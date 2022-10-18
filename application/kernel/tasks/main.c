@@ -39,7 +39,9 @@ define_vsf_thread(__thread_task_t, 1024,
 
 static vsf_eda_t __eda_task;
 static vsf_teda_t __teda_task;
-static __thread_task_t __thread_task;
+static __thread_task_t __thread_task = {
+    .counter = 0,
+};
 
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
@@ -47,7 +49,6 @@ static __thread_task_t __thread_task;
 implement_vsf_thread(__thread_task_t)
 {
     vsf_trace_info("thread task started\n");
-    vsf_pthis->counter = 0;
     while (true) {
         vsf_thread_delay_ms(1000);
         vsf_trace_info("%d: thread task timer triggered\n", vsf_pthis->counter++);
