@@ -15,29 +15,26 @@
  *                                                                           *
  ****************************************************************************/
 
+
+//! \note User Level Application Configuration
+
+#ifndef __VSF_USR_CFG_H__
+#define __VSF_USR_CFG_H__
+
 /*============================ INCLUDES ======================================*/
 
-#include "vsf.h"
-#include "vsf_board.h"
+#include "vsf_board_cfg.h"
 
 /*============================ MACROS ========================================*/
 
-#if VSF_USE_TRACE != ENABLED
-#   error this demo depends on VSF_USE_TRACE, please enable it!
-#endif
+#define VSF_USE_SIMPLE_STREAM                           ENABLED
+#define VSF_USE_TRACE                                   ENABLED
 
-/*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-/*============================ IMPLEMENTATION ================================*/
+/*============================ INCLUDES ======================================*/
 
-int VSF_USER_ENTRY(void)
-{
-    vsf_board_init();
-
-    vsf_start_trace();
-    vsf_trace_info("hello world" VSF_TRACE_CFG_LINEEND);
-    return 0;
-}
+#endif
+/* EOF */
