@@ -30,7 +30,9 @@
 /*============================ TYPES =========================================*/
 
 declare_vsf_thread(__thread_task_t)
-define_vsf_thread(__thread_task_t, 1024)
+define_vsf_thread(__thread_task_t, 1024,
+    int counter;
+)
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
@@ -45,9 +47,10 @@ static __thread_task_t __thread_task;
 implement_vsf_thread(__thread_task_t)
 {
     vsf_trace_info("thread task started\n");
+    vsf_pthis->counter = 0;
     while (true) {
         vsf_thread_delay_ms(1000);
-        vsf_trace_info("thread task timer triggered\n");
+        vsf_trace_info("%d: thread task timer triggered\n", vsf_pthis->counter++);
     }
 }
 
