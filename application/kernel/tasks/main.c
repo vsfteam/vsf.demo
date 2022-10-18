@@ -31,7 +31,9 @@
 
 declare_vsf_thread(__thread_task_t)
 define_vsf_thread(__thread_task_t, 1024,
+    const char *name;
     int counter;
+    int interval_ms;
 )
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -39,7 +41,10 @@ define_vsf_thread(__thread_task_t, 1024,
 
 static vsf_eda_t __eda_task;
 static vsf_teda_t __teda_task;
-static __thread_task_t __thread_task = {
+static __thread_task_t __thread_task_a = {
+    .counter = 0,
+};
+static __thread_task_t __thread_task_b = {
     .counter = 0,
 };
 
@@ -50,8 +55,8 @@ implement_vsf_thread(__thread_task_t)
 {
     vsf_trace_info("thread task started\n");
     while (true) {
-        vsf_thread_delay_ms(1000);
-        vsf_trace_info("%d: thread task timer triggered\n", vsf_pthis->counter++);
+        vsf_thread_delay_ms(vsf_pthis->interval_ms);
+        vsf_trace_info("%s: thread task timer triggered %d\n", vsf_pthis->name, vsf_pthis->counter++);
     }
 }
 
@@ -90,6 +95,13 @@ int VSF_USER_ENTRY(void)
         .fn.evthandler          = __teda_evthandler,
         .priority               = vsf_prio_0,
     });
-    init_vsf_thread(__thread_task_t, &__thread_task, vsf_prio_0);
+
+    __thread_task_a.name = "thread_task_a";
+    __thread_task_a.interval_ms = 1000;
+    init_vsf_thread(__thread_task_t, &__thread_task_a, vsf_prio_0);
+
+    __thread_task_b.name = "thread_task_b";
+    __thread_task_b.interval_ms = 500;
+    init_vsf_thread(__thread_task_t, &__thread_task_b, vsf_prio_0);
     return 0;
 }
