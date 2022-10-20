@@ -61,8 +61,8 @@
  * Application Configurations                                                 *
  *----------------------------------------------------------------------------*/
 
-#define APP_DISP_WINGDI_HEIGHT                          960
-#define APP_DISP_WINGDI_WIDTH                           1440
+#define APP_DISP_WINGDI_HEIGHT                          800
+#define APP_DISP_WINGDI_WIDTH                           480
 #define APP_DISP_WINGDI_COLOR                           VSF_DISP_COLOR_RGB565
 
 #define APP_CFG_WINSOUND_ARCH_PRIO                      vsf_arch_prio_0
