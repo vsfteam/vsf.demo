@@ -16,45 +16,27 @@
  ****************************************************************************/
 
 
-//! \note User Level Board Configuration
+//! \note User Level Application Configuration
 
-#ifndef __VSF_BOARD_H__
-#define __VSF_BOARD_H__
+#ifndef __VSF_USR_CFG_H__
+#define __VSF_USR_CFG_H__
 
 /*============================ INCLUDES ======================================*/
 
-#include "vsf.h"
+#include "vsf_board_cfg.h"
 
 /*============================ MACROS ========================================*/
+
+#define VSF_USE_MAL                                     ENABLED
+#   define VSF_MAL_USE_MMC_MAL                          ENABLED
+
+#define VSF_USE_SIMPLE_STREAM                           ENABLED
+#define VSF_USE_TRACE                                   ENABLED
+
 /*============================ TYPES =========================================*/
-
-typedef struct vsf_board_t {
-    vsf_spi_t *spi;
-    vsf_i2c_t *i2c;
-    vsf_mmc_t *mmc;
-    uint8_t mmc_bus_width;
-    uint32_t mmc_voltage;
-
-#if VSF_USE_UI == ENABLED
-    vk_disp_t *display_dev;
-    vk_disp_mipi_lcd_t disp_spi_mipi;
-#endif
-#if VSF_USE_AUDIO == ENABLED
-    vk_audio_dev_t *audio_dev;
-    // TODO: add audio device instance
-#endif
-#if VSF_USE_USB_HOST == ENABLED
-    vk_usbh_t usbh_dev;
-#endif
-} vsf_board_t;
-
 /*============================ GLOBAL VARIABLES ==============================*/
-
-extern vsf_board_t vsf_board;
-
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern void vsf_board_init(void);
-
-#endif      // __VSF_BOARD_CFG_WIN_H__
+#endif
+/* EOF */

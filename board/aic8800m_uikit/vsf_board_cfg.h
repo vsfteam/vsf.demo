@@ -55,6 +55,7 @@
 #define VSF_HAL_USE_RNG                                 ENABLED
 #define VSF_HAL_USE_GPIO                                ENABLED
 #define VSF_HAL_USE_SPI                                 ENABLED
+#define VSF_HAL_USE_MMC                                 ENABLED
 // debug port on aic8800m_uikit is uart1, so disable debug stream
 //  debug stream is implement in vsf_board.c using uart1
 #define VSF_HAL_USE_DEBUG_STREAM                        DISABLED
@@ -102,36 +103,16 @@
 #define vsf_usbh_malloc_aligned                         __vsf_usbh_malloc_aligned
 #define vsf_usbh_free                                   __vsf_usbh_free
 
-#define VSF_CFG_DEBUG_STREAM_TX_T                       vsf_stream_t
+// debug stream is implemented in vsf_board.c
+#if VSF_HAL_USE_DEBUG_STREAM == DISABLED
+#   define VSF_CFG_DEBUG_STREAM_TX_T                    vsf_stream_t
+#endif
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
  *----------------------------------------------------------------------------*/
 
-#define APP_CFG_WINSOUND_ARCH_PRIO                      vsf_arch_prio_0
 #define APP_CFG_USBH_ARCH_PRIO                          vsf_arch_prio_0
-
-#define APP_DISP_SPI_MIPI_SPI                           (vsf_spi_t *)&vsf_hw_spi0
-#define APP_DISP_SPI_MIPI_RESET_GPIO                    (vsf_gpio_t *)&vsf_hw_gpio1
-#define APP_DISP_SPI_MIPI_RESET_PIN_MASK                (1 << 7)
-#define APP_DISP_SPI_MIPI_DCX_GPIO                      (vsf_gpio_t *)&vsf_hw_gpio0
-#define APP_DISP_SPI_MIPI_DCX_PIN_MASK                  (1 << 4)
-
-#define APP_DISP_SPI_MIPI_HEIGHT                        320
-#define APP_DISP_SPI_MIPI_WIDTH                         240
-#define APP_DISP_SPI_MIPI_COLOR                         VSF_DISP_COLOR_RGB565
-#define APP_DISP_SPI_MIPI_ADDRESS_MODE                                          \
-               (MIPI_DCS_PAGE_ADDRESS_TOP_TO_BOTTOM         |                   \
-                MIPI_DCS_COLUME_ADDRESS_LEFT_TO_RIGHT       |                   \
-                MIPI_DCS_PAGE_COLUMN_NORMAL_ORDER)
-#define APP_DISP_SPI_MIPI_SEQ                         {                         \
-                VSF_DISP_MIPI_LCD_ST7789V_BASE,                                 \
-                VSF_DISP_MIPI_LCD_INIT_MODE_AND_FORMAT(                         \
-                    APP_DISP_SPI_MIPI_ADDRESS_MODE,                             \
-                    MIPI_DCS_PIXEL_FORMAT_DBI_16_BITS                           \
-                ),                                                              \
-        }
-#define APP_DISP_SPI_MIPI_CLOCK_HZ                      (60ul * 1000ul * 1000ul)
 
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/

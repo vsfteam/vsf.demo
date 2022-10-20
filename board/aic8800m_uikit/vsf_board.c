@@ -26,58 +26,61 @@
 /*============================ LOCAL VARIABLES ===============================*/
 
 #if VSF_USE_USB_HOST == ENABLED
-static const vk_winusb_hcd_param_t __winusb_hcd_param = {
+static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
+    .op                         = &VSF_USB_HC0_IP,
     .priority                   = APP_CFG_USBH_ARCH_PRIO,
 };
 #endif
 
 /*============================ GLOBAL VARIABLES ==============================*/
 
-#if VSF_USE_UI == ENABLED || VSF_USE_AUDIO == ENABLED || VSF_USE_USB_HOST == ENABLED
 vsf_board_t vsf_board = {
+    .spi                        = (vsf_spi_t *)&vsf_hw_spi0,
+    .i2c                        = (vsf_i2c_t *)&vsf_hw_i2c0,
+
+    .mmc                        = (vsf_mmc_t *)&vsf_hw_mmc0,
+    .mmc_bus_width              = 4,
+    .mmc_voltage                = SD_OCR_VDD_32_33 | SD_OCR_VDD_33_34,
+
 #if VSF_USE_UI == ENABLED
     .display_dev                = &vsf_board.disp_wingdi.use_as__vk_disp_t,
     .disp_spi_mipi              = {
         .param                  = {
-            .height             = APP_DISP_SPI_MIPI_HEIGHT,
-            .width              = APP_DISP_SPI_MIPI_WIDTH,
+            .height             = 320,
+            .width              = 240,
             .drv                = &vk_disp_drv_mipi_lcd,
-            .color              = APP_DISP_SPI_MIPI_COLOR,
+            .color              = VSF_DISP_COLOR_RGB565,
         },
-        .spi                    = APP_DISP_SPI_MIPI_SPI,
+        .spi                    = (vsf_spi_t *)&vsf_hw_spi0,
         .reset                  = {
-            .gpio               = APP_DISP_SPI_MIPI_RESET_GPIO,
-            .pin_mask           = APP_DISP_SPI_MIPI_RESET_PIN_MASK,
+            .gpio               = (vsf_gpio_t *)&vsf_hw_gpio1,
+            .pin_mask           = 1 << 7,
         },
         .dcx                    = {
-            .gpio               = APP_DISP_SPI_MIPI_DCX_GPIO,
-            .pin_mask           = APP_DISP_SPI_MIPI_DCX_PIN_MASK,
+            .gpio               = (vsf_gpio_t *)&vsf_hw_gpio0,
+            .pin_mask           = 1 << 4,
         },
-        .clock_hz               = APP_DISP_SPI_MIPI_CLOCK_HZ,
-        .init_seq               = (const uint8_t [])APP_DISP_SPI_MIPI_SEQ,
-        .init_seq_len           = sizeof((const uint8_t [])APP_DISP_SPI_MIPI_SEQ),
+        .clock_hz               = 60ul * 1000ul * 1000ul,
+        .init_seq               = (const uint8_t [])VSF_DISP_MIPI_LCD_ST7789V_BASE,
+        .init_seq_len           = sizeof((const uint8_t [])VSF_DISP_MIPI_LCD_ST7789V_BASE),
     },
 #endif
 #if VSF_USE_AUDIO == ENABLED
     .audio_dev                  = &vsf_board.audio_winsound.use_as__vk_audio_dev_t,
-    .audio_winsound             = {
-        .drv                    = &vk_winsound_drv,
-        .hw_prio                = APP_CFG_WINSOUND_ARCH_PRIO,
-    },
 #endif
 #if VSF_USE_USB_HOST == ENABLED
     .usbh_dev                   = {
-        .drv                    = &vk_winusb_hcd_drv,
-        .param                  = (void *)&__winusb_hcd_param,
+        .drv                    = &vk_dwcotg_hcd_drv,
+        .param                  = (void *)&__dwcotg_hcd_param,
     },
 #endif
 };
-#endif
 
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
+#if !defined(VSF_HAL_USE_DEBUG_STREAM) || VSF_HAL_USE_DEBUG_STREAM == DISABLED
 static void __VSF_DEBUG_STREAM_TX_INIT(void)
 {
     vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart1;
@@ -112,6 +115,7 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
 #undef VSF_HAL_USE_DEBUG_STREAM
 #define VSF_HAL_USE_DEBUG_STREAM        ENABLED
 #include "hal/driver/common/debug_stream/debug_stream_tx_blocked.inc"
+#endif
 
 void vsf_board_init(void)
 {
