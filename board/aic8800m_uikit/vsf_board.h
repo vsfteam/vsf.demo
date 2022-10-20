@@ -29,6 +29,7 @@
 /*============================ TYPES =========================================*/
 
 typedef struct vsf_board_t {
+    vsf_usart_t *usart;
     vsf_spi_t *spi;
     vsf_i2c_t *i2c;
     vsf_mmc_t *mmc;

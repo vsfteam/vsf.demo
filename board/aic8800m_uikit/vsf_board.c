@@ -35,6 +35,7 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
 /*============================ GLOBAL VARIABLES ==============================*/
 
 vsf_board_t vsf_board = {
+    .usart                      = (vsf_usart_t *)&vsf_hw_usart1,
     .spi                        = (vsf_spi_t *)&vsf_hw_spi0,
     .i2c                        = (vsf_i2c_t *)&vsf_hw_i2c0,
 
