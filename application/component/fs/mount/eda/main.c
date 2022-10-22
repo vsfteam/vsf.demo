@@ -30,13 +30,10 @@
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
-
-static vsf_eda_t __eda_task;
-
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
-static void __eda_task_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
+int VSF_USER_ENTRY(void)
 {
     enum {
         STATE_OPEN_ROOT,
@@ -48,8 +45,11 @@ static void __eda_task_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
     vsf_err_t err;
     static vk_file_t *root, *child;
 
-    switch (evt) {
+    switch (vsf_eda_get_cur_evt()) {
     case VSF_EVT_INIT:
+        vsf_board_init();
+        vsf_start_trace();
+
         vk_fs_init();
         vsf_eda_set_user_value(STATE_OPEN_ROOT);
         vk_file_open(NULL, "/", &root);
@@ -98,16 +98,5 @@ static void __eda_task_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
         }
         break;
     }
-}
-
-int VSF_USER_ENTRY(void)
-{
-    vsf_board_init();
-    vsf_start_trace();
-
-    vsf_eda_start(&__eda_task, &(vsf_eda_cfg_t){
-        .fn.evthandler      = __eda_task_evthandler,
-        .priority           = vsf_prio_0,
-    });
     return 0;
 }

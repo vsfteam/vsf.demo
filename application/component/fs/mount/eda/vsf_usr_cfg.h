@@ -27,6 +27,8 @@
 
 /*============================ MACROS ========================================*/
 
+#define VSF_OS_CFG_MAIN_MODE                            VSF_OS_CFG_MAIN_MODE_EDA
+
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
 #define VSF_USE_TRACE                                   ENABLED
 

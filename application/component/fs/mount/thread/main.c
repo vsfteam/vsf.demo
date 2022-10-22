@@ -28,20 +28,16 @@
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
-
-declare_vsf_thread(__thread_task_t)
-define_vsf_thread(__thread_task_t, 1024)
-
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
-
-static __thread_task_t __thread_task;
-
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
-implement_vsf_thread(__thread_task_t)
+int VSF_USER_ENTRY(void)
 {
+    vsf_board_init();
+    vsf_start_trace();
+
     vk_file_t *root, *child;
 
     vk_fs_init();
@@ -59,13 +55,5 @@ implement_vsf_thread(__thread_task_t)
     }
     vsf_trace_info("\n");
     vk_file_close(root);
-}
-
-int VSF_USER_ENTRY(void)
-{
-    vsf_board_init();
-    vsf_start_trace();
-
-    init_vsf_thread(__thread_task_t, &__thread_task, vsf_prio_0);
     return 0;
 }
