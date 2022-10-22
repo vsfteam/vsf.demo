@@ -16,46 +16,26 @@
  ****************************************************************************/
 
 
-//! \note User Level Board Configuration
+//! \note User Level Application Configuration
 
-#ifndef __VSF_BOARD_H__
-#define __VSF_BOARD_H__
+#ifndef __VSF_USR_CFG_H__
+#define __VSF_USR_CFG_H__
 
 /*============================ INCLUDES ======================================*/
 
-#include "vsf.h"
+#include "vsf_board_cfg.h"
 
 /*============================ MACROS ========================================*/
+
+#define VSF_USE_SIMPLE_STREAM                           ENABLED
+#define VSF_USE_TRACE                                   ENABLED
+
+#define VSF_USE_FS                                      ENABLED
+
 /*============================ TYPES =========================================*/
-
-typedef struct vsf_board_t {
-    vsf_usart_t *usart;
-
-#if VSF_USE_UI == ENABLED
-    vk_disp_t *display_dev;
-    vk_disp_wingdi_t disp_wingdi;
-#endif
-#if VSF_USE_AUDIO == ENABLED
-    vk_audio_dev_t *audio_dev;
-    vk_winsound_dev_t audio_winsound;
-#endif
-#if VSF_USE_USB_HOST == ENABLED
-    vk_usbh_t usbh_dev;
-#endif
-#if VSF_USE_FS == ENABLED
-    const vk_fs_op_t *fsop;
-    void * fsinfo;
-    vk_winfs_info_t winfs_info;
-#endif
-} vsf_board_t;
-
 /*============================ GLOBAL VARIABLES ==============================*/
-
-extern vsf_board_t vsf_board;
-
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern void vsf_board_init(void);
-
-#endif      // __VSF_BOARD_CFG_WIN_H__
+#endif
+/* EOF */

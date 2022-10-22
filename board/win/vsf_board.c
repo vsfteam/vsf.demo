@@ -32,8 +32,9 @@ static const vk_winusb_hcd_param_t __winusb_hcd_param = {
 
 /*============================ GLOBAL VARIABLES ==============================*/
 
-#if VSF_USE_UI == ENABLED || VSF_USE_AUDIO == ENABLED || VSF_USE_USB_HOST == ENABLED
 vsf_board_t vsf_board = {
+    .usart                      = NULL,
+
 #if VSF_USE_UI == ENABLED
     .display_dev                = &vsf_board.disp_wingdi.use_as__vk_disp_t,
     .disp_wingdi                = {
@@ -58,8 +59,14 @@ vsf_board_t vsf_board = {
         .param                  = (void *)&__winusb_hcd_param,
     },
 #endif
-};
+#if VSF_USE_FS == ENABLED
+    .fsop                       = &vk_winfs_op,
+    .fsinfo                     = (void *)&vsf_board.winfs_info,
+    .winfs_info                 = {
+        .root.name              = ".",
+    },
 #endif
+};
 
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
@@ -67,5 +74,12 @@ vsf_board_t vsf_board = {
 
 void vsf_board_init(void)
 {
-    
+    uint8_t usart_devnum;
+    vsf_usart_win_device_t usart_devices[8];
+
+    vsf_hw_usart_scan_devices();
+    while (vsf_hw_usart_is_scanning(&usart_devnum));
+    if (vsf_hw_usart_get_devices((vsf_usart_win_device_t *)&usart_devices, dimof(usart_devices))) {
+        vsf_board.usart = usart_devices[0].instance;
+    }
 }

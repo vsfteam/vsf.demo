@@ -15,47 +15,57 @@
  *                                                                           *
  ****************************************************************************/
 
-
-//! \note User Level Board Configuration
-
-#ifndef __VSF_BOARD_H__
-#define __VSF_BOARD_H__
-
 /*============================ INCLUDES ======================================*/
 
 #include "vsf.h"
+#include "vsf_board.h"
 
 /*============================ MACROS ========================================*/
+
+#if VSF_USE_TRACE != ENABLED
+#   error this demo depends on VSF_USE_TRACE, please enable it!
+#endif
+
+/*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
-typedef struct vsf_board_t {
-    vsf_usart_t *usart;
-
-#if VSF_USE_UI == ENABLED
-    vk_disp_t *display_dev;
-    vk_disp_wingdi_t disp_wingdi;
-#endif
-#if VSF_USE_AUDIO == ENABLED
-    vk_audio_dev_t *audio_dev;
-    vk_winsound_dev_t audio_winsound;
-#endif
-#if VSF_USE_USB_HOST == ENABLED
-    vk_usbh_t usbh_dev;
-#endif
-#if VSF_USE_FS == ENABLED
-    const vk_fs_op_t *fsop;
-    void * fsinfo;
-    vk_winfs_info_t winfs_info;
-#endif
-} vsf_board_t;
+declare_vsf_thread(__thread_task_t)
+define_vsf_thread(__thread_task_t, 1024)
 
 /*============================ GLOBAL VARIABLES ==============================*/
-
-extern vsf_board_t vsf_board;
-
 /*============================ LOCAL VARIABLES ===============================*/
+
+static __thread_task_t __thread_task;
+
 /*============================ PROTOTYPES ====================================*/
+/*============================ IMPLEMENTATION ================================*/
 
-extern void vsf_board_init(void);
+implement_vsf_thread(__thread_task_t)
+{
+    vk_file_t *root, *child;
 
-#endif      // __VSF_BOARD_CFG_WIN_H__
+    vk_fs_init();
+    vk_file_open(NULL, "/", &root);
+    vk_fs_mount(root, vsf_board.fsop, vsf_board.fsinfo);
+
+    while (true) {
+        vk_file_open(root, NULL, &child);
+        if (vsf_eda_get_return_value() != VSF_ERR_NONE) {
+            break;
+        }
+
+        vsf_trace_info("%s ", child->name);
+        vk_file_close(child);
+    }
+    vsf_trace_info("\n");
+    vk_file_close(root);
+}
+
+int VSF_USER_ENTRY(void)
+{
+    vsf_board_init();
+    vsf_start_trace();
+
+    init_vsf_thread(__thread_task_t, &__thread_task, vsf_prio_0);
+    return 0;
+}
