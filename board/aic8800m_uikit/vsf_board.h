@@ -42,7 +42,7 @@ typedef struct vsf_board_t {
 #endif
 #if VSF_USE_AUDIO == ENABLED
     vk_audio_dev_t *audio_dev;
-    // TODO: add audio device instance
+    vk_aic1000a_dev_t aic1000a;
 #endif
 #if VSF_USE_USB_HOST == ENABLED
     vk_usbh_t usbh_dev;

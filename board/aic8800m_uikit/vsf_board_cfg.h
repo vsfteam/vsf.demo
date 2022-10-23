@@ -54,6 +54,7 @@
 // actually general hal components will be enabled by default
 #define VSF_HAL_USE_RNG                                 ENABLED
 #define VSF_HAL_USE_GPIO                                ENABLED
+#   define VSF_HW_GPIO_CFG_MULTI_CLASS                  ENABLED
 #define VSF_HAL_USE_SPI                                 ENABLED
 #define VSF_HAL_USE_MMC                                 ENABLED
 // debug port on aic8800m_uikit is uart1, so disable debug stream
@@ -106,7 +107,11 @@
 // debug stream is implemented in vsf_board.c
 #if VSF_HAL_USE_DEBUG_STREAM == DISABLED
 #   define VSF_CFG_DEBUG_STREAM_TX_T                    vsf_stream_t
+#   define VSF_CFG_DEBUG_STREAM_RX_T                    vsf_mem_stream_t
 #endif
+
+#define VSF_USE_AUDIO                                   ENABLED
+#   define VSF_AUDIO_USE_AIC1000A                       ENABLED
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *

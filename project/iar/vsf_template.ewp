@@ -238,6 +238,7 @@
                     <state>CFG_AIC1000_MIC_MATRIX=0</state>
                     <state>CONFIG_RWNX</state>
                     <state>CONFIG_RWNX_LWIP</state>
+                    <state>CFG_EXT_AIC1000</state>
                     <state>LWIP_NO_STDINT_H=1</state>
                     <state>LWIP_SO_RCVBUF=1</state>
                 </option>
@@ -398,6 +399,15 @@
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\plf\aic8800\src\driver\time</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\plf\aic8800\src\driver\bt</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\plf\aic8800\src\driver\bt\patch\mcu</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\plf\aic8800\src\driver\aud_proc</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\plf\aic8800\src\driver\gpio</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\plf\aic8800\src\driver\aic1000aud_regs</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\asio</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\common</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\device</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\process\audio_proc</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\process\drc</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\process\eq</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\modules\common\api</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\modules\dbg\api</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\wifi\fhost</state>
@@ -4199,6 +4209,24 @@
                     <group>
                         <name>driver</name>
                         <group>
+                            <name>aic1000a</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\av\audio\driver\aic1000a\vsf_aic1000a.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\av\audio\driver\aic1000a\vsf_aic1000a.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>dummy</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\av\audio\driver\dummy\vsf_audio_dummy.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\av\audio\driver\dummy\vsf_audio_dummy.h</name>
+                            </file>
+                        </group>
+                        <group>
                             <name>winsound</name>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\av\audio\driver\winsound\vsf_winsound.c</name>
@@ -4425,6 +4453,15 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\mim_mal\vsf_mim_mal.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>mmc_mal</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\mmc_mal\vsf_mmc_mal.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\mmc_mal\vsf_mmc_mal.h</name>
                         </file>
                     </group>
                     <group>
@@ -5333,6 +5370,15 @@
                             </file>
                         </group>
                         <group>
+                            <name>mmc</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\mmc\mmc.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\mmc\mmc.h</name>
+                            </file>
+                        </group>
+                        <group>
                             <name>port</name>
                             <group>
                                 <name>arch</name>
@@ -5454,6 +5500,114 @@
                         </group>
                         <group>
                             <name>vendor</name>
+                            <group>
+                                <name>audio</name>
+                                <group>
+                                    <name>asio</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\asio\asio.c</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\asio\asio.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\asio\asio_dsd.c</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\asio\asio_dsd.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\asio\asio_src.c</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\asio\asio_src.h</name>
+                                    </file>
+                                </group>
+                                <group>
+                                    <name>common</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\common\audio_config.c</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\common\audio_config.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\common\audio_mem.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\common\audio_tws.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\common\audio_types.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\common\audio_utils.c</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\common\audio_utils.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\common\rt_mem.c</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\common\rt_mem.h</name>
+                                    </file>
+                                </group>
+                                <group>
+                                    <name>device</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\device\aic1000_psi_api.c</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\device\aic1000_psi_api.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\device\codec_ext_aic1000.c</name>
+                                    </file>
+                                </group>
+                                <group>
+                                    <name>lib</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\lib\armgcc_4_8\libaudio_lite.a</name>
+                                    </file>
+                                </group>
+                                <group>
+                                    <name>process</name>
+                                    <group>
+                                        <name>audio_proc</name>
+                                        <file>
+                                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\process\audio_proc\audio_proc_api.c</name>
+                                        </file>
+                                        <file>
+                                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\process\audio_proc\audio_proc_api.h</name>
+                                        </file>
+                                    </group>
+                                    <group>
+                                        <name>drc</name>
+                                        <file>
+                                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\process\drc\audio_drc.c</name>
+                                        </file>
+                                        <file>
+                                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\process\drc\audio_drc.h</name>
+                                        </file>
+                                        <file>
+                                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\process\drc\audio_drc_cmd.c</name>
+                                        </file>
+                                    </group>
+                                    <group>
+                                        <name>eq</name>
+                                        <file>
+                                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\process\eq\audio_eq.c</name>
+                                        </file>
+                                        <file>
+                                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\process\eq\audio_eq.h</name>
+                                        </file>
+                                        <file>
+                                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\audio\process\eq\audio_eq_cmd.c</name>
+                                        </file>
+                                    </group>
+                                </group>
+                            </group>
                             <group>
                                 <name>lwip</name>
                                 <group>
@@ -6447,6 +6601,36 @@
                 <group>
                     <name>common</name>
                     <group>
+                        <name>adc</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\adc\adc_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\adc\adc_template.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>debug_stream</name>
+                    </group>
+                    <group>
+                        <name>flash</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\flash\flash_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\flash\flash_template.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>gpio</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\gpio\gpio_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\gpio\gpio_template.h</name>
+                        </file>
+                    </group>
+                    <group>
                         <name>i2c</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\i2c\i2c_common.c</name>
@@ -6465,6 +6649,63 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\i2c\multiplex_i2c.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>io</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\io\io_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\io\io_template.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>mmc</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\mmc\mmc_probe.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\mmc\mmc_probe.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\mmc\mmc_template.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>pm</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\pm\pm_template.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>pwm</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\pwm\pwm_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\pwm\pwm_template.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>rng</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\rng\rng_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\rng\rng_template.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>rtc</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\rtc\rtc_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\rtc\rtc_common.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\rtc\rtc_template.h</name>
                         </file>
                     </group>
                     <group>
@@ -6497,10 +6738,19 @@
                     <group>
                         <name>template</name>
                         <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template.h</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_adc.h</name>
                         </file>
                         <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_declaration.h</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_flash.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_gpio.h</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_hal_driver.h</name>
@@ -6509,10 +6759,22 @@
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_i2c.h</name>
                         </file>
                         <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_implementation.h</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_io.h</name>
                         </file>
                         <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_mmc.h</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_pm.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_pwm.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_rng.h</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_rtc.h</name>
@@ -6521,10 +6783,22 @@
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_spi.h</name>
                         </file>
                         <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_timer.h</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_usart.h</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_usb.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>timer</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\timer\timer_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\timer\timer_template.h</name>
                         </file>
                     </group>
                     <group>
