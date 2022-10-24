@@ -37,6 +37,18 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
 };
 #endif
 
+#if VSF_USE_UI == ENABLED
+static const uint8_t __vsf_board_lcd_initseq[] = {
+    VSF_DISP_MIPI_LCD_ST7789V_BASE,
+    VSF_DISP_MIPI_LCD_INIT_MODE_AND_FORMAT(
+            MIPI_DCS_PAGE_ADDRESS_TOP_TO_BOTTOM
+        |   MIPI_DCS_COLUME_ADDRESS_LEFT_TO_RIGHT
+        |   MIPI_DCS_PAGE_COLUMN_NORMAL_ORDER,
+            MIPI_DCS_PIXEL_FORMAT_DBI_16_BITS
+    ),
+};
+#endif
+
 /*============================ GLOBAL VARIABLES ==============================*/
 
 vsf_board_t vsf_board = {
@@ -67,8 +79,8 @@ vsf_board_t vsf_board = {
             .pin_mask           = 1 << 4,
         },
         .clock_hz               = 60ul * 1000ul * 1000ul,
-        .init_seq               = (const uint8_t []){VSF_DISP_MIPI_LCD_ST7789V_BASE},
-        .init_seq_len           = sizeof((const uint8_t []){VSF_DISP_MIPI_LCD_ST7789V_BASE}),
+        .init_seq               = __vsf_board_lcd_initseq,
+        .init_seq_len           = sizeof(__vsf_board_lcd_initseq),
     },
 #endif
 #if VSF_USE_AUDIO == ENABLED
@@ -208,8 +220,13 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
 void vsf_board_init(void)
 {
     static const vsf_io_cfg_t cfgs[] = {
-//        {VSF_PA0,   0x09,   0},
-//        {VSF_PA3,   0x09,   0},
+#if VSF_USE_UI == ENABLED
+        {VSF_PA0,   0x09,   0},
+        {VSF_PA3,   0x09,   0},
+        {VSF_PA4,   0x00,   0},
+#endif
+        // PB7 as lcd/touch reset
+        {VSF_PB7,   0x00,   0},
 
 #if VSF_USE_AUDIO == ENABLED
         // PA5 as 26M clock output

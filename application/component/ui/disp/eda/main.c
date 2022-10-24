@@ -44,6 +44,17 @@ static void __disp_on_ready(vk_disp_t *disp)
     vsf_eda_post_evt((vsf_eda_t *)disp->ui_data, VSF_EVT_USER);
 }
 
+static void __disp_demo_update_buffer(uint16_t *buf, uint32_t size)
+{
+    static const uint16_t __colors[] = {0x1F << 11, 0x3F << 6, 0x1F};
+    static int __color_index = 0;
+
+    for (int i = 0; i < size; i++) {
+        buf[i] = __colors[__color_index];
+    }
+    __color_index = (__color_index + 1) % dimof(__colors);
+}
+
 static void __teda_task_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
 {
     switch (evt) {
@@ -76,7 +87,8 @@ static void __teda_task_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
         vsf_teda_set_timer_ms(1000);
         break;
     case VSF_EVT_USER:
-        memset(__framebuffer, 0xAA, vsf_disp_get_frame_size(vsf_board.display_dev));
+        __disp_demo_update_buffer((uint16_t *)__framebuffer,
+            vsf_board.display_dev->param.width * vsf_board.display_dev->param.height);
         // if area is NULL, then refresh full screen
         vk_disp_refresh(vsf_board.display_dev, NULL, __framebuffer);
         __fps++;
