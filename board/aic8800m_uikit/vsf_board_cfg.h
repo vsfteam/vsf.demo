@@ -110,8 +110,8 @@
 #   define VSF_CFG_DEBUG_STREAM_RX_T                    vsf_mem_stream_t
 #endif
 
-#define VSF_USE_AUDIO                                   ENABLED
-#   define VSF_AUDIO_USE_AIC1000A                       ENABLED
+#define VSF_AUDIO_USE_AIC1000A                          ENABLED
+#define VSF_DISP_USE_MIPI_LCD                           ENABLED
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *

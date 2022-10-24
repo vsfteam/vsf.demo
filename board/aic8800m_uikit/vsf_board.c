@@ -49,7 +49,7 @@ vsf_board_t vsf_board = {
     .mmc_voltage                = SD_OCR_VDD_32_33 | SD_OCR_VDD_33_34,
 
 #if VSF_USE_UI == ENABLED
-    .display_dev                = &vsf_board.disp_wingdi.use_as__vk_disp_t,
+    .display_dev                = &vsf_board.disp_spi_mipi.use_as__vk_disp_t,
     .disp_spi_mipi              = {
         .param                  = {
             .height             = 320,
@@ -67,8 +67,8 @@ vsf_board_t vsf_board = {
             .pin_mask           = 1 << 4,
         },
         .clock_hz               = 60ul * 1000ul * 1000ul,
-        .init_seq               = (const uint8_t [])VSF_DISP_MIPI_LCD_ST7789V_BASE,
-        .init_seq_len           = sizeof((const uint8_t [])VSF_DISP_MIPI_LCD_ST7789V_BASE),
+        .init_seq               = (const uint8_t []){VSF_DISP_MIPI_LCD_ST7789V_BASE},
+        .init_seq_len           = sizeof((const uint8_t []){VSF_DISP_MIPI_LCD_ST7789V_BASE}),
     },
 #endif
 #if VSF_USE_AUDIO == ENABLED
