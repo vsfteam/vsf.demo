@@ -17,6 +17,7 @@
 
 /*============================ INCLUDES ======================================*/
 
+#define __VSF_HEAP_CLASS_INHERIT__
 #define __VSF_SIMPLE_STREAM_CLASS_INHERIT__
 #include "./vsf_board.h"
 
@@ -91,6 +92,46 @@ vsf_board_t vsf_board = {
 
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ IMPLEMENTATION ================================*/
+
+#if VSF_USE_USB_HOST
+// redefine usbh memory allocation, memory MUST be in 0x001A0000 - 0x001C7FFF
+struct __usbh_heap_t {
+    implement(vsf_heap_t)
+    uint8_t memory[32 * 1024];
+    // one more as terminator
+    vsf_dlist_t freelist[2];
+} static __usbh_heap;
+
+static vsf_dlist_t * __usbh_heap_get_freelist(uint_fast32_t size)
+{
+    return &__usbh_heap.freelist[0];
+}
+
+static void __usbh_heap_init(void)
+{
+    memset(&__usbh_heap.use_as__vsf_heap_t, 0, sizeof(__usbh_heap.use_as__vsf_heap_t));
+    for (uint_fast8_t i = 0; i < dimof(__usbh_heap.freelist); i++) {
+        vsf_dlist_init(&__usbh_heap.freelist[i]);
+    }
+    __usbh_heap.get_freelist = __usbh_heap_get_freelist;
+    __vsf_heap_add_buffer(&__usbh_heap.use_as__vsf_heap_t, __usbh_heap.memory, sizeof(__usbh_heap.memory));
+}
+
+void * __vsf_usbh_malloc_aligned(uint_fast32_t size, uint_fast32_t alignment)
+{
+    return __vsf_heap_malloc_aligned(&__usbh_heap.use_as__vsf_heap_t, size, alignment);
+}
+
+void * __vsf_usbh_malloc(uint_fast32_t size)
+{
+    return __vsf_heap_malloc_aligned(&__usbh_heap.use_as__vsf_heap_t, size, 0);
+}
+
+void __vsf_usbh_free(void *buffer)
+{
+    __vsf_heap_free(&__usbh_heap.use_as__vsf_heap_t, buffer);
+}
+#endif
 
 #if !defined(VSF_HAL_USE_DEBUG_STREAM) || VSF_HAL_USE_DEBUG_STREAM == DISABLED
 #   ifndef VSF_DEBUG_STREAM_CFG_RX_BUF_SIZE
@@ -204,6 +245,9 @@ void vsf_board_init(void)
     vsf_io_config((vsf_io_cfg_t *)cfgs, dimof(cfgs));
 
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
+#if VSF_USE_USB_HOST
+    __usbh_heap_init();
+#endif
 
 #if VSF_USE_AUDIO == ENABLED
     // generate 26M debug_clk for audio
