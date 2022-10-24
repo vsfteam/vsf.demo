@@ -24,46 +24,15 @@
 #include "reg_sysctrl.h"
 
 /*============================ MACROS ========================================*/
-
-#if VSF_USE_AUDIO == ENABLED
-#   if VSF_GPIO_CFG_MULTI_CLASS != ENABLED
-#       error VSF_GPIO_CFG_MULTI_CLASS MUST be enabled for AIC1000A audio
-#   endif
-
-#   define REG_AIC1000LITE_GPIO         ((HWP_AIC1000LITE_GPIO_T *)REG_AIC1000LITE_GPIO_BASE)
-#endif
-
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ PROTOTYPES ====================================*/
-
-#if VSF_USE_AUDIO == ENABLED
-static void __aic1000a_psi_gpio_set_output(vsf_gpio_t *gpio, uint32_t pin_mask);
-static void __aic1000a_psi_gpio_set_input(vsf_gpio_t *gpio, uint32_t pin_mask);
-static void __aic1000a_psi_gpio_clear(vsf_gpio_t *gpio, uint32_t pin_mask);
-static void __aic1000a_psi_gpio_set(vsf_gpio_t *gpio, uint32_t pin_mask);
-static uint32_t __aic1000a_psi_gpio_read(vsf_gpio_t *gpio);
-#endif
-
 /*============================ LOCAL VARIABLES ===============================*/
 
 #if VSF_USE_USB_HOST == ENABLED
 static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
     .op                         = &VSF_USB_HC0_IP,
     .priority                   = APP_CFG_USBH_ARCH_PRIO,
-};
-#endif
-
-#if VSF_USE_AUDIO == ENABLED
-static const vsf_gpio_op_t aic1000a_psi_gpio_op = {
-    .set_output                 = __aic1000a_psi_gpio_set_output,
-    .set_input                  = __aic1000a_psi_gpio_set_input,
-    .clear                      = __aic1000a_psi_gpio_clear,
-    .set                        = __aic1000a_psi_gpio_set,
-    .read                       = __aic1000a_psi_gpio_read,
-};
-static vsf_gpio_t aic1000a_psi_gpio = {
-    .op                         = &aic1000a_psi_gpio_op,
 };
 #endif
 
@@ -106,7 +75,7 @@ vsf_board_t vsf_board = {
     .aic1000a                   = {
         .drv                    = &vk_aic1000a_drv,
         .pwrkey_port            = (vsf_gpio_t *)&vsf_hw_gpio1,
-        .psi_port               = (vsf_gpio_t *)&aic1000a_psi_gpio,
+        .psi_port               = (vsf_gpio_t *)&vsf_hw_gpio1,
         .pwrkey_pin             = 5,
         .psi_clk_pin            = 4,
         .psi_dat_pin            = 13,
@@ -195,33 +164,6 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
 #include "hal/driver/common/debug_stream/debug_stream_tx_blocked.inc"
 #endif
 
-#if VSF_USE_AUDIO == ENABLED
-static void __aic1000a_psi_gpio_set_output(vsf_gpio_t *gpio, uint32_t pin_mask)
-{
-    PMIC_MEM_MASK_WRITE((unsigned int)(&REG_AIC1000LITE_GPIO->DR), pin_mask, pin_mask);
-}
-
-static void __aic1000a_psi_gpio_set_input(vsf_gpio_t *gpio, uint32_t pin_mask)
-{
-    PMIC_MEM_MASK_WRITE((unsigned int)(&REG_AIC1000LITE_GPIO->DR), 0, pin_mask);
-}
-
-static void __aic1000a_psi_gpio_clear(vsf_gpio_t *gpio, uint32_t pin_mask)
-{
-    PMIC_MEM_MASK_WRITE((unsigned int)(&REG_AIC1000LITE_GPIO->VR), 0, pin_mask);
-}
-
-static void __aic1000a_psi_gpio_set(vsf_gpio_t *gpio, uint32_t pin_mask)
-{
-    PMIC_MEM_MASK_WRITE((unsigned int)(&REG_AIC1000LITE_GPIO->VR), pin_mask, pin_mask);
-}
-
-static uint32_t __aic1000a_psi_gpio_read(vsf_gpio_t *gpio)
-{
-    return PMIC_MEM_READ((unsigned int)(&REG_AIC1000LITE_GPIO->VR));
-}
-#endif
-
 void vsf_board_init(void)
 {
     static const vsf_io_cfg_t cfgs[] = {
@@ -266,12 +208,9 @@ void vsf_board_init(void)
 #if VSF_USE_AUDIO == ENABLED
     // generate 26M debug_clk for audio
     AIC_CPUSYSCTRL->TPSEL = (AIC_CPUSYSCTRL->TPSEL & ~(0xFFUL << 8)) | (0x18UL << 8);
-    PMIC_MEM_MASK_WRITE((unsigned int)(&REG_AIC1000LITE_GPIO->MR),
-        (1 << vsf_board.aic1000a.psi_clk_pin) | (1 << vsf_board.aic1000a.psi_dat_pin),
-        (1 << vsf_board.aic1000a.psi_clk_pin) | (1 << vsf_board.aic1000a.psi_dat_pin));
 #endif
 
-    // currently known dependency on rtos_al: lwip from vendor and audio
+    // currently known dependency on rtos_al: lwip from vendor and audio in SDK
     if (rtos_init()) {
         VSF_HAL_ASSERT(false);
     }
