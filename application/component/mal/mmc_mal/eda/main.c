@@ -52,8 +52,8 @@ static void __eda_task_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
     switch (evt) {
     case VSF_EVT_INIT:
         vsf_trace_info("initialize mmc_mal\n");
-        vk_mal_init(&__mmc_mal.use_as__vk_mal_t);
         vsf_eda_set_user_value(STATE_MAL_INIT);
+        vk_mal_init(&__mmc_mal.use_as__vk_mal_t);
         break;
     case VSF_EVT_RETURN:
         if ((int)vsf_eda_get_return_value() < 0) {
@@ -64,8 +64,8 @@ static void __eda_task_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
         switch (vsf_eda_get_user_value()) {
         case STATE_MAL_INIT:
             vsf_trace_info("read mmc_mal\n");
-            vk_mal_read(&__mmc_mal.use_as__vk_mal_t, 0, 512, __buffer);
             vsf_eda_set_user_value(STATE_MAL_READ);
+            vk_mal_read(&__mmc_mal.use_as__vk_mal_t, 0, 512, __buffer);
             break;
         case STATE_MAL_READ:
             vsf_trace_buffer(VSF_TRACE_INFO, __buffer, sizeof(__buffer));

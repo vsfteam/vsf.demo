@@ -6663,6 +6663,9 @@
                     <group>
                         <name>mmc</name>
                         <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\mmc\mmc_common.c</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\mmc\mmc_probe.c</name>
                         </file>
                         <file>
