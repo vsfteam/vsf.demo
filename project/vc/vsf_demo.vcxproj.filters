@@ -661,6 +661,9 @@
     <Filter Include="board">
       <UniqueIdentifier>{ea65139e-64d5-4af2-be2f-53c7078cfcd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\hal\driver\common\mmc">
+      <UniqueIdentifier>{1924c7d9-0f38-47cf-97b3-538c786b8627}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -1773,6 +1776,12 @@
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h">
       <Filter>board</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\mmc\mmc_probe.h">
+      <Filter>vsf\hal\driver\common\mmc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\mmc\mmc_template.h">
+      <Filter>vsf\hal\driver\common\mmc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -2399,6 +2408,12 @@
     <ClCompile Include="..\..\board\win\vsf_board.c">
       <Filter>board</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\common\mmc\mmc_common.c">
+      <Filter>vsf\hal\driver\common\mmc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\common\mmc\mmc_probe.c">
+      <Filter>vsf\hal\driver\common\mmc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">
@@ -2439,6 +2454,9 @@
     </None>
     <None Include="..\..\vsf\source\hal\driver\common\adc\adc_template.inc">
       <Filter>vsf\hal\driver\common\adc</Filter>
+    </None>
+    <None Include="..\..\vsf\source\hal\driver\common\mmc\mmc_template.inc">
+      <Filter>vsf\hal\driver\common\mmc</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
