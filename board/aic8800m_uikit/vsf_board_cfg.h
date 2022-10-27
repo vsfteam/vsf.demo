@@ -57,6 +57,8 @@
 #   define VSF_HW_GPIO_CFG_MULTI_CLASS                  ENABLED
 #define VSF_HAL_USE_SPI                                 ENABLED
 #define VSF_HAL_USE_MMC                                 ENABLED
+#define VSF_HAL_USE_I2S                                 ENABLED
+#define VSF_HAL_USE_USART                               ENABLED
 // debug port on aic8800m_uikit is uart1, so disable debug stream
 //  debug stream is implement in vsf_board.c using uart1
 #define VSF_HAL_USE_DEBUG_STREAM                        DISABLED

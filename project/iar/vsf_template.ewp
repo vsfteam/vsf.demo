@@ -4227,6 +4227,15 @@
                             </file>
                         </group>
                         <group>
+                            <name>i2s</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\av\audio\driver\i2s\vsf_audio_i2s.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\av\audio\driver\i2s\vsf_audio_i2s.h</name>
+                            </file>
+                        </group>
+                        <group>
                             <name>winsound</name>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\av\audio\driver\winsound\vsf_winsound.c</name>
@@ -5358,6 +5367,15 @@
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\i2c\i2c.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>i2s</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\i2s\i2s.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\i2s\i2s.h</name>
                             </file>
                         </group>
                         <group>
@@ -6652,6 +6670,18 @@
                         </file>
                     </group>
                     <group>
+                        <name>i2s</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\i2s\i2s_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\i2s\i2s_template.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\i2s\i2s_template.inc</name>
+                        </file>
+                    </group>
+                    <group>
                         <name>io</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\io\io_common.c</name>
@@ -6760,6 +6790,9 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_i2c.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_i2s.h</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_implementation.h</name>
@@ -8438,6 +8471,15 @@
                                 <name>vfs</name>
                                 <group>
                                     <name>devfs</name>
+                                    <group>
+                                        <name>alsa</name>
+                                        <file>
+                                            <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\devfs\alsa\vsf_linux_devfs_alsa.c</name>
+                                        </file>
+                                        <file>
+                                            <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\devfs\alsa\vsf_linux_devfs_alsa.h</name>
+                                        </file>
+                                    </group>
                                     <file>
                                         <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\devfs\vsf_linux_devfs.c</name>
                                     </file>

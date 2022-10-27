@@ -52,13 +52,23 @@ static const uint8_t __vsf_board_lcd_initseq[] = {
 /*============================ GLOBAL VARIABLES ==============================*/
 
 vsf_board_t vsf_board = {
+#if VSF_HAL_USE_USART == ENABLED
     .usart                      = (vsf_usart_t *)&vsf_hw_usart1,
+#endif
+#if VSF_HAL_USE_SPI == ENABLED
     .spi                        = (vsf_spi_t *)&vsf_hw_spi0,
+#endif
+#if VSF_HAL_USE_I2C == ENABLED
     .i2c                        = (vsf_i2c_t *)&vsf_hw_i2c0,
-
+#endif
+#if VSF_HAL_USE_MMC == ENABLED
     .mmc                        = (vsf_mmc_t *)&vsf_hw_mmc0,
     .mmc_bus_width              = 4,
     .mmc_voltage                = SD_OCR_VDD_32_33 | SD_OCR_VDD_33_34,
+#endif
+#if VSF_HAL_USE_I2S == ENABLED
+    .i2s                        = (vsf_i2s_t *)&vsf_hw_i2s0,
+#endif
 
 #if VSF_USE_UI == ENABLED
     .display_dev                = &vsf_board.disp_spi_mipi.use_as__vk_disp_t,
@@ -262,11 +272,12 @@ void vsf_board_init(void)
     vsf_io_config((vsf_io_cfg_t *)cfgs, dimof(cfgs));
 
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
-#if VSF_USE_USB_HOST
+#if VSF_USE_USB_HOST == ENABLED
     __usbh_heap_init();
 #endif
 
 #if VSF_USE_AUDIO == ENABLED
+    vsf_board.aic1000a.i2s = vsf_board.i2s;
     // generate 26M debug_clk for audio
     AIC_CPUSYSCTRL->TPSEL = (AIC_CPUSYSCTRL->TPSEL & ~(0xFFUL << 8)) | (0x18UL << 8);
 #endif

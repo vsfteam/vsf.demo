@@ -29,12 +29,23 @@
 /*============================ TYPES =========================================*/
 
 typedef struct vsf_board_t {
+#if VSF_HAL_USE_USART == ENABLED
     vsf_usart_t *usart;
+#endif
+#if VSF_HAL_USE_SPI == ENABLED
     vsf_spi_t *spi;
+#endif
+#if VSF_HAL_USE_I2C == ENABLED
     vsf_i2c_t *i2c;
+#endif
+#if VSF_HAL_USE_MMC == ENABLED
     vsf_mmc_t *mmc;
     uint8_t mmc_bus_width;
     uint32_t mmc_voltage;
+#endif
+#if VSF_HAL_USE_I2S == ENABLED
+    vsf_i2s_t *i2s;
+#endif
 
 #if VSF_USE_UI == ENABLED
     vk_disp_t *display_dev;
