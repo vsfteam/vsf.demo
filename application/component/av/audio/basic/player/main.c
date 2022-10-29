@@ -443,7 +443,6 @@ int VSF_USER_ENTRY(void)
     vsf_board_init();
 
     vsf_start_trace();
-    vsf_trace_info("hello world" VSF_TRACE_CFG_LINEEND);
 
     vsf_stream_init(&__audio_stream.use_as__vsf_stream_t);
     vk_audio_init(vsf_board.audio_dev);
