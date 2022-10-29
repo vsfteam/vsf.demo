@@ -97,6 +97,8 @@ vsf_board_t vsf_board = {
     .audio_dev                  = &vsf_board.aic1000a.use_as__vk_audio_dev_t,
     .aic1000a                   = {
         .drv                    = &vk_aic1000a_drv,
+        .i2s                    = (vsf_i2s_t *)&vsf_hw_i2s0,    // vsf_board.i2s
+        .i2s_feature            = I2S_MODE_SLAVE | I2S_STANDARD_MSB,
         .pwrkey_port            = (vsf_gpio_t *)&vsf_hw_gpio1,
         .psi_port               = (vsf_gpio_t *)&vsf_hw_gpio1,
         .pwrkey_pin             = 5,
@@ -277,7 +279,6 @@ void vsf_board_init(void)
 #endif
 
 #if VSF_USE_AUDIO == ENABLED
-    vsf_board.aic1000a.i2s = vsf_board.i2s;
     // generate 26M debug_clk for audio
     AIC_CPUSYSCTRL->TPSEL = (AIC_CPUSYSCTRL->TPSEL & ~(0xFFUL << 8)) | (0x18UL << 8);
 #endif
