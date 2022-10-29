@@ -79,7 +79,8 @@ void vsf_board_init(void)
 
     vsf_hw_usart_scan_devices();
     while (vsf_hw_usart_is_scanning(&usart_devnum));
-    if (vsf_hw_usart_get_devices((vsf_usart_win_device_t *)&usart_devices, dimof(usart_devices))) {
+    if (usart_devnum > 0) {
+        vsf_hw_usart_get_devices((vsf_usart_win_device_t *)&usart_devices, dimof(usart_devices));
         vsf_board.usart = usart_devices[0].instance;
     }
 }
