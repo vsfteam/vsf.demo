@@ -15,6 +15,14 @@
  *                                                                           *
  ****************************************************************************/
 
+/*
+ * basic_audio_player demo
+ * Play a 48K 16bit 2channel audio to audio device defined in vsf_board.
+ * 
+ * Dependency:
+ *   vsf_board.audio_dev
+ */
+
 /*============================ INCLUDES ======================================*/
 
 #define __VSF_SIMPLE_STREAM_CLASS_INHERIT__

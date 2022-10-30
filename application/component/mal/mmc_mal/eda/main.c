@@ -15,6 +15,14 @@
  *                                                                           *
  ****************************************************************************/
 
+/*
+ * eda mmc_mal demo
+ * Read first block (512 bytes) in the mmc device defined in vsf_board.
+ * 
+ * Dependency:
+ *   vsf_board.mmc & vsf_board.mmc_voltage & vsf_board.mmc_bus_width
+ */
+
 /*============================ INCLUDES ======================================*/
 
 #include "vsf.h"

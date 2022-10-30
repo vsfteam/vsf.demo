@@ -15,6 +15,14 @@
  *                                                                           *
  ****************************************************************************/
 
+/*
+ * eda display demo
+ * Refresh display defined in vsf_board.
+ * 
+ * Dependency:
+ *   vsf_board.display_dev
+ */
+
 /*============================ INCLUDES ======================================*/
 
 #define __VSF_DISP_CLASS_INHERIT__

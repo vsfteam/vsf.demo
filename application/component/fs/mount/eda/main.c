@@ -15,6 +15,14 @@
  *                                                                           *
  ****************************************************************************/
 
+/*
+ * eda fs_mount demo
+ * Mount file system defined in vsf_board.
+ * 
+ * Dependency:
+ *   vsf_board.fsop & vsf_board.fsinfo
+ */
+
 /*============================ INCLUDES ======================================*/
 
 #include "vsf.h"
