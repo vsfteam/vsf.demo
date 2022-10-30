@@ -3,7 +3,7 @@
 /* Linker script to configure memory regions. */
 MEMORY
 {
-    FLASH (rwx)     : ORIGIN = 0x08000000, LENGTH = (2048K - 16K)
+    FLASH (rwx)     : ORIGIN = 0x08004000, LENGTH = (2048K - 32K)
     EXRAM (rwx)     : ORIGIN = 0x00150000, LENGTH = 64K
     DRAM (rwx)      : ORIGIN = 0x001A0000, LENGTH = (160K - 8K)
     LPIRAM (rwx)    : ORIGIN = 0x001C7F00, LENGTH = 0x100

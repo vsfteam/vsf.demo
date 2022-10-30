@@ -7,6 +7,10 @@ cmake_policy(SET CMP0076 NEW)
 #endif()
 message(STATUS "VSF_PATH: $ENV{VSF_PATH}")
 
+# board and application settings
+set(BOARD_PATH ../../../board/aic8800m_uikit)
+set(APPLICATION_PATH ../../../application/kernel/helloworld)
+
 # compiler configurations
 # arm-none-eabi-gcc will not pass compiler checker of cmake, so include before project
 set(CMAKE_C_FLAGS 
@@ -53,7 +57,7 @@ set(VSF_TARGET_DEFINITIONS
 # VSF_USE configurations
 
 # include vsf cmake script
-set(VSF_CONFIG_PATH ../../../application/kernel/helloworld)
+set(VSF_CONFIG_PATH ${APPLICATION_PATH})
 include($ENV{VSF_PATH}/script/cmake/vsf.cmake)
 
 # application configurations
@@ -69,13 +73,8 @@ target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
 )
 
 # add user application source code/include directories
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
-    ../../../board/aic8800m_uikit
-)
-target_sources(${CMAKE_PROJECT_NAME} PUBLIC
-    ../../../board/aic8800m_uikit/vsf_board.c
-    ../../../application/kernel/helloworld/main.c
-)
+add_subdirectory(${BOARD_PATH} ${CMAKE_CURRENT_BINARY_DIR}/board_bin)
+add_subdirectory(${APPLICATION_PATH} ${CMAKE_CURRENT_BINARY_DIR}/application_bin)
 
 # type conversion and show size
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
