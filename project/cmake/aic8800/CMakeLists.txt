@@ -23,7 +23,7 @@ set(CMAKE_CXX_FLAGS
 )
 include($ENV{VSF_PATH}/script/cmake/compilers/gnuarmemb.cmake)
 
-project(vsf_linux C CXX ASM)
+project(vsf_demo C CXX ASM)
 set(VSF_TARGET AIC8800M)
 set(VSF_TARGET_DEFINITIONS
 #   hw related definitions for AIC8800M required by sdk
