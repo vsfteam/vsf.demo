@@ -664,6 +664,24 @@
     <Filter Include="vsf\hal\driver\common\mmc">
       <UniqueIdentifier>{1924c7d9-0f38-47cf-97b3-538c786b8627}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\shell\sys\linux\kernel\core">
+      <UniqueIdentifier>{1cb3d64a-a252-40a3-b004-104190a57747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\shell\sys\linux\kernel\core\80211">
+      <UniqueIdentifier>{d6080394-627e-4960-832a-79f4220a6faa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\shell\sys\linux\kernel\core\hid">
+      <UniqueIdentifier>{b3de1b1b-2964-47c5-a203-a143ce1f5168}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\shell\sys\linux\kernel\core\input">
+      <UniqueIdentifier>{15919872-90ac-40dc-898e-37098c96b502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\shell\sys\linux\kernel\core\led">
+      <UniqueIdentifier>{ab4dba9c-38dc-40ee-9e89-d15309345de7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\shell\sys\linux\kernel\core\usb">
+      <UniqueIdentifier>{b378880d-91f4-42a5-97e9-b21db0842137}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2413,6 +2431,24 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\driver\common\mmc\mmc_probe.c">
       <Filter>vsf\hal\driver\common\mmc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\vsf_linux_core.c">
+      <Filter>vsf\shell\sys\linux\kernel\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\80211\vsf_linux_core_80211.c">
+      <Filter>vsf\shell\sys\linux\kernel\core\80211</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\hid\vsf_linux_core_hid.c">
+      <Filter>vsf\shell\sys\linux\kernel\core\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\input\vsf_linux_core_input.c">
+      <Filter>vsf\shell\sys\linux\kernel\core\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\led\vsf_linux_core_led.c">
+      <Filter>vsf\shell\sys\linux\kernel\core\led</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\usb\vsf_linux_core_usb.c">
+      <Filter>vsf\shell\sys\linux\kernel\core\usb</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

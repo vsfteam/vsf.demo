@@ -8466,6 +8466,42 @@
                     <group>
                         <name>kernel</name>
                         <group>
+                            <name>core</name>
+                            <group>
+                                <name>80211</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\kernel\core\80211\vsf_linux_core_80211.c</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>hid</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\kernel\core\hid\vsf_linux_core_hid.c</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>input</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\kernel\core\input\vsf_linux_core_input.c</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>led</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\kernel\core\led\vsf_linux_core_led.c</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>usb</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\kernel\core\usb\vsf_linux_core_usb.c</name>
+                                </file>
+                            </group>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\kernel\core\vsf_linux_core.c</name>
+                            </file>
+                        </group>
+                        <group>
                             <name>fs</name>
                             <group>
                                 <name>vfs</name>
