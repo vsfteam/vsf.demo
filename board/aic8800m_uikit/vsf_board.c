@@ -39,12 +39,8 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
 
 #if VSF_USE_UI == ENABLED
 static const uint8_t __vsf_board_lcd_initseq[] = {
-    VSF_DISP_MIPI_LCD_ST7789V_BASE,
-    VSF_DISP_MIPI_LCD_INIT_MODE_AND_FORMAT(
-            MIPI_DCS_PAGE_ADDRESS_TOP_TO_BOTTOM
-        |   MIPI_DCS_COLUME_ADDRESS_LEFT_TO_RIGHT
-        |   MIPI_DCS_PAGE_COLUMN_NORMAL_ORDER,
-            MIPI_DCS_PIXEL_FORMAT_DBI_16_BITS
+    VSF_DISP_ST7789V_SPI_INITSEQ(
+        MIPI_MODE_RGB, MIPI_PIXEL_FORMAT_BITLEN(16)
     ),
 };
 #endif
@@ -76,7 +72,7 @@ vsf_board_t vsf_board = {
         .param                  = {
             .height             = 320,
             .width              = 240,
-            .drv                = &vk_disp_drv_mipi_lcd,
+            .drv                = &vk_disp_drv_mipi_spi_lcd,
             .color              = VSF_DISP_COLOR_RGB565,
         },
         .spi                    = (vsf_spi_t *)&vsf_hw_spi0,

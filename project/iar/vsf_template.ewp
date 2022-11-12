@@ -223,6 +223,7 @@
                     <state>__VSF__</state>
                     <state>__AIC__</state>
                     <state>__AIC8800__</state>
+                    <state>CFG_AIC8800</state>
                     <state>CFG_HW_PLATFORM=2</state>
                     <state>CFG_RF_MODE=3</state>
                     <state>CFG_PMIC</state>
