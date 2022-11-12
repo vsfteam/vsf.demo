@@ -47,6 +47,15 @@ static const uint8_t __vsf_board_lcd_initseq[] = {
 
 /*============================ GLOBAL VARIABLES ==============================*/
 
+#if VSF_USE_USB_DEVICE == ENABLED
+static const vk_dwcotg_dcd_param_t __dwcotg_dcd_param = {
+    .op                 = &VSF_USB_DC0_IP,
+    .speed              = VSF_USBD_CFG_SPEED,
+        .ulpi_en            = true,
+        .dma_en             = false,
+};
+#endif
+
 vsf_board_t vsf_board = {
 #if VSF_HAL_USE_USART == ENABLED
     .usart                      = (vsf_usart_t *)&vsf_hw_usart1,
@@ -108,10 +117,19 @@ vsf_board_t vsf_board = {
         .param                  = (void *)&__dwcotg_hcd_param,
     },
 #endif
+#if VSF_USE_USB_DEVICE == ENABLED
+    .dwcotg_dcd                 = {
+        .param                  = &__dwcotg_dcd_param,
+    },
+#endif
 };
 
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ IMPLEMENTATION ================================*/
+
+#if VSF_USE_USB_DEVICE == ENABLED
+vsf_usb_dc_from_dwcotg_ip(0, vsf_board.dwcotg_dcd, VSF_USB_DC0)
+#endif
 
 #if VSF_USE_USB_HOST
 // redefine usbh memory allocation, memory MUST be in 0x001A0000 - 0x001C7FFF

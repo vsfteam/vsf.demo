@@ -106,6 +106,9 @@
 #define vsf_usbh_malloc_aligned                         __vsf_usbh_malloc_aligned
 #define vsf_usbh_free                                   __vsf_usbh_free
 
+#define VSF_USBD_USE_DCD_DWCOTG                         ENABLED
+#   define VSF_USBD_CFG_SPEED                           USB_SPEED_HIGH
+
 // debug stream is implemented in vsf_board.c
 #if VSF_HAL_USE_DEBUG_STREAM == DISABLED
 #   define VSF_CFG_DEBUG_STREAM_TX_T                    vsf_stream_t
