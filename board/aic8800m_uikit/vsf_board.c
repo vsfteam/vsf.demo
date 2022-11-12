@@ -229,6 +229,7 @@ void vsf_board_init(void)
 {
     static const vsf_io_cfg_t cfgs[] = {
 #if VSF_USE_UI == ENABLED
+        // SPI for lcd, PA0(SWCLK)
         {VSF_PA0,   0x09,   0},
         {VSF_PA3,   0x09,   0},
         {VSF_PA4,   0x00,   0},
@@ -249,19 +250,22 @@ void vsf_board_init(void)
         {VSF_PA14,  0x06,   0},
         {VSF_PA15,  0x06,   0},
 
-//        {VSF_PA1,   0x06,   0},
-        {VSF_PA2,   0x06,   0},
-//        {VSF_PA7,   0x08,   0},
-//        {VSF_PA13,  0x08,   0},
-        {VSF_PA7,   0x08,   0},
-        {VSF_PA8,   0x08,   0},
-        {VSF_PA9,   0x08,   0},
-
-        {VSF_PB0,   0x01,   0},
-        {VSF_PB1,   0x01,   0},
-        {VSF_PB5,   0x00,   0},
+        // PSI, configuration port for AIC1000A
         {VSF_PB4,   0x00,   0},
         {VSF_PB13,  0x00,   0},
+        // JACK_DET
+        {VSF_PB0,   0x01,   0},
+        // AUDIO_SLEEP
+        {VSF_PB1,   0x01,   0},
+        // AUDIO_POWER
+        {VSF_PB5,   0x00,   0},
+        // I2S, BCK: PA1(SWDIO)/PA7(CTP_SDA), DIN: PA2/PA13(SDIO_CLK)
+        {VSF_PA1,   0x06,   0},
+//        {VSF_PA7,   0x08,   0},
+        {VSF_PA2,   0x06,   0},
+//        {VSF_PA13,  0x08,   0},
+        {VSF_PA8,   0x08,   0},
+        {VSF_PA9,   0x08,   0},
 
         // PB2 PB3 as UART1
         {VSF_PB2,   0x01,   0},
