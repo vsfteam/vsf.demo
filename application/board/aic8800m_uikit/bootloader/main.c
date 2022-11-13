@@ -180,13 +180,11 @@ vsf_component_peda_ifs_entry(__mscboot_on_firmware_read, vk_memfs_callback_read)
                 },
             });
             while (vsf_flash_enable(&vsf_hw_flash0) != fsm_rt_cpl);
-            return;
         }
         // fall through
     case VSF_EVT_RETURN:
         switch (vsf_eda_get_user_value()) {
         case STATE_FW_READ_INIT:
-            vsf_eda_set_user_value(STATE_FW_READ_READ);
             break;
         case STATE_FW_READ_READ:
             vsf_eda_return(vsf_local.rsize);
@@ -194,6 +192,7 @@ vsf_component_peda_ifs_entry(__mscboot_on_firmware_read, vk_memfs_callback_read)
         }
 
         __flash_eda_pending = vsf_eda_get_cur();
+        vsf_eda_set_user_value(STATE_FW_READ_READ);
         vsf_flash_read(&vsf_hw_flash0, vsf_local.offset, vsf_local.buff, vsf_local.size);
         vsf_local.offset += vsf_local.size;
         vsf_local.buff += vsf_local.size;
@@ -231,7 +230,6 @@ vsf_component_peda_ifs_entry(__mscboot_on_firmware_write, vk_memfs_callback_writ
                 },
             });
             while (vsf_flash_enable(&vsf_hw_flash0) != fsm_rt_cpl);
-            return;
         }
         // fall through
     case VSF_EVT_RETURN:
@@ -240,8 +238,8 @@ vsf_component_peda_ifs_entry(__mscboot_on_firmware_write, vk_memfs_callback_writ
             if (!(vsf_local.offset % cap.erase_sector_size)) {
                 // erase on erase_sector_size aligned address
                 __flash_eda_pending = vsf_eda_get_cur();
-                vsf_flash_erase_one_sector(&vsf_hw_flash0, vsf_local.offset);
                 vsf_eda_set_user_value(STATE_FW_WRITE_ERASE);
+                vsf_flash_erase_one_sector(&vsf_hw_flash0, vsf_local.offset);
                 return;
             }
             break;
