@@ -52,13 +52,23 @@
 #define SWI3_IRQHandler                                 I2CS_IRQHandler
 
 // actually general hal components will be enabled by default
-#define VSF_HAL_USE_RNG                                 ENABLED
+#ifndef VSF_HAL_USE_RNG
+#   define VSF_HAL_USE_RNG                              ENABLED
+#endif
 #define VSF_HAL_USE_GPIO                                ENABLED
 #   define VSF_HW_GPIO_CFG_MULTI_CLASS                  ENABLED
-#define VSF_HAL_USE_SPI                                 ENABLED
-#define VSF_HAL_USE_MMC                                 ENABLED
-#define VSF_HAL_USE_I2S                                 ENABLED
-#define VSF_HAL_USE_USART                               ENABLED
+#ifndef VSF_HAL_USE_SPI
+#   define VSF_HAL_USE_SPI                              ENABLED
+#endif
+#ifndef VSF_HAL_USE_MMC
+#   define VSF_HAL_USE_MMC                              ENABLED
+#endif
+#ifndef VSF_HAL_USE_I2S
+#   define VSF_HAL_USE_I2S                              ENABLED
+#endif
+#ifndef VSF_HAL_USE_USART
+#   define VSF_HAL_USE_USART                            ENABLED
+#endif
 // debug port on aic8800m_uikit is uart1, so disable debug stream
 //  debug stream is implement in vsf_board.c using uart1
 #define VSF_HAL_USE_DEBUG_STREAM                        DISABLED
@@ -91,7 +101,9 @@
  * Components Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
-#define VSF_USE_HEAP                                    ENABLED
+#ifndef VSF_USE_HEAP
+#   define VSF_USE_HEAP                                 ENABLED
+#endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   4
 #   define VSF_HEAP_ADDR                                0x00100000

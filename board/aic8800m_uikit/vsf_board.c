@@ -21,7 +21,9 @@
 #define __VSF_SIMPLE_STREAM_CLASS_INHERIT__
 #include "./vsf_board.h"
 
-#include "rtos_al.h"
+#if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
+#   include "rtos_al.h"
+#endif
 #include "reg_sysctrl.h"
 
 /*============================ MACROS ========================================*/
@@ -171,7 +173,8 @@ void __vsf_usbh_free(void *buffer)
 }
 #endif
 
-#if !defined(VSF_HAL_USE_DEBUG_STREAM) || VSF_HAL_USE_DEBUG_STREAM == DISABLED
+#if     (!defined(VSF_HAL_USE_DEBUG_STREAM) || VSF_HAL_USE_DEBUG_STREAM == DISABLED)\
+    &&  VSF_HAL_USE_USART == ENABLED
 #   ifndef VSF_DEBUG_STREAM_CFG_RX_BUF_SIZE
 #       define VSF_DEBUG_STREAM_CFG_RX_BUF_SIZE         32
 #   endif
@@ -301,8 +304,10 @@ void vsf_board_init(void)
     AIC_CPUSYSCTRL->TPSEL = (AIC_CPUSYSCTRL->TPSEL & ~(0xFFUL << 8)) | (0x18UL << 8);
 #endif
 
+#if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
     // currently known dependency on rtos_al: lwip from vendor and audio in SDK
     if (rtos_init()) {
         VSF_HAL_ASSERT(false);
     }
+#endif
 }
