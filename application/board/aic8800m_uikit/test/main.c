@@ -527,7 +527,6 @@ int VSF_USER_ENTRY(void)
         area.pos.x = rand() % vsf_disp_get_width(vsf_board.display_dev);
         area.pos.y = rand() % vsf_disp_get_height(vsf_board.display_dev);
 
-
         vk_disp_refresh(vsf_board.display_dev, &area, framebuffer);
         vsf_thread_wfe(VSF_EVT_USER);
     }
