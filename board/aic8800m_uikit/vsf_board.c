@@ -232,9 +232,14 @@ static void __VSF_DEBUG_STREAM_TX_INIT(void)
 static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size)
 {
     vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart1;
+    uint_fast16_t cur_size;
 
-    for (uint_fast32_t i = 0; i < size; i++) {
-        vsf_usart_txfifo_write(debug_usart, buf++, 1);
+    while (size > 0) {
+        cur_size = vsf_usart_txfifo_write(debug_usart, buf, size);
+        if (cur_size > 0) {
+            size -= cur_size;
+            buf += cur_size;
+        }
     }
 }
 
