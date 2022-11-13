@@ -27,6 +27,9 @@
 
 /*============================ MACROS ========================================*/
 
+// define VSF_ASSERT for better debug experience
+#define VSF_ASSERT(...)                                 if (!(__VA_ARGS__)) {while(1);}
+
 #define VSF_OS_CFG_MAIN_MODE                            VSF_OS_CFG_MAIN_MODE_THREAD
 
 #define VSF_USE_SIMPLE_STREAM                           ENABLED

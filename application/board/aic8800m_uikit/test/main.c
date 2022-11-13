@@ -465,6 +465,7 @@ int VSF_USER_ENTRY(void)
 {
     vsf_board_init();
     vsf_start_trace();
+    vsf_trace_info("aic8800m_uikit tester\n");
 
     // output audio data
     vsf_stream_init(&__audio_stream.use_as__vsf_stream_t);
@@ -478,6 +479,7 @@ int VSF_USER_ENTRY(void)
     __audio_stream.tx.evthandler = __audio_stream_evthandler;
     vsf_stream_connect_tx(&__audio_stream.use_as__vsf_stream_t);
     __audio_stream_evthandler(&__audio_stream.use_as__vsf_stream_t, NULL, VSF_STREAM_ON_OUT);
+    vsf_trace_info("audio opened\n");
 
     // SDIO test
     static vk_mmc_mal_t __mmc_mal = {
@@ -485,7 +487,12 @@ int VSF_USER_ENTRY(void)
         .hw_priority            = vsf_arch_prio_0,
         .working_clock_hz       = 50UL * 1000 * 1000,
     };
+    __mmc_mal.mmc = vsf_board.mmc;
+    __mmc_mal.voltage = vsf_board.mmc_voltage;
+    __mmc_mal.bus_width = vsf_board.mmc_bus_width;
+
     static uint8_t __buffer[512];
+    vsf_trace_info("mmc test\n");
     vk_mal_init(&__mmc_mal.use_as__vk_mal_t);
     if ((int)vsf_eda_get_return_value() < 0) {
         vsf_trace_error("fail to initialize tf card.\n");
@@ -498,6 +505,13 @@ int VSF_USER_ENTRY(void)
     }
     vsf_trace_buffer(VSF_TRACE_INFO, __buffer, sizeof(__buffer));
 
+    // reset display and touch screen
+    vsf_gpio_set_output(&vsf_hw_gpio1, 1 << 7);
+    vsf_gpio_clear(&vsf_hw_gpio1, 1 << 7);
+    vsf_thread_delay_ms(20);
+    vsf_gpio_set(&vsf_hw_gpio1, 1 << 7);
+    vsf_thread_delay_ms(100);
+
     // display test
     uint16_t *framebuffer = vsf_heap_malloc(32 * 32 * sizeof(uint16_t));
     if (NULL == framebuffer) {
@@ -506,6 +520,7 @@ int VSF_USER_ENTRY(void)
     }
     vsf_board.display_dev->ui_data = vsf_eda_get_cur();
     vsf_board.display_dev->ui_on_ready = __disp_on_ready;
+    vsf_trace_info("init display\n");
     if (VSF_ERR_NONE != vk_disp_init(vsf_board.display_dev)) {
         vsf_trace_error("fail to initialize display.\n");
         return -1;
@@ -513,22 +528,28 @@ int VSF_USER_ENTRY(void)
     vsf_thread_wfe(VSF_EVT_USER);
 
     uint16_t color;
-    vk_disp_area_t area = {
-        .size.x     = 32,
-        .size.y     = 32,
-    };
+    vk_disp_area_t area;
     srand((unsigned int)vsf_systimer_get());
     while (1) {
         color = rand() & 0xFFFF;
+        area.size.x = 32;
+        area.size.y = 32;
         for (int i = 0; i < area.size.x * area.size.y; i++) {
             framebuffer[i] = color;
         }
 
         area.pos.x = rand() % vsf_disp_get_width(vsf_board.display_dev);
         area.pos.y = rand() % vsf_disp_get_height(vsf_board.display_dev);
+        if (area.pos.x + area.size.x > vsf_board.display_dev->param.width) {
+            area.size.x = vsf_board.display_dev->param.width - area.pos.x;
+        }
+        if (area.pos.y + area.size.y > vsf_board.display_dev->param.height) {
+            area.size.y = vsf_board.display_dev->param.height - area.pos.y;
+        }
 
         vk_disp_refresh(vsf_board.display_dev, &area, framebuffer);
         vsf_thread_wfe(VSF_EVT_USER);
+        vsf_thread_delay_ms(30);
     }
     return 0;
 }
