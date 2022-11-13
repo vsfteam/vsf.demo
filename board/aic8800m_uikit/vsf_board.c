@@ -294,7 +294,9 @@ void vsf_board_init(void)
     };
     vsf_io_config((vsf_io_cfg_t *)cfgs, dimof(cfgs));
 
+#if VSF_HAL_USE_DEBUG_STREAM == DISABLED && VSF_HAL_USE_USART == ENABLED
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
+#endif
 #if VSF_USE_USB_HOST == ENABLED
     __usbh_heap_init();
 #endif

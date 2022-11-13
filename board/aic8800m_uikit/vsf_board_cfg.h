@@ -71,7 +71,13 @@
 #endif
 // debug port on aic8800m_uikit is uart1, so disable debug stream
 //  debug stream is implement in vsf_board.c using uart1
-#define VSF_HAL_USE_DEBUG_STREAM                        DISABLED
+#ifndef VSF_HAL_USE_DEBUG_STREAM
+#   if VSF_HAL_USE_USART == ENABLED
+#       define VSF_HAL_USE_DEBUG_STREAM                 DISABLED
+#   else
+#       define VSF_HAL_USE_DEBUG_STREAM                 ENABLED
+#   endif
+#endif
 
 /*----------------------------------------------------------------------------*
  * Kernel Configurations                                                      *
@@ -122,7 +128,7 @@
 #   define VSF_USBD_CFG_SPEED                           USB_SPEED_HIGH
 
 // debug stream is implemented in vsf_board.c
-#if VSF_HAL_USE_DEBUG_STREAM == DISABLED
+#if VSF_HAL_USE_DEBUG_STREAM == DISABLED && VSF_HAL_USE_USART == ENABLED
 #   define VSF_CFG_DEBUG_STREAM_TX_T                    vsf_stream_t
 #   define VSF_CFG_DEBUG_STREAM_RX_T                    vsf_mem_stream_t
 #endif
