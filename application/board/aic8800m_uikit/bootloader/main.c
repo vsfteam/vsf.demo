@@ -179,7 +179,7 @@ vsf_component_peda_ifs_entry(__mscboot_on_firmware_read, vk_memfs_callback_read)
                     .prio       = vsf_arch_prio_0,
                 },
             });
-            while (vsf_hw_flash_enable(&vsf_hw_flash0) != fsm_rt_cpl);
+            while (vsf_flash_enable(&vsf_hw_flash0) != fsm_rt_cpl);
             return;
         }
         // fall through
@@ -230,7 +230,7 @@ vsf_component_peda_ifs_entry(__mscboot_on_firmware_write, vk_memfs_callback_writ
                     .prio       = vsf_arch_prio_0,
                 },
             });
-            while (vsf_hw_flash_enable(&vsf_hw_flash0) != fsm_rt_cpl);
+            while (vsf_flash_enable(&vsf_hw_flash0) != fsm_rt_cpl);
             return;
         }
         // fall through
