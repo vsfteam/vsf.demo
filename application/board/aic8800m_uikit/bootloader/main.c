@@ -243,7 +243,7 @@ bool vsf_driver_init(void)
 
 int VSF_USER_ENTRY(void)
 {
-    if (vsf_gpio_read(&vsf_hw_gpio1) & (1 << 7)) {
+    if (!(vsf_gpio_read(&vsf_hw_gpio1) & (1 << 7))) {
         vk_usbd_init(&__user_usbd_msc);
         vk_usbd_connect(&__user_usbd_msc);
     } else {
