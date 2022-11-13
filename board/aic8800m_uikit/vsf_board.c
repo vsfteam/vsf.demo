@@ -175,6 +175,7 @@ void __vsf_usbh_free(void *buffer)
 
 #if     (!defined(VSF_HAL_USE_DEBUG_STREAM) || VSF_HAL_USE_DEBUG_STREAM == DISABLED)\
     &&  VSF_HAL_USE_USART == ENABLED
+#   define __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
 #   ifndef VSF_DEBUG_STREAM_CFG_RX_BUF_SIZE
 #       define VSF_DEBUG_STREAM_CFG_RX_BUF_SIZE         32
 #   endif
@@ -294,7 +295,7 @@ void vsf_board_init(void)
     };
     vsf_io_config((vsf_io_cfg_t *)cfgs, dimof(cfgs));
 
-#if VSF_HAL_USE_DEBUG_STREAM == DISABLED && VSF_HAL_USE_USART == ENABLED
+#ifdef __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
 #endif
 #if VSF_USE_USB_HOST == ENABLED
