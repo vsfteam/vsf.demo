@@ -55,10 +55,7 @@ dcl_vsf_peda_methods(static, __mscboot_on_firmware_write)
 /*============================ LOCAL VARIABLES ===============================*/
 
 static bool __flash_is_inited = false;
-static vk_hw_flash_mal_t __flash_mal = {
-    .drv                    = &vk_hw_flash_mal_drv,
-    .flash                  = &vsf_hw_flash0,
-};
+static vsf_eda_t *__flash_eda_pending;
 
 static vk_fakefat32_file_t __fakefat32_root[2] = {
     {
@@ -76,9 +73,9 @@ static vk_fakefat32_file_t __fakefat32_root[2] = {
 
 static vk_fakefat32_mal_t __fakefat32mal = {
     .drv                    = &vk_fakefat32_mal_drv,
-    .sector_size            = MSCBOOT_CFG_BLOCK_SIZE,
-    .sector_number          = 0x10000,
-    .sectors_per_cluster    = 1,
+    .sector_size            = 512,
+    .sector_number          = 0x80040,  // more than 65536 clusters, to match FAT32
+    .sectors_per_cluster    = 8,        // 512 * 8 = 4K is erase sector size of AIC8800M
     .volume_id              = 0x12345678,
     .disk_id                = 0x9ABCEF01,
     .root                   = {
@@ -90,8 +87,8 @@ static vk_fakefat32_mal_t __fakefat32mal = {
 
 describe_mem_stream(__user_usbd_msc_stream, 1024)
 static const vk_virtual_scsi_param_t __usrapp_scsi_param = {
-    .block_size             = MSCBOOT_CFG_BLOCK_SIZE,
-    .block_num              = 0x10000,
+    .block_size             = 512,
+    .block_num              = 0x80040,  // more than 65536 clusters, to match FAT32
     .vendor                 = "VSF     ",
     .product                = "VSF MSCBOOT     ",
     .revision               = "1.00",
@@ -150,6 +147,15 @@ end_describe_usbd(__user_usbd_msc, VSF_USB_DC0)
 
 /*============================ IMPLEMENTATION ================================*/
 
+static void __mscboot_flash_irqhandler(void *target, vsf_flash_irq_mask_t mask, vsf_flash_t *flash)
+{
+    vsf_eda_t *eda_pending = __flash_eda_pending;
+    if (eda_pending != NULL) {
+        __flash_eda_pending = NULL;
+        vsf_eda_post_evt(eda_pending, VSF_EVT_RETURN);
+    }
+}
+
 vsf_component_peda_ifs_entry(__mscboot_on_firmware_read, vk_memfs_callback_read)
 {
     vsf_peda_begin();
@@ -167,7 +173,13 @@ vsf_component_peda_ifs_entry(__mscboot_on_firmware_read, vk_memfs_callback_read)
 
         if (!__flash_is_inited) {
             __flash_is_inited = true;
-            vk_mal_init(&__flash_mal.use_as__vk_mal_t);
+            vsf_flash_init(&vsf_hw_flash0, &(vsf_flash_cfg_t){
+                .isr            = {
+                    .handler_fn = __mscboot_flash_irqhandler,
+                    .prio       = vsf_arch_prio_0,
+                },
+            });
+            while (vsf_hw_flash_enable(&vsf_hw_flash0) != fsm_rt_cpl);
             return;
         }
         // fall through
@@ -181,7 +193,8 @@ vsf_component_peda_ifs_entry(__mscboot_on_firmware_read, vk_memfs_callback_read)
             return;
         }
 
-        vk_mal_read(&__flash_mal.use_as__vk_mal_t, vsf_local.offset, vsf_local.size, vsf_local.buff);
+        __flash_eda_pending = vsf_eda_get_cur();
+        vsf_flash_read(&vsf_hw_flash0, vsf_local.offset, vsf_local.buff, vsf_local.size);
         vsf_local.offset += vsf_local.size;
         vsf_local.buff += vsf_local.size;
         vsf_local.rsize += vsf_local.size;
@@ -198,8 +211,10 @@ vsf_component_peda_ifs_entry(__mscboot_on_firmware_write, vk_memfs_callback_writ
 
     enum {
         STATE_FW_WRITE_INIT,
-        STATE_FW_WRITE_READ,
+        STATE_FW_WRITE_ERASE,
+        STATE_FW_WRITE_WRITE,
     };
+    vsf_flash_capability_t cap = vsf_flash_capability(&vsf_hw_flash0);
 
     switch (evt) {
     case VSF_EVT_INIT:
@@ -209,21 +224,37 @@ vsf_component_peda_ifs_entry(__mscboot_on_firmware_write, vk_memfs_callback_writ
 
         if (!__flash_is_inited) {
             __flash_is_inited = true;
-            vk_mal_init(&__flash_mal.use_as__vk_mal_t);
+            vsf_flash_init(&vsf_hw_flash0, &(vsf_flash_cfg_t){
+                .isr            = {
+                    .handler_fn = __mscboot_flash_irqhandler,
+                    .prio       = vsf_arch_prio_0,
+                },
+            });
+            while (vsf_hw_flash_enable(&vsf_hw_flash0) != fsm_rt_cpl);
             return;
         }
         // fall through
     case VSF_EVT_RETURN:
         switch (vsf_eda_get_user_value()) {
         case STATE_FW_WRITE_INIT:
-            vsf_eda_set_user_value(STATE_FW_WRITE_READ);
+            if (!(vsf_local.offset % cap.erase_sector_size)) {
+                // erase on erase_sector_size aligned address
+                __flash_eda_pending = vsf_eda_get_cur();
+                vsf_flash_erase_one_sector(&vsf_hw_flash0, vsf_local.offset);
+                vsf_eda_set_user_value(STATE_FW_WRITE_ERASE);
+                return;
+            }
             break;
-        case STATE_FW_WRITE_READ:
+        case STATE_FW_WRITE_ERASE:
+            break;
+        case STATE_FW_WRITE_WRITE:
             vsf_eda_return(vsf_local.wsize);
             return;
         }
 
-        vk_mal_write(&__flash_mal.use_as__vk_mal_t, vsf_local.offset, vsf_local.size, vsf_local.buff);
+        __flash_eda_pending = vsf_eda_get_cur();
+        vsf_eda_set_user_value(STATE_FW_WRITE_WRITE);
+        vsf_flash_write(&vsf_hw_flash0, vsf_local.offset, vsf_local.buff, vsf_local.size);
         vsf_local.offset += vsf_local.size;
         vsf_local.buff += vsf_local.size;
         vsf_local.wsize += vsf_local.size;

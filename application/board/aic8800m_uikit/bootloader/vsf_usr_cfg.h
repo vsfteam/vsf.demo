@@ -79,7 +79,6 @@
 // reserve __MSCBOOT_BOOTLOADER_SIZE and 16K reserved configuration area for wifi
 #define MSCBOOT_CFG_FW_SIZE                             ((2 * 1024 * 1024) - __MSCBOOT_BOOTLOADER_SIZE - (16 * 1024))
 #define MSCBOOT_CFG_FW_ADDR                             __MSCBOOT_BOOTLOADER_SIZE
-#define MSCBOOT_CFG_BLOCK_SIZE                          512
 
 /*============================ INCLUDES ======================================*/
 
