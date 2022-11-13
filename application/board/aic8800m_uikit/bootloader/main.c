@@ -276,7 +276,7 @@ int VSF_USER_ENTRY(void)
         vk_usbd_init(&__user_usbd_msc);
         vk_usbd_connect(&__user_usbd_msc);
     } else {
-        uint32_t *image = (uint32_t *)(0x08004000);
+        uint32_t *image = (uint32_t *)(0x08000000 + MSCBOOT_CFG_FW_ADDR);
         vsf_arch_set_stack(image[0]);
         ((void (*)(void))(image[1]))();
     }
