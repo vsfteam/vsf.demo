@@ -549,7 +549,6 @@ int VSF_USER_ENTRY(void)
 
         vk_disp_refresh(vsf_board.display_dev, &area, framebuffer);
         vsf_thread_wfe(VSF_EVT_USER);
-        vsf_thread_delay_ms(30);
     }
     return 0;
 }
