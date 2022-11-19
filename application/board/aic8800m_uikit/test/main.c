@@ -28,6 +28,10 @@
  *   vsf_board.audio_dev
  *   vsf_board.display_dev
  * 
+ * Submodule(except PLOOC):
+ *   CMSIS(source/utilities/compiler/arm/3rd-party/CMSIS)
+ *   AIC8800M_SDK_vsf(source/hal/driver/AIC/AIC8800/vendor)
+ * 
  * VSF_USER_ENTRY runs in thead mode(VSF_OS_CFG_MAIN_MODE is VSF_OS_CFG_MAIN_MODE_THREAD).
  */
 

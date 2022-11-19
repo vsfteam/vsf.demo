@@ -26,6 +26,10 @@
  * Include Directories necessary for linux:
  *   $PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include
  *   $PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\simple_libc
+ * 
+ * Submodule(except PLOOC):
+ *   CMSIS(source/utilities/compiler/arm/3rd-party/CMSIS)
+ *   AIC8800M_SDK_vsf(source/hal/driver/AIC/AIC8800/vendor)
  */
 
 /*============================ INCLUDES ======================================*/
