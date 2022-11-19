@@ -366,7 +366,7 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\..\board\aic8800m_uikit</state>
+                    <state>$PROJ_DIR$\..\..\board\aic8800m</state>
                     <state>$PROJ_DIR$\..\..\application\kernel\helloworld</state>
                     <state>$PROJ_DIR$\..\..\vsf\source</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
@@ -1133,13 +1133,13 @@
     <group>
         <name>board</name>
         <file>
-            <name>$PROJ_DIR$\..\..\board\aic8800m_uikit\vsf_board.c</name>
+            <name>$PROJ_DIR$\..\..\board\aic8800m\vsf_board.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\board\aic8800m_uikit\vsf_board.h</name>
+            <name>$PROJ_DIR$\..\..\board\aic8800m\vsf_board.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\board\aic8800m_uikit\vsf_board_cfg.h</name>
+            <name>$PROJ_DIR$\..\..\board\aic8800m\vsf_board_cfg.h</name>
         </file>
     </group>
     <group>

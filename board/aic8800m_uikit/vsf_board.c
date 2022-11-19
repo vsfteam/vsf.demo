@@ -133,7 +133,7 @@ vsf_board_t vsf_board = {
 vsf_usb_dc_from_dwcotg_ip(0, vsf_board.dwcotg_dcd, VSF_USB_DC0)
 #endif
 
-#if VSF_USE_USB_HOST
+#if VSF_USE_USB_HOST == ENABLED
 // redefine usbh memory allocation, memory MUST be in 0x001A0000 - 0x001C7FFF
 struct __usbh_heap_t {
     implement(vsf_heap_t)
