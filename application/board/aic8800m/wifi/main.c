@@ -23,6 +23,9 @@
  *   board/aic8800m or board/aic8800m_uikit
  *   VSF_USE_LINUX is enabled
  *
+ * Include Directories necessary for linux:
+ *   $PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include
+ *   $PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\simple_libc
  */
 
 /*============================ INCLUDES ======================================*/
