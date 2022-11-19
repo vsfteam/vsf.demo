@@ -27,6 +27,8 @@
  *   vsf_board.mmc & vsf_board.mmc_voltage & vsf_board.mmc_bus_width
  *   vsf_board.audio_dev
  *   vsf_board.display_dev
+ * 
+ * VSF_USER_ENTRY runs in thead mode(VSF_OS_CFG_MAIN_MODE is VSF_OS_CFG_MAIN_MODE_THREAD).
  */
 
 /*============================ INCLUDES ======================================*/

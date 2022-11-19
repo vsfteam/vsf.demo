@@ -18,7 +18,6 @@
 /*============================ INCLUDES ======================================*/
 
 #define __VSF_HEAP_CLASS_INHERIT__
-#define __VSF_SIMPLE_STREAM_CLASS_INHERIT__
 #include "./vsf_board.h"
 
 #if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
@@ -38,7 +37,6 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
     .priority                   = APP_CFG_USBH_ARCH_PRIO,
 };
 #endif
-
 
 /*============================ GLOBAL VARIABLES ==============================*/
 
@@ -116,8 +114,9 @@ void __vsf_usbh_free(void *buffer)
 
 void vsf_board_init(void)
 {
-    VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
+    // do not change order below
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);
+    VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
 
 #if VSF_USE_USB_HOST == ENABLED
     __usbh_heap_init();

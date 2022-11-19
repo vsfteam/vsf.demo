@@ -15,55 +15,41 @@
  *                                                                           *
  ****************************************************************************/
 
-/*
- * thread fs_mount demo
- * Mount file system defined in vsf_board.
- * 
- * Dependency:
- *   vsf_board.fsop & vsf_board.fsinfo
- * 
- * VSF_USER_ENTRY runs in thead mode(VSF_OS_CFG_MAIN_MODE is VSF_OS_CFG_MAIN_MODE_THREAD).
- */
+
+//! \note User Level Application Configuration
+
+#ifndef __VSF_USR_CFG_H__
+#define __VSF_USR_CFG_H__
 
 /*============================ INCLUDES ======================================*/
 
-#include "vsf.h"
-#include "vsf_board.h"
+#include "vsf_board_cfg.h"
 
 /*============================ MACROS ========================================*/
 
-#if VSF_USE_TRACE != ENABLED
-#   error this demo depends on VSF_USE_TRACE, please enable it!
-#endif
+#define VSF_ASSERT(...)                                 if (!(__VA_ARGS__)) {while(1);};
 
-/*============================ MACROFIED FUNCTIONS ===========================*/
+#define VSF_USE_SIMPLE_SPRINTF                          ENABLED
+#   define VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT             ENABLED
+#   define VSF_SIMPLE_SPRINTF_SUPPORT_IPMAC             ENABLED
+
+#define VSF_USE_SIMPLE_STREAM                           ENABLED
+#define VSF_USE_TRACE                                   ENABLED
+#define VSF_USE_LWIP                                    ENABLED
+#define VSF_USE_MAL                                     ENABLED
+#define VSF_USE_FS                                      ENABLED
+
+#define VSF_USE_LINUX                                   ENABLED
+#   define VSF_LINUX_CFG_STACKSIZE                      4096
+#   define VSF_USE_POSIX                                ENABLED
+#   define VSF_LINUX_USE_BUSYBOX                        ENABLED
+#   define VSF_LINUX_CFG_FD_BITMAP_SIZE                 32
+#   define VSF_LINUX_USE_SIMPLE_LIBC                    ENABLED
+
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-/*============================ IMPLEMENTATION ================================*/
 
-int VSF_USER_ENTRY(void)
-{
-    vsf_board_init();
-    vsf_start_trace();
-
-    vk_file_t *root, *child;
-
-    vk_fs_init();
-    vk_file_open(NULL, "/", &root);
-    vk_fs_mount(root, vsf_board.fsop, vsf_board.fsinfo);
-
-    while (true) {
-        vk_file_open(root, NULL, &child);
-        if (vsf_eda_get_return_value() != VSF_ERR_NONE) {
-            break;
-        }
-
-        vsf_trace_info("%s ", child->name);
-        vk_file_close(child);
-    }
-    vsf_trace_info("\n");
-    vk_file_close(root);
-    return 0;
-}
+#endif
+/* EOF */
