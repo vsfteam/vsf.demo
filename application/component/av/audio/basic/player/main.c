@@ -20,6 +20,7 @@
  * Play a 48K 16bit 2channel audio to audio device defined in vsf_board.
  * 
  * Dependency:
+ * Board:
  *   vsf_board.audio_dev
  */
 

@@ -19,15 +19,16 @@
  * aic8800m btstack demo
  *
  * Dependency:
+ * Board:
  *   board/aic8800m or board/aic8800m_uikit
- *
- * Include Directories necessary for btstack:
- *   $PROJ_DIR$\..\..\vsf\source\component\3rd-party\btstack\raw\src
  *
  * Submodule(except PLOOC):
  *   CMSIS(source/utilities/compiler/arm/3rd-party/CMSIS)
  *   AIC8800M_SDK_vsf(source/hal/driver/AIC/AIC8800/vendor)
  *   btstack(source/component/3rd-party/btstack/raw)
+ * 
+ * Include Directories necessary for btstack:
+ *   vsf/source/component/3rd-party/btstack/raw/src
  *
  * Source Code:
  *   vsf/component/3rd-party/btstack

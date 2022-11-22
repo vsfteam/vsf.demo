@@ -20,6 +20,7 @@
  * Mount file system defined in vsf_board.
  * 
  * Dependency:
+ * Board:
  *   vsf_board.fsop & vsf_board.fsinfo
  */
 

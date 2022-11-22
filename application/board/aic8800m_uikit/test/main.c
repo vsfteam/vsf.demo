@@ -24,6 +24,7 @@
  *  messages will be outputed on debug uart.
  *
  * Dependency:
+ * Board:
  *   vsf_board.mmc & vsf_board.mmc_voltage & vsf_board.mmc_bus_width
  *   vsf_board.audio_dev
  *   vsf_board.display_dev

@@ -20,16 +20,17 @@
  * Based on linux sub-system, wifi related comands: wifi_scan/wifi_connect/wifi_ap
  *
  * Dependency:
+ * Board:
  *   board/aic8800m or board/aic8800m_uikit
  *   VSF_USE_LINUX is enabled
  *
- * Include Directories necessary for linux:
- *   $PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include
- *   $PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\simple_libc
- * 
  * Submodule(except PLOOC):
  *   CMSIS(source/utilities/compiler/arm/3rd-party/CMSIS)
  *   AIC8800M_SDK_vsf(source/hal/driver/AIC/AIC8800/vendor)
+ * 
+ * Include Directories necessary for linux:
+ *   vsf/source/shell/sys/linux/include
+ *   vsf/source/shell/sys/linux/include/simple_libc
  */
 
 /*============================ INCLUDES ======================================*/

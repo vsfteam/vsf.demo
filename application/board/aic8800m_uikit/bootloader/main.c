@@ -20,7 +20,7 @@
  * If PB7 is low when startup, enter bootloader, or enter application.
  *
  * Dependency:
- *  Board:
+ * Board:
  *   VSF_USB_DC0
  * 
  * Submodule(except PLOOC):

@@ -20,6 +20,7 @@
  * Refresh display defined in vsf_board.
  * 
  * Dependency:
+ * Board:
  *   vsf_board.display_dev
  */
 
