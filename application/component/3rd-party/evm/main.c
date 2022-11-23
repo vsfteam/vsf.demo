@@ -3,7 +3,7 @@
  *
  * Dependency:
  * Board:
- *   vsf_board.display_dev(RGB8888, width >= 480, height >= 320)
+ *   vsf_board.display_dev(match LV_COLOR_DEPTH in lv_conf.h)
  *
  * Submodule(except PLOOC):
  *   evm(application/component/3rd-party/evm/raw)
