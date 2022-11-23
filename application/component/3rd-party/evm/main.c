@@ -3,8 +3,7 @@
  *
  * Dependency:
  * Board:
- *   vsf_board.display_dev
- *   VSF_USE_LINUX is enabled
+ *   vsf_board.display_dev(RGB8888, width >= 480, height >= 320)
  *
  * Submodule(except PLOOC):
  *   evm(application/component/3rd-party/evm/raw)
@@ -24,13 +23,13 @@
  * 
  * Source Code:
  *   vsf/component/3rd-party/lvgl/port
- *   vsf/example/template/demo/linux_demo/mount_demo.c for __WIN__
+ *   vsf/example/template/demo/linux_demo/mount_demo.c if mount is necessary
  *   application/component/3rd-party/evm
  *   application/component/3rd-party/evm/raw/bsp/evue-simulator/pikascript
  *   application/component/3rd-party/evm/raw/components/lvgl
  *   application/component/3rd-party/evm/raw/engines/pikascript
  *   application/component/3rd-party/evm/raw/modules/iot/common
- *   application/component/3rd-party/evm/raw/modules/linux
+ *   application/component/3rd-party/evm/raw/modules/iot/linux
  * 
  * Pre-defined symbols:
  *   LV_CONF_INCLUDE_SIMPLE
@@ -196,10 +195,15 @@ int evue_main(int argc, char** argv)
     /*Initialize the HAL (display, input devices, tick) for LVGL*/
     vk_disp_t *vsf_disp = vsf_board.display_dev;
     VSF_ASSERT(vsf_disp != NULL);
-    if (vsf_disp->param.color != VSF_DISP_COLOR_RGB565) {
-        // insecure operation
-        ((vk_disp_param_t *)&vsf_disp->param)->color = VSF_DISP_COLOR_RGB565;
-    }
+#if LV_COLOR_DEPTH == 32
+    VSF_ASSERT(vsf_disp_get_pixel_format(vsf_disp) == VSF_DISP_COLOR_ARGB8888);
+#elif LV_COLOR_DEPTH == 16
+    VSF_ASSERT(vsf_disp_get_pixel_format(vsf_disp) == VSF_DISP_COLOR_RGB565);
+#elif LV_COLOR_DEPTH == 8
+    VSF_ASSERT(vsf_disp_get_pixel_format(vsf_disp) == VSF_DISP_COLOR_RGB332);
+#else
+    VSF_ASSERT(false);
+#endif
 
     /*Initialize LVGL*/
     lv_init();

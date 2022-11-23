@@ -22,7 +22,6 @@
  * Dependency:
  * Board:
  *   board/aic8800m or board/aic8800m_uikit
- *   VSF_USE_LINUX is enabled
  *
  * Submodule(except PLOOC):
  *   CMSIS(source/utilities/compiler/arm/3rd-party/CMSIS)
