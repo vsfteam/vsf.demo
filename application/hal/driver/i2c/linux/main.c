@@ -96,6 +96,7 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_i2c("/dev/i2c-0", vsf_board.i2c);
     // 2. fs
     // 3. app
+    busybox_bind(VSF_LINUX_CFG_BIN_PATH "/i2c_test", i2c_main);
     return 0;
 }
 
