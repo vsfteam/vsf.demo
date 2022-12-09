@@ -37,6 +37,7 @@
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
+#define VSF_HAL_USE_GPIO                                DISABLED
 #define VSF_HAL_USE_USART                               ENABLED
 #define VSF_HAL_USE_DEBUG_STREAM                        ENABLED
 #   define VSF_DEBUG_STREAM_CFG_HW_PRIORITY             vsf_arch_prio_0
