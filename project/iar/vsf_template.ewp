@@ -8297,11 +8297,173 @@
                         </group>
                         <group>
                             <name>linux</name>
+                            <group>
+                                <name>device</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\device\bus.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\device\class.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\device\driver.h</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>spi</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\spi\spidev.h</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>usb</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\usb\ch9.h</name>
+                                </file>
+                            </group>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\atomic.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\bitfield.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\bits.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\delay.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\device.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\err.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\errno.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\etherdevice.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\fb.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\firmware.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\fs.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\gfp.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\hid.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\hrtimer.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\i2c-dev.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\i2c.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\idr.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\ieee80211.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\if_ether.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\input.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\jiffies.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\kobject.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\kref.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\kstrtox.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\leds.h</name>
+                            </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\limits.h</name>
                             </file>
                             <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\list.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\llist.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\minmax.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\module.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\mutex.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\pm.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\power_supply.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\printk.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\refcount.h</name>
+                            </file>
+                            <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\serial.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\skbuff.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\slab.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\spinlock.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\sysfs.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\timer.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\types.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\uinput.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\usb.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\uuid.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\version.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\wait.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\linux\workqueue.h</name>
                             </file>
                         </group>
                         <group>
@@ -8373,6 +8535,9 @@
                                 <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\sys\mount.h</name>
                             </file>
                             <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\sys\param.h</name>
+                            </file>
+                            <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\sys\random.h</name>
                             </file>
                             <file>
@@ -8382,7 +8547,13 @@
                                 <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\sys\select.h</name>
                             </file>
                             <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\sys\sem.h</name>
+                            </file>
+                            <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\sys\shm.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\sys\signalfd.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\sys\socket.h</name>
