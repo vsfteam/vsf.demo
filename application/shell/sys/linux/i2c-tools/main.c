@@ -43,6 +43,7 @@
 /*============================ INCLUDES ======================================*/
 
 #include <unistd.h>
+#include <fcntl.h>
 #include "vsf_board.h"
 
 /*============================ MACROS ========================================*/
@@ -53,14 +54,30 @@
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
+static int __vsf_linux_create_string_file(const char *filename, char *data)
+{
+    int fd = open(filename, O_CREAT);
+    if (fd < 0) {
+        return -1;
+    }
+
+    write(fd, data, strlen(data));
+    close(fd);
+    return 0;
+}
+
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
     vsf_linux_vfs_init();
     busybox_install();
+    mkdir("/proc", 0);
+    __vsf_linux_create_string_file("/proc/mounts", "sysfs /sys sysfs rw,nosuid,nodev,noexec,relatime 0 0");
 
     // 1. driver
-    vsf_linux_fs_bind_i2c("/dev/i2c-0", vsf_board.i2c);
+    mkdirs("/sys/class/i2c-dev/i2c-0", 0);
+    __vsf_linux_create_string_file("/sys/class/i2c-dev/i2c-0/name", "vsf_i2c0");
+    vsf_linux_fs_bind_i2c("/dev/i2c/0", vsf_board.i2c);
     // 2. fs
     // 3. app
     extern int i2cdetect_main(int argc, char *argv[]);
