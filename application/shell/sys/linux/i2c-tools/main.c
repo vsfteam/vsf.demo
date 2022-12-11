@@ -30,9 +30,18 @@
  *   i2c-tools/raw/lib/smbus.c
  *   i2c-tools/raw/tools/i2cbusses.c
  *   i2c-tools/raw/tools/i2cdetect.c
+ *   i2c-tools/raw/tools/i2cdump.c
+ *   i2c-tools/raw/tools/i2cget.c
+ *   i2c-tools/raw/tools/i2cset.c
+ *   i2c-tools/raw/tools/i2ctransfer.c
+ *   i2c-tools/raw/tools/util.c
  *
  * Pre-define:
  *   i2c-tools/raw/tools/i2cdetect.c:   main=i2cdetect_main
+ *   i2c-tools/raw/tools/i2cdump.c:     main=i2cdump_main
+ *   i2c-tools/raw/tools/i2cget.c:      main=i2cget_main
+ *   i2c-tools/raw/tools/i2cset.c:      main=i2cset_main
+ *   i2c-tools/raw/tools/i2ctransfer.c: main=i2ctransfer_main
  *
  * Include Directories necessary for linux:
  *   vsf/source/shell/sys/linux/include
@@ -85,6 +94,14 @@ int vsf_linux_create_fhs(void)
     // 3. app
     extern int i2cdetect_main(int argc, char *argv[]);
     busybox_bind(VSF_LINUX_CFG_BIN_PATH "/i2cdetect", i2cdetect_main);
+    extern int i2cget_main(int argc, char *argv[]);
+    busybox_bind(VSF_LINUX_CFG_BIN_PATH "/i2cget", i2cget_main);
+    extern int i2cset_main(int argc, char *argv[]);
+    busybox_bind(VSF_LINUX_CFG_BIN_PATH "/i2cset", i2cset_main);
+    extern int i2ctransfer_main(int argc, char *argv[]);
+    busybox_bind(VSF_LINUX_CFG_BIN_PATH "/i2ctransfer", i2ctransfer_main);
+    extern int i2cdump_main(int argc, char *argv[]);
+    busybox_bind(VSF_LINUX_CFG_BIN_PATH "/i2cdump", i2cdump_main);
     return 0;
 }
 
