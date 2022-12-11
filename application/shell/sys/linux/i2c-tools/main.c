@@ -68,13 +68,16 @@ static int __vsf_linux_create_string_file(const char *filename, char *data)
 
 int vsf_linux_create_fhs(void)
 {
-    // 0. devfs, busybox, etc
+    // 0. devfs, procfs, busybox, etc
     vsf_linux_vfs_init();
     busybox_install();
     mkdir("/proc", 0);
     __vsf_linux_create_string_file("/proc/mounts", "sysfs /sys sysfs rw,nosuid,nodev,noexec,relatime 0 0");
 
     // 1. driver
+#if VSF_HAL_USE_GPIO == ENABLED && VSF_HW_GPIO_COUNT > 0
+    vsf_linux_fs_bind_gpio_hw("/sys/class/gpio");
+#endif
     mkdirs("/sys/class/i2c-dev/i2c-0", 0);
     __vsf_linux_create_string_file("/sys/class/i2c-dev/i2c-0/name", "vsf_i2c0");
     vsf_linux_fs_bind_i2c("/dev/i2c/0", vsf_board.i2c);
