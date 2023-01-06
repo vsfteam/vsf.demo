@@ -30,12 +30,8 @@
 
 /*============================ MACROS ========================================*/
 
-#ifndef USRAPP_CFG_USBD_SPEED
-#   define USRAPP_CFG_USBD_SPEED            USB_DC_SPEED_HIGH
-#endif
-
 // __APP_CFG_CDC_BULK_SIZE is for internal usage
-#if USRAPP_CFG_USBD_SPEED == USB_DC_SPEED_HIGH
+#if VSF_USBD_CFG_SPEED == USB_DC_SPEED_HIGH
 #   define __APP_CFG_CDC_BULK_SIZE          512
 #else
 #   define __APP_CFG_CDC_BULK_SIZE          64
@@ -48,7 +44,7 @@
 
 describe_block_stream(__user_usbd_cdc_stream0, 2, __APP_CFG_CDC_BULK_SIZE)
 
-describe_usbd(__user_usbd_cdc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, USRAPP_CFG_USBD_SPEED)
+describe_usbd(__user_usbd_cdc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED)
     usbd_common_desc_iad(__user_usbd_cdc,
                         // str_product, str_vendor, str_serial
                         u"VSF-USBD-Simplest", u"SimonQian", u"1.0.0",
