@@ -95,6 +95,9 @@ typedef struct usbd_uac_t {
 describe_mem_stream(__user_usbd_uac_rx_stream, 192)
 describe_mem_stream(__user_usbd_uac_tx_stream, 96)
 
+describe_mem_stream(__audio_ticktock_stream, 2 * 192)
+describe_stream_adapter(__audio_stream_adapter, &__user_usbd_uac_rx_stream, &__audio_ticktock_stream)
+
 static const usbd_uac_const_t __user_usbd_uac_const = {
     .usbd                       = {
         .dev_desc               = {
@@ -500,11 +503,8 @@ static usbd_uac_t __user_usbd_uac = {
 static void __usrapp_usbd_uac_on_stream(vsf_stream_t *stream, void *param, vsf_stream_evt_t evt)
 {
     switch (evt) {
-    case VSF_STREAM_ON_TX:
+    case VSF_STREAM_ON_OUT:
         vsf_stream_write(stream, NULL, vsf_stream_get_free_size(stream));
-        break;
-    case VSF_STREAM_ON_RX:
-        vsf_stream_read(stream, NULL, vsf_stream_get_buff_size(stream));
         break;
     }
 }
@@ -514,14 +514,18 @@ int VSF_USER_ENTRY(void)
     vsf_board_init();
     vsf_start_trace();
 
-    vsf_stream_t *stream;
+    vsf_stream_init(&__audio_ticktock_stream.use_as__vsf_stream_t);
+    vk_audio_init(vsf_board.audio_dev);
+    vk_audio_start(vsf_board.audio_dev, 0, &__audio_ticktock_stream.use_as__vsf_stream_t, &(vk_audio_format_t){
+        .datatype.value     = VSF_AUDIO_DATA_TYPE_LEU16,
+        .sample_rate        = 480,
+        .channel_num        = 2,
+    });
 
-    stream = &__user_usbd_uac_rx_stream.use_as__vsf_stream_t;
-    vsf_stream_init(stream);
-    stream->rx.evthandler = __usrapp_usbd_uac_on_stream;
-    vsf_stream_connect_rx(stream);
+    vsf_stream_init(&__user_usbd_uac_rx_stream.use_as__vsf_stream_t);
+    vsf_stream_adapter_init(&__audio_stream_adapter);
 
-    stream = &__user_usbd_uac_tx_stream.use_as__vsf_stream_t;
+    vsf_stream_t *stream = &__user_usbd_uac_tx_stream.use_as__vsf_stream_t;
     vsf_stream_init(stream);
     stream->tx.evthandler = __usrapp_usbd_uac_on_stream;
     vsf_stream_connect_tx(stream);
