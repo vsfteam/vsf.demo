@@ -36,6 +36,7 @@
 #   define VSF_USBD_USE_UAC                             ENABLED
 #define VSF_USE_AUDIO                                   ENABLED
 #   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
+#   define VSF_AUDIO_USE_CAPTURE                        ENABLED
 
 // Application configuration
 #define APP_CFG_USBD_VID                                0xA7A8

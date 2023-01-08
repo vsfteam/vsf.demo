@@ -93,7 +93,7 @@ typedef struct usbd_uac_t {
 /*============================ LOCAL VARIABLES ===============================*/
 
 describe_mem_stream(__user_usbd_uac_rx_stream, 2 * 192)
-describe_mem_stream(__user_usbd_uac_tx_stream, 96)
+describe_mem_stream(__user_usbd_uac_tx_stream, 2 * 96)
 
 static const usbd_uac_const_t __user_usbd_uac_const = {
     .usbd                       = {
@@ -497,36 +497,25 @@ static usbd_uac_t __user_usbd_uac = {
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
-static void __usrapp_usbd_uac_on_stream(vsf_stream_t *stream, void *param, vsf_stream_evt_t evt)
-{
-    switch (evt) {
-    case VSF_STREAM_ON_OUT:
-        vsf_stream_write(stream, NULL, vsf_stream_get_free_size(stream));
-        break;
-    }
-}
-
 int VSF_USER_ENTRY(void)
 {
     vsf_board_init();
     vsf_start_trace();
 
     vsf_stream_init(&__user_usbd_uac_rx_stream.use_as__vsf_stream_t);
+    vsf_stream_init(&__user_usbd_uac_tx_stream.use_as__vsf_stream_t);
+
     vk_audio_init(vsf_board.audio_dev);
     vk_audio_start(vsf_board.audio_dev, 0, &__user_usbd_uac_rx_stream.use_as__vsf_stream_t, &(vk_audio_format_t){
         .datatype.value     = VSF_AUDIO_DATA_TYPE_LEU16,
         .sample_rate        = 480,
         .channel_num        = 2,
     });
-
-    vsf_stream_t *stream = &__user_usbd_uac_tx_stream.use_as__vsf_stream_t;
-    vsf_stream_init(stream);
-    stream->tx.evthandler = __usrapp_usbd_uac_on_stream;
-    vsf_stream_connect_tx(stream);
-
-    uint8_t *buffer;
-    uint_fast32_t size = vsf_stream_get_wbuf(stream, &buffer);
-    vsf_stream_write(stream, NULL, size);
+    vk_audio_start(vsf_board.audio_dev, 1, &__user_usbd_uac_tx_stream.use_as__vsf_stream_t, &(vk_audio_format_t){
+        .datatype.value     = VSF_AUDIO_DATA_TYPE_LEU16,
+        .sample_rate        = 480,
+        .channel_num        = 1,
+    });
 
     vk_usbd_init(&__user_usbd_uac.usbd.dev);
     vk_usbd_connect(&__user_usbd_uac.usbd.dev);
