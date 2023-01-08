@@ -92,6 +92,10 @@ typedef struct usbd_uac_t {
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 
+// stream data flow:
+//  playback:   usb -> __user_usbd_uac_playback_stream -> __user_stream_adapter_playback -> __user_audio_playback_stream -> audio_dev
+//  capture:    audio_dev -> __user_audio_capture_stream -> __user_stream_adapter_capture -> __user_usbd_uac_capture_stream -> usb
+
 describe_mem_stream(__user_usbd_uac_playback_stream, 192)
 describe_mem_stream(__user_usbd_uac_capture_stream, 96)
 
