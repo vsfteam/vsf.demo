@@ -18,7 +18,7 @@
 /*
  * basic_audio_player demo
  * Play a 48K 16bit 2channel audio to audio device defined in vsf_board.
- * 
+ *
  * Dependency:
  * Board:
  *   vsf_board.audio_dev
@@ -31,11 +31,6 @@
 #include "vsf_board.h"
 
 /*============================ MACROS ========================================*/
-
-#if VSF_USE_TRACE != ENABLED
-#   error this demo depends on VSF_USE_TRACE, please enable it!
-#endif
-
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -433,14 +428,14 @@ const uint8_t __playback_buf[PLAYBACK_SIZE] = {
     0x00, 0xC0, 0x02, 0xC0, 0x04, 0xCF, 0x02, 0xCF, 0xE0, 0xDE, 0xE2, 0xDE, 0x49, 0xEF, 0x47, 0xEF,
 };
 
-static vsf_mem_stream_t __audio_stream = {
+static vsf_mem_stream_t __audio_playback_stream = {
     VSF_MEM_STREAM_INIT((uint8_t *)__playback_buf, sizeof(__playback_buf))
 };
 
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
-static void __audio_stream_evthandler(vsf_stream_t *stream, void *param, vsf_stream_evt_t evt)
+static void __audio_playback_stream_evthandler(vsf_stream_t *stream, void *param, vsf_stream_evt_t evt)
 {
     if (VSF_STREAM_ON_OUT == evt) {
         vsf_stream_write(stream, NULL, vsf_stream_get_free_size(stream));
@@ -451,18 +446,20 @@ int VSF_USER_ENTRY(void)
 {
     vsf_board_init();
 
+#if VSF_USE_TRACE == ENABLED
     vsf_start_trace();
+#endif
 
-    vsf_stream_init(&__audio_stream.use_as__vsf_stream_t);
+    vsf_stream_init(&__audio_playback_stream.use_as__vsf_stream_t);
     vk_audio_init(vsf_board.audio_dev);
-    vk_audio_start(vsf_board.audio_dev, 0, &__audio_stream.use_as__vsf_stream_t, &(vk_audio_format_t){
+    vk_audio_start(vsf_board.audio_dev, 0, &__audio_playback_stream.use_as__vsf_stream_t, &(vk_audio_format_t){
         .datatype.value     = VSF_AUDIO_DATA_TYPE_LEU16,
         .sample_rate        = 480,
         .channel_num        = 2,
     });
 
-    __audio_stream.tx.evthandler = __audio_stream_evthandler;
-    vsf_stream_connect_tx(&__audio_stream.use_as__vsf_stream_t);
-    __audio_stream_evthandler(&__audio_stream.use_as__vsf_stream_t, NULL, VSF_STREAM_ON_OUT);
+    __audio_playback_stream.tx.evthandler = __audio_playback_stream_evthandler;
+    vsf_stream_connect_tx(&__audio_playback_stream.use_as__vsf_stream_t);
+    __audio_playback_stream_evthandler(&__audio_playback_stream.use_as__vsf_stream_t, NULL, VSF_STREAM_ON_OUT);
     return 0;
 }
