@@ -521,12 +521,12 @@ int VSF_USER_ENTRY(void)
 
     vk_audio_init(vsf_board.audio_dev);
     vk_audio_start(vsf_board.audio_dev, 0, &__user_audio_playback_stream.use_as__vsf_stream_t, &(vk_audio_format_t){
-        .datatype.value     = VSF_AUDIO_DATA_TYPE_LEU16,
+        .datatype.value     = VSF_AUDIO_DATA_TYPE_LES16,
         .sample_rate        = 480,
         .channel_num        = 2,
     });
     vk_audio_start(vsf_board.audio_dev, 1, &__user_audio_capture_stream.use_as__vsf_stream_t, &(vk_audio_format_t){
-        .datatype.value     = VSF_AUDIO_DATA_TYPE_LEU16,
+        .datatype.value     = VSF_AUDIO_DATA_TYPE_LES16,
         .sample_rate        = 480,
         .channel_num        = 1,
     });
