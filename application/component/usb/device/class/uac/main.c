@@ -517,7 +517,7 @@ int VSF_USER_ENTRY(void)
     vsf_stream_init(&__user_audio_capture_stream.use_as__vsf_stream_t);
     vsf_stream_init(&__user_usbd_uac_playback_stream.use_as__vsf_stream_t);
     vsf_stream_init(&__user_usbd_uac_capture_stream.use_as__vsf_stream_t);
-    vsf_stream_adapter_init(&__user_stream_adapter_playback);
+    vsf_audio_ticktock_stream_adapter_init(&__user_stream_adapter_playback);
     vsf_stream_adapter_init(&__user_stream_adapter_capture);
 
     vk_audio_init(vsf_board.audio_dev);
