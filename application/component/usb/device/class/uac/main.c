@@ -517,8 +517,8 @@ int VSF_USER_ENTRY(void)
     vsf_stream_init(&__user_audio_capture_stream.use_as__vsf_stream_t);
     vsf_stream_init(&__user_usbd_uac_playback_stream.use_as__vsf_stream_t);
     vsf_stream_init(&__user_usbd_uac_capture_stream.use_as__vsf_stream_t);
-    vsf_audio_ticktock_stream_adapter_init(&__user_stream_adapter_playback);
-    vsf_stream_adapter_init(&__user_stream_adapter_capture);
+    vsf_audio_playback_ticktock_stream_adapter_init(&__user_stream_adapter_playback);
+    vsf_audio_capture_ticktock_stream_adapter_init(&__user_stream_adapter_capture);
 
     vk_audio_init(vsf_board.audio_dev);
     vk_audio_start(vsf_board.audio_dev, 0, &__user_audio_playback_stream.use_as__vsf_stream_t, &(vk_audio_format_t){
