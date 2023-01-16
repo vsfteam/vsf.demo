@@ -103,8 +103,8 @@ describe_mem_stream(__user_audio_playback_stream, 2 * 192)
 describe_mem_stream(__user_audio_capture_stream, 2 * 96)
 
 // threshold and block_size are both half of audio ticktock stream size
-describe_stream_adapter(__user_stream_adapter_playback, &__user_usbd_uac_playback_stream, &__user_audio_playback_stream, 192, 192)
-describe_stream_adapter(__user_stream_adapter_capture, &__user_audio_capture_stream, &__user_usbd_uac_capture_stream, 96, 96)
+describe_audio_ticktock_stream_adapter(__user_stream_adapter_playback, &__user_usbd_uac_playback_stream, &__user_audio_playback_stream, 192)
+describe_audio_ticktock_stream_adapter(__user_stream_adapter_capture, &__user_audio_capture_stream, &__user_usbd_uac_capture_stream, 96)
 
 static const usbd_uac_const_t __user_usbd_uac_const = {
     .usbd                       = {
