@@ -162,22 +162,23 @@ static void __vsf_distbus_transport_stream_evthandler(vsf_stream_t *stream, void
     struct vsf_distbus_transport_t *transport = param;
     uint32_t remain_size;
 
-    if (stream == &vsf_distbus_transport_stream_rx.use_as__vsf_stream_t) {
+    switch (evt) {
+    case VSF_STREAM_ON_IN:
         remain_size = transport->rx.size;
         if (    (remain_size > 0)
             &&  (__vsf_distbus_transport_try_recv(transport) == remain_size)
             &&  (transport->rx.callback.on_recv != NULL)) {
             transport->rx.callback.on_recv(transport->rx.callback.param);
         }
-    } else if (stream == &vsf_distbus_transport_stream_tx.use_as__vsf_stream_t) {
+        break;
+    case VSF_STREAM_ON_OUT:
         remain_size = transport->tx.size;
         if (    (remain_size > 0)
             &&  (__vsf_distbus_transport_try_send(transport) == remain_size)
             &&  (transport->tx.callback.on_sent != NULL)) {
             transport->tx.callback.on_sent(transport->tx.callback.param);
         }
-    } else {
-        VSF_ASSERT(false);
+        break;
     }
 }
 
