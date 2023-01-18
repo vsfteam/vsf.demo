@@ -27,7 +27,7 @@
  *   CMSIS(source/utilities/compiler/arm/3rd-party/CMSIS)
  *   AIC8800M_SDK_vsf(source/hal/driver/AIC/AIC8800/vendor)
  *
- *  Linker:
+ * Linker:
  *   flash starts at 0x8000000
  */
 
