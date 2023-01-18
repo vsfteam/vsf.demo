@@ -682,6 +682,45 @@
     <Filter Include="vsf\shell\sys\linux\kernel\core\usb">
       <UniqueIdentifier>{b378880d-91f4-42a5-97e9-b21db0842137}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\hal\driver\common\gpio">
+      <UniqueIdentifier>{b44aaad7-15b1-4b7c-9cab-5a2e7417dba4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\common\template">
+      <UniqueIdentifier>{f526c50f-6308-4240-862d-1a8d8b5b655e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\io">
+      <UniqueIdentifier>{ad473625-9d73-4160-ae74-3a97f4be4e1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\gpio">
+      <UniqueIdentifier>{55d2bf71-3712-46f9-9358-ee3be2d73faf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\adc">
+      <UniqueIdentifier>{46da0879-3ea8-4e40-8ff2-a2a255bd4f10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\dac">
+      <UniqueIdentifier>{8ab83eac-1459-452d-afbd-01a73e9a7a8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\i2c">
+      <UniqueIdentifier>{ebcd9b10-90a5-4c94-97c2-0bc916c82875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\mmc">
+      <UniqueIdentifier>{a6cca9f4-545f-4e15-8e8c-9defd7a3c2e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\pwm">
+      <UniqueIdentifier>{09126244-e617-4b3e-8704-39739c58e966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\spi">
+      <UniqueIdentifier>{617c1bd6-570b-4b3c-9ef9-0241d750b34a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\usart">
+      <UniqueIdentifier>{0c694ce1-bf0f-480d-b259-868105f9f126}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\i2s">
+      <UniqueIdentifier>{fe067b21-1489-4467-8b44-c40a5ad5fa65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\usbh">
+      <UniqueIdentifier>{184c25a7-5502-43fb-ad98-67b387d9de4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -1800,6 +1839,99 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\common\mmc\mmc_template.h">
       <Filter>vsf\hal\driver\common\mmc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\gpio\gpio_template.h">
+      <Filter>vsf\hal\driver\common\gpio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_adc.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_declaration.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_flash.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_gpio.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_hal_driver.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_i2c.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_i2s.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_implementation.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_io.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_mmc.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_pm.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_pwm.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_rng.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_rtc.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_spi.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_timer.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_usart.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_usb.h">
+      <Filter>vsf\hal\driver\common\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.h">
+      <Filter>vsf\hal\driver\vsf\distbus\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.h">
+      <Filter>vsf\hal\driver\vsf\distbus\gpio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\adc\vsf_hal_distbus_adc.h">
+      <Filter>vsf\hal\driver\vsf\distbus\adc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\dac\vsf_hal_distbus_dac.h">
+      <Filter>vsf\hal\driver\vsf\distbus\dac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.h">
+      <Filter>vsf\hal\driver\vsf\distbus\i2c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.h">
+      <Filter>vsf\hal\driver\vsf\distbus\mmc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.h">
+      <Filter>vsf\hal\driver\vsf\distbus\pwm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.h">
+      <Filter>vsf\hal\driver\vsf\distbus\spi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\usart\vsf_hal_distbus_usart.h">
+      <Filter>vsf\hal\driver\vsf\distbus\usart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.h">
+      <Filter>vsf\hal\driver\vsf\distbus\i2s</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.h">
+      <Filter>vsf\hal\driver\vsf\distbus\usbh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -2450,6 +2582,42 @@
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\usb\vsf_linux_core_usb.c">
       <Filter>vsf\shell\sys\linux\kernel\core\usb</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\common\gpio\gpio_common.c">
+      <Filter>vsf\hal\driver\common\gpio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.c">
+      <Filter>vsf\hal\driver\vsf\distbus\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.c">
+      <Filter>vsf\hal\driver\vsf\distbus\gpio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\adc\vsf_hal_distbus_adc.c">
+      <Filter>vsf\hal\driver\vsf\distbus\adc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\dac\vsf_hal_distbus_dac.c">
+      <Filter>vsf\hal\driver\vsf\distbus\dac</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.c">
+      <Filter>vsf\hal\driver\vsf\distbus\i2c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.c">
+      <Filter>vsf\hal\driver\vsf\distbus\mmc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.c">
+      <Filter>vsf\hal\driver\vsf\distbus\pwm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.c">
+      <Filter>vsf\hal\driver\vsf\distbus\spi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\usart\vsf_hal_distbus_usart.c">
+      <Filter>vsf\hal\driver\vsf\distbus\usart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.c">
+      <Filter>vsf\hal\driver\vsf\distbus\i2s</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.c">
+      <Filter>vsf\hal\driver\vsf\distbus\usbh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">
@@ -2493,6 +2661,9 @@
     </None>
     <None Include="..\..\vsf\source\hal\driver\common\mmc\mmc_template.inc">
       <Filter>vsf\hal\driver\common\mmc</Filter>
+    </None>
+    <None Include="..\..\vsf\source\hal\driver\common\gpio\gpio_template.inc">
+      <Filter>vsf\hal\driver\common\gpio</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

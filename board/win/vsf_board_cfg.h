@@ -37,10 +37,22 @@
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
-#define VSF_HAL_USE_GPIO                                DISABLED
+#define VSF_HAL_USE_GPIO                                ENABLED
 #define VSF_HAL_USE_USART                               ENABLED
 #define VSF_HAL_USE_DEBUG_STREAM                        ENABLED
 #   define VSF_DEBUG_STREAM_CFG_HW_PRIORITY             vsf_arch_prio_0
+#define VSF_HAL_USE_DISTBUS                             ENABLED
+#   define VSF_HAL_DISTBUS_USE_IO                       ENABLED
+#   define VSF_HAL_DISTBUS_USE_GPIO                     ENABLED
+#   define VSF_HAL_DISTBUS_USE_ADC                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_PWM                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_I2C                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_SPI                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_USART                    ENABLED
+#   define VSF_HAL_DISTBUS_USE_MMC                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_I2S                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_USBD                     ENABLED
+#   define VSF_HAL_DISTBUS_USE_USBH                     ENABLED
 
 /*----------------------------------------------------------------------------*
  * Components Configurations                                                  *
@@ -50,6 +62,7 @@
 #define VSF_AUDIO_USE_WINSOUND                          ENABLED
 #define VSF_FS_USE_WINFS                                ENABLED
 #define VSF_USE_HEAP                                    ENABLED
+#define VSF_USE_DISTBUS                                 ENABLED
 
 #define VSF_USBH_USE_HCD_WINUSB                         ENABLED
 #   define VSF_WINUSB_HCD_CFG_DEV_NUM                   1
