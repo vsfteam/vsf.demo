@@ -22,11 +22,11 @@
  * Dependency:
  * Board:
  *   VSF_USB_DC0
- * 
+ *
  * Submodule(except PLOOC):
  *   CMSIS(source/utilities/compiler/arm/3rd-party/CMSIS)
  *   AIC8800M_SDK_vsf(source/hal/driver/AIC/AIC8800/vendor)
- * 
+ *
  *  Linker:
  *   flash starts at 0x8000000
  */
@@ -281,7 +281,7 @@ int VSF_USER_ENTRY(void)
         vk_usbd_init(&__user_usbd_msc);
         vk_usbd_connect(&__user_usbd_msc);
     } else {
-        vsf_flash_capability_t cap = vsf_flash_capability(&&vsf_hw_flash0);
+        vsf_flash_capability_t cap = vsf_flash_capability(&vsf_hw_flash0);
         uint32_t *image = (uint32_t *)(cap.base_address + MSCBOOT_CFG_FW_ADDR);
         vsf_arch_set_stack(image[0]);
         ((void (*)(void))(image[1]))();
