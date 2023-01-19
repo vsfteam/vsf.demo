@@ -24,8 +24,16 @@
 
 #if     VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM == ENABLED
 #   include "./usbd_cdcacm/vsf_distbus_transport_usbd_cdcacm.h"
+typedef vsf_distbus_transport_usbd_cdcacm_t     vsf_distbus_transport_t;
+#   define vsf_distbus_transport_init           vsf_distbus_transport_usbd_cdcacm_init
+#   define vsf_distbus_transport_send           vsf_distbus_transport_usbd_cdcacm_send
+#   define vsf_distbus_transport_recv           vsf_distbus_transport_usbd_cdcacm_recv
 #elif   VSF_DISTBUS_TRANSPORT_USE_STREAM == ENABLED
 #   include "./stream/vsf_distbus_transport_stream.h"
+typedef vsf_distbus_transport_stream_t          vsf_distbus_transport_t;
+#   define vsf_distbus_transport_init           vsf_distbus_transport_stream_init
+#   define vsf_distbus_transport_send           vsf_distbus_transport_stream_send
+#   define vsf_distbus_transport_recv           vsf_distbus_transport_stream_recv
 #endif
 
 /*============================ MACROS ========================================*/

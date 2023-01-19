@@ -46,41 +46,40 @@ extern "C" {
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
-vsf_class(vsf_distbus_transport_t) {
-    struct {
-        void *param;
-        void (*on_inited)(void *p);
-    } callback_on_inited;
-    struct {
-        uint8_t *buffer;
-        uint32_t size;
+vsf_class(vsf_distbus_transport_stream_t) {
+    public_member(
+        vsf_stream_t *stream_rx;
+        vsf_stream_t *stream_tx;
+    )
 
+    private_member(
         struct {
-            void *param;
-            void (*on_sent)(void *p);
-        } callback;
-    } tx;
-    struct {
-        uint8_t *buffer;
-        uint32_t size;
+            uint8_t *buffer;
+            uint32_t size;
 
+            struct {
+                void *param;
+                void (*on_sent)(void *p);
+            } callback;
+        } tx;
         struct {
-            void *param;
-            void (*on_recv)(void *p);
-        } callback;
-    } rx;
+            uint8_t *buffer;
+            uint32_t size;
+
+            struct {
+                void *param;
+                void (*on_recv)(void *p);
+            } callback;
+        } rx;
+    )
 };
 
 /*============================ GLOBAL VARIABLES ==============================*/
-
-declare_mem_stream(vsf_distbus_transport_stream_rx)
-declare_mem_stream(vsf_distbus_transport_stream_tx)
-
 /*============================ PROTOTYPES ====================================*/
 
-extern bool vsf_distbus_transport_init(void *p, void (*on_inited)(void *p));
-extern bool vsf_distbus_transport_send(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p));
-extern bool vsf_distbus_transport_recv(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_recv)(void *p));
+extern bool vsf_distbus_transport_stream_init(void *transport, void *p, void (*on_inited)(void *p));
+extern bool vsf_distbus_transport_stream_send(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p));
+extern bool vsf_distbus_transport_stream_recv(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_recv)(void *p));
 
 #ifdef __cplusplus
 }

@@ -24,6 +24,17 @@
 
 // for bool
 #include "utilities/vsf_utilities.h"
+#include "../stream/vsf_distbus_transport_stream.h"
+
+#if     defined(__VSF_DISTBUS_TRANSPORT_USBD_CDCACM_CLASS_IMPLEMENT)
+#   undef __VSF_DISTBUS_TRANSPORT_USBD_CDCACM_CLASS_IMPLEMENT
+#   define __VSF_CLASS_IMPLEMENT__
+#elif   defined(__VSF_DISTBUS_TRANSPORT_USBD_CDCACM_CLASS_INHERIT__)
+#   undef __VSF_DISTBUS_TRANSPORT_USBD_CDCACM_CLASS_INHERIT__
+#   define __VSF_CLASS_INHERIT__
+#endif
+
+#include "utilities/ooc_class.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,12 +44,19 @@ extern "C" {
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
+
+vsf_class(vsf_distbus_transport_usbd_cdcacm_t) {
+    public_member(
+        implement(vsf_distbus_transport_stream_t)
+    )
+};
+
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern bool vsf_distbus_transport_init(void *p, void (*on_inited)(void *p));
-extern bool vsf_distbus_transport_send(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p));
-extern bool vsf_distbus_transport_recv(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_recv)(void *p));
+extern bool vsf_distbus_transport_usbd_cdcacm_init(void *transport, void *p, void (*on_inited)(void *p));
+extern bool vsf_distbus_transport_usbd_cdcacm_send(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p));
+extern bool vsf_distbus_transport_usbd_cdcacm_recv(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_recv)(void *p));
 
 #ifdef __cplusplus
 }

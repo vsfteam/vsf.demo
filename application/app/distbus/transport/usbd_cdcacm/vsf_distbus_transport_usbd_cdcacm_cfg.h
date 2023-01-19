@@ -19,9 +19,12 @@
 #define __VSF_DISTBUS_TRANSPORT_USBD_CDCACM_CFG_H__
 
 /*============================ INCLUDES ======================================*/
+
+#define VSF_DISTBUS_TRANSPORT_USE_STREAM                ENABLED
+#include "../stream/vsf_distbus_transport_stream_cfg.h"
+
 /*============================ MACROS ========================================*/
 
-#define VSF_USE_SIMPLE_STREAM                           ENABLED
 // for block stream
 #define VSF_USE_FIFO                                    ENABLED
 

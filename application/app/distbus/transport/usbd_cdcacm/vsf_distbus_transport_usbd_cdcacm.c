@@ -25,6 +25,7 @@
 
 /*============================ INCLUDES ======================================*/
 
+#define __VSF_DISTBUS_TRANSPORT_USBD_CDCACM_CLASS_IMPLEMENT
 #include "./vsf_distbus_transport_usbd_cdcacm.h"
 
 #if VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM == ENABLED
@@ -47,8 +48,8 @@
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 
-describe_block_stream(vsf_distbus_transport_stream_rx, 8, __APP_CFG_CDC_BULK_SIZE)
-describe_block_stream(vsf_distbus_transport_stream_tx, 8, __APP_CFG_CDC_BULK_SIZE)
+describe_block_stream(vsf_distbus_transport_usbd_cdcacm_stream_rx, 8, __APP_CFG_CDC_BULK_SIZE)
+describe_block_stream(vsf_distbus_transport_usbd_cdcacm_stream_tx, 8, __APP_CFG_CDC_BULK_SIZE)
 
 describe_usbd(__user_usbd_cdc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED)
     usbd_common_desc_iad(__user_usbd_cdc,
@@ -86,7 +87,7 @@ describe_usbd(__user_usbd_cdc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_
                         // interrupt in ep, bulk in ep, bulk out ep
                         1, 2, 2,
                         // stream_rx, stream_tx
-                        &vsf_distbus_transport_stream_rx, &vsf_distbus_transport_stream_tx,
+                        &vsf_distbus_transport_usbd_cdcacm_stream_rx, &vsf_distbus_transport_usbd_cdcacm_stream_tx,
                         // default line coding
                         USB_CDC_ACM_LINECODE(115200, 8, USB_CDC_ACM_PARITY_NONE, USB_CDC_ACM_STOPBIT_1)
         )
@@ -94,133 +95,32 @@ describe_usbd(__user_usbd_cdc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_
         usbd_cdc_acm_ifs(__user_usbd_cdc, 0)
 end_describe_usbd(__user_usbd_cdc, VSF_USB_DC0)
 
-struct vsf_distbus_transport_t {
-    struct {
-        void *param;
-        void (*on_inited)(void *p);
-    } callback_on_inited;
-    struct {
-        uint8_t *buffer;
-        uint32_t size;
-
-        struct {
-            void *param;
-            void (*on_sent)(void *p);
-        } callback;
-    } tx;
-    struct {
-        uint8_t *buffer;
-        uint32_t size;
-
-        struct {
-            void *param;
-            void (*on_recv)(void *p);
-        } callback;
-    } rx;
-} static __vsf_distbus_transport;
-
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
-static uint_fast32_t __vsf_distbus_transport_try_send(struct vsf_distbus_transport_t *transport)
+bool vsf_distbus_transport_usbd_cdcacm_init(void *transport, void *p, void (*on_inited)(void *p))
 {
-    uint_fast32_t trans_size = 0, wsiz;
-    uint8_t *wbuf;
+    vsf_distbus_transport_usbd_cdcacm_t *transport_usbd_cdcacm = transport;
+    transport_usbd_cdcacm->stream_rx = &vsf_distbus_transport_usbd_cdcacm_stream_rx.use_as__vsf_stream_t;
+    transport_usbd_cdcacm->stream_tx = &vsf_distbus_transport_usbd_cdcacm_stream_tx.use_as__vsf_stream_t;
 
-    while (transport->tx.size > 0) {
-        wsiz = VSF_STREAM_GET_WBUF(&vsf_distbus_transport_stream_tx, &wbuf);
-        if (wsiz <= 0) {
-            break;
-        }
-
-        wsiz = vsf_min(wsiz, transport->tx.size);
-        memcpy(wbuf, transport->tx.buffer, wsiz);
-        trans_size += wsiz;
-        transport->tx.size -= wsiz;
-        transport->tx.buffer += wsiz;
-    }
-    return trans_size;
-}
-
-static uint_fast32_t __vsf_distbus_transport_try_recv(struct vsf_distbus_transport_t *transport)
-{
-    uint_fast32_t trans_size = 0, rsiz;
-    uint8_t *rbuf;
-
-    while (transport->rx.size > 0) {
-        rsiz = VSF_STREAM_GET_RBUF(&vsf_distbus_transport_stream_rx, &rbuf);
-        if (rsiz <= 0) {
-            break;
-        }
-
-        rsiz = vsf_min(rsiz, transport->rx.size);
-        memcpy(transport->rx.buffer, rbuf, rsiz);
-        trans_size += rsiz;
-        transport->rx.size -= rsiz;
-        transport->rx.buffer += rsiz;
-    }
-    return trans_size;
-}
-
-static void __vsf_distbus_transport_stream_evthandler(vsf_stream_t *stream, void *param, vsf_stream_evt_t evt)
-{
-    struct vsf_distbus_transport_t *transport = param;
-    uint32_t remain_size;
-
-    switch (evt) {
-    case VSF_STREAM_ON_IN:
-        remain_size = transport->rx.size;
-        if (    (remain_size > 0)
-            &&  (__vsf_distbus_transport_try_recv(transport) == remain_size)
-            &&  (transport->rx.callback.on_recv != NULL)) {
-            transport->rx.callback.on_recv(transport->rx.callback.param);
-        }
-        break;
-    case VSF_STREAM_ON_OUT:
-        remain_size = transport->tx.size;
-        if (    (remain_size > 0)
-            &&  (__vsf_distbus_transport_try_send(transport) == remain_size)
-            &&  (transport->tx.callback.on_sent != NULL)) {
-            transport->tx.callback.on_sent(transport->tx.callback.param);
-        }
-        break;
-    }
-}
-
-bool vsf_distbus_transport_init(void *p, void (*on_inited)(void *p))
-{
-    VSF_STREAM_INIT(&vsf_distbus_transport_stream_rx);
-    vsf_distbus_transport_stream_rx.rx.param = &__vsf_distbus_transport;
-    vsf_distbus_transport_stream_rx.rx.evthandler = __vsf_distbus_transport_stream_evthandler;
-    VSF_STREAM_CONNECT_RX(&vsf_distbus_transport_stream_rx);
-
-    VSF_STREAM_INIT(&vsf_distbus_transport_stream_tx);
-    vsf_distbus_transport_stream_tx.tx.param = &__vsf_distbus_transport;
-    vsf_distbus_transport_stream_tx.tx.evthandler = __vsf_distbus_transport_stream_evthandler;
-    VSF_STREAM_CONNECT_TX(&vsf_distbus_transport_stream_tx);
-
-    __vsf_distbus_transport.tx.size = 0;
-    __vsf_distbus_transport.rx.size = 0;
-    __vsf_distbus_transport.callback_on_inited.param = p;
-    __vsf_distbus_transport.callback_on_inited.on_inited = on_inited;
+    vsf_distbus_transport_stream_init(&transport_usbd_cdcacm->use_as__vsf_distbus_transport_stream_t, p, on_inited);
 
     vk_usbd_init(&__user_usbd_cdc);
     vk_usbd_connect(&__user_usbd_cdc);
-    return VSF_ERR_NONE;
+    return false;
 }
 
-bool vsf_distbus_transport_send(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p))
+bool vsf_distbus_transport_usbd_cdcacm_send(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p))
 {
-    __vsf_distbus_transport.tx.buffer = buffer;
-    __vsf_distbus_transport.tx.size = size;
-    return __vsf_distbus_transport_try_send(&__vsf_distbus_transport) == size;
+    vsf_distbus_transport_usbd_cdcacm_t *transport_usbd_cdcacm = transport;
+    return vsf_distbus_transport_stream_send(&transport_usbd_cdcacm->use_as__vsf_distbus_transport_stream_t, buffer, size, p, on_sent);
 }
 
-bool vsf_distbus_transport_recv(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_recv)(void *p))
+bool vsf_distbus_transport_usbd_cdcacm_recv(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_recv)(void *p))
 {
-    __vsf_distbus_transport.rx.buffer = buffer;
-    __vsf_distbus_transport.rx.size = size;
-    return __vsf_distbus_transport_try_recv(&__vsf_distbus_transport) == size;
+    vsf_distbus_transport_usbd_cdcacm_t *transport_usbd_cdcacm = transport;
+    return vsf_distbus_transport_stream_recv(&transport_usbd_cdcacm->use_as__vsf_distbus_transport_stream_t, buffer, size, p, on_recv);
 }
 
 #endif      // VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM

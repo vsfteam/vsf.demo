@@ -23,6 +23,7 @@
 
 /*============================ INCLUDES ======================================*/
 
+#define __VSF_DISTBUS_TRANSPORT_STREAM_CLASS_IMPLEMENT
 #include "./vsf_distbus_transport_stream.h"
 
 #if VSF_DISTBUS_TRANSPORT_USE_STREAM == ENABLED
@@ -32,112 +33,107 @@
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
-
-describe_mem_stream(vsf_distbus_transport_stream_rx, 1024)
-describe_mem_stream(vsf_distbus_transport_stream_tx, 1024)
-
-static vsf_distbus_transport_t __vsf_distbus_transport;
-
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
-static uint_fast32_t __vsf_distbus_transport_try_send(struct vsf_distbus_transport_t *transport)
+static uint_fast32_t __vsf_distbus_transport_try_send(vsf_distbus_transport_stream_t *transport_stream)
 {
     uint_fast32_t trans_size = 0, wsiz;
     uint8_t *wbuf;
 
-    while (transport->tx.size > 0) {
-        wsiz = VSF_STREAM_GET_WBUF(&vsf_distbus_transport_stream_tx, &wbuf);
+    while (transport_stream->tx.size > 0) {
+        wsiz = VSF_STREAM_GET_WBUF(transport_stream->stream_tx, &wbuf);
         if (wsiz <= 0) {
             break;
         }
 
-        wsiz = vsf_min(wsiz, transport->tx.size);
-        memcpy(wbuf, transport->tx.buffer, wsiz);
+        wsiz = vsf_min(wsiz, transport_stream->tx.size);
+        memcpy(wbuf, transport_stream->tx.buffer, wsiz);
         trans_size += wsiz;
-        transport->tx.size -= wsiz;
-        transport->tx.buffer += wsiz;
+        transport_stream->tx.size -= wsiz;
+        transport_stream->tx.buffer += wsiz;
     }
     return trans_size;
 }
 
-static uint_fast32_t __vsf_distbus_transport_try_recv(struct vsf_distbus_transport_t *transport)
+static uint_fast32_t __vsf_distbus_transport_try_recv(vsf_distbus_transport_stream_t *transport_stream)
 {
     uint_fast32_t trans_size = 0, rsiz;
     uint8_t *rbuf;
 
-    while (transport->rx.size > 0) {
-        rsiz = VSF_STREAM_GET_RBUF(&vsf_distbus_transport_stream_rx, &rbuf);
+    while (transport_stream->rx.size > 0) {
+        rsiz = VSF_STREAM_GET_RBUF(transport_stream->stream_rx, &rbuf);
         if (rsiz <= 0) {
             break;
         }
 
-        rsiz = vsf_min(rsiz, transport->rx.size);
-        memcpy(transport->rx.buffer, rbuf, rsiz);
+        rsiz = vsf_min(rsiz, transport_stream->rx.size);
+        memcpy(transport_stream->rx.buffer, rbuf, rsiz);
         trans_size += rsiz;
-        transport->rx.size -= rsiz;
-        transport->rx.buffer += rsiz;
+        transport_stream->rx.size -= rsiz;
+        transport_stream->rx.buffer += rsiz;
     }
     return trans_size;
 }
 
 static void __vsf_distbus_transport_stream_evthandler(vsf_stream_t *stream, void *param, vsf_stream_evt_t evt)
 {
-    struct vsf_distbus_transport_t *transport = param;
+    vsf_distbus_transport_stream_t *transport_stream = param;
     uint32_t remain_size;
 
     switch (evt) {
     case VSF_STREAM_ON_IN:
-        remain_size = transport->rx.size;
+        remain_size = transport_stream->rx.size;
         if (    (remain_size > 0)
-            &&  (__vsf_distbus_transport_try_recv(transport) == remain_size)
-            &&  (transport->rx.callback.on_recv != NULL)) {
-            transport->rx.callback.on_recv(transport->rx.callback.param);
+            &&  (__vsf_distbus_transport_try_recv(transport_stream) == remain_size)
+            &&  (transport_stream->rx.callback.on_recv != NULL)) {
+            transport_stream->rx.callback.on_recv(transport_stream->rx.callback.param);
         }
         break;
     case VSF_STREAM_ON_OUT:
-        remain_size = transport->tx.size;
+        remain_size = transport_stream->tx.size;
         if (    (remain_size > 0)
-            &&  (__vsf_distbus_transport_try_send(transport) == remain_size)
-            &&  (transport->tx.callback.on_sent != NULL)) {
-            transport->tx.callback.on_sent(transport->tx.callback.param);
+            &&  (__vsf_distbus_transport_try_send(transport_stream) == remain_size)
+            &&  (transport_stream->tx.callback.on_sent != NULL)) {
+            transport_stream->tx.callback.on_sent(transport_stream->tx.callback.param);
         }
         break;
     }
 }
 
-bool vsf_distbus_transport_init(void *p, void (*on_inited)(void *p))
+bool vsf_distbus_transport_stream_init(void *transport, void *p, void (*on_inited)(void *p))
 {
-    VSF_STREAM_INIT(&vsf_distbus_transport_stream_rx);
-    vsf_distbus_transport_stream_rx.rx.param = &__vsf_distbus_transport;
-    vsf_distbus_transport_stream_rx.rx.evthandler = __vsf_distbus_transport_stream_evthandler;
-    VSF_STREAM_CONNECT_RX(&vsf_distbus_transport_stream_rx);
+    vsf_distbus_transport_stream_t *transport_stream = transport;
 
-    VSF_STREAM_INIT(&vsf_distbus_transport_stream_tx);
-    vsf_distbus_transport_stream_tx.tx.param = &__vsf_distbus_transport;
-    vsf_distbus_transport_stream_tx.tx.evthandler = __vsf_distbus_transport_stream_evthandler;
-    VSF_STREAM_CONNECT_TX(&vsf_distbus_transport_stream_tx);
+    VSF_STREAM_INIT(transport_stream->stream_rx);
+    transport_stream->stream_rx->rx.param = transport_stream;
+    transport_stream->stream_rx->rx.evthandler = __vsf_distbus_transport_stream_evthandler;
+    VSF_STREAM_CONNECT_RX(transport_stream->stream_rx);
 
-    __vsf_distbus_transport.tx.size = 0;
-    __vsf_distbus_transport.rx.size = 0;
-    __vsf_distbus_transport.callback_on_inited.param = p;
-    __vsf_distbus_transport.callback_on_inited.on_inited = on_inited;
+    VSF_STREAM_INIT(transport_stream->stream_tx);
+    transport_stream->stream_tx->tx.param = transport_stream;
+    transport_stream->stream_tx->tx.evthandler = __vsf_distbus_transport_stream_evthandler;
+    VSF_STREAM_CONNECT_TX(transport_stream->stream_tx);
 
-    return VSF_ERR_NONE;
+    transport_stream->tx.size = 0;
+    transport_stream->rx.size = 0;
+    return true;
 }
 
-bool vsf_distbus_transport_send(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p))
+bool vsf_distbus_transport_stream_send(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p))
 {
-    __vsf_distbus_transport.tx.buffer = buffer;
-    __vsf_distbus_transport.tx.size = size;
-    return __vsf_distbus_transport_try_send(&__vsf_distbus_transport) == size;
+    vsf_distbus_transport_stream_t *transport_stream = transport;
+    transport_stream->tx.buffer = buffer;
+    transport_stream->tx.size = size;
+    return __vsf_distbus_transport_try_send(transport_stream) == size;
 }
 
-bool vsf_distbus_transport_recv(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_recv)(void *p))
+bool vsf_distbus_transport_stream_recv(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_recv)(void *p))
 {
-    __vsf_distbus_transport.rx.buffer = buffer;
-    __vsf_distbus_transport.rx.size = size;
-    return __vsf_distbus_transport_try_recv(&__vsf_distbus_transport) == size;
+    vsf_distbus_transport_stream_t *transport_stream = transport;
+    transport_stream->rx.buffer = buffer;
+    transport_stream->rx.size = size;
+    return __vsf_distbus_transport_try_recv(transport_stream) == size;
 }
 
 #endif      // VSF_DISTBUS_TRANSPORT_USE_STREAM
