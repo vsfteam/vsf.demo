@@ -15,30 +15,18 @@
  *                                                                           *
  ****************************************************************************/
 
-#ifndef __VSF_DISTBUS_TRANSPORT_H__
-#define __VSF_DISTBUS_TRANSPORT_H__
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef __VSF_DISTBUS_TRANSPORT_STREAM_CFG_H__
+#define __VSF_DISTBUS_TRANSPORT_STREAM_CFG_H__
 
 /*============================ INCLUDES ======================================*/
 /*============================ MACROS ========================================*/
-/*============================ MACROFIED FUNCTIONS ===========================*/
+
+#define VSF_USE_SIMPLE_STREAM                           ENABLED
+
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
-
-declare_block_stream(vsf_distbus_transport_stream_rx)
-declare_block_stream(vsf_distbus_transport_stream_tx)
-
+/*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern bool vsf_distbus_transport_init(void *p, void (*on_inited)(void *p));
-extern bool vsf_distbus_transport_send(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p));
-extern bool vsf_distbus_transport_recv(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_recv)(void *p));
-
-#ifdef __cplusplus
-}
 #endif
-
-#endif      // __VSF_DISTBUS_TRANSPORT_H__
+/* EOF */

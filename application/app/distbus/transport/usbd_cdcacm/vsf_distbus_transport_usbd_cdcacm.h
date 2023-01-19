@@ -15,39 +15,34 @@
  *                                                                           *
  ****************************************************************************/
 
-//! \note User Level Application Configuration
+#ifndef __VSF_DISTBUS_TRANSPORT_USBD_CDCACM_H__
+#define __VSF_DISTBUS_TRANSPORT_USBD_CDCACM_H__
 
-#ifndef __VSF_USR_CFG_H__
-#define __VSF_USR_CFG_H__
+#include "vsf_cfg.h"
+
+#if VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM == ENABLED
+
+// for bool
+#include "utilities/vsf_utilities.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*============================ INCLUDES ======================================*/
-
-#include "vsf_board_cfg.h"
-
 /*============================ MACROS ========================================*/
-
-#undef VSF_HAL_USE_DAC
-#define VSF_HAL_USE_DAC                                 DISABLED
-
-#define VSF_USE_SIMPLE_STREAM                           ENABLED
-#define VSF_USE_TRACE                                   ENABLED
-
-#define VSF_USE_DISTBUS                                 ENABLED
-#   define VSF_HAL_DISTBUS_CFG_MTU                      512
-// select one of the transports below
-//#   define VSF_DISTBUS_TRANSPORT_USE_STREAM             ENABLED
-#   define VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM        ENABLED
-
-#define APP_DISTBUS_CFG_TRANSPORT_USBD_CDCACM
-#define APP_DISTBUS_CFG_POOL_NUM                        16
-
+/*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
-/*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-/*============================ INCLUDES ======================================*/
 
-#include "transport/vsf_distbus_transport_cfg.h"
+extern bool vsf_distbus_transport_init(void *p, void (*on_inited)(void *p));
+extern bool vsf_distbus_transport_send(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p));
+extern bool vsf_distbus_transport_recv(uint8_t *buffer, uint_fast32_t size, void *p, void (*on_recv)(void *p));
 
+#ifdef __cplusplus
+}
 #endif
-/* EOF */
+
+#endif      // VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM
+#endif      // __VSF_DISTBUS_TRANSPORT_USBD_CDCACM_H__

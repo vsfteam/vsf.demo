@@ -15,39 +15,28 @@
  *                                                                           *
  ****************************************************************************/
 
-//! \note User Level Application Configuration
-
-#ifndef __VSF_USR_CFG_H__
-#define __VSF_USR_CFG_H__
+#ifndef __VSF_DISTBUS_TRANSPORT_USBD_CDCACM_CFG_H__
+#define __VSF_DISTBUS_TRANSPORT_USBD_CDCACM_CFG_H__
 
 /*============================ INCLUDES ======================================*/
-
-#include "vsf_board_cfg.h"
-
 /*============================ MACROS ========================================*/
 
-#undef VSF_HAL_USE_DAC
-#define VSF_HAL_USE_DAC                                 DISABLED
-
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
-#define VSF_USE_TRACE                                   ENABLED
+// for block stream
+#define VSF_USE_FIFO                                    ENABLED
 
-#define VSF_USE_DISTBUS                                 ENABLED
-#   define VSF_HAL_DISTBUS_CFG_MTU                      512
-// select one of the transports below
-//#   define VSF_DISTBUS_TRANSPORT_USE_STREAM             ENABLED
-#   define VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM        ENABLED
+#define VSF_USE_USB_DEVICE                              ENABLED
+#   define VSF_USBD_USE_CDC                             ENABLED
+#       define VSF_USBD_USE_CDCACM                      ENABLED
 
-#define APP_DISTBUS_CFG_TRANSPORT_USBD_CDCACM
-#define APP_DISTBUS_CFG_POOL_NUM                        16
+// Application configuration
+#define APP_CFG_USBD_VID                                0xA7A8
+#define APP_CFG_USBD_PID                                0x2348
 
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-/*============================ INCLUDES ======================================*/
-
-#include "transport/vsf_distbus_transport_cfg.h"
 
 #endif
 /* EOF */

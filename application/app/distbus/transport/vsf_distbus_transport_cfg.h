@@ -15,27 +15,20 @@
  *                                                                           *
  ****************************************************************************/
 
-
-//! \note User Level Application Configuration
-
 #ifndef __VSF_DISTBUS_TRANSPORT_CFG_H__
 #define __VSF_DISTBUS_TRANSPORT_CFG_H__
 
 /*============================ INCLUDES ======================================*/
+
+#include "vsf_cfg.h"
+
+#if     VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM == ENABLED
+#   include "./usbd_cdcacm/vsf_distbus_transport_usbd_cdcacm_cfg.h"
+#elif   VSF_DISTBUS_TRANSPORT_USE_STREAM == ENABLED
+#   include "./stream/vsf_distbus_transport_stream_cfg.h"
+#endif
+
 /*============================ MACROS ========================================*/
-
-#define VSF_USE_SIMPLE_STREAM                           ENABLED
-// for block stream
-#define VSF_USE_FIFO                                    ENABLED
-
-#define VSF_USE_USB_DEVICE                              ENABLED
-#   define VSF_USBD_USE_CDC                             ENABLED
-#       define VSF_USBD_USE_CDCACM                      ENABLED
-
-// Application configuration
-#define APP_CFG_USBD_VID                                0xA7A8
-#define APP_CFG_USBD_PID                                0x2348
-
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/

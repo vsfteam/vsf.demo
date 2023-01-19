@@ -15,39 +15,23 @@
  *                                                                           *
  ****************************************************************************/
 
-//! \note User Level Application Configuration
-
-#ifndef __VSF_USR_CFG_H__
-#define __VSF_USR_CFG_H__
+#ifndef __VSF_DISTBUS_TRANSPORT_H__
+#define __VSF_DISTBUS_TRANSPORT_H__
 
 /*============================ INCLUDES ======================================*/
 
-#include "vsf_board_cfg.h"
+#include "vsf_cfg.h"
+
+#if     VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM == ENABLED
+#   include "./usbd_cdcacm/vsf_distbus_transport_usbd_cdcacm.h"
+#elif   VSF_DISTBUS_TRANSPORT_USE_STREAM == ENABLED
+#   include "./stream/vsf_distbus_transport_stream.h"
+#endif
 
 /*============================ MACROS ========================================*/
-
-#undef VSF_HAL_USE_DAC
-#define VSF_HAL_USE_DAC                                 DISABLED
-
-#define VSF_USE_SIMPLE_STREAM                           ENABLED
-#define VSF_USE_TRACE                                   ENABLED
-
-#define VSF_USE_DISTBUS                                 ENABLED
-#   define VSF_HAL_DISTBUS_CFG_MTU                      512
-// select one of the transports below
-//#   define VSF_DISTBUS_TRANSPORT_USE_STREAM             ENABLED
-#   define VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM        ENABLED
-
-#define APP_DISTBUS_CFG_TRANSPORT_USBD_CDCACM
-#define APP_DISTBUS_CFG_POOL_NUM                        16
-
+/*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
-/*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-/*============================ INCLUDES ======================================*/
 
-#include "transport/vsf_distbus_transport_cfg.h"
-
-#endif
-/* EOF */
+#endif      // __VSF_DISTBUS_TRANSPORT_H__

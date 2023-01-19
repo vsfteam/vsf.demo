@@ -26,8 +26,7 @@
  *   application/app/distbus/*
  *
  * Include Directories:
- *   application/app/distbus/transport/specific transport/*
- *   application/app/distbus/hal/*
+ *   application/app/distbus
  *
  * Extra:
  *   dependency for the specific transport
@@ -39,11 +38,7 @@
 #include "vsf_board.h"
 
 #include "hal/vsf_distbus_hal.h"
-#ifdef APP_DISTBUS_CFG_TRANSPORT_USBD_CDCACM
-#   include "transport/usbd_cdcacm/vsf_distbus_transport.h"
-#else
-#   error please select one transport supported
-#endif
+#include "transport/vsf_distbus_transport.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
