@@ -7564,12 +7564,111 @@
                     <group>
                         <name>ditbus</name>
                         <group>
+                            <name>adc</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\adc\vsf_hal_distbus_adc.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\adc\vsf_hal_distbus_adc.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>dac</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\dac\vsf_hal_distbus_dac.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\dac\vsf_hal_distbus_dac.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>gpio</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>i2c</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>i2s</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>io</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>mmc</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>pwm</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>spi</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>usart</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\usart\vsf_hal_distbus_usart.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\usart\vsf_hal_distbus_usart.h</name>
+                            </file>
+                        </group>
+                        <group>
                             <name>usbd</name>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\usbd\vsf_hal_distbus_usbd.c</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\usbd\vsf_hal_distbus_usbd.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>usbh</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.h</name>
                             </file>
                         </group>
                         <file>
