@@ -46,7 +46,7 @@
 
 typedef struct __user_distbus_msg_t {
     implement(vsf_distbus_msg_t)
-    uint8_t buffer[VSF_HAL_DISTBUS_CFG_MTU];
+    uint8_t buffer[VSF_HAL_DISTBUS_CFG_MTU + offset_of(vsf_distbus_msg_t, header)];
 } __user_distbus_msg_t;
 
 dcl_vsf_pool(__user_distbus_msg_pool)
@@ -112,7 +112,7 @@ static void __user_distbus_on_error(vsf_distbus_t *distbus)
 
 static void * __user_distbus_alloc_msg(uint_fast32_t size)
 {
-    VSF_ASSERT(size <= VSF_HAL_DISTBUS_CFG_MTU);
+    VSF_ASSERT(size <= sizeof(((__user_distbus_msg_t *)NULL))->buffer);
     return VSF_POOL_ALLOC(__user_distbus_msg_pool, &__user_distbus.msg_pool);
 }
 

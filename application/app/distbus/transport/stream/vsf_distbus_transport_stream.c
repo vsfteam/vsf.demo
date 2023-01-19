@@ -49,6 +49,8 @@ static uint_fast32_t __vsf_distbus_transport_try_send(vsf_distbus_transport_stre
 
         wsiz = vsf_min(wsiz, transport_stream->tx.size);
         memcpy(wbuf, transport_stream->tx.buffer, wsiz);
+        VSF_STREAM_WRITE(transport_stream->stream_tx, NULL, wsiz);
+
         trans_size += wsiz;
         transport_stream->tx.size -= wsiz;
         transport_stream->tx.buffer += wsiz;
@@ -69,6 +71,8 @@ static uint_fast32_t __vsf_distbus_transport_try_recv(vsf_distbus_transport_stre
 
         rsiz = vsf_min(rsiz, transport_stream->rx.size);
         memcpy(transport_stream->rx.buffer, rbuf, rsiz);
+        VSF_STREAM_READ(transport_stream->stream_rx, NULL, rsiz);
+
         trans_size += rsiz;
         transport_stream->rx.size -= rsiz;
         transport_stream->rx.buffer += rsiz;
@@ -125,6 +129,8 @@ bool vsf_distbus_transport_stream_send(void *transport, uint8_t *buffer, uint_fa
     vsf_distbus_transport_stream_t *transport_stream = transport;
     transport_stream->tx.buffer = buffer;
     transport_stream->tx.size = size;
+    transport_stream->tx.callback.param = p;
+    transport_stream->tx.callback.on_sent = on_sent;
     return __vsf_distbus_transport_try_send(transport_stream) == size;
 }
 
@@ -133,6 +139,8 @@ bool vsf_distbus_transport_stream_recv(void *transport, uint8_t *buffer, uint_fa
     vsf_distbus_transport_stream_t *transport_stream = transport;
     transport_stream->rx.buffer = buffer;
     transport_stream->rx.size = size;
+    transport_stream->rx.callback.param = p;
+    transport_stream->rx.callback.on_recv = on_recv;
     return __vsf_distbus_transport_try_recv(transport_stream) == size;
 }
 
