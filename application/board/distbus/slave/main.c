@@ -38,6 +38,7 @@
 #include "vsf.h"
 #include "vsf_board.h"
 
+#include "hal/vsf_distbus_hal.h"
 #ifdef APP_DISTBUS_CFG_TRANSPORT_USBD_CDCACM
 #   include "transport/usbd_cdcacm/vsf_distbus_transport.h"
 #else
@@ -50,7 +51,7 @@
 
 typedef struct __user_distbus_msg_t {
     implement(vsf_distbus_msg_t)
-    uint8_t buffer[APP_DISTBUS_CFG_MTU];
+    uint8_t buffer[VSF_HAL_DISTBUS_CFG_MTU];
 } __user_distbus_msg_t;
 
 dcl_vsf_pool(__user_distbus_msg_pool)
@@ -87,6 +88,10 @@ static __user_distbus_t __user_distbus = {
     },
 };
 
+static vsf_distbus_hal_t __vsf_distbus_hal = {
+    0
+};
+
 /*============================ IMPLEMENTATION ================================*/
 
 imp_vsf_pool(__user_distbus_msg_pool, __user_distbus_msg_t)
@@ -98,7 +103,7 @@ static void __user_distbus_on_error(vsf_distbus_t *distbus)
 
 static void * __user_distbus_alloc_msg(uint_fast32_t size)
 {
-    VSF_ASSERT(size <= APP_DISTBUS_CFG_MTU);
+    VSF_ASSERT(size <= VSF_HAL_DISTBUS_CFG_MTU);
     return VSF_POOL_ALLOC(__user_distbus_msg_pool, &__user_distbus.msg_pool);
 }
 
@@ -116,6 +121,10 @@ int VSF_USER_ENTRY(void)
 
     VSF_POOL_INIT(__user_distbus_msg_pool, &__user_distbus.msg_pool, APP_DISTBUS_CFG_POOL_NUM);
     vsf_distbus_init(&__user_distbus.distbus);
+
+    // initialize services
+    vsf_distbus_hal_init(&__user_distbus.distbus, &__vsf_distbus_hal);
+
     vsf_distbus_start(&__user_distbus.distbus);
     return 0;
 }

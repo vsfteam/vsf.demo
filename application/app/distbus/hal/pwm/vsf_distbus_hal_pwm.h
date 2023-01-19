@@ -15,40 +15,48 @@
  *                                                                           *
  ****************************************************************************/
 
-//! \note User Level Application Configuration
+#ifndef __VSF_DISTBUS_HAL_PWM_H__
+#define __VSF_DISTBUS_HAL_PWM_H__
 
-#ifndef __VSF_USR_CFG_H__
-#define __VSF_USR_CFG_H__
+#include "hal/vsf_hal.h"
+#include "service/vsf_service.h"
+
+#if VSF_HAL_USE_PWM == ENABLED
+
+#if     defined(__VSF_DISTBUS_HAL_PWM_CLASS_IMPLEMENT)
+#   define __VSF_CLASS_IMPLEMENT__
+#elif   defined(__VSF_DISTBUS_HAL_PWM_CLASS_INHERIT__)
+#   define __VSF_CLASS_INHERIT__
+#endif
+
+#include "utilities/ooc_class.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*============================ INCLUDES ======================================*/
-
-#include "vsf_board_cfg.h"
-
 /*============================ MACROS ========================================*/
-
-#undef VSF_HAL_USE_DAC
-#define VSF_HAL_USE_DAC                                 DISABLED
-
-#define VSF_USE_SIMPLE_STREAM                           ENABLED
-#define VSF_USE_TRACE                                   ENABLED
-
-#define VSF_USE_DISTBUS                                 ENABLED
-#   define VSF_HAL_DISTBUS_CFG_MTU                      512
-
-#define APP_DISTBUS_CFG_TRANSPORT_USBD_CDCACM
-#define APP_DISTBUS_CFG_POOL_NUM                        16
-
+/*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
+
+vsf_class(vsf_distbus_hal_pwm_t) {
+//    public_member(
+//    )
+    private_member(
+        vsf_distbus_service_t   service;
+        vsf_distbus_t           *distbus;
+    )
+};
+
 /*============================ GLOBAL VARIABLES ==============================*/
-/*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-/*============================ INCLUDES ======================================*/
 
-#ifdef APP_DISTBUS_CFG_TRANSPORT_USBD_CDCACM
-#   include "transport/usbd_cdcacm/vsf_distbus_transport_cfg.h"
-#else
-#   error please select one transport supported
+extern void vsf_distbus_hal_pwm_init(vsf_distbus_t *distbus, vsf_distbus_hal_pwm_t *distbus_hal_pwm);
+
+#ifdef __cplusplus
+}
 #endif
 
-#endif
-/* EOF */
+#endif      // VSF_HAL_USE_PWM
+#endif      // __VSF_DISTBUS_HAL_PWM_H__
