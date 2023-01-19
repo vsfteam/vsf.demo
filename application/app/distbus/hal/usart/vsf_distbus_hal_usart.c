@@ -34,6 +34,8 @@
 #undef VSF_HAL_DISTBUS_USE_USART
 #define VSF_HAL_DISTBUS_USE_USART           ENABLED
 
+#define __VSF_DISTBUS_CLASS_INHERIT__
+#define __VSF_DISTBUS_HAL_USART_CLASS_IMPLEMENT
 // for hal_distbus_usart constants
 #define __VSF_HAL_DISTBUS_USART_CLASS_INHERIT__
 #include "./vsf_distbus_hal_usart.h"

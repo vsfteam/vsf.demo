@@ -60,12 +60,25 @@ typedef struct __user_distbus_t {
     vsf_distbus_hal_t                       hal;
 } __user_distbus_t;
 
+#if APP_DISTBUS_CFG_DEBUG == ENABLED
+typedef struct __debug_distbus_t {
+    vsf_distbus_t                           distbus;
+    vsf_distbus_transport_t                 transport;
+    vsf_hal_distbus_t                       hal;
+} __debug_distbus_t;
+#endif
+
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ PROTOTYPES ====================================*/
 
 static void __user_distbus_on_error(vsf_distbus_t *distbus);
 static void * __user_distbus_alloc_msg(uint_fast32_t size);
 static void __user_distbus_free_msg(void *msg);
+static void __user_distbus_on_connected(vsf_distbus_t *distbus);
+
+#if APP_DISTBUS_CFG_DEBUG == ENABLED
+static void __debug_distbus_on_connected(vsf_distbus_t *distbus);
+#endif
 
 /*============================ LOCAL VARIABLES ===============================*/
 
@@ -76,6 +89,7 @@ describe_mem_stream(vsf_distbus_transport_stream_tx, 1024)
 
 static __user_distbus_t __user_distbus = {
     .distbus                    = {
+        .on_connected           = __user_distbus_on_connected,
         .op                     = {
             .mem                = {
                 .alloc_msg      = __user_distbus_alloc_msg,
@@ -101,6 +115,31 @@ static __user_distbus_t __user_distbus = {
     },
 };
 
+#if APP_DISTBUS_CFG_DEBUG == ENABLED
+static __debug_distbus_t __debug_distbus = {
+    .distbus                    = {
+        .on_connected           = __debug_distbus_on_connected,
+        .op                     = {
+            .mem                = {
+                .alloc_msg      = __user_distbus_alloc_msg,
+                .free_msg       = __user_distbus_free_msg,
+            },
+            .bus                = {
+                .transport      = &__debug_distbus.transport,
+                .init           = vsf_distbus_transport_init,
+                .send           = vsf_distbus_transport_send,
+                .recv           = vsf_distbus_transport_recv,
+            },
+            .on_error           = __user_distbus_on_error,
+        },
+    },
+    .transport                  = {
+        .stream_rx              = &vsf_distbus_transport_stream_tx.use_as__vsf_stream_t,
+        .stream_tx              = &vsf_distbus_transport_stream_rx.use_as__vsf_stream_t,
+    },
+};
+#endif
+
 /*============================ IMPLEMENTATION ================================*/
 
 imp_vsf_pool(__user_distbus_msg_pool, __user_distbus_msg_t)
@@ -121,6 +160,20 @@ static void __user_distbus_free_msg(void *msg)
     VSF_POOL_FREE(__user_distbus_msg_pool, &__user_distbus.msg_pool, msg);
 }
 
+static void __user_distbus_on_connected(vsf_distbus_t *distbus)
+{
+    __user_distbus_t *user_distbus = container_of(distbus, __user_distbus_t, distbus);
+    vsf_distbus_hal_start(&user_distbus->hal);
+}
+
+#if APP_DISTBUS_CFG_DEBUG == ENABLED
+static void __debug_distbus_on_connected(vsf_distbus_t *distbus)
+{
+    __debug_distbus_t *debug_distbus = container_of(distbus, __debug_distbus_t, distbus);
+    vsf_hal_distbus_start(&debug_distbus->hal);
+}
+#endif
+
 int VSF_USER_ENTRY(void)
 {
     vsf_board_init();
@@ -134,30 +187,9 @@ int VSF_USER_ENTRY(void)
     vsf_distbus_start(&__user_distbus.distbus);
 
 #if APP_DISTBUS_CFG_DEBUG == ENABLED
-    static vsf_distbus_transport_t __debug_distbus_transport = {
-        .stream_rx              = &vsf_distbus_transport_stream_tx.use_as__vsf_stream_t,
-        .stream_tx              = &vsf_distbus_transport_stream_rx.use_as__vsf_stream_t,
-    };
-    static vsf_distbus_t __debug_distbus = {
-        .op                     = {
-            .mem                = {
-                .alloc_msg      = __user_distbus_alloc_msg,
-                .free_msg       = __user_distbus_free_msg,
-            },
-            .bus                = {
-                .transport      = &__debug_distbus_transport,
-                .init           = vsf_distbus_transport_init,
-                .send           = vsf_distbus_transport_send,
-                .recv           = vsf_distbus_transport_recv,
-            },
-            .on_error           = __user_distbus_on_error,
-        },
-    };
-    static vsf_hal_distbus_t __debug_hal_distbus;
-
-    vsf_distbus_init(&__debug_distbus);
-    vsf_hal_distbus_register(&__debug_distbus, &__debug_hal_distbus);
-    vsf_distbus_start(&__debug_distbus);
+    vsf_distbus_init(&__debug_distbus.distbus);
+    vsf_hal_distbus_register(&__debug_distbus.distbus, &__debug_distbus.hal);
+    vsf_distbus_start(&__debug_distbus.distbus);
 #endif
     return 0;
 }

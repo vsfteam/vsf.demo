@@ -34,6 +34,8 @@
 #undef VSF_HAL_DISTBUS_USE_SPI
 #define VSF_HAL_DISTBUS_USE_SPI             ENABLED
 
+#define __VSF_DISTBUS_CLASS_INHERIT__
+#define __VSF_DISTBUS_HAL_SPI_CLASS_IMPLEMENT
 // for hal_distbus_spi constants
 #define __VSF_HAL_DISTBUS_SPI_CLASS_INHERIT__
 #include "./vsf_distbus_hal_spi.h"

@@ -34,6 +34,8 @@
 #undef VSF_HAL_DISTBUS_USE_IO
 #define VSF_HAL_DISTBUS_USE_IO              ENABLED
 
+#define __VSF_DISTBUS_CLASS_INHERIT__
+#define __VSF_DISTBUS_HAL_IO_CLASS_IMPLEMENT
 // for hal_distbus_io constants
 #define __VSF_HAL_DISTBUS_IO_CLASS_INHERIT__
 #include "./vsf_distbus_hal_io.h"

@@ -34,6 +34,8 @@
 #undef VSF_HAL_DISTBUS_USE_I2C
 #define VSF_HAL_DISTBUS_USE_I2C             ENABLED
 
+#define __VSF_DISTBUS_CLASS_INHERIT__
+#define __VSF_DISTBUS_HAL_I2C_CLASS_IMPLEMENT
 // for hal_distbus_i2c constants
 #define __VSF_HAL_DISTBUS_I2C_CLASS_INHERIT__
 #include "./vsf_distbus_hal_i2c.h"

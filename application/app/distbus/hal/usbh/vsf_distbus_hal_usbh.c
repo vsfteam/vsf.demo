@@ -36,6 +36,8 @@
 #undef VSF_HAL_DISTBUS_USE_USBH
 #define VSF_HAL_DISTBUS_USE_USBH            ENABLED
 
+#define __VSF_DISTBUS_CLASS_INHERIT__
+#define __VSF_DISTBUS_HAL_USBH_CLASS_IMPLEMENT
 // for hal_distbus_usbh constants
 #define __VSF_HAL_DISTBUS_USBH_CLASS_INHERIT__
 #include "./vsf_distbus_hal_usbh.h"

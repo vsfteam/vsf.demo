@@ -34,6 +34,8 @@
 #undef VSF_HAL_DISTBUS_USE_ADC
 #define VSF_HAL_DISTBUS_USE_ADC             ENABLED
 
+#define __VSF_DISTBUS_CLASS_INHERIT__
+#define __VSF_DISTBUS_HAL_ADC_CLASS_IMPLEMENT
 // for hal_distbus_adc constants
 #define __VSF_HAL_DISTBUS_ADC_CLASS_INHERIT__
 #include "./vsf_distbus_hal_adc.h"

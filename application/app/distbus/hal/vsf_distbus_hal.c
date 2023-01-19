@@ -30,6 +30,7 @@
 #undef VSF_HAL_USE_DISTBUS
 #define VSF_HAL_USE_DISTBUS                 ENABLED
 
+#define __VSF_DISTBUS_CLASS_INHERIT__
 // for hal_distbus constants
 #define __VSF_HAL_DISTBUS_CLASS_INHERIT__
 #include "./vsf_distbus_hal.h"
@@ -56,7 +57,7 @@ static const vsf_distbus_service_info_t __vsf_distbus_hal_service_info = {
 static bool __vsf_distbus_hal_service_msghandler(vsf_distbus_t *distbus,
                         vsf_distbus_service_t *service, vsf_distbus_msg_t *msg)
 {
-    vsf_hal_distbus_t *hal_distbus = container_of(service, vsf_hal_distbus_t, service);
+    vsf_distbus_hal_t *distbus_hal = container_of(service, vsf_distbus_hal_t, service);
     uint8_t *data = (uint8_t *)&msg->header + sizeof(msg->header);
     uint32_t datalen = msg->header.datalen;
 
@@ -72,4 +73,13 @@ void vsf_distbus_hal_register(vsf_distbus_t *distbus, vsf_distbus_hal_t *distbus
     distbus_hal->distbus = distbus;
     distbus_hal->service.info = &__vsf_distbus_hal_service_info;
     vsf_distbus_register_service(distbus, &distbus_hal->service);
+}
+
+void vsf_distbus_hal_start(vsf_distbus_hal_t *distbus_hal)
+{
+    vsf_distbus_msg_t *msg = vsf_distbus_alloc_msg(distbus_hal->distbus, 0, NULL);
+    VSF_HAL_ASSERT(msg != NULL);
+
+    msg->header.addr = VSF_HAL_DISTBUS_CMD_CONNECT;
+    vsf_distbus_send_msg(distbus_hal->distbus, &distbus_hal->service, msg);
 }

@@ -34,6 +34,8 @@
 #undef VSF_HAL_DISTBUS_USE_GPIO
 #define VSF_HAL_DISTBUS_USE_GPIO            ENABLED
 
+#define __VSF_DISTBUS_CLASS_INHERIT__
+#define __VSF_DISTBUS_HAL_GPIO_CLASS_IMPLEMENT
 // for hal_distbus_gpio constants
 #define __VSF_HAL_DISTBUS_GPIO_CLASS_INHERIT__
 #include "./vsf_distbus_hal_gpio.h"

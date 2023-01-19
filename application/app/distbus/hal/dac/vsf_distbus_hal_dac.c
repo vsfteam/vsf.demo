@@ -34,6 +34,8 @@
 #undef VSF_HAL_DISTBUS_USE_DAC
 #define VSF_HAL_DISTBUS_USE_DAC             ENABLED
 
+#define __VSF_DISTBUS_CLASS_INHERIT__
+#define __VSF_DISTBUS_HAL_DAC_CLASS_IMPLEMENT
 // for hal_distbus_dac constants
 #define __VSF_HAL_DISTBUS_DAC_CLASS_INHERIT__
 #include "./vsf_distbus_hal_dac.h"

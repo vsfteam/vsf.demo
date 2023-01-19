@@ -19,6 +19,7 @@
 #define __VSF_DISTBUS_HAL_H__
 
 #include "hal/vsf_hal.h"
+// for distbus
 #include "service/vsf_service.h"
 
 #include "./io/vsf_distbus_hal_io.h"
@@ -135,6 +136,7 @@ vsf_class(vsf_distbus_hal_t) {
 /*============================ PROTOTYPES ====================================*/
 
 extern void vsf_distbus_hal_register(vsf_distbus_t *distbus, vsf_distbus_hal_t *distbus_hal);
+extern void vsf_distbus_hal_start(vsf_distbus_hal_t *distbus_hal);
 
 #ifdef __cplusplus
 }
