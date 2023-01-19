@@ -67,7 +67,7 @@ static bool __vsf_distbus_hal_service_msghandler(vsf_distbus_t *distbus,
     return false;
 }
 
-void vsf_distbus_hal_init(vsf_distbus_t *distbus, vsf_distbus_hal_t *distbus_hal)
+void vsf_distbus_hal_register(vsf_distbus_t *distbus, vsf_distbus_hal_t *distbus_hal)
 {
     distbus_hal->distbus = distbus;
     distbus_hal->service.info = &__vsf_distbus_hal_service_info;

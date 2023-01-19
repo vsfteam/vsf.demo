@@ -57,6 +57,7 @@ typedef struct __user_distbus_t {
     vsf_pool(__user_distbus_msg_pool)       msg_pool;
 
     vsf_distbus_transport_t                 transport;
+    vsf_distbus_hal_t                       hal;
 } __user_distbus_t;
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -95,10 +96,9 @@ static __user_distbus_t __user_distbus = {
         .stream_tx              = &vsf_distbus_transport_stream_tx.use_as__vsf_stream_t,
     },
 #endif
-};
-
-static vsf_distbus_hal_t __vsf_distbus_hal = {
-    0
+    .hal                        = {
+        0
+    },
 };
 
 /*============================ IMPLEMENTATION ================================*/
@@ -130,10 +130,7 @@ int VSF_USER_ENTRY(void)
 
     VSF_POOL_INIT(__user_distbus_msg_pool, &__user_distbus.msg_pool, APP_DISTBUS_CFG_POOL_NUM);
     vsf_distbus_init(&__user_distbus.distbus);
-
-    // initialize services
-    vsf_distbus_hal_init(&__user_distbus.distbus, &__vsf_distbus_hal);
-
+    vsf_distbus_hal_register(&__user_distbus.distbus, &__user_distbus.hal);
     vsf_distbus_start(&__user_distbus.distbus);
 
 #if APP_DISTBUS_CFG_DEBUG == ENABLED
