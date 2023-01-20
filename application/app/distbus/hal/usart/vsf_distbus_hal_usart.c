@@ -28,12 +28,6 @@
 
 #if VSF_HAL_USE_USART == ENABLED
 
-// define VSF_HAL_USE_DISTBUS_XXXX for constants in header
-#undef VSF_HAL_USE_DISTBUS
-#define VSF_HAL_USE_DISTBUS                 ENABLED
-#undef VSF_HAL_DISTBUS_USE_USART
-#define VSF_HAL_DISTBUS_USE_USART           ENABLED
-
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_USART_CLASS_IMPLEMENT
 // for hal_distbus_usart constants
@@ -75,7 +69,12 @@ static bool __vsf_distbus_hal_usart_service_msghandler(vsf_distbus_t *distbus,
     return retain_msg;
 }
 
-void vsf_distbus_hal_usart_init(vsf_distbus_t *distbus, vsf_distbus_hal_usart_t *distbus_hal_usart)
+uint32_t vsf_distbus_hal_usart_declare(vsf_distbus_hal_usart_t *distbus_hal_usart, uint8_t *ptr, uint32_t size)
+{
+    return 0;
+}
+
+void vsf_distbus_hal_usart_register(vsf_distbus_t *distbus, vsf_distbus_hal_usart_t *distbus_hal_usart)
 {
     distbus_hal_usart->distbus = distbus;
     distbus_hal_usart->service.info = &__vsf_distbus_hal_usart_service_info;

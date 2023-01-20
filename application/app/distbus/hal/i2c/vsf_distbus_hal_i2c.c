@@ -28,12 +28,6 @@
 
 #if VSF_HAL_USE_I2C == ENABLED
 
-// define VSF_HAL_USE_DISTBUS_XXXX for constants in header
-#undef VSF_HAL_USE_DISTBUS
-#define VSF_HAL_USE_DISTBUS                 ENABLED
-#undef VSF_HAL_DISTBUS_USE_I2C
-#define VSF_HAL_DISTBUS_USE_I2C             ENABLED
-
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_I2C_CLASS_IMPLEMENT
 // for hal_distbus_i2c constants
@@ -75,7 +69,12 @@ static bool __vsf_distbus_hal_i2c_service_msghandler(vsf_distbus_t *distbus,
     return retain_msg;
 }
 
-void vsf_distbus_hal_i2c_init(vsf_distbus_t *distbus, vsf_distbus_hal_i2c_t *distbus_hal_i2c)
+uint32_t vsf_distbus_hal_i2c_declare(vsf_distbus_hal_i2c_t *distbus_hal_i2c, uint8_t *ptr, uint32_t size)
+{
+    return 0;
+}
+
+void vsf_distbus_hal_i2c_register(vsf_distbus_t *distbus, vsf_distbus_hal_i2c_t *distbus_hal_i2c)
 {
     distbus_hal_i2c->distbus = distbus;
     distbus_hal_i2c->service.info = &__vsf_distbus_hal_i2c_service_info;

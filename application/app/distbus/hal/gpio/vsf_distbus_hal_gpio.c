@@ -28,12 +28,6 @@
 
 #if VSF_HAL_USE_GPIO == ENABLED
 
-// define VSF_HAL_USE_DISTBUS_XXXX for constants in header
-#undef VSF_HAL_USE_DISTBUS
-#define VSF_HAL_USE_DISTBUS                 ENABLED
-#undef VSF_HAL_DISTBUS_USE_GPIO
-#define VSF_HAL_DISTBUS_USE_GPIO            ENABLED
-
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_GPIO_CLASS_IMPLEMENT
 // for hal_distbus_gpio constants
@@ -75,7 +69,23 @@ static bool __vsf_distbus_hal_gpio_service_msghandler(vsf_distbus_t *distbus,
     return retain_msg;
 }
 
-void vsf_distbus_hal_gpio_init(vsf_distbus_t *distbus, vsf_distbus_hal_gpio_t *distbus_hal_gpio)
+uint32_t vsf_distbus_hal_gpio_declare(vsf_distbus_hal_gpio_t *distbus_hal_gpio, uint8_t *ptr, uint32_t size)
+{
+    if (size >= sizeof(vsf_hal_distbus_gpio_info_t)) {
+        gpio_capability_t cap = vsf_gpio_capability(distbus_hal_gpio->target);
+        vsf_hal_distbus_gpio_info_t info = {
+            .support_config_pin         = cap.is_support_config_pin,
+            .support_output_and_set     = cap.is_support_output_and_set,
+            .support_output_and_clear   = cap.is_support_output_and_clear,
+            .pin_count                  = cap.pin_count,
+            .avail_pin_mask             = cap.avail_pin_mask,
+        };
+        memcpy(ptr, &info, sizeof(vsf_hal_distbus_gpio_info_t));
+    }
+    return sizeof(vsf_hal_distbus_gpio_info_t);
+}
+
+void vsf_distbus_hal_gpio_register(vsf_distbus_t *distbus, vsf_distbus_hal_gpio_t *distbus_hal_gpio)
 {
     distbus_hal_gpio->distbus = distbus;
     distbus_hal_gpio->service.info = &__vsf_distbus_hal_gpio_service_info;

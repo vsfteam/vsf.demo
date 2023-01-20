@@ -31,6 +31,22 @@
 
 #undef VSF_HAL_USE_DAC
 #define VSF_HAL_USE_DAC                                 DISABLED
+// enable hal_distbus for constants and structures
+#define VSF_HAL_USE_DISTBUS                             ENABLED
+#   define VSF_HAL_DISTBUS_USE_IO                       ENABLED
+#   define VSF_HAL_DISTBUS_USE_GPIO                     ENABLED
+#   define VSF_HAL_DISTBUS_USE_ADC                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_PWM                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_I2C                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_SPI                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_USART                    ENABLED
+#   define VSF_HAL_DISTBUS_USE_MMC                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_I2S                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_USBD                     ENABLED
+#   define VSF_HAL_DISTBUS_USE_USBH                     ENABLED
+
+#define VSF_USE_USB_DEVICE                              ENABLED
+#define VSF_USE_USB_HOST                                ENABLED
 
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
 #define VSF_USE_TRACE                                   ENABLED
@@ -40,18 +56,6 @@
 
 #if APP_DISTBUS_CFG_DEBUG == ENABLED
 #   define VSF_DISTBUS_TRANSPORT_USE_STREAM             ENABLED
-#   define VSF_HAL_USE_DISTBUS                          ENABLED
-#       define VSF_HAL_DISTBUS_USE_IO                   ENABLED
-#       define VSF_HAL_DISTBUS_USE_GPIO                 ENABLED
-#       define VSF_HAL_DISTBUS_USE_ADC                  ENABLED
-#       define VSF_HAL_DISTBUS_USE_PWM                  ENABLED
-#       define VSF_HAL_DISTBUS_USE_I2C                  ENABLED
-#       define VSF_HAL_DISTBUS_USE_SPI                  ENABLED
-#       define VSF_HAL_DISTBUS_USE_USART                ENABLED
-#       define VSF_HAL_DISTBUS_USE_MMC                  ENABLED
-#       define VSF_HAL_DISTBUS_USE_I2S                  ENABLED
-#       define VSF_HAL_DISTBUS_USE_USBD                 ENABLED
-#       define VSF_HAL_DISTBUS_USE_USBH                 ENABLED
 #else
 #   define VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM        ENABLED
 #endif

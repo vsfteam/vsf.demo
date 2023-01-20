@@ -55,9 +55,21 @@ def_vsf_pool(__user_distbus_msg_pool, __user_distbus_msg_t)
 typedef struct __user_distbus_t {
     vsf_distbus_t                           distbus;
     vsf_pool(__user_distbus_msg_pool)       msg_pool;
-
     vsf_distbus_transport_t                 transport;
+
     vsf_distbus_hal_t                       hal;
+    // for gpio, map all
+    // for other port like i2c/spi, map device in vsf_board
+#if VSF_HAL_USE_GPIO == ENABLED
+    vsf_distbus_hal_gpio_t                  gpio[VSF_HW_GPIO_COUNT];
+
+#   define __VSF_DISTBUS_HAL_GPIO_BIND(__N, __PREFIX)                           \
+        .gpio[(__N)].target = (vsf_gpio_t *)&VSF_MCONNECT(__PREFIX, _gpio, __N),
+#   define VSF_DISTBUS_HAL_GPIO_BIND(__INSTANCE, __DEV_NUM, __PREFIX)           \
+        .hal.gpio.dev_num = __DEV_NUM,                                          \
+        .hal.gpio.dev = (__INSTANCE).gpio,                                      \
+        VSF_MREPEAT(__DEV_NUM, __VSF_DISTBUS_HAL_GPIO_BIND, vsf_hw)
+#endif
 } __user_distbus_t;
 
 #if APP_DISTBUS_CFG_DEBUG == ENABLED
@@ -110,9 +122,10 @@ static __user_distbus_t __user_distbus = {
         .stream_tx              = &vsf_distbus_transport_stream_tx.use_as__vsf_stream_t,
     },
 #endif
-    .hal                        = {
-        0
-    },
+
+#if VSF_HAL_USE_GPIO == ENABLED
+    VSF_DISTBUS_HAL_GPIO_BIND(__user_distbus, VSF_HW_GPIO_COUNT, vsf_hw)
+#endif
 };
 
 #if APP_DISTBUS_CFG_DEBUG == ENABLED

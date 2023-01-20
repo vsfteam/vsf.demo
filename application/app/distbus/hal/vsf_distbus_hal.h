@@ -54,77 +54,14 @@ extern "C" {
 
 vsf_class(vsf_distbus_hal_t) {
     public_member(
-#if VSF_HAL_USE_IO == ENABLED
-        struct {
-            vsf_distbus_hal_io_t    *dev;
-        } io;
-#endif
-#if VSF_HAL_USE_GPIO == ENABLED
-        struct {
-            uint8_t                 dev_num;
-            vsf_distbus_hal_gpio_t  *dev;
-        } gpio;
-#endif
-#if VSF_HAL_USE_I2C == ENABLED
-        struct {
-            uint8_t                 dev_num;
-            vsf_distbus_hal_i2c_t   *dev;
-        } i2c;
-#endif
-#if VSF_HAL_USE_SPI == ENABLED
-        struct {
-            uint8_t                 dev_num;
-            vsf_distbus_hal_spi_t   *dev;
-        } spi;
-#endif
-#if VSF_HAL_USE_USART == ENABLED
-        struct {
-            uint8_t                 dev_num;
-            vsf_distbus_hal_usart_t *dev;
-        } usart;
-#endif
-#if VSF_HAL_USE_MMC == ENABLED
-        struct {
-            uint8_t                 dev_num;
-            vsf_distbus_hal_mmc_t   *dev;
-        } mmc;
-#endif
-#if VSF_HAL_USE_ADC == ENABLED
-        struct {
-            uint8_t                 dev_num;
-            vsf_distbus_hal_adc_t   *dev;
-        } adc;
-#endif
-#if VSF_HAL_USE_DAC == ENABLED
-        struct {
-            uint8_t                 dev_num;
-            vsf_distbus_hal_dac_t   *dev;
-        } dac;
-#endif
-#if VSF_HAL_USE_PWM == ENABLED
-        struct {
-            uint8_t                 dev_num;
-            vsf_distbus_hal_pwm_t   *dev;
-        } pwm;
-#endif
-#if VSF_HAL_USE_I2S == ENABLED
-        struct {
-            uint8_t                 dev_num;
-            vsf_distbus_hal_i2s_t   *dev;
-        } i2s;
-#endif
-#if VSF_USE_USB_DEVICE == ENABLED && VSF_HAL_USE_USBD == ENABLED
-        struct {
-            uint8_t                 dev_num;
-            vsf_distbus_hal_usbd_t  *dev;
-        } usbd;
-#endif
-#if VSF_USE_USB_HOST == ENABLED && VSF_HAL_USE_USBH == ENABLED
-        struct {
-            uint8_t                 dev_num;
-            vsf_distbus_hal_usbh_t  *dev;
-        } usbh;
-#endif
+#define VSF_DISTBUS_HAL_DEFINE(__TYPE)                                          \
+        struct {                                                                \
+            uint8_t                                     dev_num;                \
+            VSF_MCONNECT(vsf_distbus_hal_, __TYPE, _t)  *dev;                   \
+        } __TYPE;
+        VSF_MFOREACH(VSF_DISTBUS_HAL_DEFINE,
+#include "vsf_distbus_hal_enum.inc"
+        )
     )
     private_member(
         vsf_distbus_service_t   service;

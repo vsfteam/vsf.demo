@@ -52,7 +52,8 @@ vsf_class(vsf_distbus_hal_usbh_t) {
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern void vsf_distbus_hal_usbh_init(vsf_distbus_t *distbus, vsf_distbus_hal_usbh_t *distbus_hal_usbh);
+extern uint32_t vsf_distbus_hal_usbh_declare(vsf_distbus_hal_usbh_t *distbus_hal_usbh, uint8_t *ptr, uint32_t size);
+extern void vsf_distbus_hal_usbh_register(vsf_distbus_t *distbus, vsf_distbus_hal_usbh_t *distbus_hal_usbh);
 
 #ifdef __cplusplus
 }

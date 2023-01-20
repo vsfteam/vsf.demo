@@ -28,12 +28,6 @@
 
 #if VSF_HAL_USE_SPI == ENABLED
 
-// define VSF_HAL_USE_DISTBUS_XXXX for constants in header
-#undef VSF_HAL_USE_DISTBUS
-#define VSF_HAL_USE_DISTBUS                 ENABLED
-#undef VSF_HAL_DISTBUS_USE_SPI
-#define VSF_HAL_DISTBUS_USE_SPI             ENABLED
-
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_SPI_CLASS_IMPLEMENT
 // for hal_distbus_spi constants
@@ -75,7 +69,12 @@ static bool __vsf_distbus_hal_spi_service_msghandler(vsf_distbus_t *distbus,
     return retain_msg;
 }
 
-void vsf_distbus_hal_spi_init(vsf_distbus_t *distbus, vsf_distbus_hal_spi_t *distbus_hal_spi)
+uint32_t vsf_distbus_hal_spi_declare(vsf_distbus_hal_spi_t *distbus_hal_spi, uint8_t *ptr, uint32_t size)
+{
+    return 0;
+}
+
+void vsf_distbus_hal_spi_register(vsf_distbus_t *distbus, vsf_distbus_hal_spi_t *distbus_hal_spi)
 {
     distbus_hal_spi->distbus = distbus;
     distbus_hal_spi->service.info = &__vsf_distbus_hal_spi_service_info;

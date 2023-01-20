@@ -41,8 +41,9 @@ extern "C" {
 /*============================ TYPES =========================================*/
 
 vsf_class(vsf_distbus_hal_i2c_t) {
-//    public_member(
-//    )
+    public_member(
+        vsf_i2c_t               *target;
+    )
     private_member(
         vsf_distbus_service_t   service;
         vsf_distbus_t           *distbus;
@@ -52,7 +53,8 @@ vsf_class(vsf_distbus_hal_i2c_t) {
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern void vsf_distbus_hal_i2c_init(vsf_distbus_t *distbus, vsf_distbus_hal_i2c_t *distbus_hal_i2c);
+extern uint32_t vsf_distbus_hal_i2c_declare(vsf_distbus_hal_i2c_t *distbus_hal_i2c, uint8_t *ptr, uint32_t size);
+extern void vsf_distbus_hal_i2c_register(vsf_distbus_t *distbus, vsf_distbus_hal_i2c_t *distbus_hal_i2c);
 
 #ifdef __cplusplus
 }

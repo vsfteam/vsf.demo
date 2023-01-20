@@ -28,14 +28,6 @@
 
 #if VSF_HAL_USE_USBH == ENABLED
 
-// define VSF_HAL_USE_DISTBUS_XXXX for constants in header
-#undef VSF_HAL_USE_DISTBUS
-#define VSF_HAL_USE_DISTBUS                 ENABLED
-#undef VSF_USE_USB_HOST
-#define VSF_USE_USB_HOST                    ENABLED
-#undef VSF_HAL_DISTBUS_USE_USBH
-#define VSF_HAL_DISTBUS_USE_USBH            ENABLED
-
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_USBH_CLASS_IMPLEMENT
 // for hal_distbus_usbh constants
@@ -77,7 +69,12 @@ static bool __vsf_distbus_hal_usbh_service_msghandler(vsf_distbus_t *distbus,
     return retain_msg;
 }
 
-void vsf_distbus_hal_usbh_init(vsf_distbus_t *distbus, vsf_distbus_hal_usbh_t *distbus_hal_usbh)
+uint32_t vsf_distbus_hal_usbh_declare(vsf_distbus_hal_usbh_t *distbus_hal_usbh, uint8_t *ptr, uint32_t size)
+{
+    return 0;
+}
+
+void vsf_distbus_hal_usbh_register(vsf_distbus_t *distbus, vsf_distbus_hal_usbh_t *distbus_hal_usbh)
 {
     distbus_hal_usbh->distbus = distbus;
     distbus_hal_usbh->service.info = &__vsf_distbus_hal_usbh_service_info;

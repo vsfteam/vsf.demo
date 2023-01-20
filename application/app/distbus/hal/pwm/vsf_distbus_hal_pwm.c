@@ -28,12 +28,6 @@
 
 #if VSF_HAL_USE_PWM == ENABLED
 
-// define VSF_HAL_USE_DISTBUS_XXXX for constants in header
-#undef VSF_HAL_USE_DISTBUS
-#define VSF_HAL_USE_DISTBUS                 ENABLED
-#undef VSF_HAL_DISTBUS_USE_PWM
-#define VSF_HAL_DISTBUS_USE_PWM             ENABLED
-
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_PWM_CLASS_IMPLEMENT
 // for hal_distbus_pwm constants
@@ -75,7 +69,12 @@ static bool __vsf_distbus_hal_pwm_service_msghandler(vsf_distbus_t *distbus,
     return retain_msg;
 }
 
-void vsf_distbus_hal_pwm_init(vsf_distbus_t *distbus, vsf_distbus_hal_pwm_t *distbus_hal_pwm)
+uint32_t vsf_distbus_hal_pwm_declare(vsf_distbus_hal_pwm_t *distbus_hal_pwm, uint8_t *ptr, uint32_t size)
+{
+    return 0;
+}
+
+void vsf_distbus_hal_pwm_register(vsf_distbus_t *distbus, vsf_distbus_hal_pwm_t *distbus_hal_pwm)
 {
     distbus_hal_pwm->distbus = distbus;
     distbus_hal_pwm->service.info = &__vsf_distbus_hal_pwm_service_info;

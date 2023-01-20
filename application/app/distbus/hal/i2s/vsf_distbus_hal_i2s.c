@@ -28,12 +28,6 @@
 
 #if VSF_HAL_USE_I2S == ENABLED
 
-// define VSF_HAL_USE_DISTBUS_XXXX for constants in header
-#undef VSF_HAL_USE_DISTBUS
-#define VSF_HAL_USE_DISTBUS                 ENABLED
-#undef VSF_HAL_DISTBUS_USE_I2S
-#define VSF_HAL_DISTBUS_USE_I2S             ENABLED
-
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_I2S_CLASS_IMPLEMENT
 // for hal_distbus_i2s constants
@@ -75,7 +69,12 @@ static bool __vsf_distbus_hal_i2s_service_msghandler(vsf_distbus_t *distbus,
     return retain_msg;
 }
 
-void vsf_distbus_hal_i2s_init(vsf_distbus_t *distbus, vsf_distbus_hal_i2s_t *distbus_hal_i2s)
+uint32_t vsf_distbus_hal_i2s_declare(vsf_distbus_hal_i2s_t *distbus_hal_i2s, uint8_t *ptr, uint32_t size)
+{
+    return 0;
+}
+
+void vsf_distbus_hal_i2s_register(vsf_distbus_t *distbus, vsf_distbus_hal_i2s_t *distbus_hal_i2s)
 {
     distbus_hal_i2s->distbus = distbus;
     distbus_hal_i2s->service.info = &__vsf_distbus_hal_i2s_service_info;

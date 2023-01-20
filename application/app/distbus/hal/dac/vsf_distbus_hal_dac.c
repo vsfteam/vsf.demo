@@ -28,12 +28,6 @@
 
 #if VSF_HAL_USE_DAC == ENABLED
 
-// define VSF_HAL_USE_DISTBUS_XXXX for constants in header
-#undef VSF_HAL_USE_DISTBUS
-#define VSF_HAL_USE_DISTBUS                 ENABLED
-#undef VSF_HAL_DISTBUS_USE_DAC
-#define VSF_HAL_DISTBUS_USE_DAC             ENABLED
-
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_DAC_CLASS_IMPLEMENT
 // for hal_distbus_dac constants
@@ -75,7 +69,12 @@ static bool __vsf_distbus_hal_dac_service_msghandler(vsf_distbus_t *distbus,
     return retain_msg;
 }
 
-void vsf_distbus_hal_dac_init(vsf_distbus_t *distbus, vsf_distbus_hal_dac_t *distbus_hal_dac)
+uint32_t vsf_distbus_hal_dac_declare(vsf_distbus_hal_dac_t *distbus_hal_dac, uint8_t *ptr, uint32_t size)
+{
+    return 0;
+}
+
+void vsf_distbus_hal_dac_register(vsf_distbus_t *distbus, vsf_distbus_hal_dac_t *distbus_hal_dac)
 {
     distbus_hal_dac->distbus = distbus;
     distbus_hal_dac->service.info = &__vsf_distbus_hal_dac_service_info;

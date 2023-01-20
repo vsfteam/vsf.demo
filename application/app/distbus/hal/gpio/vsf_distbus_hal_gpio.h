@@ -41,18 +41,20 @@ extern "C" {
 /*============================ TYPES =========================================*/
 
 vsf_class(vsf_distbus_hal_gpio_t) {
-//    public_member(
-//    )
+    public_member(
+        vsf_gpio_t                      *target;
+    )
     private_member(
-        vsf_distbus_service_t   service;
-        vsf_distbus_t           *distbus;
+        vsf_distbus_service_t           service;
+        vsf_distbus_t                   *distbus;
     )
 };
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern void vsf_distbus_hal_gpio_init(vsf_distbus_t *distbus, vsf_distbus_hal_gpio_t *distbus_hal_gpio);
+extern uint32_t vsf_distbus_hal_gpio_declare(vsf_distbus_hal_gpio_t *distbus_hal_gpio, uint8_t *ptr, uint32_t size);
+extern void vsf_distbus_hal_gpio_register(vsf_distbus_t *distbus, vsf_distbus_hal_gpio_t *distbus_hal_gpio);
 
 #ifdef __cplusplus
 }
