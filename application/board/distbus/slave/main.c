@@ -88,10 +88,6 @@ static void * __user_distbus_alloc_msg(uint_fast32_t size);
 static void __user_distbus_free_msg(void *msg);
 static void __user_distbus_on_connected(vsf_distbus_t *distbus);
 
-#if APP_DISTBUS_CFG_DEBUG == ENABLED
-static void __debug_distbus_on_connected(vsf_distbus_t *distbus);
-#endif
-
 /*============================ LOCAL VARIABLES ===============================*/
 
 #if VSF_DISTBUS_TRANSPORT_USE_STREAM == ENABLED
@@ -131,7 +127,6 @@ static __user_distbus_t __user_distbus = {
 #if APP_DISTBUS_CFG_DEBUG == ENABLED
 static __debug_distbus_t __debug_distbus = {
     .distbus                    = {
-        .on_connected           = __debug_distbus_on_connected,
         .op                     = {
             .mem                = {
                 .alloc_msg      = __user_distbus_alloc_msg,
@@ -180,12 +175,6 @@ static void __user_distbus_on_connected(vsf_distbus_t *distbus)
 }
 
 #if APP_DISTBUS_CFG_DEBUG == ENABLED
-static void __debug_distbus_on_connected(vsf_distbus_t *distbus)
-{
-    __debug_distbus_t *debug_distbus = container_of(distbus, __debug_distbus_t, distbus);
-    vsf_hal_distbus_start(&debug_distbus->hal);
-}
-
 void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type_t type, uint8_t num, void *devs)
 {
     static const char *__types_str[] = {
