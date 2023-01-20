@@ -185,6 +185,21 @@ static void __debug_distbus_on_connected(vsf_distbus_t *distbus)
     __debug_distbus_t *debug_distbus = container_of(distbus, __debug_distbus_t, distbus);
     vsf_hal_distbus_start(&debug_distbus->hal);
 }
+
+void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type_t type, uint8_t num, void *devs)
+{
+    static const char *__types_str[] = {
+#define VSF_DISTBUS_HAL_TYPE_STR(__TYPE)                                        \
+        [VSF_MCONNECT(VSF_HAL_DISTBUS_, __TYPE)] = VSF_STR(__TYPE),
+
+        VSF_MFOREACH(VSF_DISTBUS_HAL_TYPE_STR,
+#include "hal/vsf_distbus_hal_enum.inc"
+        )
+    };
+    VSF_ASSERT(type < dimof(__types_str));
+    VSF_ASSERT(__types_str[type] != NULL);
+    vsf_trace_info("new %s %d %p" VSF_TRACE_CFG_LINEEND, __types_str[type], num, devs);
+}
 #endif
 
 int VSF_USER_ENTRY(void)
