@@ -199,6 +199,15 @@ void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type
     VSF_ASSERT(type < dimof(__types_str));
     VSF_ASSERT(__types_str[type] != NULL);
     vsf_trace_info("new %s %d %p" VSF_TRACE_CFG_LINEEND, __types_str[type], num, devs);
+
+    switch (type) {
+    case VSF_HAL_DISTBUS_GPIO:
+        while (true) {
+            vsf_gpio_set(__debug_distbus.hal.gpio.dev, 1 << 15);
+            vsf_gpio_clear(__debug_distbus.hal.gpio.dev, 1 << 15);
+        }
+        break;
+    }
 }
 #endif
 

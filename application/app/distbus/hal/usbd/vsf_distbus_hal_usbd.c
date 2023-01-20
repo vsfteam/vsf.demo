@@ -57,9 +57,13 @@ static bool __vsf_distbus_hal_usbd_service_msghandler(vsf_distbus_t *distbus,
                         vsf_distbus_service_t *service, vsf_distbus_msg_t *msg)
 {
     vsf_distbus_hal_usbd_t *hal_distbus_usbd = container_of(service, vsf_distbus_hal_usbd_t, service);
-    uint8_t *data = (uint8_t *)&msg->header + sizeof(msg->header);
     uint32_t datalen = msg->header.datalen;
     bool retain_msg = false;
+
+    union {
+        void *ptr;
+    } u_arg;
+    u_arg.ptr = (uint8_t *)&msg->header + sizeof(msg->header);
 
     switch (msg->header.addr) {
     default:

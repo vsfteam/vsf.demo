@@ -58,8 +58,13 @@ static bool __vsf_distbus_hal_service_msghandler(vsf_distbus_t *distbus,
                         vsf_distbus_service_t *service, vsf_distbus_msg_t *msg)
 {
     vsf_distbus_hal_t *distbus_hal = container_of(service, vsf_distbus_hal_t, service);
-    uint8_t *data = (uint8_t *)&msg->header + sizeof(msg->header);
     uint32_t datalen = msg->header.datalen;
+    uint8_t *data;
+
+    union {
+        void *ptr;
+    } u_arg;
+    u_arg.ptr = (uint8_t *)&msg->header + sizeof(msg->header);
 
     switch (msg->header.addr) {
     case VSF_HAL_DISTBUS_CMD_CONNECT:
@@ -85,6 +90,8 @@ static bool __vsf_distbus_hal_service_msghandler(vsf_distbus_t *distbus,
                     VSF_ASSERT(false);                                          \
                     break;                                                      \
                 }                                                               \
+                VSF_MCONNECT(vsf_distbus_hal_, __TYPE, _register)(              \
+                            distbus_hal->distbus, &distbus_hal->__TYPE.dev[i]); \
                 datalen -= reallen;                                             \
             }                                                                   \
         }
