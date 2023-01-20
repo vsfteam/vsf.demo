@@ -73,22 +73,27 @@ static bool __vsf_distbus_hal_service_msghandler(vsf_distbus_t *distbus,
         uint32_t reallen, i;
 
 #define VSF_DISTBUS_HAL_DECLARE(__TYPE)                                         \
-        VSF_ASSERT(datalen >= 2);                                               \
-        *data++ = VSF_MCONNECT(VSF_HAL_DISTBUS_, __TYPE);                       \
-        *data++ = distbus_hal->__TYPE.dev_num;                                  \
-        for (i = 0; i < distbus_hal->__TYPE.dev_num; i++) {                     \
-            reallen = VSF_MCONNECT(vsf_distbus_hal_, __TYPE, _declare)(         \
-                        &distbus_hal->__TYPE.dev[i], data, datalen);            \
-            if (reallen > datalen) {                                            \
-                VSF_ASSERT(false);                                              \
-                break;                                                          \
+        if (distbus_hal->__TYPE.dev_num > 0) {                                  \
+            VSF_ASSERT(datalen >= 2);                                           \
+            *data++ = VSF_MCONNECT(VSF_HAL_DISTBUS_, __TYPE);                   \
+            *data++ = distbus_hal->__TYPE.dev_num;                              \
+            datalen -= 2;                                                       \
+            for (i = 0; i < distbus_hal->__TYPE.dev_num; i++) {                 \
+                reallen = VSF_MCONNECT(vsf_distbus_hal_, __TYPE, _declare)(     \
+                            &distbus_hal->__TYPE.dev[i], data, datalen);        \
+                if (reallen > datalen) {                                        \
+                    VSF_ASSERT(false);                                          \
+                    break;                                                      \
+                }                                                               \
+                datalen -= reallen;                                             \
             }                                                                   \
-            datalen -= reallen;                                                 \
         }
         VSF_MFOREACH(VSF_DISTBUS_HAL_DECLARE,
 #include "vsf_distbus_hal_enum.inc"
         )
 
+        msg->header.datalen = VSF_HAL_DISTBUS_CFG_MTU - datalen;
+        msg->header.addr = VSF_HAL_DISTBUS_CMD_DECLARE;
         vsf_distbus_send_msg(distbus_hal->distbus, &distbus_hal->service, msg);
         break;
     }

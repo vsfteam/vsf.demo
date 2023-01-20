@@ -49,11 +49,11 @@ static uint_fast32_t __vsf_distbus_transport_try_send(vsf_distbus_transport_stre
 
         wsiz = vsf_min(wsiz, transport_stream->tx.size);
         memcpy(wbuf, transport_stream->tx.buffer, wsiz);
-        VSF_STREAM_WRITE(transport_stream->stream_tx, NULL, wsiz);
-
         trans_size += wsiz;
         transport_stream->tx.size -= wsiz;
         transport_stream->tx.buffer += wsiz;
+
+        VSF_STREAM_WRITE(transport_stream->stream_tx, NULL, wsiz);
     }
     return trans_size;
 }
@@ -71,11 +71,11 @@ static uint_fast32_t __vsf_distbus_transport_try_recv(vsf_distbus_transport_stre
 
         rsiz = vsf_min(rsiz, transport_stream->rx.size);
         memcpy(transport_stream->rx.buffer, rbuf, rsiz);
-        VSF_STREAM_READ(transport_stream->stream_rx, NULL, rsiz);
-
         trans_size += rsiz;
         transport_stream->rx.size -= rsiz;
         transport_stream->rx.buffer += rsiz;
+
+        VSF_STREAM_READ(transport_stream->stream_rx, NULL, rsiz);
     }
     return trans_size;
 }
@@ -86,7 +86,15 @@ static void __vsf_distbus_transport_stream_evthandler(vsf_stream_t *stream, void
     uint32_t remain_size;
 
     switch (evt) {
+    case VSF_STREAM_ON_CONNECT:
+        if (stream == transport_stream->stream_rx) {
+            goto check_rx;
+        } else {
+            goto check_tx;
+        }
+        break;
     case VSF_STREAM_ON_IN:
+    check_rx:
         remain_size = transport_stream->rx.size;
         if (    (remain_size > 0)
             &&  (__vsf_distbus_transport_try_recv(transport_stream) == remain_size)
@@ -95,6 +103,7 @@ static void __vsf_distbus_transport_stream_evthandler(vsf_stream_t *stream, void
         }
         break;
     case VSF_STREAM_ON_OUT:
+    check_tx:
         remain_size = transport_stream->tx.size;
         if (    (remain_size > 0)
             &&  (__vsf_distbus_transport_try_send(transport_stream) == remain_size)
@@ -109,12 +118,10 @@ bool vsf_distbus_transport_stream_init(void *transport, void *p, void (*on_inite
 {
     vsf_distbus_transport_stream_t *transport_stream = transport;
 
-    VSF_STREAM_INIT(transport_stream->stream_rx);
     transport_stream->stream_rx->rx.param = transport_stream;
     transport_stream->stream_rx->rx.evthandler = __vsf_distbus_transport_stream_evthandler;
     VSF_STREAM_CONNECT_RX(transport_stream->stream_rx);
 
-    VSF_STREAM_INIT(transport_stream->stream_tx);
     transport_stream->stream_tx->tx.param = transport_stream;
     transport_stream->stream_tx->tx.evthandler = __vsf_distbus_transport_stream_evthandler;
     VSF_STREAM_CONNECT_TX(transport_stream->stream_tx);

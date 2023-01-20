@@ -194,7 +194,12 @@ int VSF_USER_ENTRY(void)
     vsf_start_trace();
 #endif
 
+#if VSF_DISTBUS_TRANSPORT_USE_STREAM == ENABLED
+    VSF_STREAM_INIT(&vsf_distbus_transport_stream_rx);
+    VSF_STREAM_INIT(&vsf_distbus_transport_stream_tx);
+#endif
     VSF_POOL_INIT(__user_distbus_msg_pool, &__user_distbus.msg_pool, APP_DISTBUS_CFG_POOL_NUM);
+
     vsf_distbus_init(&__user_distbus.distbus);
     vsf_distbus_hal_register(&__user_distbus.distbus, &__user_distbus.hal);
     vsf_distbus_start(&__user_distbus.distbus);
