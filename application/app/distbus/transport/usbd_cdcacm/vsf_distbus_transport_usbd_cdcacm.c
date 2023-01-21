@@ -103,6 +103,8 @@ bool vsf_distbus_transport_usbd_cdcacm_init(void *transport, void *p, void (*on_
     vsf_distbus_transport_usbd_cdcacm_t *transport_usbd_cdcacm = transport;
     transport_usbd_cdcacm->stream_rx = &vsf_distbus_transport_usbd_cdcacm_stream_rx.use_as__vsf_stream_t;
     transport_usbd_cdcacm->stream_tx = &vsf_distbus_transport_usbd_cdcacm_stream_tx.use_as__vsf_stream_t;
+    vsf_stream_init(transport_usbd_cdcacm->stream_rx);
+    vsf_stream_init(transport_usbd_cdcacm->stream_tx);
 
     vsf_distbus_transport_stream_init(&transport_usbd_cdcacm->use_as__vsf_distbus_transport_stream_t, p, on_inited);
 

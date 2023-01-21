@@ -237,6 +237,7 @@ void vsf_board_init(void)
     VSF_STREAM_INIT(&vsf_distbus_transport_stream_rx);
     VSF_STREAM_INIT(&vsf_distbus_transport_stream_tx);
 
+    __user_distbus.usart_stream.usart = vsf_board.distbus_usart;
     vsf_usart_stream_init(&__user_distbus.usart_stream, &(vsf_usart_cfg_t) {
         .mode               = VSF_USART_8_BIT_LENGTH | VSF_USART_NO_PARITY | VSF_USART_1_STOPBIT | VSF_USART_TX_ENABLE | VSF_USART_RX_ENABLE,
         .baudrate           = 921600,

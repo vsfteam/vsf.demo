@@ -83,7 +83,7 @@
 // This is useful if you want to connect to a external board running distbus_hal
 //   slave, and the hardware resources on the board can be conntrolled by
 //   hal_distbus host.
-#define VSF_BOARD_CFG_DISTBUS_USART                   1
+//#define VSF_BOARD_CFG_DISTBUS_USART                     1
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
