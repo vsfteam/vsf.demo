@@ -48,6 +48,8 @@ extern "C" {
 
 vsf_class(vsf_distbus_transport_stream_t) {
     public_member(
+        // distbus <== stream_rx.rx
+        // distbus ==> stream_tx.tx
         vsf_stream_t *stream_rx;
         vsf_stream_t *stream_tx;
     )

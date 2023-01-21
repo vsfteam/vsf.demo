@@ -21,8 +21,10 @@
  * Dependency:
  *
  * If VSF_HAL_DISTBUS is enabled:
- *   VSF_OS_CFG_MAIN_MODE MUST be VSF_OS_CFG_MAIN_MODE_THREAD(default).
- *   VSF_BOARD_CFG_DISTBUS_USART can be defined as the usart used as transport of distbus.
+ *   Configuration:
+ *     VSF_OS_CFG_MAIN_MODE MUST be VSF_OS_CFG_MAIN_MODE_THREAD(default).
+ *     VSF_BOARD_CFG_DISTBUS_USART can be defined as the usart used as transport of distbus.
+ *     VSF_KERNEL_CFG_EDA_SUPPORT_TIMER and VSF_KERNEL_CFG_SUPPORT_CALLBACK_TIMER MUST be enabled
  *
  *   Source:
  *     application/app/distbus/transport/*
@@ -47,6 +49,13 @@
 /*============================ MACROS ========================================*/
 
 #if __APP_USE_DISTBUS
+#   if (VSF_KERNEL_CFG_EDA_SUPPORT_TIMER != ENABLED) || (VSF_KERNEL_CFG_SUPPORT_CALLBACK_TIMER != ENABLED)
+#       error hal_distbus need VSF_KERNEL_CFG_EDA_SUPPORT_TIMER and VSF_KERNEL_CFG_SUPPORT_CALLBACK_TIMER
+#   endif
+#   if VSF_OS_CFG_MAIN_MODE != VSF_OS_CFG_MAIN_MODE_THREAD
+#   error VSF_OS_CFG_MAIN_MODE MUST be VSF_OS_CFG_MAIN_MODE_THREAD
+#   endif
+
 #   ifndef APP_DISTBUS_CFG_POOL_NUM
 #       define APP_DISTBUS_CFG_POOL_NUM         32
 #   endif
@@ -68,6 +77,7 @@ typedef struct __user_distbus_t {
     vsf_distbus_t                       distbus;
     vsf_usart_stream_t                  usart_stream;
     vsf_distbus_transport_t             transport;
+    vsf_callback_timer_t                timer;
     vsf_hal_distbus_t                   hal;
     vsf_pool(__user_distbus_msg_pool)   msg_pool;
 } __user_distbus_t;
@@ -80,6 +90,7 @@ typedef struct __user_distbus_t {
 static void __user_distbus_on_error(vsf_distbus_t *distbus);
 static void * __user_distbus_alloc_msg(uint_fast32_t size);
 static void __user_distbus_free_msg(void *msg);
+static void __user_distbus_on_connected(vsf_distbus_t *distbus);
 #endif
 
 /*============================ LOCAL VARIABLES ===============================*/
@@ -134,6 +145,7 @@ describe_mem_stream(vsf_distbus_transport_stream_tx, 1024)
 
 static __user_distbus_t __user_distbus = {
     .distbus                    = {
+        .on_connected           = __user_distbus_on_connected,
         .op                     = {
             .mem                = {
                 .alloc_msg      = __user_distbus_alloc_msg,
@@ -154,8 +166,8 @@ static __user_distbus_t __user_distbus = {
         .stream_tx              = &vsf_distbus_transport_stream_tx.use_as__vsf_stream_t,
     },
     .usart_stream               = {
-        .stream_rx              = &vsf_distbus_transport_stream_tx.use_as__vsf_stream_t,
-        .stream_tx              = &vsf_distbus_transport_stream_rx.use_as__vsf_stream_t,
+        .stream_rx              = &vsf_distbus_transport_stream_rx.use_as__vsf_stream_t,
+        .stream_tx              = &vsf_distbus_transport_stream_tx.use_as__vsf_stream_t,
     },
 #endif
 };
@@ -205,6 +217,21 @@ void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type
         break;
     }
 }
+
+static void __user_distbus_on_connected(vsf_distbus_t *distbus)
+{
+    __user_distbus_t *user_distbus = container_of(distbus, __user_distbus_t, distbus);
+    vsf_hal_distbus_start(&user_distbus->hal);
+    vsf_callback_timer_add_ms(&user_distbus->timer, 1000);
+}
+
+static void __user_distbus_connection_check_on_timer(vsf_callback_timer_t *timer)
+{
+    __user_distbus_t *user_distbus = container_of(timer, __user_distbus_t, timer);
+    if (!user_distbus->hal.remote_connected) {
+        __user_distbus_on_connected(&user_distbus->distbus);
+    }
+}
 #endif
 
 void vsf_board_init(void)
@@ -236,6 +263,9 @@ void vsf_board_init(void)
     VSF_POOL_INIT(__user_distbus_msg_pool, &__user_distbus.msg_pool, APP_DISTBUS_CFG_POOL_NUM);
     VSF_STREAM_INIT(&vsf_distbus_transport_stream_rx);
     VSF_STREAM_INIT(&vsf_distbus_transport_stream_tx);
+
+    vsf_callback_timer_init(&__user_distbus.timer);
+    __user_distbus.timer.on_timer = __user_distbus_connection_check_on_timer;
 
     __user_distbus.usart_stream.usart = vsf_board.distbus_usart;
     vsf_usart_stream_init(&__user_distbus.usart_stream, &(vsf_usart_cfg_t) {

@@ -57,6 +57,7 @@ typedef struct __user_distbus_t {
     vsf_pool(__user_distbus_msg_pool)       msg_pool;
     vsf_distbus_transport_t                 transport;
 
+    vsf_callback_timer_t                    timer;
     vsf_distbus_hal_t                       hal;
 #define __VSF_DISTBUS_HAL_BIND(__N, __TYPE, __PREFIX)                           \
     .__TYPE[__N].target = (VSF_MCONNECT(vsf_, __TYPE, _t) *)&VSF_MCONNECT(__PREFIX, _, __TYPE, __N),
@@ -174,6 +175,15 @@ static void __user_distbus_on_connected(vsf_distbus_t *distbus)
 {
     __user_distbus_t *user_distbus = container_of(distbus, __user_distbus_t, distbus);
     vsf_distbus_hal_start(&user_distbus->hal);
+    vsf_callback_timer_add_ms(&user_distbus->timer, 1000);
+}
+
+static void __user_distbus_connection_check_on_timer(vsf_callback_timer_t *timer)
+{
+    __user_distbus_t *user_distbus = container_of(timer, __user_distbus_t, timer);
+    if (!user_distbus->hal.remote_connected) {
+        __user_distbus_on_connected(&user_distbus->distbus);
+    }
 }
 
 #if APP_DISTBUS_CFG_DEBUG == ENABLED
@@ -214,6 +224,8 @@ int VSF_USER_ENTRY(void)
 #endif
     VSF_POOL_INIT(__user_distbus_msg_pool, &__user_distbus.msg_pool, APP_DISTBUS_CFG_POOL_NUM);
 
+    vsf_callback_timer_init(&__user_distbus.timer);
+    __user_distbus.timer.on_timer = __user_distbus_connection_check_on_timer;
     vsf_distbus_init(&__user_distbus.distbus);
     vsf_distbus_hal_register(&__user_distbus.distbus, &__user_distbus.hal);
     vsf_distbus_start(&__user_distbus.distbus);

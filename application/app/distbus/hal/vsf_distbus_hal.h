@@ -35,10 +35,15 @@
 #include "./usbd/vsf_distbus_hal_usbd.h"
 #include "./usbh/vsf_distbus_hal_usbh.h"
 
+#undef PUBLIC_CONST
 #if     defined(__VSF_DISTBUS_HAL_CLASS_IMPLEMENT)
 #   define __VSF_CLASS_IMPLEMENT__
+#   define PUBLIC_CONST
 #elif   defined(__VSF_DISTBUS_HAL_CLASS_INHERIT__)
 #   define __VSF_CLASS_INHERIT__
+#   define PUBLIC_CONST
+#else
+#   define PUBLIC_CONST             const
 #endif
 
 #include "utilities/ooc_class.h"
@@ -66,6 +71,7 @@ typedef struct __vsf_distbus_hal_enum_t {
 vsf_class(vsf_distbus_hal_t) {
     public_member(
         implement(__vsf_distbus_hal_enum_t)
+        PUBLIC_CONST bool       remote_connected;
     )
     private_member(
         vsf_distbus_service_t   service;

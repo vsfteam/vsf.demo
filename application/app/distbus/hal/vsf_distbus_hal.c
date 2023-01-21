@@ -33,6 +33,7 @@
 #define __VSF_DISTBUS_CLASS_INHERIT__
 // for hal_distbus constants
 #define __VSF_HAL_DISTBUS_CLASS_INHERIT__
+#define __VSF_DISTBUS_HAL_CLASS_IMPLEMENT
 #include "./vsf_distbus_hal.h"
 
 /*============================ MACROS ========================================*/
@@ -102,12 +103,18 @@ static bool __vsf_distbus_hal_service_msghandler(vsf_distbus_t *distbus,
         msg->header.addr = VSF_HAL_DISTBUS_CMD_DECLARE;
         vsf_distbus_send_msg(distbus_hal->distbus, &distbus_hal->service, msg);
         break;
+    case VSF_HAL_DISTBUS_CMD_DECLARE:
+        if (!distbus_hal->remote_connected) {
+            distbus_hal->remote_connected = true;
+        }
+        break;
     }
     return false;
 }
 
 void vsf_distbus_hal_register(vsf_distbus_t *distbus, vsf_distbus_hal_t *distbus_hal)
 {
+    distbus_hal->remote_connected = false;
     distbus_hal->distbus = distbus;
     distbus_hal->service.info = &__vsf_distbus_hal_service_info;
     vsf_distbus_register_service(distbus, &distbus_hal->service);
