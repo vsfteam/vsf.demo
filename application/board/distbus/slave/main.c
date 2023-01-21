@@ -58,17 +58,19 @@ typedef struct __user_distbus_t {
     vsf_distbus_transport_t                 transport;
 
     vsf_distbus_hal_t                       hal;
+#define __VSF_DISTBUS_HAL_BIND(__N, __TYPE, __PREFIX)                           \
+    .__TYPE[__N].target = (VSF_MCONNECT(vsf_, __TYPE, _t) *)&VSF_MCONNECT(__PREFIX, _, __TYPE, __N),
+#define VSF_DISTBUS_HAL_BIND_MULTI(__INSTANCE, __TYPE, __DEV_NUM, __PREFIX)     \
+    .hal.__TYPE.dev_num = __DEV_NUM,                                            \
+    .hal.__TYPE.dev = (__INSTANCE).__TYPE,                                      \
+    VSF_MREPEAT(__DEV_NUM, __VSF_DISTBUS_HAL_BIND, __TYPE, __PREFIX)
+
     // for gpio, map all
     // for other port like i2c/spi, map device in vsf_board
 #if VSF_HAL_USE_GPIO == ENABLED
     vsf_distbus_hal_gpio_t                  gpio[VSF_HW_GPIO_COUNT];
-
-#   define __VSF_DISTBUS_HAL_GPIO_BIND(__N, __PREFIX)                           \
-        .gpio[(__N)].target = (vsf_gpio_t *)&VSF_MCONNECT(__PREFIX, _gpio, __N),
-#   define VSF_DISTBUS_HAL_GPIO_BIND(__INSTANCE, __DEV_NUM, __PREFIX)           \
-        .hal.gpio.dev_num = __DEV_NUM,                                          \
-        .hal.gpio.dev = (__INSTANCE).gpio,                                      \
-        VSF_MREPEAT(__DEV_NUM, __VSF_DISTBUS_HAL_GPIO_BIND, vsf_hw)
+#define VSF_DISTBUS_HAL_BIND_GPIO_MULTI(__INSTANCE, __DEV_NUM, __PREFIX)        \
+        VSF_DISTBUS_HAL_BIND_MULTI(__INSTANCE, gpio, __DEV_NUM, __PREFIX)
 #endif
 } __user_distbus_t;
 
@@ -120,7 +122,7 @@ static __user_distbus_t __user_distbus = {
 #endif
 
 #if VSF_HAL_USE_GPIO == ENABLED
-    VSF_DISTBUS_HAL_GPIO_BIND(__user_distbus, VSF_HW_GPIO_COUNT, vsf_hw)
+    VSF_DISTBUS_HAL_BIND_GPIO_MULTI(__user_distbus, VSF_HW_GPIO_COUNT, vsf_hw)
 #endif
 };
 
