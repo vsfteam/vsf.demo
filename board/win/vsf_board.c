@@ -15,6 +15,15 @@
  *                                                                           *
  ****************************************************************************/
 
+/*
+ * board support for windows
+ * 
+ * Dependency:
+ * If VSF_HAL_DISTBUS is enabled,
+ *   VSF_OS_CFG_MAIN_MODE MUST be VSF_OS_CFG_MAIN_MODE_THREAD(default).
+ *
+ */
+
 /*============================ INCLUDES ======================================*/
 
 #include "./vsf_board.h"
@@ -81,6 +90,20 @@ void vsf_board_init(void)
     while (vsf_hw_usart_is_scanning(&usart_devnum));
     if (usart_devnum > 0) {
         vsf_hw_usart_get_devices((vsf_usart_win_device_t *)&usart_devices, dimof(usart_devices));
+#ifdef VSF_BOARD_CFG_USART
+        for (uint8_t i = 0; i < usart_devnum; i++) {
+            if (VSF_BOARD_CFG_USART == usart_devices[i].port) {
+                vsf_board.usart = usart_devices[i].instance;
+                break;
+            }
+        }
+#else
+        
         vsf_board.usart = usart_devices[0].instance;
+#endif
     }
+#ifdef VSF_BOARD_CFG_USART
+    // note that even if assert here, assert message will not be diaplayed, because trace is not started here
+    VSF_ASSERT(vsf_board.usart != NULL);
+#endif
 }

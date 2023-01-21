@@ -73,6 +73,14 @@
 #define VSF_USBH_USE_HUB                                DISABLED
 
 /*----------------------------------------------------------------------------*
+ * Board Configurations                                                       *
+ *----------------------------------------------------------------------------*/
+
+// define VSF_BOARD_CFG_USART to N to use the COMN as vsf_board.usart
+//  if not defined, the first COM available will be used
+//#define VSF_BOARD_CFG_USART                             1
+
+/*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
  *----------------------------------------------------------------------------*/
 
