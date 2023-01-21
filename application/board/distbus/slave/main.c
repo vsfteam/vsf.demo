@@ -184,7 +184,7 @@ void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type
         [VSF_MCONNECT(VSF_HAL_DISTBUS_, __TYPE)] = VSF_STR(__TYPE),
 
 #define __VSF_DISTBUS_HAL_ENUM  VSF_DISTBUS_HAL_TYPE_STR
-#include "vsf_distbus_hal_enum.inc"
+#include "hal/vsf_distbus_hal_enum.inc"
     };
     VSF_ASSERT(type < dimof(__types_str));
     VSF_ASSERT(__types_str[type] != NULL);
