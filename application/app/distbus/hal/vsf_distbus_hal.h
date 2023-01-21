@@ -52,16 +52,20 @@ extern "C" {
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
-vsf_class(vsf_distbus_hal_t) {
-    public_member(
+typedef struct __vsf_distbus_hal_enum_t {
 #define VSF_DISTBUS_HAL_DEFINE(__TYPE)                                          \
         struct {                                                                \
-            uint8_t                                     dev_num;                \
-            VSF_MCONNECT(vsf_distbus_hal_, __TYPE, _t)  *dev;                   \
+            uint8_t                 dev_num;                                    \
+            VSF_MCONNECT(vsf_distbus_hal_, __TYPE, _t) *dev;                    \
         } __TYPE;
-        VSF_MFOREACH(VSF_DISTBUS_HAL_DEFINE,
+
+#define __VSF_DISTBUS_HAL_ENUM      VSF_DISTBUS_HAL_DEFINE
 #include "vsf_distbus_hal_enum.inc"
-        )
+} __vsf_distbus_hal_enum_t;
+
+vsf_class(vsf_distbus_hal_t) {
+    public_member(
+        implement(__vsf_distbus_hal_enum_t)
     )
     private_member(
         vsf_distbus_service_t   service;

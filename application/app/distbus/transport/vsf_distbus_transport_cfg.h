@@ -26,6 +26,8 @@
 #   include "./usbd_cdcacm/vsf_distbus_transport_usbd_cdcacm_cfg.h"
 #elif   VSF_DISTBUS_TRANSPORT_USE_STREAM == ENABLED
 #   include "./stream/vsf_distbus_transport_stream_cfg.h"
+#else
+#   error please select transport
 #endif
 
 /*============================ MACROS ========================================*/

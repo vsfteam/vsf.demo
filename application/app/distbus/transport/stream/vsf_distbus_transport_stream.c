@@ -23,6 +23,7 @@
 
 /*============================ INCLUDES ======================================*/
 
+#define __VSF_SIMPLE_STREAM_CLASS_INHERIT__
 #define __VSF_DISTBUS_TRANSPORT_STREAM_CLASS_IMPLEMENT
 #include "./vsf_distbus_transport_stream.h"
 

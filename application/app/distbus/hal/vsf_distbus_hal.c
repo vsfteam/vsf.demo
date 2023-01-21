@@ -95,9 +95,8 @@ static bool __vsf_distbus_hal_service_msghandler(vsf_distbus_t *distbus,
                 datalen -= reallen;                                             \
             }                                                                   \
         }
-        VSF_MFOREACH(VSF_DISTBUS_HAL_DECLARE,
+#define __VSF_DISTBUS_HAL_ENUM  VSF_DISTBUS_HAL_DECLARE
 #include "vsf_distbus_hal_enum.inc"
-        )
 
         msg->header.datalen = VSF_HAL_DISTBUS_CFG_MTU - datalen;
         msg->header.addr = VSF_HAL_DISTBUS_CMD_DECLARE;

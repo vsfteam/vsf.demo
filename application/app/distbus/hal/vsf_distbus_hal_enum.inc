@@ -1,36 +1,38 @@
 #if VSF_HAL_USE_IO == ENABLED
-    io,
+    __VSF_DISTBUS_HAL_ENUM(io)
 #endif
 #if VSF_HAL_USE_GPIO == ENABLED
-    gpio,
+    __VSF_DISTBUS_HAL_ENUM(gpio)
 #endif
 #if VSF_HAL_USE_I2C == ENABLED
-    i2c,
+    __VSF_DISTBUS_HAL_ENUM(i2c)
 #endif
 #if VSF_HAL_USE_SPI == ENABLED
-    spi,
+    __VSF_DISTBUS_HAL_ENUM(spi)
 #endif
 #if VSF_HAL_USE_USART == ENABLED
-    usart,
+    __VSF_DISTBUS_HAL_ENUM(usart)
 #endif
 #if VSF_HAL_USE_MMC == ENABLED
-    mmc,
+    __VSF_DISTBUS_HAL_ENUM(mmc)
 #endif
 #if VSF_HAL_USE_ADC == ENABLED
-    adc,
+    __VSF_DISTBUS_HAL_ENUM(adc)
 #endif
 #if VSF_HAL_USE_DAC == ENABLED
-    dac,
+    __VSF_DISTBUS_HAL_ENUM(dac)
 #endif
 #if VSF_HAL_USE_PWM == ENABLED
-    pwm,
+    __VSF_DISTBUS_HAL_ENUM(pwm)
 #endif
 #if VSF_HAL_USE_I2S == ENABLED
-    i2s,
+    __VSF_DISTBUS_HAL_ENUM(i2s)
 #endif
 #if VSF_USE_USB_DEVICE == ENABLED && VSF_HAL_USE_USBD == ENABLED
-    usbd,
+    __VSF_DISTBUS_HAL_ENUM(usbd)
 #endif
 #if VSF_USE_USB_HOST == ENABLED && VSF_HAL_USE_USBH == ENABLED
-    usbh,
+    __VSF_DISTBUS_HAL_ENUM(usbh)
 #endif
+
+#undef __VSF_DISTBUS_HAL_ENUM(

@@ -34,6 +34,8 @@ typedef vsf_distbus_transport_stream_t          vsf_distbus_transport_t;
 #   define vsf_distbus_transport_init           vsf_distbus_transport_stream_init
 #   define vsf_distbus_transport_send           vsf_distbus_transport_stream_send
 #   define vsf_distbus_transport_recv           vsf_distbus_transport_stream_recv
+#else
+#   error please select transport
 #endif
 
 /*============================ MACROS ========================================*/
