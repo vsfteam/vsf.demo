@@ -80,6 +80,8 @@ typedef struct __user_distbus_t {
     vsf_callback_timer_t                timer;
     vsf_hal_distbus_t                   hal;
     vsf_pool(__user_distbus_msg_pool)   msg_pool;
+
+    vsf_eda_t                           *eda_pending;
 } __user_distbus_t;
 
 #endif
@@ -228,6 +230,13 @@ void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type
         }
         break;
     }
+
+    __user_distbus_t *user_distbus = container_of(hal_distbus, __user_distbus_t, hal);
+    if (user_distbus->eda_pending != NULL) {
+        vsf_eda_t *eda_pending = user_distbus->eda_pending;
+        user_distbus->eda_pending = NULL;
+        vsf_eda_post_evt(eda_pending, VSF_EVT_USER);
+    }
 }
 
 static void __user_distbus_on_connected(vsf_distbus_t *distbus)
@@ -284,8 +293,12 @@ void vsf_board_init(void)
         .mode               = VSF_USART_8_BIT_LENGTH | VSF_USART_NO_PARITY | VSF_USART_1_STOPBIT | VSF_USART_TX_ENABLE | VSF_USART_RX_ENABLE,
         .baudrate           = 921600,
     });
+
     vsf_distbus_init(&__user_distbus.distbus);
     vsf_hal_distbus_register(&__user_distbus.distbus, &__user_distbus.hal);
+    __user_distbus.eda_pending = vsf_eda_get_cur();
     vsf_distbus_start(&__user_distbus.distbus);
+
+    vsf_thread_wfe(VSF_EVT_USER);
 #endif
 }
