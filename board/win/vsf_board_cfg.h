@@ -63,6 +63,8 @@
 #define VSF_FS_USE_WINFS                                ENABLED
 #define VSF_USE_HEAP                                    ENABLED
 #define VSF_USE_DISTBUS                                 ENABLED
+// acutally VSF_DISTBUS_TRANSPORT_USE_STREAM is not in vsf, but in application/app/distbus
+#   define VSF_DISTBUS_TRANSPORT_USE_STREAM             ENABLED
 
 #define VSF_USBH_USE_HCD_WINUSB                         ENABLED
 #   define VSF_WINUSB_HCD_CFG_DEV_NUM                   1
@@ -76,9 +78,12 @@
  * Board Configurations                                                       *
  *----------------------------------------------------------------------------*/
 
-// define VSF_BOARD_CFG_USART to N to use the COMN as vsf_board.usart
-//  if not defined, the first COM available will be used
-//#define VSF_BOARD_CFG_USART                             1
+// define VSF_BOARD_CFG_DISTBUS_USART to N to use the COMN as distbus transport
+// if not defined, hal_distbus will not be used
+// This is useful if you want to connect to a external board running distbus_hal
+//   slave, and the hardware resources on the board can be conntrolled by
+//   hal_distbus host.
+#define VSF_BOARD_CFG_DISTBUS_USART                   1
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *

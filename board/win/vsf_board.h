@@ -30,6 +30,9 @@
 
 typedef struct vsf_board_t {
     vsf_usart_t *usart;
+#if VSF_USE_DISTBUS == ENABLED && VSF_HAL_USE_DISTBUS == ENABLED && defined(VSF_BOARD_CFG_DISTBUS_USART)
+    vsf_usart_t *distbus_usart;
+#endif
 
 #if VSF_USE_UI == ENABLED
     vk_disp_t *display_dev;
