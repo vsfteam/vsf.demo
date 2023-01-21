@@ -207,6 +207,27 @@ void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type
     VSF_ASSERT(type < dimof(__types_str));
     VSF_ASSERT(__types_str[type] != NULL);
     vsf_trace_info("new %s %d %p" VSF_TRACE_CFG_LINEEND, __types_str[type], num, devs);
+
+    union {
+        void *ptr;
+#define VSF_HAL_DISTBUS_DEFINE_DEVS(__TYPE)                                     \
+        VSF_MCONNECT(vsf_hal_distbus_, __TYPE, _t) *__TYPE;
+
+#define __VSF_HAL_DISTBUS_ENUM      VSF_HAL_DISTBUS_DEFINE_DEVS
+#include "hal/driver/vsf/distbus/vsf_hal_distbus_enum.inc"
+    } u_devs;
+    u_devs.ptr = devs;
+
+    switch (type) {
+    case VSF_HAL_DISTBUS_GPIO:
+        if (!vsf_board.gpio.dev_num) {
+            vsf_board.gpio.dev_num = vsf_min(num, dimof(vsf_board.gpio.dev));
+            for (uint8_t i = 0; i < vsf_board.gpio.dev_num; i++) {
+                vsf_board.gpio.dev[i] = (vsf_gpio_t *)&u_devs.gpio[i];
+            }
+        }
+        break;
+    }
 }
 
 static void __user_distbus_on_connected(vsf_distbus_t *distbus)

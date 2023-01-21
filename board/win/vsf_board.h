@@ -29,6 +29,11 @@
 /*============================ TYPES =========================================*/
 
 typedef struct vsf_board_t {
+    struct {
+        uint8_t dev_num;
+        vsf_gpio_t *dev[16];
+    } gpio;
+
     vsf_usart_t *usart;
 #if VSF_USE_DISTBUS == ENABLED && VSF_HAL_USE_DISTBUS == ENABLED && defined(VSF_BOARD_CFG_DISTBUS_USART)
     vsf_usart_t *distbus_usart;
