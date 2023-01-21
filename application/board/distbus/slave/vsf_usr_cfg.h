@@ -27,7 +27,7 @@
 /*============================ MACROS ========================================*/
 
 #define APP_DISTBUS_CFG_POOL_NUM                        16
-#define APP_DISTBUS_CFG_DEBUG                           ENABLED
+//#define APP_DISTBUS_CFG_DEBUG                           ENABLED
 
 #undef VSF_HAL_USE_DAC
 #define VSF_HAL_USE_DAC                                 DISABLED
