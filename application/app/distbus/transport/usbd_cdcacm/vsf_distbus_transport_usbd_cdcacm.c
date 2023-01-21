@@ -110,7 +110,7 @@ bool vsf_distbus_transport_usbd_cdcacm_init(void *transport, void *p, void (*on_
 
     vk_usbd_init(&__user_usbd_cdc);
     vk_usbd_connect(&__user_usbd_cdc);
-    return false;
+    return true;
 }
 
 bool vsf_distbus_transport_usbd_cdcacm_send(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p))
