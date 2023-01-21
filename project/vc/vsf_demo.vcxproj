@@ -237,6 +237,7 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\driver.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\rtc\rtc.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\uart\uart.h" />
+    <ClInclude Include="..\..\vsf\source\hal\utilities\stream\usart\vsf_usart_stream.h" />
     <ClInclude Include="..\..\vsf\source\hal\vsf_hal.h" />
     <ClInclude Include="..\..\vsf\source\hal\vsf_hal_cfg.h" />
     <ClInclude Include="..\..\vsf\source\kernel\shell\simple\vsf_simple.h" />
@@ -571,6 +572,7 @@
     <ClCompile Include="..\..\vsf\source\hal\driver\x86\win\driver.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\x86\win\rtc\rtc.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\x86\win\uart\uart.c" />
+    <ClCompile Include="..\..\vsf\source\hal\utilities\stream\usart\vsf_usart_stream.c" />
     <ClCompile Include="..\..\vsf\source\hal\vsf_hal.c" />
     <ClCompile Include="..\..\vsf\source\kernel\shell\simple\vsf_simple_bmpevt.c" />
     <ClCompile Include="..\..\vsf\source\kernel\shell\simple\vsf_simple_task.c" />

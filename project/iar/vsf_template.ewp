@@ -7802,6 +7802,18 @@
                         <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\io_mapper\vsf_io_mapper.h</name>
                     </file>
                 </group>
+                <group>
+                    <name>stream</name>
+                    <group>
+                        <name>usart</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\stream\usart\vsf_usart_stream.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\stream\usart\vsf_usart_stream.h</name>
+                        </file>
+                    </group>
+                </group>
             </group>
             <file>
                 <name>$PROJ_DIR$\..\..\vsf\source\hal\vsf_hal.c</name>

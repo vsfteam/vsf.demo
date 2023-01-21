@@ -66,6 +66,7 @@ def_vsf_pool(__user_distbus_msg_pool, __user_distbus_msg_t)
 
 typedef struct __user_distbus_t {
     vsf_distbus_t                       distbus;
+    vsf_usart_stream_t                  usart_stream;
     vsf_distbus_transport_t             transport;
     vsf_hal_distbus_t                   hal;
     vsf_pool(__user_distbus_msg_pool)   msg_pool;
@@ -152,6 +153,10 @@ static __user_distbus_t __user_distbus = {
         .stream_rx              = &vsf_distbus_transport_stream_rx.use_as__vsf_stream_t,
         .stream_tx              = &vsf_distbus_transport_stream_tx.use_as__vsf_stream_t,
     },
+    .usart_stream               = {
+        .stream_rx              = &vsf_distbus_transport_stream_tx.use_as__vsf_stream_t,
+        .stream_tx              = &vsf_distbus_transport_stream_rx.use_as__vsf_stream_t,
+    },
 #endif
 };
 #endif
@@ -232,6 +237,10 @@ void vsf_board_init(void)
     VSF_STREAM_INIT(&vsf_distbus_transport_stream_rx);
     VSF_STREAM_INIT(&vsf_distbus_transport_stream_tx);
 
+    vsf_usart_stream_init(&__user_distbus.usart_stream, &(vsf_usart_cfg_t) {
+        .mode               = VSF_USART_8_BIT_LENGTH | VSF_USART_NO_PARITY | VSF_USART_1_STOPBIT | VSF_USART_TX_ENABLE | VSF_USART_RX_ENABLE,
+        .baudrate           = 921600,
+    });
     vsf_distbus_init(&__user_distbus.distbus);
     vsf_hal_distbus_register(&__user_distbus.distbus, &__user_distbus.hal);
     vsf_distbus_start(&__user_distbus.distbus);
