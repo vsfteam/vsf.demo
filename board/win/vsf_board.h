@@ -25,20 +25,33 @@
 
 #include "vsf.h"
 
+#if VSF_USE_DISTBUS == ENABLED && VSF_HAL_USE_DISTBUS == ENABLED && defined(VSF_BOARD_CFG_DISTBUS_USART)
+#   define __APP_USE_DISTBUS                    ENABLED
+#endif
+
+#if __APP_USE_DISTBUS == ENABLED
+#   include "transport/vsf_distbus_transport.h"
+#endif
+
 /*============================ MACROS ========================================*/
 /*============================ TYPES =========================================*/
 
 typedef struct vsf_board_t {
-    struct {
-        uint8_t dev_num;
-        vsf_gpio_t *dev[16];
-    } gpio;
-
-    vsf_usart_t *usart;
-#if VSF_USE_DISTBUS == ENABLED && VSF_HAL_USE_DISTBUS == ENABLED && defined(VSF_BOARD_CFG_DISTBUS_USART)
+#if __APP_USE_DISTBUS == ENABLED
     vsf_usart_t *distbus_usart;
+    struct {
+#define VSF_BOARD_HAL_DISTBUS_DEFINE(__TYPE)                                    \
+        struct {                                                                \
+            uint8_t dev_num;                                                    \
+            VSF_MCONNECT(vsf_, __TYPE, _t) *dev[16];                            \
+        } __TYPE;
+
+#define __VSF_HAL_DISTBUS_ENUM  VSF_BOARD_HAL_DISTBUS_DEFINE
+#include "hal/driver/vsf/distbus/vsf_hal_distbus_enum.inc"
+    } chip;
 #endif
 
+    vsf_usart_t *usart;
 #if VSF_USE_UI == ENABLED
     vk_disp_t *display_dev;
     vk_disp_wingdi_t disp_wingdi;

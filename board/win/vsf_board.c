@@ -38,14 +38,6 @@
 
 #include "./vsf_board.h"
 
-#if VSF_USE_DISTBUS == ENABLED && VSF_HAL_USE_DISTBUS == ENABLED && defined(VSF_BOARD_CFG_DISTBUS_USART)
-#   define __APP_USE_DISTBUS                    ENABLED
-#endif
-
-#if __APP_USE_DISTBUS == ENABLED
-#   include "transport/vsf_distbus_transport.h"
-#endif
-
 /*============================ MACROS ========================================*/
 
 #if __APP_USE_DISTBUS
@@ -200,10 +192,10 @@ static void __user_distbus_free_msg(void *msg)
 void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type_t type, uint8_t num, void *devs)
 {
     static const char *__types_str[] = {
-#define VSF_HAL_DISTBUS_TYPE_STR(__TYPE)                                        \
+#define VSF_BOARD_HAL_DISTBUS_TYPE_STR(__TYPE)                                  \
         [VSF_MCONNECT(VSF_HAL_DISTBUS_, __TYPE)] = VSF_STR(__TYPE),
 
-#define __VSF_HAL_DISTBUS_ENUM  VSF_HAL_DISTBUS_TYPE_STR
+#define __VSF_HAL_DISTBUS_ENUM  VSF_BOARD_HAL_DISTBUS_TYPE_STR
 #include "hal/driver/vsf/distbus/vsf_hal_distbus_enum.inc"
     };
     VSF_ASSERT(type < dimof(__types_str));
@@ -212,22 +204,32 @@ void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type
 
     union {
         void *ptr;
-#define VSF_HAL_DISTBUS_DEFINE_DEVS(__TYPE)                                     \
+#define VSF_BOARD_HAL_DISTBUS_DEFINE_DEVS(__TYPE)                               \
         VSF_MCONNECT(vsf_hal_distbus_, __TYPE, _t) *__TYPE;
 
-#define __VSF_HAL_DISTBUS_ENUM      VSF_HAL_DISTBUS_DEFINE_DEVS
+#define __VSF_HAL_DISTBUS_ENUM      VSF_BOARD_HAL_DISTBUS_DEFINE_DEVS
 #include "hal/driver/vsf/distbus/vsf_hal_distbus_enum.inc"
     } u_devs;
     u_devs.ptr = devs;
 
     switch (type) {
-    case VSF_HAL_DISTBUS_GPIO:
-        if (!vsf_board.gpio.dev_num) {
-            vsf_board.gpio.dev_num = vsf_min(num, dimof(vsf_board.gpio.dev));
-            for (uint8_t i = 0; i < vsf_board.gpio.dev_num; i++) {
-                vsf_board.gpio.dev[i] = (vsf_gpio_t *)&u_devs.gpio[i];
-            }
-        }
+#define VSF_BOARD_HAL_DISTBUS_ENUM(__TYPE)                                      \
+    case VSF_MCONNECT(VSF_HAL_DISTBUS_, __TYPE):                                \
+        if (!vsf_board.chip.__TYPE.dev_num) {                                   \
+            vsf_board.chip.__TYPE.dev_num = vsf_min(num, dimof(vsf_board.chip.__TYPE.dev));\
+            for (uint8_t i = 0; i < vsf_board.chip.__TYPE.dev_num; i++) {       \
+                vsf_board.chip.__TYPE.dev[i] = (VSF_MCONNECT(vsf_, __TYPE, _t) *)&u_devs.__TYPE[i];\
+            }                                                                   \
+        }                                                                       \
+        break;
+
+#define __VSF_HAL_DISTBUS_ENUM      VSF_BOARD_HAL_DISTBUS_ENUM
+#include "hal/driver/vsf/distbus/vsf_hal_distbus_enum.inc"
+    }
+
+    switch (type) {
+    case VSF_HAL_DISTBUS_USART:
+        vsf_board.usart = vsf_board.chip.usart.dev[0];
         break;
     }
 
@@ -264,7 +266,6 @@ void vsf_board_init(void)
     while (vsf_hw_usart_is_scanning(&usart_devnum));
     if (usart_devnum > 0) {
         vsf_hw_usart_get_devices((vsf_usart_win_device_t *)&usart_devices, dimof(usart_devices));
-        vsf_board.usart = usart_devices[0].instance;
 
 #ifdef VSF_BOARD_CFG_DISTBUS_USART
         for (uint8_t i = 0; i < usart_devnum; i++) {
@@ -273,6 +274,8 @@ void vsf_board_init(void)
                 break;
             }
         }
+#else
+        vsf_board.usart = usart_devices[0].instance;
 #endif
     }
 #ifdef VSF_BOARD_CFG_DISTBUS_USART
