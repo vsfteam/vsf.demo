@@ -75,38 +75,46 @@ static bool __vsf_distbus_hal_gpio_service_msghandler(vsf_distbus_t *distbus,
 
     switch (msg->header.addr) {
     case VSF_HAL_DISTBUS_GPIO_CMD_CONFIG_PIN:
+        VSF_ASSERT(datalen == sizeof(*u_arg.config_pin));
         u_arg.config_pin->pin_mask = le32_to_cpu(u_arg.config_pin->pin_mask);
         vsf_gpio_config_pin(hal_distbus_gpio->target, u_arg.config_pin->pin_mask,
             vsf_hal_distbus_io_feature_to_generic_io_feature(u_arg.config_pin->feature));
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_SET_DIRECTION:
+        VSF_ASSERT(datalen == sizeof(*u_arg.set_direction));
         u_arg.set_direction->pin_mask = le32_to_cpu(u_arg.set_direction->pin_mask);
         u_arg.set_direction->direction_mask = le32_to_cpu(u_arg.set_direction->direction_mask);
         vsf_gpio_set_direction(hal_distbus_gpio->target, u_arg.set_direction->pin_mask,
             u_arg.set_direction->direction_mask);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_WRITE:
+        VSF_ASSERT(datalen == sizeof(*u_arg.write));
         u_arg.write->pin_mask = le32_to_cpu(u_arg.write->pin_mask);
         u_arg.write->value = le32_to_cpu(u_arg.write->value);
         vsf_gpio_write(hal_distbus_gpio->target, u_arg.write->pin_mask, u_arg.write->value);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_SET:
+        VSF_ASSERT(datalen == sizeof(*u_arg.set));
         u_arg.set->pin_mask = le32_to_cpu(u_arg.set->pin_mask);
         vsf_gpio_set(hal_distbus_gpio->target, u_arg.set->pin_mask);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_CLEAR:
+        VSF_ASSERT(datalen == sizeof(*u_arg.clear));
         u_arg.clear->pin_mask = le32_to_cpu(u_arg.clear->pin_mask);
         vsf_gpio_clear(hal_distbus_gpio->target, u_arg.clear->pin_mask);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_TOGGLE:
+        VSF_ASSERT(datalen == sizeof(*u_arg.toggle));
         u_arg.toggle->pin_mask = le32_to_cpu(u_arg.toggle->pin_mask);
         vsf_gpio_toggle(hal_distbus_gpio->target, u_arg.toggle->pin_mask);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_OUTPUT_AND_SET:
+        VSF_ASSERT(datalen == sizeof(*u_arg.output_and_set));
         u_arg.output_and_set->pin_mask = le32_to_cpu(u_arg.output_and_set->pin_mask);
         vsf_gpio_output_and_set(hal_distbus_gpio->target, u_arg.output_and_set->pin_mask);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_OUTPUT_AND_CLEAR:
+        VSF_ASSERT(datalen == sizeof(*u_arg.output_and_clear));
         u_arg.output_and_clear->pin_mask = le32_to_cpu(u_arg.output_and_clear->pin_mask);
         vsf_gpio_output_and_clear(hal_distbus_gpio->target, u_arg.output_and_clear->pin_mask);
         break;
