@@ -25,6 +25,17 @@
 /*============================ MACROS ========================================*/
 
 /*----------------------------------------------------------------------------*
+ * Board Configurations                                                       *
+ *----------------------------------------------------------------------------*/
+
+// define VSF_BOARD_CFG_DISTBUS_USART to N to use the COMN as distbus transport
+// if not defined, hal_distbus will not be used
+// This is useful if you want to connect to a external board running distbus_hal
+//   slave, and the hardware resources on the board can be conntrolled by
+//   hal_distbus host.
+//#define VSF_BOARD_CFG_DISTBUS_USART                     1
+
+/*----------------------------------------------------------------------------*
  * Architecture Configurations                                                *
  *----------------------------------------------------------------------------*/
 
@@ -32,6 +43,10 @@
 #define VSF_OS_CFG_ADD_EVTQ_TO_IDLE                     ENABLED
 // cpu usage is not supported in windows/linux/macos
 #define VSF_KERNEL_CFG_CPU_USAGE                        DISABLED
+
+#ifdef VSF_BOARD_CFG_DISTBUS_USART
+#   define VSF_WIN_USART_CFG_TX_BLOCK                   ENABLED
+#endif
 
 /*----------------------------------------------------------------------------*
  * Hal Driver Configurations                                                  *
@@ -73,17 +88,6 @@
 #define VSF_USBH_CFG_EDA_PRIORITY                       vsf_prio_0
 #define VSF_USBH_CFG_ENABLE_ROOT_HUB                    DISABLED
 #define VSF_USBH_USE_HUB                                DISABLED
-
-/*----------------------------------------------------------------------------*
- * Board Configurations                                                       *
- *----------------------------------------------------------------------------*/
-
-// define VSF_BOARD_CFG_DISTBUS_USART to N to use the COMN as distbus transport
-// if not defined, hal_distbus will not be used
-// This is useful if you want to connect to a external board running distbus_hal
-//   slave, and the hardware resources on the board can be conntrolled by
-//   hal_distbus host.
-//#define VSF_BOARD_CFG_DISTBUS_USART                     1
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
