@@ -166,9 +166,6 @@
     <Filter Include="vsf\hal\driver\x86">
       <UniqueIdentifier>{6839995b-5b02-421e-b703-23f6b9c984d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vsf\hal\interface">
-      <UniqueIdentifier>{41094f8b-289b-4758-876d-d5b08a45d435}</UniqueIdentifier>
-    </Filter>
     <Filter Include="vsf\component\debugger">
       <UniqueIdentifier>{56f47ff4-bca5-4b1a-8fe9-539a67c81a9b}</UniqueIdentifier>
     </Filter>
@@ -721,6 +718,27 @@
     <Filter Include="vsf\hal\driver\vsf\distbus\usbh">
       <UniqueIdentifier>{184c25a7-5502-43fb-ad98-67b387d9de4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="application\distbus">
+      <UniqueIdentifier>{ec53dbef-475f-45c7-8c3e-2986d0c12ba8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\distbus\transport">
+      <UniqueIdentifier>{163b4e73-0768-4f6f-b321-218490fc5fd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\distbus\transport\stream">
+      <UniqueIdentifier>{6753dbcd-23cf-4052-acc1-599f6d3fe0a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\distbus\transport\usbd_cdcacm">
+      <UniqueIdentifier>{2a45d5c4-b591-4df6-af94-b0609325060f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities">
+      <UniqueIdentifier>{8d181241-266f-4833-aa3a-2a5204687583}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\stream">
+      <UniqueIdentifier>{4db3c543-7556-47c7-ad5f-1420c0bb4328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\stream\usart">
+      <UniqueIdentifier>{bca2a986-7ccc-4939-9efa-1c68e449f4d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -788,21 +806,6 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\driver\driver.h">
       <Filter>vsf\hal\driver</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\interface\vsf_interface_common.h">
-      <Filter>vsf\hal\interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\interface\vsf_interface_io.h">
-      <Filter>vsf\hal\interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\interface\vsf_interface_pm.h">
-      <Filter>vsf\hal\interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\interface\vsf_interface_usart.h">
-      <Filter>vsf\hal\interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\interface\vsf_interface_usb.h">
-      <Filter>vsf\hal\interface</Filter>
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\service\vsf_service.h">
       <Filter>vsf\service</Filter>
@@ -1503,9 +1506,6 @@
     <ClInclude Include="..\..\vsf\source\utilities\vsf_utilities_cfg.h">
       <Filter>vsf\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\interface\vsf_interface_spi.h">
-      <Filter>vsf\hal\interface</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\vsf\source\component\crypto\hash\vsf_hash.h">
       <Filter>vsf\component\crypto\hash</Filter>
     </ClInclude>
@@ -1931,6 +1931,27 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.h">
       <Filter>vsf\hal\driver\vsf\distbus\usbh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport.h">
+      <Filter>application\distbus\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport_cfg.h">
+      <Filter>application\distbus\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\app\distbus\transport\stream\vsf_distbus_transport_stream.h">
+      <Filter>application\distbus\transport\stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\app\distbus\transport\stream\vsf_distbus_transport_stream_cfg.h">
+      <Filter>application\distbus\transport\stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm.h">
+      <Filter>application\distbus\transport\usbd_cdcacm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm_cfg.h">
+      <Filter>application\distbus\transport\usbd_cdcacm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\stream\usart\vsf_usart_stream.h">
+      <Filter>vsf\hal\utilities\stream\usart</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2617,6 +2638,15 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.c">
       <Filter>vsf\hal\driver\vsf\distbus\usbh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\app\distbus\transport\stream\vsf_distbus_transport_stream.c">
+      <Filter>application\distbus\transport\stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm.c">
+      <Filter>application\distbus\transport\usbd_cdcacm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\stream\usart\vsf_usart_stream.c">
+      <Filter>vsf\hal\utilities\stream\usart</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
