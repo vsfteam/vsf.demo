@@ -75,29 +75,39 @@ static bool __vsf_distbus_hal_gpio_service_msghandler(vsf_distbus_t *distbus,
 
     switch (msg->header.addr) {
     case VSF_HAL_DISTBUS_GPIO_CMD_CONFIG_PIN:
+        u_arg.config_pin->pin_mask = le32_to_cpu(u_arg.config_pin->pin_mask);
         vsf_gpio_config_pin(hal_distbus_gpio->target, u_arg.config_pin->pin_mask,
             vsf_hal_distbus_io_feature_to_generic_io_feature(u_arg.config_pin->feature));
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_SET_DIRECTION:
+        u_arg.set_direction->pin_mask = le32_to_cpu(u_arg.set_direction->pin_mask);
+        u_arg.set_direction->direction_mask = le32_to_cpu(u_arg.set_direction->direction_mask);
         vsf_gpio_set_direction(hal_distbus_gpio->target, u_arg.set_direction->pin_mask,
             u_arg.set_direction->direction_mask);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_WRITE:
+        u_arg.write->pin_mask = le32_to_cpu(u_arg.write->pin_mask);
+        u_arg.write->value = le32_to_cpu(u_arg.write->value);
         vsf_gpio_write(hal_distbus_gpio->target, u_arg.write->pin_mask, u_arg.write->value);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_SET:
+        u_arg.set->pin_mask = le32_to_cpu(u_arg.set->pin_mask);
         vsf_gpio_set(hal_distbus_gpio->target, u_arg.set->pin_mask);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_CLEAR:
+        u_arg.clear->pin_mask = le32_to_cpu(u_arg.clear->pin_mask);
         vsf_gpio_clear(hal_distbus_gpio->target, u_arg.clear->pin_mask);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_TOGGLE:
+        u_arg.toggle->pin_mask = le32_to_cpu(u_arg.toggle->pin_mask);
         vsf_gpio_toggle(hal_distbus_gpio->target, u_arg.toggle->pin_mask);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_OUTPUT_AND_SET:
+        u_arg.output_and_set->pin_mask = le32_to_cpu(u_arg.output_and_set->pin_mask);
         vsf_gpio_output_and_set(hal_distbus_gpio->target, u_arg.output_and_set->pin_mask);
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_OUTPUT_AND_CLEAR:
+        u_arg.output_and_clear->pin_mask = le32_to_cpu(u_arg.output_and_clear->pin_mask);
         vsf_gpio_output_and_clear(hal_distbus_gpio->target, u_arg.output_and_clear->pin_mask);
         break;
     default:
@@ -116,10 +126,10 @@ uint32_t vsf_distbus_hal_gpio_declare(vsf_distbus_hal_gpio_t *distbus_hal_gpio, 
             .support_output_and_set     = cap.is_support_output_and_set,
             .support_output_and_clear   = cap.is_support_output_and_clear,
             .pin_count                  = cap.pin_count,
-            .pin_mask                   = cap.avail_pin_mask,
+            .pin_mask                   = cpu_to_le32(cap.avail_pin_mask),
 
-            .direction                  = vsf_gpio_get_direction(distbus_hal_gpio->target, cap.avail_pin_mask),
-            .value                      = vsf_gpio_read(distbus_hal_gpio->target),
+            .direction                  = cpu_to_le32(vsf_gpio_get_direction(distbus_hal_gpio->target, cap.avail_pin_mask)),
+            .value                      = cpu_to_le32(vsf_gpio_read(distbus_hal_gpio->target)),
         };
         memcpy(ptr, &info, sizeof(vsf_hal_distbus_gpio_info_t));
     }
