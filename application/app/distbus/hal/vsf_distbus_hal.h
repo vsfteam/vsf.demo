@@ -22,6 +22,8 @@
 // for distbus
 #include "service/vsf_service.h"
 
+#if VSF_USE_DISTBUS == ENABLED
+
 #include "./io/vsf_distbus_hal_io.h"
 #include "./gpio/vsf_distbus_hal_gpio.h"
 #include "./i2c/vsf_distbus_hal_i2c.h"
@@ -89,4 +91,5 @@ extern void vsf_distbus_hal_start(vsf_distbus_hal_t *distbus_hal);
 }
 #endif
 
+#endif      // VSF_USE_DISTBUS
 #endif      // __VSF_DISTBUS_HAL_H__

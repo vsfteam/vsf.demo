@@ -26,7 +26,7 @@
 
 #include "hal/vsf_hal_cfg.h"
 
-#if VSF_HAL_USE_I2C == ENABLED
+#if VSF_HAL_USE_I2C == ENABLED && VSF_USE_DISTBUS == ENABLED
 
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_I2C_CLASS_IMPLEMENT
@@ -85,4 +85,4 @@ void vsf_distbus_hal_i2c_register(vsf_distbus_t *distbus, vsf_distbus_hal_i2c_t 
     vsf_distbus_register_service(distbus, &distbus_hal_i2c->service);
 }
 
-#endif      // VSF_HAL_USE_I2C
+#endif      // VSF_HAL_USE_I2C && VSF_USE_DISTBUS

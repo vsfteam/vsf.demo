@@ -26,7 +26,7 @@
 
 #include "hal/vsf_hal_cfg.h"
 
-#if VSF_HAL_USE_PWM == ENABLED
+#if VSF_HAL_USE_PWM == ENABLED && VSF_USE_DISTBUS == ENABLED
 
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_PWM_CLASS_IMPLEMENT
@@ -85,4 +85,4 @@ void vsf_distbus_hal_pwm_register(vsf_distbus_t *distbus, vsf_distbus_hal_pwm_t 
     vsf_distbus_register_service(distbus, &distbus_hal_pwm->service);
 }
 
-#endif      // VSF_HAL_USE_PWM
+#endif      // VSF_HAL_USE_PWM && VSF_USE_DISTBUS

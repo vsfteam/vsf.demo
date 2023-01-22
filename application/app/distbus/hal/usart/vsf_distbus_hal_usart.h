@@ -21,7 +21,7 @@
 #include "hal/vsf_hal.h"
 #include "service/vsf_service.h"
 
-#if VSF_HAL_USE_USART == ENABLED
+#if VSF_HAL_USE_USART == ENABLED && VSF_USE_DISTBUS == ENABLED
 
 #if     defined(__VSF_DISTBUS_HAL_USART_CLASS_IMPLEMENT)
 #   define __VSF_CLASS_IMPLEMENT__
@@ -60,5 +60,5 @@ extern void vsf_distbus_hal_usart_register(vsf_distbus_t *distbus, vsf_distbus_h
 }
 #endif
 
-#endif      // VSF_HAL_USE_USART
+#endif      // VSF_HAL_USE_USART && VSF_USE_DISTBUS
 #endif      // __VSF_DISTBUS_HAL_USART_H__

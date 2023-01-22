@@ -26,6 +26,8 @@
 
 #include "hal/vsf_hal_cfg.h"
 
+#if VSF_USE_DISTBUS == ENABLED
+
 // define VSF_HAL_USE_DISTBUS_XXXX for constants in header
 #undef VSF_HAL_USE_DISTBUS
 #define VSF_HAL_USE_DISTBUS                 ENABLED
@@ -128,3 +130,5 @@ void vsf_distbus_hal_start(vsf_distbus_hal_t *distbus_hal)
     msg->header.addr = VSF_HAL_DISTBUS_CMD_CONNECT;
     vsf_distbus_send_msg(distbus_hal->distbus, &distbus_hal->service, msg);
 }
+
+#endif      // VSF_USE_DISTBUS

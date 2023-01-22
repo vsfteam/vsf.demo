@@ -26,7 +26,7 @@
 
 #include "hal/vsf_hal_cfg.h"
 
-#if VSF_HAL_USE_USART == ENABLED
+#if VSF_HAL_USE_USART == ENABLED && VSF_USE_DISTBUS == ENABLED
 
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_USART_CLASS_IMPLEMENT
@@ -85,4 +85,4 @@ void vsf_distbus_hal_usart_register(vsf_distbus_t *distbus, vsf_distbus_hal_usar
     vsf_distbus_register_service(distbus, &distbus_hal_usart->service);
 }
 
-#endif      // VSF_HAL_USE_USART
+#endif      // VSF_HAL_USE_USART && VSF_USE_DISTBUS

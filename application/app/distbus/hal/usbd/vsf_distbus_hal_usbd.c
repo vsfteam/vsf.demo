@@ -26,7 +26,7 @@
 
 #include "hal/vsf_hal_cfg.h"
 
-#if VSF_HAL_USE_USBD == ENABLED
+#if VSF_HAL_USE_USBD == ENABLED && VSF_USE_DISTBUS == ENABLED
 
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_USBD_CLASS_IMPLEMENT
@@ -85,4 +85,4 @@ void vsf_distbus_hal_usbd_register(vsf_distbus_t *distbus, vsf_distbus_hal_usbd_
     vsf_distbus_register_service(distbus, &distbus_hal_usbd->service);
 }
 
-#endif      // VSF_HAL_USE_USBD
+#endif      // VSF_HAL_USE_USBD && VSF_USE_DISTBUS

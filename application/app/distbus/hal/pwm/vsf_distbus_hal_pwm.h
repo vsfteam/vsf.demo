@@ -21,7 +21,7 @@
 #include "hal/vsf_hal.h"
 #include "service/vsf_service.h"
 
-#if VSF_HAL_USE_PWM == ENABLED
+#if VSF_HAL_USE_PWM == ENABLED && VSF_USE_DISTBUS == ENABLED
 
 #if     defined(__VSF_DISTBUS_HAL_PWM_CLASS_IMPLEMENT)
 #   define __VSF_CLASS_IMPLEMENT__
@@ -60,5 +60,5 @@ extern void vsf_distbus_hal_pwm_register(vsf_distbus_t *distbus, vsf_distbus_hal
 }
 #endif
 
-#endif      // VSF_HAL_USE_PWM
+#endif      // VSF_HAL_USE_PWM && VSF_USE_DISTBUS
 #endif      // __VSF_DISTBUS_HAL_PWM_H__

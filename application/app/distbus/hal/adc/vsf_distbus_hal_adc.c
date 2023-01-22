@@ -26,7 +26,7 @@
 
 #include "hal/vsf_hal_cfg.h"
 
-#if VSF_HAL_USE_ADC == ENABLED
+#if VSF_HAL_USE_ADC == ENABLED && VSF_USE_DISTBUS == ENABLED
 
 #define __VSF_DISTBUS_CLASS_INHERIT__
 #define __VSF_DISTBUS_HAL_ADC_CLASS_IMPLEMENT
@@ -85,4 +85,4 @@ void vsf_distbus_hal_adc_register(vsf_distbus_t *distbus, vsf_distbus_hal_adc_t 
     vsf_distbus_register_service(distbus, &distbus_hal_adc->service);
 }
 
-#endif      // VSF_HAL_USE_ADC
+#endif      // VSF_HAL_USE_ADC && VSF_USE_DISTBUS
