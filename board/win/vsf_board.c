@@ -205,7 +205,7 @@ void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type
             vsf_board.chip.__TYPE.dev_num = vsf_min(num, dimof(vsf_board.chip.__TYPE.dev));\
             for (uint8_t i = 0; i < vsf_board.chip.__TYPE.dev_num; i++) {       \
                 vsf_board.chip.__TYPE.dev[i] = (VSF_MCONNECT(vsf_, __TYPE, _t) *)&u_devs.__TYPE[i];\
-                vsf_trace_info("[hal_distbus] new " VSF_STR(__TYPE) "%d %p" VSF_TRACE_CFG_LINEEND, i, vsf_board.chip.__TYPE.dev[i]);\
+                __vsf_arch_trace(0, "[hal_distbus] new " VSF_STR(__TYPE) "%d %p" VSF_TRACE_CFG_LINEEND, i, vsf_board.chip.__TYPE.dev[i]);\
             }                                                                   \
         }                                                                       \
         break;
