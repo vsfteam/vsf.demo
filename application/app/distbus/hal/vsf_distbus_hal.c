@@ -95,6 +95,7 @@ static bool __vsf_distbus_hal_service_msghandler(vsf_distbus_t *distbus,
                 }                                                               \
                 VSF_MCONNECT(vsf_distbus_hal_, __TYPE, _register)(              \
                             distbus_hal->distbus, &distbus_hal->__TYPE.dev[i]); \
+                data += reallen;                                                \
                 datalen -= reallen;                                             \
             }                                                                   \
         }
