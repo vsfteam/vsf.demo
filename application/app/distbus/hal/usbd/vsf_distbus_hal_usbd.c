@@ -56,7 +56,7 @@ static const vsf_distbus_service_info_t __vsf_distbus_hal_usbd_service_info = {
 static bool __vsf_distbus_hal_usbd_service_msghandler(vsf_distbus_t *distbus,
                         vsf_distbus_service_t *service, vsf_distbus_msg_t *msg)
 {
-    vsf_distbus_hal_usbd_t *hal_distbus_usbd = container_of(service, vsf_distbus_hal_usbd_t, service);
+    vsf_distbus_hal_usbd_t *usbd = container_of(service, vsf_distbus_hal_usbd_t, service);
     uint32_t datalen = msg->header.datalen;
     bool retain_msg = false;
 
@@ -73,16 +73,20 @@ static bool __vsf_distbus_hal_usbd_service_msghandler(vsf_distbus_t *distbus,
     return retain_msg;
 }
 
-uint32_t vsf_distbus_hal_usbd_declare(vsf_distbus_hal_usbd_t *distbus_hal_usbd, uint8_t *ptr, uint32_t size)
+uint32_t vsf_distbus_hal_usbd_declare(vsf_distbus_hal_usbd_t *usbd, uint8_t *ptr, uint32_t size)
 {
     return 0;
 }
 
-void vsf_distbus_hal_usbd_register(vsf_distbus_t *distbus, vsf_distbus_hal_usbd_t *distbus_hal_usbd)
+void vsf_distbus_hal_usbd_poll(vsf_distbus_hal_usbd_t *usbd)
 {
-    distbus_hal_usbd->distbus = distbus;
-    distbus_hal_usbd->service.info = &__vsf_distbus_hal_usbd_service_info;
-    vsf_distbus_register_service(distbus, &distbus_hal_usbd->service);
+}
+
+void vsf_distbus_hal_usbd_register(vsf_distbus_t *distbus, vsf_distbus_hal_usbd_t *usbd)
+{
+    usbd->distbus = distbus;
+    usbd->service.info = &__vsf_distbus_hal_usbd_service_info;
+    vsf_distbus_register_service(distbus, &usbd->service);
 }
 
 #endif      // VSF_HAL_USE_USBD && VSF_USE_DISTBUS

@@ -18,6 +18,8 @@
 #ifndef __VSF_DISTBUS_HAL_H__
 #define __VSF_DISTBUS_HAL_H__
 
+/*============================ INCLUDES ======================================*/
+
 #include "hal/vsf_hal.h"
 // for distbus
 #include "service/vsf_service.h"
@@ -45,7 +47,7 @@
 #   define __VSF_CLASS_INHERIT__
 #   define PUBLIC_CONST
 #else
-#   define PUBLIC_CONST             const
+#   define PUBLIC_CONST         const
 #endif
 
 #include "utilities/ooc_class.h"
@@ -54,7 +56,6 @@
 extern "C" {
 #endif
 
-/*============================ INCLUDES ======================================*/
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
@@ -62,11 +63,11 @@ extern "C" {
 typedef struct __vsf_distbus_hal_enum_t {
 #define VSF_DISTBUS_HAL_DEFINE(__TYPE)                                          \
         struct {                                                                \
-            uint8_t                 dev_num;                                    \
+            uint8_t             dev_num;                                        \
             VSF_MCONNECT(vsf_distbus_hal_, __TYPE, _t) *dev;                    \
         } __TYPE;
 
-#define __VSF_DISTBUS_HAL_ENUM      VSF_DISTBUS_HAL_DEFINE
+#define __VSF_DISTBUS_HAL_ENUM  VSF_DISTBUS_HAL_DEFINE
 #include "vsf_distbus_hal_enum.inc"
 } __vsf_distbus_hal_enum_t;
 
@@ -74,6 +75,8 @@ vsf_class(vsf_distbus_hal_t) {
     public_member(
         implement(__vsf_distbus_hal_enum_t)
         PUBLIC_CONST bool       remote_connected;
+        PUBLIC_CONST bool       remote_declared;
+        void (*on_remote_connected)(vsf_distbus_hal_t *distbus_hal);
     )
     private_member(
         vsf_distbus_service_t   service;

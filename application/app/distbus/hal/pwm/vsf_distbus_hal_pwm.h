@@ -53,8 +53,10 @@ vsf_class(vsf_distbus_hal_pwm_t) {
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern uint32_t vsf_distbus_hal_pwm_declare(vsf_distbus_hal_pwm_t *distbus_hal_pwm, uint8_t *ptr, uint32_t size);
-extern void vsf_distbus_hal_pwm_register(vsf_distbus_t *distbus, vsf_distbus_hal_pwm_t *distbus_hal_pwm);
+extern uint32_t vsf_distbus_hal_pwm_declare(vsf_distbus_hal_pwm_t *pwm, uint8_t *ptr, uint32_t size);
+extern void vsf_distbus_hal_pwm_poll(vsf_distbus_hal_pwm_t *pwm);
+
+extern void vsf_distbus_hal_pwm_register(vsf_distbus_t *distbus, vsf_distbus_hal_pwm_t *pwm);
 
 #ifdef __cplusplus
 }

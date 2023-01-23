@@ -56,7 +56,7 @@ static const vsf_distbus_service_info_t __vsf_distbus_hal_pwm_service_info = {
 static bool __vsf_distbus_hal_pwm_service_msghandler(vsf_distbus_t *distbus,
                         vsf_distbus_service_t *service, vsf_distbus_msg_t *msg)
 {
-    vsf_distbus_hal_pwm_t *hal_distbus_pwm = container_of(service, vsf_distbus_hal_pwm_t, service);
+    vsf_distbus_hal_pwm_t *pwm = container_of(service, vsf_distbus_hal_pwm_t, service);
     uint32_t datalen = msg->header.datalen;
     bool retain_msg = false;
 
@@ -73,16 +73,20 @@ static bool __vsf_distbus_hal_pwm_service_msghandler(vsf_distbus_t *distbus,
     return retain_msg;
 }
 
-uint32_t vsf_distbus_hal_pwm_declare(vsf_distbus_hal_pwm_t *distbus_hal_pwm, uint8_t *ptr, uint32_t size)
+uint32_t vsf_distbus_hal_pwm_declare(vsf_distbus_hal_pwm_t *pwm, uint8_t *ptr, uint32_t size)
 {
     return 0;
 }
 
-void vsf_distbus_hal_pwm_register(vsf_distbus_t *distbus, vsf_distbus_hal_pwm_t *distbus_hal_pwm)
+void vsf_distbus_hal_pwm_poll(vsf_distbus_hal_pwm_t *pwm)
 {
-    distbus_hal_pwm->distbus = distbus;
-    distbus_hal_pwm->service.info = &__vsf_distbus_hal_pwm_service_info;
-    vsf_distbus_register_service(distbus, &distbus_hal_pwm->service);
+}
+
+void vsf_distbus_hal_pwm_register(vsf_distbus_t *distbus, vsf_distbus_hal_pwm_t *pwm)
+{
+    pwm->distbus = distbus;
+    pwm->service.info = &__vsf_distbus_hal_pwm_service_info;
+    vsf_distbus_register_service(distbus, &pwm->service);
 }
 
 #endif      // VSF_HAL_USE_PWM && VSF_USE_DISTBUS

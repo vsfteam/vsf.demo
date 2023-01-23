@@ -53,8 +53,10 @@ vsf_class(vsf_distbus_hal_spi_t) {
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern uint32_t vsf_distbus_hal_spi_declare(vsf_distbus_hal_spi_t *distbus_hal_spi, uint8_t *ptr, uint32_t size);
-extern void vsf_distbus_hal_spi_register(vsf_distbus_t *distbus, vsf_distbus_hal_spi_t *distbus_hal_spi);
+extern uint32_t vsf_distbus_hal_spi_declare(vsf_distbus_hal_spi_t *spi, uint8_t *ptr, uint32_t size);
+extern void vsf_distbus_hal_spi_poll(vsf_distbus_hal_spi_t *spi);
+
+extern void vsf_distbus_hal_spi_register(vsf_distbus_t *distbus, vsf_distbus_hal_spi_t *spi);
 
 #ifdef __cplusplus
 }

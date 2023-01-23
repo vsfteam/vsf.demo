@@ -53,8 +53,10 @@ vsf_class(vsf_distbus_hal_dac_t) {
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern uint32_t vsf_distbus_hal_dac_declare(vsf_distbus_hal_dac_t *distbus_hal_dac, uint8_t *ptr, uint32_t size);
-extern void vsf_distbus_hal_dac_register(vsf_distbus_t *distbus, vsf_distbus_hal_dac_t *distbus_hal_dac);
+extern uint32_t vsf_distbus_hal_dac_declare(vsf_distbus_hal_dac_t *dac, uint8_t *ptr, uint32_t size);
+extern void vsf_distbus_hal_dac_poll(vsf_distbus_hal_dac_t *dac);
+
+extern void vsf_distbus_hal_dac_register(vsf_distbus_t *distbus, vsf_distbus_hal_dac_t *dac);
 
 #ifdef __cplusplus
 }

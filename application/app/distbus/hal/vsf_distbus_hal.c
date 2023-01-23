@@ -80,7 +80,7 @@ static bool __vsf_distbus_hal_service_msghandler(vsf_distbus_t *distbus,
         datalen = VSF_HAL_DISTBUS_CFG_MTU;
         uint32_t reallen, i;
 
-#define VSF_DISTBUS_HAL_DECLARE(__TYPE)                                         \
+#define VSF_DISTBUS_HAL_PREPARE_DECLARE_CMD(__TYPE)                             \
         if (distbus_hal->__TYPE.dev_num > 0) {                                  \
             VSF_ASSERT(datalen >= 2);                                           \
             *data++ = VSF_MCONNECT(VSF_HAL_DISTBUS_, __TYPE);                   \
@@ -98,16 +98,23 @@ static bool __vsf_distbus_hal_service_msghandler(vsf_distbus_t *distbus,
                 datalen -= reallen;                                             \
             }                                                                   \
         }
-#define __VSF_DISTBUS_HAL_ENUM  VSF_DISTBUS_HAL_DECLARE
+#define __VSF_DISTBUS_HAL_ENUM  VSF_DISTBUS_HAL_PREPARE_DECLARE_CMD
 #include "vsf_distbus_hal_enum.inc"
 
         msg->header.datalen = VSF_HAL_DISTBUS_CFG_MTU - datalen;
         msg->header.addr = VSF_HAL_DISTBUS_CMD_DECLARE;
         vsf_distbus_send_msg(distbus_hal->distbus, &distbus_hal->service, msg);
-        break;
-    case VSF_HAL_DISTBUS_CMD_DECLARE:
+
         if (!distbus_hal->remote_connected) {
             distbus_hal->remote_connected = true;
+            if (distbus_hal->on_remote_connected != NULL) {
+                distbus_hal->on_remote_connected(distbus_hal);
+            }
+        }
+        break;
+    case VSF_HAL_DISTBUS_CMD_DECLARE:
+        if (!distbus_hal->remote_declared) {
+            distbus_hal->remote_declared = true;
         }
         break;
     }
@@ -116,7 +123,7 @@ static bool __vsf_distbus_hal_service_msghandler(vsf_distbus_t *distbus,
 
 void vsf_distbus_hal_register(vsf_distbus_t *distbus, vsf_distbus_hal_t *distbus_hal)
 {
-    distbus_hal->remote_connected = false;
+    distbus_hal->remote_declared = false;
     distbus_hal->distbus = distbus;
     distbus_hal->service.info = &__vsf_distbus_hal_service_info;
     vsf_distbus_register_service(distbus, &distbus_hal->service);

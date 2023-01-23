@@ -56,7 +56,7 @@ static const vsf_distbus_service_info_t __vsf_distbus_hal_io_service_info = {
 static bool __vsf_distbus_hal_io_service_msghandler(vsf_distbus_t *distbus,
                         vsf_distbus_service_t *service, vsf_distbus_msg_t *msg)
 {
-    vsf_distbus_hal_io_t *hal_distbus_io = container_of(service, vsf_distbus_hal_io_t, service);
+    vsf_distbus_hal_io_t *io = container_of(service, vsf_distbus_hal_io_t, service);
     uint32_t datalen = msg->header.datalen;
     bool retain_msg = false;
 
@@ -73,16 +73,20 @@ static bool __vsf_distbus_hal_io_service_msghandler(vsf_distbus_t *distbus,
     return retain_msg;
 }
 
-uint32_t vsf_distbus_hal_io_declare(vsf_distbus_hal_io_t *distbus_hal_io, uint8_t *ptr, uint32_t size)
+uint32_t vsf_distbus_hal_io_declare(vsf_distbus_hal_io_t *io, uint8_t *ptr, uint32_t size)
 {
     return 0;
 }
 
-void vsf_distbus_hal_io_register(vsf_distbus_t *distbus, vsf_distbus_hal_io_t *distbus_hal_io)
+void vsf_distbus_hal_io_poll(vsf_distbus_hal_io_t *io)
 {
-    distbus_hal_io->distbus = distbus;
-    distbus_hal_io->service.info = &__vsf_distbus_hal_io_service_info;
-    vsf_distbus_register_service(distbus, &distbus_hal_io->service);
+}
+
+void vsf_distbus_hal_io_register(vsf_distbus_t *distbus, vsf_distbus_hal_io_t *io)
+{
+    io->distbus = distbus;
+    io->service.info = &__vsf_distbus_hal_io_service_info;
+    vsf_distbus_register_service(distbus, &io->service);
 }
 
 #endif      // VSF_HAL_USE_IO && VSF_USE_DISTBUS
