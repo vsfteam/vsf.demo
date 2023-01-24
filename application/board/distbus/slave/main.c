@@ -197,11 +197,7 @@ static void __user_distbus_connection_check_on_timer(vsf_callback_timer_t *timer
     __user_distbus_t *user_distbus = container_of(timer, __user_distbus_t, timer);
     if (!user_distbus->hal.remote_connected) {
         __user_distbus_on_connected(&user_distbus->distbus);
-    }
-}
-
-void vsf_plug_in_on_kernel_idle(void)
-{
+    } else {
 #define APP_DISTBUS_HAL_POLL(__TYPE)                                            \
         for (uint8_t i = 0; i < dimof(__user_distbus.__TYPE); i++) {            \
             VSF_MCONNECT(vsf_distbus_hal_, __TYPE, _poll)(&__user_distbus.__TYPE[i]);\
@@ -211,9 +207,12 @@ void vsf_plug_in_on_kernel_idle(void)
 #define __VSF_DISTBUS_HAL_ENUM  APP_DISTBUS_HAL_POLL
 #include "hal/vsf_distbus_hal_enum.inc"
 #else
-    APP_DISTBUS_HAL_POLL(gpio)
-    APP_DISTBUS_HAL_POLL(usart)
+        APP_DISTBUS_HAL_POLL(gpio)
+        APP_DISTBUS_HAL_POLL(usart)
 #endif
+
+        vsf_callback_timer_add_ms(&user_distbus->timer, 1);
+    }
 }
 
 #if APP_DISTBUS_CFG_DEBUG == ENABLED
