@@ -56,6 +56,10 @@ vsf_class(vsf_distbus_transport_stream_t) {
 
     private_member(
         struct {
+            void *param;
+            void (*on_inited)(void *param);
+        } callback;
+        struct {
             uint8_t *buffer;
             uint32_t size;
 
@@ -63,6 +67,7 @@ vsf_class(vsf_distbus_transport_stream_t) {
                 void *param;
                 void (*on_sent)(void *p);
             } callback;
+            bool is_connected;
         } tx;
         struct {
             uint8_t *buffer;
@@ -72,6 +77,7 @@ vsf_class(vsf_distbus_transport_stream_t) {
                 void *param;
                 void (*on_recv)(void *p);
             } callback;
+            bool is_connected;
         } rx;
     )
 };

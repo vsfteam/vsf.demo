@@ -106,11 +106,10 @@ bool vsf_distbus_transport_usbd_cdcacm_init(void *transport, void *p, void (*on_
     vsf_stream_init(transport_usbd_cdcacm->stream_rx);
     vsf_stream_init(transport_usbd_cdcacm->stream_tx);
 
-    vsf_distbus_transport_stream_init(&transport_usbd_cdcacm->use_as__vsf_distbus_transport_stream_t, p, on_inited);
-
     vk_usbd_init(&__user_usbd_cdc);
     vk_usbd_connect(&__user_usbd_cdc);
-    return true;
+
+    return vsf_distbus_transport_stream_init(&transport_usbd_cdcacm->use_as__vsf_distbus_transport_stream_t, p, on_inited);
 }
 
 bool vsf_distbus_transport_usbd_cdcacm_send(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p))

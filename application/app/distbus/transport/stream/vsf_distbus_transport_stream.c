@@ -89,8 +89,20 @@ static void __vsf_distbus_transport_stream_evthandler(vsf_stream_t *stream, void
     switch (evt) {
     case VSF_STREAM_ON_CONNECT:
         if (stream == transport_stream->stream_rx) {
+            if (!transport_stream->rx.is_connected) {
+                transport_stream->rx.is_connected = true;
+                if (transport_stream->tx.is_connected && transport_stream->callback.on_inited != NULL) {
+                    transport_stream->callback.on_inited(transport_stream->callback.param);
+                }
+            }
             goto check_rx;
         } else {
+            if (!transport_stream->tx.is_connected) {
+                transport_stream->tx.is_connected = true;
+                if (transport_stream->rx.is_connected && transport_stream->callback.on_inited != NULL) {
+                    transport_stream->callback.on_inited(transport_stream->callback.param);
+                }
+            }
             goto check_tx;
         }
         break;
@@ -119,6 +131,13 @@ bool vsf_distbus_transport_stream_init(void *transport, void *p, void (*on_inite
 {
     vsf_distbus_transport_stream_t *transport_stream = transport;
 
+    transport_stream->tx.size = 0;
+    transport_stream->tx.is_connected = false;
+    transport_stream->rx.size = 0;
+    transport_stream->rx.is_connected = false;
+    transport_stream->callback.param = p;
+    transport_stream->callback.on_inited = on_inited;
+
     transport_stream->stream_rx->rx.param = transport_stream;
     transport_stream->stream_rx->rx.evthandler = __vsf_distbus_transport_stream_evthandler;
     VSF_STREAM_CONNECT_RX(transport_stream->stream_rx);
@@ -126,10 +145,7 @@ bool vsf_distbus_transport_stream_init(void *transport, void *p, void (*on_inite
     transport_stream->stream_tx->tx.param = transport_stream;
     transport_stream->stream_tx->tx.evthandler = __vsf_distbus_transport_stream_evthandler;
     VSF_STREAM_CONNECT_TX(transport_stream->stream_tx);
-
-    transport_stream->tx.size = 0;
-    transport_stream->rx.size = 0;
-    return true;
+    return false;
 }
 
 bool vsf_distbus_transport_stream_send(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p))
