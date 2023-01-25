@@ -35,4 +35,4 @@
     __VSF_DISTBUS_HAL_ENUM(usbh)
 #endif
 
-#undef __VSF_DISTBUS_HAL_ENUM(
+#undef __VSF_DISTBUS_HAL_ENUM
