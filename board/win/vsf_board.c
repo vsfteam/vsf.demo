@@ -236,14 +236,10 @@ static void __user_hal_distbus_on_remote_connected(vsf_hal_distbus_t *hal_distbu
 
 void vsf_board_init(void)
 {
-    uint8_t usart_devnum;
     vsf_usart_win_device_t usart_devices[8];
+    uint8_t usart_devnum = vsf_hw_usart_scan_devices((vsf_usart_win_device_t *)&usart_devices, dimof(usart_devices));
 
-    vsf_hw_usart_scan_devices();
-    while (vsf_hw_usart_is_scanning(&usart_devnum));
     if (usart_devnum > 0) {
-        vsf_hw_usart_get_devices((vsf_usart_win_device_t *)&usart_devices, dimof(usart_devices));
-
 #ifdef VSF_BOARD_CFG_DISTBUS_USART
         for (uint8_t i = 0; i < usart_devnum; i++) {
             if (VSF_BOARD_CFG_DISTBUS_USART == usart_devices[i].port) {
