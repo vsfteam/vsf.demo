@@ -46,6 +46,9 @@
 
 #ifdef VSF_BOARD_CFG_DISTBUS_USART
 #   define VSF_WIN_USART_CFG_TX_BLOCK                   ENABLED
+// do not use win_usart as hw_usart if VSF_BOARD_CFG_DISTBUS_USART is enabled,
+//  because hw_usart will be hal_distbus_usart
+#   define VSF_WIN_USART_CFG_USE_AS_HW_USART            DISABLED
 #endif
 
 /*----------------------------------------------------------------------------*

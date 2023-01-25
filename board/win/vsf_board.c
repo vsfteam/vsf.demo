@@ -166,14 +166,16 @@ static __user_distbus_t __user_distbus = {
 
 #if __APP_USE_DISTBUS == ENABLED
 
-#   define VSF_HW_HAL_IMPLEMENT(__N, __VALUE)                                   \
-        VSF_MCONNECT(vsf_remapped_, VSF_HAL_CFG_IMP_TYPE, _t) VSF_MCONNECT(vsf_hw_, VSF_HAL_CFG_IMP_TYPE, __N);
-#   define VSF_HW_HAL_IMPLEMENT_ARRAY(__N, __VALUE)                             \
+#   define VSF_HAL_HW_IMPLEMENT(__N, __VALUE)                                   \
+        VSF_MCONNECT(vsf_remapped_, VSF_HAL_CFG_IMP_TYPE, _t) VSF_MCONNECT(vsf_hw_, VSF_HAL_CFG_IMP_TYPE, __N) = {\
+            .op                 = &VSF_MCONNECT(vsf_remapped_, VSF_HAL_CFG_IMP_TYPE, _op),\
+        };
+#   define VSF_HAL_HW_IMPLEMENT_ARRAY(__N, __VALUE)                             \
         &VSF_MCONNECT(vsf_hw_, VSF_HAL_CFG_IMP_TYPE, __N),
-#   define VSF_HW_HAL_IMPLEMENT_MULTI()                                         \
-        VSF_MREPEAT(VSF_MCONNECT(VSF_HW_, VSF_HAL_CFG_IMP_UPCASE_TYPE, _COUNT), VSF_HW_HAL_IMPLEMENT, NULL)\
+#   define VSF_HAL_HW_IMPLEMENT_MULTI()                                         \
+        VSF_MREPEAT(VSF_MCONNECT(VSF_HW_, VSF_HAL_CFG_IMP_UPCASE_TYPE, _COUNT), VSF_HAL_HW_IMPLEMENT, NULL)\
         VSF_MCONNECT(vsf_remapped_, VSF_HAL_CFG_IMP_TYPE, _t) *VSF_MCONNECT(vsf_hw_, VSF_HAL_CFG_IMP_TYPE)[VSF_MCONNECT(VSF_HW_, VSF_HAL_CFG_IMP_UPCASE_TYPE, _COUNT)] = {\
-            VSF_MREPEAT(VSF_MCONNECT(VSF_HW_, VSF_HAL_CFG_IMP_UPCASE_TYPE, _COUNT), VSF_HW_HAL_IMPLEMENT_ARRAY, NULL)\
+            VSF_MREPEAT(VSF_MCONNECT(VSF_HW_, VSF_HAL_CFG_IMP_UPCASE_TYPE, _COUNT), VSF_HAL_HW_IMPLEMENT_ARRAY, NULL)\
         };
 
 #   if VSF_HAL_USE_IO == ENABLED && (VSF_HW_IO_COUNT > 0)
@@ -181,7 +183,7 @@ static __user_distbus_t __user_distbus = {
 #       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
 #       define VSF_HAL_CFG_IMP_TYPE                 io
 #       define VSF_HAL_CFG_IMP_UPCASE_TYPE          IO
-VSF_HW_HAL_IMPLEMENT_MULTI()
+VSF_HAL_HW_IMPLEMENT_MULTI()
 #   endif
 
 #   if VSF_HAL_USE_GPIO == ENABLED && (VSF_HW_GPIO_COUNT > 0)
@@ -189,7 +191,7 @@ VSF_HW_HAL_IMPLEMENT_MULTI()
 #       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
 #       define VSF_HAL_CFG_IMP_TYPE                 gpio
 #       define VSF_HAL_CFG_IMP_UPCASE_TYPE          GPIO
-VSF_HW_HAL_IMPLEMENT_MULTI()
+VSF_HAL_HW_IMPLEMENT_MULTI()
 #   endif
 
 #   if VSF_HAL_USE_I2C == ENABLED && (VSF_HW_I2C_COUNT > 0)
@@ -197,7 +199,7 @@ VSF_HW_HAL_IMPLEMENT_MULTI()
 #       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
 #       define VSF_HAL_CFG_IMP_TYPE                 i2c
 #       define VSF_HAL_CFG_IMP_UPCASE_TYPE          I2C
-VSF_HW_HAL_IMPLEMENT_MULTI()
+VSF_HAL_HW_IMPLEMENT_MULTI()
 #   endif
 
 #   if VSF_HAL_USE_SPI == ENABLED && (VSF_HW_SPI_COUNT > 0)
@@ -205,7 +207,7 @@ VSF_HW_HAL_IMPLEMENT_MULTI()
 #       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
 #       define VSF_HAL_CFG_IMP_TYPE                 spi
 #       define VSF_HAL_CFG_IMP_UPCASE_TYPE          SPI
-VSF_HW_HAL_IMPLEMENT_MULTI()
+VSF_HAL_HW_IMPLEMENT_MULTI()
 #   endif
 
 #   if VSF_HAL_USE_MMC == ENABLED && (VSF_HW_MMC_COUNT > 0)
@@ -213,7 +215,7 @@ VSF_HW_HAL_IMPLEMENT_MULTI()
 #       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
 #       define VSF_HAL_CFG_IMP_TYPE                 mmc
 #       define VSF_HAL_CFG_IMP_UPCASE_TYPE          MMC
-VSF_HW_HAL_IMPLEMENT_MULTI()
+VSF_HAL_HW_IMPLEMENT_MULTI()
 #   endif
 
 #   if VSF_HAL_USE_ADC == ENABLED && (VSF_HW_ADC_COUNT > 0)
@@ -221,7 +223,7 @@ VSF_HW_HAL_IMPLEMENT_MULTI()
 #       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
 #       define VSF_HAL_CFG_IMP_TYPE                 adc
 #       define VSF_HAL_CFG_IMP_UPCASE_TYPE          ADC
-VSF_HW_HAL_IMPLEMENT_MULTI()
+VSF_HAL_HW_IMPLEMENT_MULTI()
 #   endif
 
 #   if VSF_HAL_USE_DAC == ENABLED && (VSF_HW_DAC_COUNT > 0)
@@ -229,7 +231,7 @@ VSF_HW_HAL_IMPLEMENT_MULTI()
 #       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
 #       define VSF_HAL_CFG_IMP_TYPE                 dac
 #       define VSF_HAL_CFG_IMP_UPCASE_TYPE          DAC
-VSF_HW_HAL_IMPLEMENT_MULTI()
+VSF_HAL_HW_IMPLEMENT_MULTI()
 #   endif
 
 #   if VSF_HAL_USE_PWM == ENABLED && (VSF_HW_PWM_COUNT > 0)
@@ -237,7 +239,7 @@ VSF_HW_HAL_IMPLEMENT_MULTI()
 #       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
 #       define VSF_HAL_CFG_IMP_TYPE                 pwm
 #       define VSF_HAL_CFG_IMP_UPCASE_TYPE          PWM
-VSF_HW_HAL_IMPLEMENT_MULTI()
+VSF_HAL_HW_IMPLEMENT_MULTI()
 #   endif
 
 #   if VSF_HAL_USE_I2S == ENABLED && (VSF_HW_I2S_COUNT > 0)
@@ -245,7 +247,15 @@ VSF_HW_HAL_IMPLEMENT_MULTI()
 #       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
 #       define VSF_HAL_CFG_IMP_TYPE                 i2s
 #       define VSF_HAL_CFG_IMP_UPCASE_TYPE          I2S
-VSF_HW_HAL_IMPLEMENT_MULTI()
+VSF_HAL_HW_IMPLEMENT_MULTI()
+#   endif
+
+#   if VSF_HAL_USE_USART == ENABLED && VSF_WIN_USART_CFG_USE_AS_HW_USART != ENABLED && (VSF_HW_USART_COUNT > 0)
+#       undef VSF_HAL_CFG_IMP_TYPE
+#       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
+#       define VSF_HAL_CFG_IMP_TYPE                 usart
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          USART
+VSF_HAL_HW_IMPLEMENT_MULTI()
 #   endif
 
 #endif
@@ -292,7 +302,6 @@ void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type
             for (uint8_t i = 0; i < vsf_board.chip.__TYPE.dev_num; i++) {       \
                 vsf_board.chip.__TYPE.dev[i] = (VSF_MCONNECT(vsf_, __TYPE, _t) *)&u_devs.__TYPE[i];\
                 VSF_MCONNECT(vsf_hw_, __TYPE)[i]->target = (VSF_MCONNECT(vsf_, __TYPE, _t) *)vsf_board.chip.__TYPE.dev[i];\
-                VSF_MCONNECT(vsf_hw_, __TYPE)[i]->op = &VSF_MCONNECT(vsf_remapped_, __TYPE, _op);\
                 __vsf_arch_trace(0, "[hal_distbus] new " VSF_STR(__TYPE) "%d %p" VSF_TRACE_CFG_LINEEND, i, vsf_board.chip.__TYPE.dev[i]);\
             }                                                                   \
         }                                                                       \
@@ -337,7 +346,7 @@ static void __user_hal_distbus_on_remote_connected(vsf_hal_distbus_t *hal_distbu
 void vsf_board_init(void)
 {
     vsf_usart_win_device_t usart_devices[8];
-    uint8_t usart_devnum = vsf_hw_usart_scan_devices((vsf_usart_win_device_t *)&usart_devices, dimof(usart_devices));
+    uint8_t usart_devnum = vsf_win_usart_scan_devices((vsf_usart_win_device_t *)&usart_devices, dimof(usart_devices));
 
     if (usart_devnum > 0) {
 #ifdef VSF_BOARD_CFG_DISTBUS_USART
