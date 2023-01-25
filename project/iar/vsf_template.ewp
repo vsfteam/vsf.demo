@@ -7803,6 +7803,102 @@
                     </file>
                 </group>
                 <group>
+                    <name>remap</name>
+                    <group>
+                        <name>adc</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\adc\vsf_remapped_adc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\adc\vsf_remapped_adc.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>dac</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\dac\vsf_remapped_dac.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\dac\vsf_remapped_dac.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>gpio</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\gpio\vsf_remapped_gpio.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\gpio\vsf_remapped_gpio.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>i2c</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\i2c\vsf_remapped_i2c.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\i2c\vsf_remapped_i2c.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>i2s</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\i2s\vsf_remapped_i2s.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\i2s\vsf_remapped_i2s.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>io</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>mmc</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\mmc\vsf_remapped_mmc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\mmc\vsf_remapped_mmc.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>pwm</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>spi</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\spi\vsf_remapped_spi.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\spi\vsf_remapped_spi.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>usart</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\usart\vsf_remapped_usart.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\usart\vsf_remapped_usart.h</name>
+                        </file>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\vsf_hal_remap.h</name>
+                    </file>
+                </group>
+                <group>
                     <name>stream</name>
                     <group>
                         <name>usart</name>
@@ -7813,6 +7909,9 @@
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\stream\usart\vsf_usart_stream.h</name>
                         </file>
                     </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\stream\vsf_hal_stream.h</name>
+                    </file>
                 </group>
             </group>
             <file>
