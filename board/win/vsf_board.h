@@ -74,6 +74,124 @@ typedef struct vsf_board_t {
 
 extern vsf_board_t vsf_board;
 
+#if __APP_USE_DISTBUS == ENABLED
+
+#   define VSF_HW_HAL_DECLARE(__N, __VALUE)                                     \
+        extern VSF_MCONNECT(vsf_remapped_, VSF_HAL_CFG_IMP_TYPE, _t) VSF_MCONNECT(vsf_hw_, VSF_HAL_CFG_IMP_TYPE, __N);
+#   define VSF_HW_HAL_DECLARE_MULTI()                                           \
+        VSF_MREPEAT(VSF_MCONNECT(VSF_HW_, VSF_HAL_CFG_IMP_UPCASE_TYPE, _COUNT), VSF_HW_HAL_DECLARE, NULL)\
+        extern VSF_MCONNECT(vsf_remapped_, VSF_HAL_CFG_IMP_TYPE, _t) *VSF_MCONNECT(vsf_hw_, VSF_HAL_CFG_IMP_TYPE)[VSF_MCONNECT(VSF_HW_, VSF_HAL_CFG_IMP_UPCASE_TYPE, _COUNT)];
+
+#   if VSF_HAL_USE_IO == ENABLED
+#       ifndef VSF_HW_IO_COUNT
+#           define VSF_HW_IO_COUNT                  1
+#       endif
+
+#       undef VSF_HAL_CFG_IMP_TYPE
+#       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
+#       define VSF_HAL_CFG_IMP_TYPE                 io
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          IO
+VSF_HW_HAL_DECLARE_MULTI()
+#   endif
+
+#   if VSF_HAL_USE_GPIO == ENABLED
+#       ifndef VSF_HW_GPIO_COUNT
+#           define VSF_HW_GPIO_COUNT                32
+#       endif
+
+#       undef VSF_HAL_CFG_IMP_TYPE
+#       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
+#       define VSF_HAL_CFG_IMP_TYPE                 gpio
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          GPIO
+VSF_HW_HAL_DECLARE_MULTI()
+#   endif
+
+#   if VSF_HAL_USE_I2C == ENABLED
+#       ifndef VSF_HW_I2C_COUNT
+#           define VSF_HW_I2C_COUNT                 32
+#       endif
+
+#       undef VSF_HAL_CFG_IMP_TYPE
+#       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
+#       define VSF_HAL_CFG_IMP_TYPE                 i2c
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          I2C
+VSF_HW_HAL_DECLARE_MULTI()
+#   endif
+
+#   if VSF_HAL_USE_SPI == ENABLED
+#       ifndef VSF_HW_SPI_COUNT
+#           define VSF_HW_SPI_COUNT                 32
+#       endif
+
+#       undef VSF_HAL_CFG_IMP_TYPE
+#       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
+#       define VSF_HAL_CFG_IMP_TYPE                 spi
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          SPI
+VSF_HW_HAL_DECLARE_MULTI()
+#   endif
+
+#   if VSF_HAL_USE_MMC == ENABLED
+#       ifndef VSF_HW_MMC_COUNT
+#           define VSF_HW_MMC_COUNT                 32
+#       endif
+
+#       undef VSF_HAL_CFG_IMP_TYPE
+#       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
+#       define VSF_HAL_CFG_IMP_TYPE                 mmc
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          MMC
+VSF_HW_HAL_DECLARE_MULTI()
+#   endif
+
+#   if VSF_HAL_USE_ADC == ENABLED
+#       ifndef VSF_HW_ADC_COUNT
+#           define VSF_HW_ADC_COUNT                 32
+#       endif
+
+#       undef VSF_HAL_CFG_IMP_TYPE
+#       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
+#       define VSF_HAL_CFG_IMP_TYPE                 adc
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          ADC
+VSF_HW_HAL_DECLARE_MULTI()
+#   endif
+
+#   if VSF_HAL_USE_DAC == ENABLED
+#       ifndef VSF_HW_DAC_COUNT
+#           define VSF_HW_DAC_COUNT                 32
+#       endif
+
+#       undef VSF_HAL_CFG_IMP_TYPE
+#       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
+#       define VSF_HAL_CFG_IMP_TYPE                 dac
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          DAC
+VSF_HW_HAL_DECLARE_MULTI()
+#   endif
+
+#   if VSF_HAL_USE_PWM == ENABLED
+#       ifndef VSF_HW_PWM_COUNT
+#           define VSF_HW_PWM_COUNT                 32
+#       endif
+
+#       undef VSF_HAL_CFG_IMP_TYPE
+#       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
+#       define VSF_HAL_CFG_IMP_TYPE                 pwm
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          PWM
+VSF_HW_HAL_DECLARE_MULTI()
+#   endif
+
+#   if VSF_HAL_USE_I2S == ENABLED
+#       ifndef VSF_HW_I2S_COUNT
+#           define VSF_HW_I2S_COUNT                 32
+#       endif
+
+#       undef VSF_HAL_CFG_IMP_TYPE
+#       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
+#       define VSF_HAL_CFG_IMP_TYPE                 i2s
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          I2S
+VSF_HW_HAL_DECLARE_MULTI()
+#   endif
+
+#endif
+
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 

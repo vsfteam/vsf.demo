@@ -715,6 +715,42 @@
     <Filter Include="vsf\hal\utilities\stream\usart">
       <UniqueIdentifier>{bca2a986-7ccc-4939-9efa-1c68e449f4d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\hal\utilities\remap">
+      <UniqueIdentifier>{ee088f0a-24d3-4012-9c14-92735380256b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\gpio">
+      <UniqueIdentifier>{a6341666-4546-4489-902e-d2712a081c34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\io">
+      <UniqueIdentifier>{ce3c697d-3667-4953-9bab-76022ce22c6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\i2c">
+      <UniqueIdentifier>{6992f4c5-6547-4e96-891f-ee17324ad084}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\spi">
+      <UniqueIdentifier>{65c900b3-78c7-4c4e-aa85-44feba4a18e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\i2s">
+      <UniqueIdentifier>{4c40d309-fb2c-45d7-a2de-94206a199edc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\adc">
+      <UniqueIdentifier>{855d773a-f027-4088-81d4-38347e004e08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\dac">
+      <UniqueIdentifier>{daa94604-5972-4282-9b7a-e2dfbbb8f42d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\pwm">
+      <UniqueIdentifier>{8f0cbab2-1d25-4f6b-8f38-7c313997d199}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\mmc">
+      <UniqueIdentifier>{1b397d19-7702-4292-b82a-7b979fc53ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\usart">
+      <UniqueIdentifier>{b9263950-5e8f-4322-8fcb-0039452a14ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\common\i2s">
+      <UniqueIdentifier>{317e17a8-2fe4-42dc-b4ef-06d761a45386}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -1896,6 +1932,45 @@
     <ClInclude Include="..\..\vsf\source\hal\utilities\stream\usart\vsf_usart_stream.h">
       <Filter>vsf\hal\utilities\stream\usart</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\gpio\vsf_remapped_gpio.h">
+      <Filter>vsf\hal\utilities\remap\gpio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\vsf_hal_remap.h">
+      <Filter>vsf\hal\utilities\remap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\stream\vsf_hal_stream.h">
+      <Filter>vsf\hal\utilities\stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.h">
+      <Filter>vsf\hal\utilities\remap\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\i2c\vsf_remapped_i2c.h">
+      <Filter>vsf\hal\utilities\remap\i2c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\spi\vsf_remapped_spi.h">
+      <Filter>vsf\hal\utilities\remap\spi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\i2s\vsf_remapped_i2s.h">
+      <Filter>vsf\hal\utilities\remap\i2s</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\adc\vsf_remapped_adc.h">
+      <Filter>vsf\hal\utilities\remap\adc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\dac\vsf_remapped_dac.h">
+      <Filter>vsf\hal\utilities\remap\dac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.h">
+      <Filter>vsf\hal\utilities\remap\pwm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\mmc\vsf_remapped_mmc.h">
+      <Filter>vsf\hal\utilities\remap\mmc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\usart\vsf_remapped_usart.h">
+      <Filter>vsf\hal\utilities\remap\usart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\i2s\i2s_template.h">
+      <Filter>vsf\hal\driver\common\i2s</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -2582,6 +2657,39 @@
     <ClCompile Include="..\..\vsf\source\hal\utilities\stream\usart\vsf_usart_stream.c">
       <Filter>vsf\hal\utilities\stream\usart</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\gpio\vsf_remapped_gpio.c">
+      <Filter>vsf\hal\utilities\remap\gpio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.c">
+      <Filter>vsf\hal\utilities\remap\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\i2c\vsf_remapped_i2c.c">
+      <Filter>vsf\hal\utilities\remap\i2c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\spi\vsf_remapped_spi.c">
+      <Filter>vsf\hal\utilities\remap\spi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\i2s\vsf_remapped_i2s.c">
+      <Filter>vsf\hal\utilities\remap\i2s</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\adc\vsf_remapped_adc.c">
+      <Filter>vsf\hal\utilities\remap\adc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\dac\vsf_remapped_dac.c">
+      <Filter>vsf\hal\utilities\remap\dac</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.c">
+      <Filter>vsf\hal\utilities\remap\pwm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\mmc\vsf_remapped_mmc.c">
+      <Filter>vsf\hal\utilities\remap\mmc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\usart\vsf_remapped_usart.c">
+      <Filter>vsf\hal\utilities\remap\usart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\common\i2s\i2s_common.c">
+      <Filter>vsf\hal\driver\common\i2s</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">
@@ -2628,6 +2736,9 @@
     </None>
     <None Include="..\..\vsf\source\hal\driver\common\gpio\gpio_template.inc">
       <Filter>vsf\hal\driver\common\gpio</Filter>
+    </None>
+    <None Include="..\..\vsf\source\hal\driver\common\i2s\i2s_template.inc">
+      <Filter>vsf\hal\driver\common\i2s</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
