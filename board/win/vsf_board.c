@@ -345,6 +345,7 @@ static void __user_hal_distbus_on_remote_connected(vsf_hal_distbus_t *hal_distbu
 
 void vsf_board_init(void)
 {
+#if VSF_HAL_USE_USART == ENABLED
     vsf_usart_win_device_t usart_devices[8];
     uint8_t usart_devnum = vsf_win_usart_scan_devices((vsf_usart_win_device_t *)&usart_devices, dimof(usart_devices));
 
@@ -363,6 +364,7 @@ void vsf_board_init(void)
 #ifdef VSF_BOARD_CFG_DISTBUS_USART
     // note that even if assert here, assert message will not be diaplayed, because trace is not started here
     VSF_ASSERT(vsf_board.distbus_usart != NULL);
+#endif
 #endif
 
 #if __APP_USE_DISTBUS
