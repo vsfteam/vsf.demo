@@ -58,6 +58,9 @@ set(VSF_TARGET_DEFINITIONS
 
 # include vsf cmake script
 set(VSF_CONFIG_PATH ${APPLICATION_PATH})
+list(APPEND VSF_TARGET_INCLUDE_DIRECTORIES
+    ${BOARD_PATH}
+)
 include($ENV{VSF_PATH}/script/cmake/vsf.cmake)
 
 # application configurations
