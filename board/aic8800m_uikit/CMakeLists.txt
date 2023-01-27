@@ -1,5 +1,3 @@
-# CMakeLists head
-
 vsf_add_include_directories(
     ./
 )

@@ -75,4 +75,4 @@ extern const i_usb_dc_t VSF_USB_DC0;
 
 extern void vsf_board_init(void);
 
-#endif      // __VSF_BOARD_CFG_WIN_H__
+#endif      // __VSF_BOARD_H__

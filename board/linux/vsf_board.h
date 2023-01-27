@@ -54,11 +54,10 @@ typedef struct vsf_board_t {
     vsf_usart_t *usart;
 #if VSF_USE_UI == ENABLED
     vk_disp_t *display_dev;
-    vk_disp_wingdi_t disp_wingdi;
+    vk_disp_sdl2_t disp_sdl2;
 #endif
 #if VSF_USE_AUDIO == ENABLED
     vk_audio_dev_t *audio_dev;
-    vk_winsound_dev_t audio_winsound;
 #endif
 #if VSF_USE_USB_HOST == ENABLED
     vk_usbh_t usbh_dev;
@@ -66,7 +65,7 @@ typedef struct vsf_board_t {
 #if VSF_USE_FS == ENABLED
     const vk_fs_op_t *fsop;
     void * fsinfo;
-    vk_winfs_info_t winfs_info;
+    vk_linfs_info_t linfs_info;
 #endif
 } vsf_board_t;
 
@@ -190,7 +189,7 @@ VSF_HAL_HW_DECLARE_MULTI()
 VSF_HAL_HW_DECLARE_MULTI()
 #   endif
 
-#   if VSF_HAL_USE_USART == ENABLED && VSF_WIN_USART_CFG_USE_AS_HW_USART != ENABLED
+#   if VSF_HAL_USE_USART == ENABLED && VSF_LINUX_USART_CFG_USE_AS_HW_USART != ENABLED
 #       ifndef VSF_HW_USART_COUNT
 #           define VSF_HW_USART_COUNT               32
 #       endif
