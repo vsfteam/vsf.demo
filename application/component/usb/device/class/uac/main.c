@@ -44,6 +44,10 @@
 #   error TODO: add support to current USB speed
 #endif
 
+#if VSF_USBD_CFG_AUTOSETUP != ENABLED
+#   error VSF_USBD_CFG_AUTOSETUP is needed for this demo
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
@@ -511,7 +515,9 @@ static usbd_uac_t __user_usbd_uac = {
 int VSF_USER_ENTRY(void)
 {
     vsf_board_init();
+#if VSF_USE_TRACE == ENABLED
     vsf_start_trace();
+#endif
 
     vsf_stream_init(&__user_audio_playback_stream.use_as__vsf_stream_t);
     vsf_stream_init(&__user_audio_capture_stream.use_as__vsf_stream_t);

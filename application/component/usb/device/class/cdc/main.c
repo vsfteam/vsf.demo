@@ -37,6 +37,10 @@
 #   define __APP_CFG_CDC_BULK_SIZE          64
 #endif
 
+#if VSF_USBD_CFG_AUTOSETUP != ENABLED
+#   error VSF_USBD_CFG_AUTOSETUP is needed for this demo
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
