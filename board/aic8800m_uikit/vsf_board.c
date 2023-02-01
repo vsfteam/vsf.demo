@@ -15,6 +15,16 @@
  *                                                                           *
  ****************************************************************************/
 
+/*
+ * vsf_board for aic8800m_uikit
+ *
+ * Priority if audio_dev is used:
+ *   Because the PSI port of AIC1000A is implemented by GPIO, which is maybe time-consuming,
+ *      so the priority of tasks which will control PSI port MUST be of lower priority.
+ *   vsf_board.aic1000a.arch_prio >= VSF_AUDIO_CFG_EDA_PRIORITY(swi priority of task)
+ *      > swi priority of task whick will call vk_audio_control to adjust mute/volume.
+ */
+
 /*============================ INCLUDES ======================================*/
 
 #define __VSF_HEAP_CLASS_INHERIT__
@@ -106,6 +116,7 @@ vsf_board_t vsf_board = {
         .drv                    = &vk_aic1000a_drv,
         .i2s                    = (vsf_i2s_t *)&vsf_hw_i2s0,    // vsf_board.i2s
         .i2s_feature            = I2S_MODE_SLAVE | I2S_STANDARD_MSB,
+        .arch_prio              = vsf_arch_prio_highest,
         .pwrkey_port            = (vsf_gpio_t *)&vsf_hw_gpio1,
         .psi_port               = (vsf_gpio_t *)&vsf_hw_gpio1,
         .pwrkey_pin             = 5,
