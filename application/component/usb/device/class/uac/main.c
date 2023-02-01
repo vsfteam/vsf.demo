@@ -91,7 +91,12 @@ typedef struct usbd_uac_t {
         vk_usbd_cfg_t config[1];
         vk_usbd_dev_t dev;
     } usbd;
+    vsf_eda_t *main_task;
 } usbd_uac_t;
+
+/*============================ PROTOTYPES ====================================*/
+
+static void __user_usbd_uac_on_set(vk_usbd_uac_control_t *control);
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
@@ -391,13 +396,16 @@ static const usbd_uac_const_t __user_usbd_uac_const = {
                     .selector   = 0x01,     // Mute
                     .channel    = 0,
                     .size       = 1,
+                    .on_set     = __user_usbd_uac_on_set,
                 },
                 [1]             = {
                     .selector   = 0x02,     // Volume
+                    .channel    = 0,
                     .size       = 2,
                     .res.uval16 = 0x0100,
                     .min.uval16 = 0x9C00,
                     .max.uval16 = 0x0000,
+                    .on_set     = __user_usbd_uac_on_set,
                 },
             },
         },
@@ -407,13 +415,16 @@ static const usbd_uac_const_t __user_usbd_uac_const = {
                     .selector   = 0x01,     // Mute
                     .channel    = 0,
                     .size       = 1,
+                    .on_set     = __user_usbd_uac_on_set,
                 },
                 [1]             = {
                     .selector   = 0x02,     // Volume
+                    .channel    = 0,
                     .size       = 2,
                     .res.uval16 = 0x007A,
                     .min.uval16 = 0x0000,
                     .max.uval16 = 0x3000,
+                    .on_set     = __user_usbd_uac_on_set,
                 },
             },
         },
@@ -509,8 +520,14 @@ static usbd_uac_t __user_usbd_uac = {
     },
 };
 
-/*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
+
+static void __user_usbd_uac_on_set(vk_usbd_uac_control_t *control)
+{
+    if (__user_usbd_uac.main_task != NULL) {
+        vsf_eda_post_msg(__user_usbd_uac.main_task, control);
+    }
+}
 
 int VSF_USER_ENTRY(void)
 {
@@ -519,6 +536,7 @@ int VSF_USER_ENTRY(void)
     vsf_start_trace();
 #endif
 
+    __user_usbd_uac.main_task = vsf_eda_get_cur();
     vsf_stream_init(&__user_audio_playback_stream.use_as__vsf_stream_t);
     vsf_stream_init(&__user_audio_capture_stream.use_as__vsf_stream_t);
     vsf_stream_init(&__user_usbd_uac_playback_stream.use_as__vsf_stream_t);
@@ -540,5 +558,26 @@ int VSF_USER_ENTRY(void)
 
     vk_usbd_init(&__user_usbd_uac.usbd.dev);
     vk_usbd_connect(&__user_usbd_uac.usbd.dev);
+
+    vk_usbd_uac_control_t *control;
+    vk_av_control_value_t value;
+    while (true) {
+        vsf_thread_wfe(VSF_EVT_MESSAGE);
+        control = vsf_eda_get_cur_msg();
+
+        if (control == &__user_usbd_uac.usbd.uac.line_in.control[0]) {
+            vk_audio_control(vsf_board.audio_dev, 1, VSF_AUDIO_CTRL_MUTE, control->cur);
+        } else if (control == &__user_usbd_uac.usbd.uac.line_in.control[1]) {
+            value.uval16 = (control->cur.uval16 - control->info->min.uval16) * 0xFFFF / control->info->max.uval16;
+            vk_audio_control(vsf_board.audio_dev, 1, VSF_AUDIO_CTRL_VOLUME_PERCENTAGE, value);
+        } else if (control == &__user_usbd_uac.usbd.uac.line_out.control[0]) {
+            vk_audio_control(vsf_board.audio_dev, 0, VSF_AUDIO_CTRL_MUTE, control->cur);
+        } else if (control == &__user_usbd_uac.usbd.uac.line_out.control[1]) {
+            value.uval16 = (control->cur.uval16 - control->info->min.uval16) * 0xFFFF / control->info->max.uval16;
+            vk_audio_control(vsf_board.audio_dev, 0, VSF_AUDIO_CTRL_VOLUME_PERCENTAGE, value);
+        } else {
+            VSF_ASSERT(false);
+        }
+    }
     return 0;
 }
