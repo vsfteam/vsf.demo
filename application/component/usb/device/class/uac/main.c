@@ -562,8 +562,7 @@ int VSF_USER_ENTRY(void)
     vk_usbd_uac_control_t *control;
     vk_av_control_value_t value;
     while (true) {
-        vsf_thread_wfe(VSF_EVT_MESSAGE);
-        control = vsf_eda_get_cur_msg();
+        control = (vk_usbd_uac_control_t *)vsf_thread_wfm();
 
         if (control == &__user_usbd_uac.usbd.uac.line_in.control[0]) {
             vk_audio_control(vsf_board.audio_dev, 1, VSF_AUDIO_CTRL_MUTE, control->cur);
