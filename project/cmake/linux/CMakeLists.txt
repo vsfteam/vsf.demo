@@ -11,7 +11,7 @@ set(BOARD_PATH ../../../board/linux)
 set(APPLICATION_PATH ../../../application/kernel/helloworld)
 
 project(vsf_template)
-set(VSF_TARGET x64/linux)
+set(VSF_TARGET generic/linux64)
 
 # compiler configurations
 # if compiler is not set, cmake will find one
