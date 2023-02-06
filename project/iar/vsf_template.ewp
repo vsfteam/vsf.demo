@@ -235,7 +235,7 @@
                     <state>CFG_IPERF</state>
                     <state>CFG_ROM_VER=255</state>
                     <state>CFG_DACL_MIXER_MODE=0</state>
-                    <state>CFG_DACR_MIXER_MODE=0</state>
+                    <state>CFG_DACR_MIXER_MODE=2</state>
                     <state>CFG_AIC1000_MIC_MATRIX=0</state>
                     <state>CONFIG_RWNX</state>
                     <state>CONFIG_RWNX_LWIP</state>
