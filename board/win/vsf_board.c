@@ -307,25 +307,15 @@ void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type
         }                                                                       \
         break;
 
-// for usart, do not map to vsf_hw_usart
-#undef VSF_HAL_DISTBUS_USE_USART
 #define __VSF_HAL_DISTBUS_ENUM      VSF_BOARD_HAL_DISTBUS_ENUM
 #include "hal/driver/vsf/distbus/vsf_hal_distbus_enum.inc"
-
-    case VSF_HAL_DISTBUS_USART:
-        if (!vsf_board.chip.usart.dev_num) {
-            vsf_board.chip.usart.dev_num = vsf_min(num, dimof(vsf_board.chip.usart.dev));
-            for (uint8_t i = 0; i < vsf_board.chip.usart.dev_num; i++) {
-                vsf_board.chip.usart.dev[i] = (vsf_usart_t *)&u_devs.usart[i];
-                __vsf_arch_trace(0, "[hal_distbus] new usart %d %p" VSF_TRACE_CFG_LINEEND, i, vsf_board.chip.usart.dev[i]);
-            }                                                                   \
-        }                                                                       \
-        break;
     }
 
     switch (type) {
     case VSF_HAL_DISTBUS_USART:
+#if VSF_HAL_USE_USART == ENABLED && VSF_HAL_DISTBUS_USE_USART == ENABLED
         vsf_board.usart = vsf_board.chip.usart.dev[0];
+#endif
         break;
     }
 
