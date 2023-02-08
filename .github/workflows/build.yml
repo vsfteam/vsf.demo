@@ -1,0 +1,77 @@
+name: CI build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  cmake-projects:
+    runs-on: ubuntu-latest
+    outputs:
+      paths: ${{ steps.find_jobs.outputs.paths }}
+      targets: ${{ steps.find_jobs.outputs.targets }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - id: find_jobs
+      run: |
+        paths=$(find application/ | grep CMakeLists.txt | rev | cut -d'/' -f 2- | rev | jq -R . | jq -s .)
+        echo "paths<<EOF" >> $GITHUB_OUTPUT
+        echo "$paths" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+        targets=$(echo "aic8800" | jq -R . | jq -s .)
+        echo "targets<<EOF" >> $GITHUB_OUTPUT
+        echo "$targets" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+        cat $GITHUB_OUTPUT
+
+  cmake-build:
+    runs-on: ubuntu-latest
+    needs: cmake-projects
+    strategy:
+      matrix:
+        path: ${{ fromJSON(needs.cmake-projects.outputs.paths) }}
+        target: ${{ fromJSON(needs.cmake-projects.outputs.targets) }}
+        cc: ['11.3.Rel1']
+
+    steps:
+      - name: get latest cmake and ninja
+        uses: lukka/get-cmake@latest
+
+      - name: arm-none-eabi-gcc
+        uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+          release: ${{matrix.cc}}
+
+      - name: install depends
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y libsdl2-dev
+        shell: bash
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: true # without recursive
+
+      - name: checkout vsf with recursive
+        run: cd vsf && git submodule update --init
+      - name: update project
+        run: |
+          sed -i -e "s|application/kernel/helloworld|${{matrix.path}}|g" project/cmake/${{matrix.target}}/CMakeLists.txt
+          git diff
+
+      - name: configure cmake
+        working-directory: ${{github.workspace}}/project/cmake/${{matrix.target}}
+        run: |
+          cmake --version
+          cmake -GNinja -B ./build
+        env:
+          VSF_PATH: ${{github.workspace}}
+
+      - name: build
+        working-directory: ${{github.workspace}}/project/cmake/${{matrix.target}}
+        run: cmake --build ./build -v
+
