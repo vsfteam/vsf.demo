@@ -20,8 +20,7 @@
  * Based on linux sub-system
  *
  * Dependency:
- * Board:
- *   vsf_board.i2c
+ *   vsf_hw_gpioX
  *
  * Include Directories necessary for linux:
  *   vsf/source/shell/sys/linux/include
@@ -90,7 +89,7 @@ int vsf_linux_create_fhs(void)
     __gpio_write("/sys/class/gpio/gpio14/direction", true,  "14",   strlen("1"));
     __gpio_write("/sys/class/gpio/gpio14/value",     true,  "1",    strlen("1"));
     __gpio_write("/sys/class/gpio/gpio14/value",     true,  "0",    strlen("0"));
-                                                            
+
     __gpio_write("/sys/class/gpio/export",           true,  "15",   strlen("15"));
     __gpio_write("/sys/class/gpio/gpio15/direction", true,  "15",   strlen("0"));
     __gpio_write("/sys/class/gpio/gpio15/value",     false, &value, 1);

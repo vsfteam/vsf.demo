@@ -128,7 +128,7 @@ static bool __vsf_distbus_hal_gpio_service_msghandler(vsf_distbus_t *distbus,
 uint32_t vsf_distbus_hal_gpio_declare(vsf_distbus_hal_gpio_t *gpio, uint8_t *ptr, uint32_t size)
 {
     if (size >= sizeof(vsf_hal_distbus_gpio_info_t)) {
-        gpio_capability_t cap = vsf_gpio_capability(gpio->target);
+        vsf_gpio_capability_t cap = vsf_gpio_capability(gpio->target);
         gpio->value = vsf_gpio_read(gpio->target);
         vsf_hal_distbus_gpio_info_t info = {
             .support_config_pin         = cap.is_support_config_pin,

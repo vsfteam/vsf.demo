@@ -34,7 +34,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
- 
+
 #include "vsf_board.h"
 
 /*============================ MACROS ========================================*/
@@ -57,21 +57,21 @@ int spi_main(int argc, char *argv[])
         fprintf(stderr, "fail to open spi device\n");
         return -1;
     }
-    
+
     uint8_t mode = SPI_MODE_3 | SPI_LSB_FIRST;
     if (ioctl(fd, SPI_IOC_WR_MODE, &mode) < 0) {
         fprintf(stderr, "fail to set spi address\n");
         close(fd);
         return -1;
     }
-    
+
     uint8_t bits = 8;
     if (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits) < 0) {
         fprintf(stderr, "fail to set spi address\n");
         close(fd);
         return -1;
     }
-    
+
     uint32_t speed = 1 * 1000 * 1000;
     if (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed) < 0) {
         fprintf(stderr, "fail to set spi address\n");
@@ -82,20 +82,20 @@ int spi_main(int argc, char *argv[])
 
 
     struct spi_ioc_transfer xfer[2];
-    uint8_t txcmd = 0xAA;        
+    uint8_t txcmd = 0xAA;
     uint8_t txbuffer[16];
     uint8_t rxbuffer[16];
 
     for (int i = 0; i < sizeof(txbuffer); i++) {
         txbuffer[i] = i;
     }
-    
+
     xfer[0].tx_buf = (unsigned long)&txcmd;
     xfer[0].len = 1;
     xfer[1].tx_buf = (unsigned long)txbuffer;
     xfer[1].rx_buf = (unsigned long)rxbuffer;
     xfer[1].len = 16;
-    
+
     if (ioctl(fd, SPI_IOC_MESSAGE(dimof(xfer)), xfer) < 0) {
         fprintf(stderr, "fail to set spi address\n");
         close(fd);
