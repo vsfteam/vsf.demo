@@ -91,6 +91,9 @@
 #define VSF_USBH_CFG_ENABLE_ROOT_HUB                    DISABLED
 #define VSF_USBH_USE_HUB                                DISABLED
 
+#define VSF_LINUX_HOSTFS_TYPE                           "linfs"
+#define VSF_LINUX_SOCKET_CFG_WRAPPER                    ENABLED
+
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
  *----------------------------------------------------------------------------*/
