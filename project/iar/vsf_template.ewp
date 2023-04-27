@@ -8866,13 +8866,52 @@
                     <group>
                         <name>lib</name>
                         <group>
-                            <name>glibc</name>
+                            <name>3rd-party</name>
                             <group>
-                                <name>3rd-party</name>
+                                <name>fnmatch</name>
+                                <excluded>
+                                    <configuration>vsf_template_aic8800</configuration>
+                                </excluded>
                                 <file>
-                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\lib\glibc\3rd-party\getopt_long.c</name>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\lib\3rd-party\fnmatch\fnmatch.c</name>
                                 </file>
                             </group>
+                            <group>
+                                <name>getopt</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\lib\3rd-party\getopt\getopt_long.c</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>glob</name>
+                                <excluded>
+                                    <configuration>vsf_template_aic8800</configuration>
+                                </excluded>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\lib\3rd-party\glob\glob.c</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>regex</name>
+                                <excluded>
+                                    <configuration>vsf_template_aic8800</configuration>
+                                </excluded>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\lib\3rd-party\regex\regcomp.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\lib\3rd-party\regex\regerror.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\lib\3rd-party\regex\regexec.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\lib\3rd-party\regex\regfree.c</name>
+                                </file>
+                            </group>
+                        </group>
+                        <group>
+                            <name>glibc</name>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\lib\glibc\vsf_linux_glibc.c</name>
                             </file>

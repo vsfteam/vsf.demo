@@ -565,9 +565,6 @@
     <Filter Include="vsf\shell\sys\linux\kernel\socket\unix">
       <UniqueIdentifier>{b4aafc7e-3552-4b52-89d7-6d411052cf54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vsf\shell\sys\linux\lib\glibc\3rd-party">
-      <UniqueIdentifier>{15158a93-39d2-4015-bdf2-063d78c7f496}</UniqueIdentifier>
-    </Filter>
     <Filter Include="vsf\shell\sys\linux\kernel\fs\vfs">
       <UniqueIdentifier>{0913cb33-3d9c-4909-bbe6-4d8870fe17c1}</UniqueIdentifier>
     </Filter>
@@ -750,6 +747,12 @@
     </Filter>
     <Filter Include="vsf\hal\driver\common\i2s">
       <UniqueIdentifier>{317e17a8-2fe4-42dc-b4ef-06d761a45386}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\shell\sys\linux\lib\3rd-party">
+      <UniqueIdentifier>{3925affd-da47-4b71-ad85-6b9a8852f948}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\shell\sys\linux\lib\3rd-party\getopt">
+      <UniqueIdentifier>{5e2ce248-8c7a-4f1d-9d1b-9681afda0dd4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2504,9 +2507,6 @@
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vsf_linux_fs.c">
       <Filter>vsf\shell\sys\linux\kernel\fs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vsf\source\shell\sys\linux\lib\glibc\3rd-party\getopt_long.c">
-      <Filter>vsf\shell\sys\linux\lib\glibc\3rd-party</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\vsf_linux_vfs.c">
       <Filter>vsf\shell\sys\linux\kernel\fs\vfs</Filter>
     </ClCompile>
@@ -2689,6 +2689,9 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\driver\common\i2s\i2s_common.c">
       <Filter>vsf\hal\driver\common\i2s</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\lib\3rd-party\getopt\getopt_long.c">
+      <Filter>vsf\shell\sys\linux\lib\3rd-party\getopt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
