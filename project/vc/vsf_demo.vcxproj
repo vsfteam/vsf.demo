@@ -181,6 +181,7 @@
     <ClInclude Include="..\..\vsf\source\hal\arch\__vsf_arch_interface.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\adc\adc_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\common.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\dac\dac_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\flash\flash_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\gpio\gpio_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\i2c\i2c_request.h" />
@@ -236,6 +237,7 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\driver.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\device.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\driver.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\rng\rng.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\rtc\rtc.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\uart\uart.h" />
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\adc\vsf_remapped_adc.h" />
@@ -542,6 +544,7 @@
     <ClCompile Include="..\..\vsf\source\hal\arch\x86\win\win_generic.c" />
     <ClCompile Include="..\..\vsf\source\hal\arch\x86\win\win_generic_simple.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\adc\adc_common.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\common\dac\dac_common.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\flash\flash_common.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\gpio\gpio_common.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\i2c\i2c_common.c" />
@@ -573,6 +576,7 @@
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\vsf_hal_distbus.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\x86\win\driver.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\x86\win\rng\rng.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\x86\win\rtc\rtc.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\x86\win\uart\uart.c" />
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\adc\vsf_remapped_adc.c" />
@@ -676,6 +680,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj</Outputs>
     </CustomBuild>
     <None Include="..\..\vsf\source\hal\driver\common\adc\adc_template.inc" />
+    <None Include="..\..\vsf\source\hal\driver\common\dac\dac_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\flash\flash_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\gpio\gpio_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\i2c\i2c_template.inc" />

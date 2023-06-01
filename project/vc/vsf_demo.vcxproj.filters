@@ -754,6 +754,12 @@
     <Filter Include="vsf\shell\sys\linux\lib\3rd-party\getopt">
       <UniqueIdentifier>{5e2ce248-8c7a-4f1d-9d1b-9681afda0dd4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\hal\driver\common\dac">
+      <UniqueIdentifier>{b60b710f-adf6-4905-abda-fc9cea357c89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\x86\win\rng">
+      <UniqueIdentifier>{f88e3868-da04-4215-955b-ea30afe18731}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -1974,6 +1980,12 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\common\i2s\i2s_template.h">
       <Filter>vsf\hal\driver\common\i2s</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\dac\dac_template.h">
+      <Filter>vsf\hal\driver\common\dac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\rng\rng.h">
+      <Filter>vsf\hal\driver\x86\win\rng</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -2693,6 +2705,12 @@
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\lib\3rd-party\getopt\getopt_long.c">
       <Filter>vsf\shell\sys\linux\lib\3rd-party\getopt</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\common\dac\dac_common.c">
+      <Filter>vsf\hal\driver\common\dac</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\x86\win\rng\rng.c">
+      <Filter>vsf\hal\driver\x86\win\rng</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">
@@ -2742,6 +2760,9 @@
     </None>
     <None Include="..\..\vsf\source\hal\driver\common\i2s\i2s_template.inc">
       <Filter>vsf\hal\driver\common\i2s</Filter>
+    </None>
+    <None Include="..\..\vsf\source\hal\driver\common\dac\dac_template.inc">
+      <Filter>vsf\hal\driver\common\dac</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
