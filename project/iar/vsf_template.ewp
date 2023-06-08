@@ -6086,18 +6086,6 @@
                                                 </file>
                                             </group>
                                             <group>
-                                                <name>gpio</name>
-                                                <file>
-                                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\plf\aic8800\src\driver\gpio\gpio_api.c</name>
-                                                </file>
-                                                <file>
-                                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\plf\aic8800\src\driver\gpio\gpio_api.h</name>
-                                                </file>
-                                                <file>
-                                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\plf\aic8800\src\driver\gpio\reg_gpio.h</name>
-                                                </file>
-                                            </group>
-                                            <group>
                                                 <name>i2cm</name>
                                                 <file>
                                                     <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\vendor\plf\aic8800\src\driver\i2cm\reg_i2cm.h</name>
