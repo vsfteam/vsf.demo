@@ -21,11 +21,25 @@
 #ifndef __VSF_USR_CFG_H__
 #define __VSF_USR_CFG_H__
 
+/*============================ MACROS ========================================*/
+
+// defined disabled hal before including vsf_board_cfg.h
+#define VSF_HAL_USE_I2C                                 DISABLED
+#define VSF_HAL_USE_MMC                                 DISABLED
+#define VSF_HAL_USE_USART                               DISABLED
+#define VSF_HAL_USE_RNG                                 DISABLED
+#define VSF_HAL_USE_SPI                                 DISABLED
+
 /*============================ INCLUDES ======================================*/
 
 #include "vsf_board_cfg.h"
 
 /*============================ MACROS ========================================*/
+
+#define VSF_KERNEL_CFG_SUPPORT_THREAD                   DISABLED
+#define VSF_KERNEL_CFG_CPU_USAGE                        DISABLED
+#define VSF_KERNEL_CFG_SUPPORT_CALLBACK_TIMER           DISABLED
+#define VSF_KERNEL_CFG_EDA_SUBCALL_HAS_RETURN_VALUE     DISABLED
 
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
 #define VSF_USE_TRACE                                   ENABLED

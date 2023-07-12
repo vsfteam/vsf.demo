@@ -22,6 +22,11 @@
  * Board:
  *   VSF_USB_DC0
  *   vsf_board.audio_dev
+ *
+ * For AIC8800M:
+ *   exclude hal/driver/AIC/AIC8800/vendor/audio
+ *   exclude hal/driver/AIC/AIC8800/vendor/lwip
+ *   exclude hal/driver/AIC/AIC8800/vendor/wifi
  */
 
 /*============================ INCLUDES ======================================*/
