@@ -760,6 +760,9 @@
     <Filter Include="vsf\hal\driver\x86\win\rng">
       <UniqueIdentifier>{f88e3868-da04-4215-955b-ea30afe18731}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\component\fs\driver\romfs">
+      <UniqueIdentifier>{373dab56-bbdc-4aca-9714-78c1a64c6970}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -1986,6 +1989,9 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\rng\rng.h">
       <Filter>vsf\hal\driver\x86\win\rng</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\fs\driver\romfs\vsf_romfs.h">
+      <Filter>vsf\component\fs\driver\romfs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -2710,6 +2716,9 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\driver\x86\win\rng\rng.c">
       <Filter>vsf\hal\driver\x86\win\rng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\fs\driver\romfs\vsf_romfs.c">
+      <Filter>vsf\component\fs\driver\romfs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -27,6 +27,9 @@
  *   exclude hal/driver/AIC/AIC8800/vendor/audio
  *   exclude hal/driver/AIC/AIC8800/vendor/lwip
  *   exclude hal/driver/AIC/AIC8800/vendor/wifi
+ *
+ * Linker:
+ *   Set image base to the start address of flash, so the mscboot will be executed on power up
  */
 
 /*============================ INCLUDES ======================================*/
