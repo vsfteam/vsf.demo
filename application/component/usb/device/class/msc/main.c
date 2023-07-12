@@ -300,8 +300,10 @@ vsf_component_peda_ifs_entry(__usr_mscboot_on_firmware_write, vk_memfs_callback_
         VSF_ASSERT(cur_size <= vsf_local.size);
         cur_size = __usr_flash_write(vsf_local.offset, cur_size, vsf_local.buff);
         if (1 == cur_size) {
+            vsf_local.size |= 1;
             break;
         } else {
+            vsf_local.size &= ~1;
             vsf_local.offset += cur_size;
             vsf_local.buff += cur_size;
             vsf_local.wsize += cur_size;
@@ -380,8 +382,10 @@ vsf_component_peda_ifs_entry(__usr_mscboot_on_romfs_write, vk_memfs_callback_wri
         VSF_ASSERT(cur_size <= vsf_local.size);
         cur_size = __usr_flash_write(vsf_local.offset, cur_size, vsf_local.buff);
         if (1 == cur_size) {
+            vsf_local.size |= 1;
             break;
         } else {
+            vsf_local.size &= ~1;
             vsf_local.offset += cur_size;
             vsf_local.buff += cur_size;
             vsf_local.wsize += cur_size;
