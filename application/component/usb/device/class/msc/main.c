@@ -409,7 +409,13 @@ int VSF_USER_ENTRY(void)
     vsf_start_trace();
 #endif
 
-    vk_usbd_init(&__app_usbd_msc);
-    vk_usbd_connect(&__app_usbd_msc);
+    app_mscboot_init();
+    if (app_mscboot_check()) {
+        vk_usbd_init(&__app_usbd_msc);
+        vk_usbd_connect(&__app_usbd_msc);
+    } else {
+        app_mscboot_fini();
+        app_mscboot_boot();
+    }
     return 0;
 }

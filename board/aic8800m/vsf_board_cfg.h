@@ -136,6 +136,29 @@
 
 #define APP_CFG_USBH_ARCH_PRIO                          vsf_arch_prio_0
 
+#define __APP_MSCBOOT_BOOTLOADER_SIZE                   (64 * 1024)
+#define APP_MSCBOOT_CFG_FW_SIZE                         (512 * 1024)
+#define APP_MSCBOOT_CFG_FW_ADDR                         __APP_MSCBOOT_BOOTLOADER_SIZE
+#define APP_MSCBOOT_CFG_ROMFS_SIZE                      (1024 * 1024)
+#define APP_MSCBOOT_CFG_ROMFS_ADDR                      (APP_MSCBOOT_CFG_FW_ADDR + APP_MSCBOOT_CFG_FW_SIZE)
+#define APP_MSCBOOT_CFG_FLASH                           vsf_hw_flash0
+#define APP_MSCBOOT_CFG_ERASE_ALIGN                     (4 * 1024)
+#define APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE                (4 * 1024)
+#define APP_MSCBOOT_CFG_WRITE_ALIGN                     (256)
+#define APP_MSCBOOT_CFG_WRITE_BLOCK_SIZE                (0)
+#define APP_MSCBOOT_CFG_READ_ALIGN                      (0)
+#define APP_MSCBOOT_CFG_READ_BLOCK_SIZE                 (0)
+
+#define app_mscboot_init()
+#define app_mscboot_check()                             true
+#define app_mscboot_fini()
+#define app_mscboot_boot()                                                      \
+    do {                                                                        \
+        uint32_t *image = (uint32_t *)(0x08000000 + APP_MSCBOOT_CFG_FW_ADDR);   \
+        vsf_arch_set_stack(image[0]);                                           \
+        ((void (*)(void))(image[1]))();                                         \
+    } while (0)
+
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/

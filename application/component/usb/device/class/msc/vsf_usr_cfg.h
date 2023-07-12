@@ -59,19 +59,6 @@
 #define APP_CFG_USBD_VID                                0xA7A8
 #define APP_CFG_USBD_PID                                0x2349
 
-#define __APP_MSCBOOT_BOOTLOADER_SIZE                   (64 * 1024)
-#define APP_MSCBOOT_CFG_FW_SIZE                         (512 * 1024)
-#define APP_MSCBOOT_CFG_FW_ADDR                         __APP_MSCBOOT_BOOTLOADER_SIZE
-#define APP_MSCBOOT_CFG_ROMFS_SIZE                      (1024 * 1024)
-#define APP_MSCBOOT_CFG_ROMFS_ADDR                      (APP_MSCBOOT_CFG_FW_ADDR + APP_MSCBOOT_CFG_FW_SIZE)
-#define APP_MSCBOOT_CFG_FLASH                           vsf_hw_flash0
-#define APP_MSCBOOT_CFG_ERASE_ALIGN                     (4 * 1024)
-#define APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE                (4 * 1024)
-#define APP_MSCBOOT_CFG_WRITE_ALIGN                     (256)
-#define APP_MSCBOOT_CFG_WRITE_BLOCK_SIZE                (0)
-#define APP_MSCBOOT_CFG_READ_ALIGN                      (0)
-#define APP_MSCBOOT_CFG_READ_BLOCK_SIZE                 (0)
-
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
