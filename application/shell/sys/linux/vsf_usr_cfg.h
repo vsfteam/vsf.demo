@@ -57,7 +57,8 @@
 #       define VSF_LINUX_USE_APPLET                     ENABLED
 #   endif
 #   define VSF_LINUX_USE_SCRIPT                         ENABLED
-#   define VSF_LINUX_CFG_INIT_SCRIPT_FILE               "/etc/startup.sh"
+#   define VSF_LINUX_CFG_INIT_SCRIPT_FILE               "/usr/etc/startup.sh"
+#   define VSF_LINUX_CFG_PATH                           "/bin:/usr/bin"
 
 #define VSF_USE_SIMPLE_SPRINTF                          ENABLED
 #define VSF_USE_SIMPLE_SSCANF                           ENABLED

@@ -40,6 +40,7 @@
 
 #include <unistd.h>
 #include <sys/mount.h>
+#include <vsf_board.h>
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -73,7 +74,6 @@ int vsf_linux_create_fhs(void)
             install_embedded_busybox = true;
         }
     }
-    symlink("/etc", "/usr/etc");
     if (install_embedded_busybox) {
         busybox_install();
     }
