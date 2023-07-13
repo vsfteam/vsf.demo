@@ -139,7 +139,7 @@
 #define APP_CFG_USBH_ARCH_PRIO                          vsf_arch_prio_0
 
 #define __APP_MSCBOOT_BOOTLOADER_SIZE                   (64 * 1024)
-#define APP_MSCBOOT_CFG_FW_SIZE                         (512 * 1024)
+#define APP_MSCBOOT_CFG_FW_SIZE                         ((512 + 256) * 1024)
 #define APP_MSCBOOT_CFG_FW_ADDR                         __APP_MSCBOOT_BOOTLOADER_SIZE
 #define APP_MSCBOOT_CFG_ROMFS_SIZE                      (1024 * 1024)
 #define APP_MSCBOOT_CFG_ROMFS_ADDR                      (APP_MSCBOOT_CFG_FW_ADDR + APP_MSCBOOT_CFG_FW_SIZE)
