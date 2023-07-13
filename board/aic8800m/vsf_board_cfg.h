@@ -101,6 +101,8 @@
  * Components Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
+#define VSF_USE_LWIP                                    ENABLED
+
 #ifndef VSF_USE_HEAP
 #   define VSF_USE_HEAP                                 ENABLED
 #endif

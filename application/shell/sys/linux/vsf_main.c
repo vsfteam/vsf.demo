@@ -55,6 +55,7 @@ int vsf_linux_create_fhs(void)
     vsf_linux_vfs_init();
 
     // 1. hardware driver
+    vsf_board_init_linux();
 
     // 2. fs
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
@@ -88,7 +89,6 @@ int vsf_linux_create_fhs(void)
 // TODO: SDL require that main need argc and argv
 int VSF_USER_ENTRY(int argc, char *argv[])
 {
-    extern void vsf_board_init(void);
     vsf_board_init();
     vsf_start_trace();
 

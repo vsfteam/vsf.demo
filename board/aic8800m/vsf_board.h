@@ -54,4 +54,8 @@ extern const i_usb_dc_t VSF_USB_DC0;
 
 extern void vsf_board_init(void);
 
+#if VSF_USE_LINUX == ENABLED
+extern void vsf_board_init_linux(void);
+#endif
+
 #endif      // __VSF_BOARD_H__
