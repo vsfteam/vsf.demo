@@ -153,7 +153,7 @@
 #define APP_MSCBOOT_CFG_READ_BLOCK_SIZE                 (0)
 
 #define app_mscboot_init()
-#define app_mscboot_check()                             true
+#define app_mscboot_check()                             (!(vsf_gpio_read(&vsf_hw_gpio1) & (1 << 6)))
 #define app_mscboot_fini()
 #define app_mscboot_boot()                                                      \
     do {                                                                        \
