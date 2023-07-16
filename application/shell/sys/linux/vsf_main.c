@@ -76,6 +76,11 @@ int vsf_linux_create_fhs(void)
     }
     if (install_embedded_busybox) {
         busybox_install();
+    } else {
+        setenv("PATH", VSF_LINUX_CFG_PATH, true);
+        if (symlink("/usr/bin/init", "/bin/init") < 0) {
+            printf("busybox found in /usr/bin, but init not found\n");
+        }
     }
 #else
     busybox_install();
