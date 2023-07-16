@@ -20,6 +20,10 @@
 #define __VSF_HEAP_CLASS_INHERIT__
 #include "./vsf_board.h"
 
+#if VSF_USE_LINUX == ENABLED
+#   include <unistd.h>
+#endif
+
 #if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
 #   include "rtos_al.h"
 #endif

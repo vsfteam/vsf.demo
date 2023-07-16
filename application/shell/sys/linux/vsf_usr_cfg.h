@@ -36,6 +36,9 @@
 #define VSF_USE_FS                                      ENABLED
 #   define VSF_FS_USE_ROMFS                             ENABLED
 #define VSF_USE_INPUT                                   ENABLED
+#if VSF_USE_LWIP == ENABLED
+#   define VSF_USE_TCPIP                                ENABLED
+#endif
 
 #define VSF_USE_LINUX                                   ENABLED
 #   define VSF_LINUX_CFG_STACKSIZE                      4096
