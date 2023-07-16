@@ -8107,6 +8107,15 @@
                 <name>loader</name>
                 <group>
                     <name>elf</name>
+                    <group>
+                        <name>arch</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\service\loader\elf\arch\vsf_elfloader_arm.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\service\loader\elf\arch\vsf_elfloader_x64.c</name>
+                        </file>
+                    </group>
                     <file>
                         <name>$PROJ_DIR$\..\..\vsf\source\service\loader\elf\elf.h</name>
                     </file>
@@ -9127,6 +9136,9 @@
                 <name>$PROJ_DIR$\..\..\vsf\source\utilities\vsf_utilities.h</name>
             </file>
         </group>
+        <file>
+            <name>$PROJ_DIR$\..\..\vsf\source\vsf.c</name>
+        </file>
         <file>
             <name>$PROJ_DIR$\..\..\vsf\source\vsf.h</name>
         </file>
