@@ -81,6 +81,14 @@ int vsf_linux_create_fhs(void)
         if (symlink("/usr/bin/init", "/bin/init") < 0) {
             printf("busybox found in /usr/bin, but init not found\n");
         }
+        if (symlink("/usr/bin/sh", "/bin/sh") < 0) {
+            printf("busybox found in /usr/bin, but sh not found\n");
+        }
+
+        mkdir("/etc", 0);
+        if (symlink("/usr/etc/inittab", "/etc/inittab") < 0) {
+            printf("fail to symlink inittab to /etc\n");
+        }
     }
 #else
     busybox_install();
