@@ -282,6 +282,10 @@
     <ClInclude Include="..\..\vsf\source\service\fifo\vsf_fifo.h" />
     <ClInclude Include="..\..\vsf\source\service\heap\vsf_heap.h" />
     <ClInclude Include="..\..\vsf\source\service\json\vsf_json.h" />
+    <ClInclude Include="..\..\vsf\source\service\loader\elf\elf.h" />
+    <ClInclude Include="..\..\vsf\source\service\loader\elf\vsf_elfloader.h" />
+    <ClInclude Include="..\..\vsf\source\service\loader\pe\vsf_peloader.h" />
+    <ClInclude Include="..\..\vsf\source\service\loader\vsf_loader.h" />
     <ClInclude Include="..\..\vsf\source\service\pbuf\vsf_pbuf.h" />
     <ClInclude Include="..\..\vsf\source\service\pbuf\vsf_pbuf_pool.h" />
     <ClInclude Include="..\..\vsf\source\service\pool\vsf_pool.h" />
@@ -612,6 +616,11 @@
     <ClCompile Include="..\..\vsf\source\service\fifo\vsf_fifo.c" />
     <ClCompile Include="..\..\vsf\source\service\heap\vsf_heap.c" />
     <ClCompile Include="..\..\vsf\source\service\json\vsf_json.c" />
+    <ClCompile Include="..\..\vsf\source\service\loader\elf\arch\vsf_elfloader_arm.c" />
+    <ClCompile Include="..\..\vsf\source\service\loader\elf\arch\vsf_elfloader_x64.c" />
+    <ClCompile Include="..\..\vsf\source\service\loader\elf\vsf_elfloader.c" />
+    <ClCompile Include="..\..\vsf\source\service\loader\pe\vsf_peloader.c" />
+    <ClCompile Include="..\..\vsf\source\service\loader\vsf_loader.c" />
     <ClCompile Include="..\..\vsf\source\service\pbuf\vsf_pbuf.c" />
     <ClCompile Include="..\..\vsf\source\service\pbuf\vsf_pbuf_pool.c" />
     <ClCompile Include="..\..\vsf\source\service\pool\vsf_pool.c" />
@@ -672,6 +681,7 @@
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c" />
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_list.c" />
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_queue.c" />
+    <ClCompile Include="..\..\vsf\source\vsf.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc" />

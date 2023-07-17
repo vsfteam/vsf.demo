@@ -34,6 +34,11 @@
  *
  * Linker:
  *   If bootloader is used, set image base to the APP address
+ *
+ * Compiler:
+ *   Avoid to use static-base reigster and veneer register, which will be used by applet.
+ *   For ARM, should be R9 and R12
+ *
  */
 
 /*============================ INCLUDES ======================================*/

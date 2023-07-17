@@ -763,6 +763,18 @@
     <Filter Include="vsf\component\fs\driver\romfs">
       <UniqueIdentifier>{373dab56-bbdc-4aca-9714-78c1a64c6970}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\service\loader">
+      <UniqueIdentifier>{fb669ba0-3010-4433-ba8f-a9407c0d737e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\service\loader\elf">
+      <UniqueIdentifier>{0ff9c3eb-6286-48e3-83dd-286c05637c39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\service\loader\elf\arch">
+      <UniqueIdentifier>{feb0bd81-cda8-45d5-bf1b-e905d9d31a21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\service\loader\pe">
+      <UniqueIdentifier>{6fb72a27-03ff-4005-8e07-77c71de6671b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -1992,6 +2004,18 @@
     <ClInclude Include="..\..\vsf\source\component\fs\driver\romfs\vsf_romfs.h">
       <Filter>vsf\component\fs\driver\romfs</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\service\loader\vsf_loader.h">
+      <Filter>vsf\service\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\service\loader\elf\elf.h">
+      <Filter>vsf\service\loader\elf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\service\loader\elf\vsf_elfloader.h">
+      <Filter>vsf\service\loader\elf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\service\loader\pe\vsf_peloader.h">
+      <Filter>vsf\service\loader\pe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -2719,6 +2743,24 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\fs\driver\romfs\vsf_romfs.c">
       <Filter>vsf\component\fs\driver\romfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\service\loader\vsf_loader.c">
+      <Filter>vsf\service\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\service\loader\elf\vsf_elfloader.c">
+      <Filter>vsf\service\loader\elf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\service\loader\elf\arch\vsf_elfloader_arm.c">
+      <Filter>vsf\service\loader\elf\arch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\service\loader\elf\arch\vsf_elfloader_x64.c">
+      <Filter>vsf\service\loader\elf\arch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\service\loader\pe\vsf_peloader.c">
+      <Filter>vsf\service\loader\pe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\vsf.c">
+      <Filter>vsf</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
