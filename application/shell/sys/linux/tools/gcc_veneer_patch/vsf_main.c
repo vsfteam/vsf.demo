@@ -33,7 +33,15 @@
  * Sources necessary for linux:
  *   vsf/source/shell/sys/linux/lib/3rd-party/fnmatch
  *   vsf/source/shell/sys/linux/lib/3rd-party/glob
+ *   vsf/example/template/demo/linux/mount_demo.c
  *
+ * Sources to modify:
+ *   vsf/source/service/loader/elf/elf.h
+ *      add #undef __VSF64__ to make elfloader suitable for CortexM
+ *   vsf/source/service/loader/elf/vsf_elfloader.c
+ *      skip relocating in vsf_elfloader_load
+ *      // relocating
+ *      if (linfo.has_dynamic && 0) {
  */
 
 /*============================ INCLUDES ======================================*/
@@ -118,16 +126,16 @@ static int __elfpatch_main(int argc, char *argv[])
             offset = 0;
             //  parse MOVW      R12, LOW16
             //  offset |= (entry[0] & (BITMASK << OFFSET)) << (16 - PREVBITS - BITLEN - OFFSET);
-            offset |= (entry[0] & (0x01 << 2)) << (16 - 0 - 1 - 2);
-            offset |= (entry[1] & (0x0F << 0)) << (16 - 1 - 4 - 0);
-            offset |= (entry[2] & (0x07 << 4)) << (16 - 5 - 3 - 4);
-            offset |= (entry[3] & (0xFF << 0)) << (16 - 8 - 8 - 0);
+            offset |= (entry[1] & (0x01 << 2)) << (16 - 0 - 1 - 2);
+            offset |= (entry[0] & (0x0F << 0)) << (16 - 1 - 4 - 0);
+            offset |= (entry[3] & (0x07 << 4)) << (16 - 5 - 3 - 4);
+            offset |= (entry[2] & (0xFF << 0)) << (16 - 8 - 8 - 0);
             //  parse MOVT      R12, HIGH16
             //  offset |= (entry[4 + n] & (BITMASK << OFFSET)) << (32 - PREVBITS - BITLEN - OFFSET);
-            offset |= (entry[4] & (0x01 << 2)) << (32 - 0 - 1 - 2);
-            offset |= (entry[5] & (0x0F << 0)) << (32 - 1 - 4 - 0);
-            offset |= (entry[6] & (0x07 << 4)) << (32 - 5 - 3 - 4);
-            offset |= (entry[7] & (0xFF << 0)) << (32 - 8 - 8 - 0);
+            offset |= (entry[5] & (0x01 << 2)) << (32 - 0 - 1 - 2);
+            offset |= (entry[4] & (0x0F << 0)) << (32 - 1 - 4 - 0);
+            offset |= (entry[7] & (0x07 << 4)) << (32 - 5 - 3 - 4);
+            offset |= (entry[6] & (0xFF << 0)) << (32 - 8 - 8 - 0);
             offset += plt_section.sh_addr + entry - plt + 12;
 
             // calculate offset to .got
@@ -136,26 +144,29 @@ static int __elfpatch_main(int argc, char *argv[])
             // patch entry
             //  set MOVW      R12, LOW16
             //  entry[n] = (entry[n] & ~(BITMASK << OFFSET)) | ((offset & (BITMASK << (16 - PREVBITS - BITLEN))) >> (16 - PREVBITS - BITLEN - OFFSET));
-            entry[0] = (entry[0] & ~(0x01 << 2)) | ((offset & (0x01 << (16 - 0 - 1))) >> (16 - 0 - 1 - 2));
-            entry[1] = (entry[1] & ~(0x0F << 0)) | ((offset & (0x0F << (16 - 1 - 4))) >> (16 - 1 - 4 - 0));
-            entry[2] = (entry[2] & ~(0x07 << 4)) | ((offset & (0x07 << (16 - 5 - 3))) >> (16 - 5 - 3 - 4));
-            entry[3] = (entry[3] & ~(0xFF << 0)) | ((offset & (0xFF << (16 - 8 - 8))) >> (16 - 8 - 8 - 0));
+            entry[1] = (entry[1] & ~(0x01 << 2)) | ((offset & (0x01 << (16 - 0 - 1))) >> (16 - 0 - 1 - 2));
+            entry[0] = (entry[0] & ~(0x0F << 0)) | ((offset & (0x0F << (16 - 1 - 4))) >> (16 - 1 - 4 - 0));
+            entry[3] = (entry[3] & ~(0x07 << 4)) | ((offset & (0x07 << (16 - 5 - 3))) >> (16 - 5 - 3 - 4));
+            entry[2] = (entry[2] & ~(0xFF << 0)) | ((offset & (0xFF << (16 - 8 - 8))) >> (16 - 8 - 8 - 0));
             //  set MOVT      R12, HIGH16
             //  entry[4 + n] = (entry[4 + n] & ~(BITMASK << OFFSET)) | ((offset & (BITMASK << (32 - PREVBITS - BITLEN))) >> (32 - PREVBITS - BITLEN - OFFSET));
-            entry[4] = (entry[4] & ~(0x01 << 2)) | ((offset & (0x01 << (32 - 0 - 1))) >> (32 - 0 - 1 - 2));
-            entry[5] = (entry[5] & ~(0x0F << 0)) | ((offset & (0x0F << (32 - 1 - 4))) >> (32 - 1 - 4 - 0));
-            entry[6] = (entry[6] & ~(0x07 << 4)) | ((offset & (0x07 << (32 - 5 - 3))) >> (32 - 5 - 3 - 4));
-            entry[7] = (entry[7] & ~(0xFF << 0)) | ((offset & (0xFF << (32 - 8 - 8))) >> (32 - 8 - 8 - 0));
+            entry[5] = (entry[5] & ~(0x01 << 2)) | ((offset & (0x01 << (32 - 0 - 1))) >> (32 - 0 - 1 - 2));
+            entry[4] = (entry[4] & ~(0x0F << 0)) | ((offset & (0x0F << (32 - 1 - 4))) >> (32 - 1 - 4 - 0));
+            entry[7] = (entry[7] & ~(0x07 << 4)) | ((offset & (0x07 << (32 - 5 - 3))) >> (32 - 5 - 3 - 4));
+            entry[6] = (entry[6] & ~(0xFF << 0)) | ((offset & (0xFF << (32 - 8 - 8))) >> (32 - 8 - 8 - 0));
             //  ADD      R12, PC  ==>>  ADD      R12, R9
-            entry[8] = 0x9C;
+            entry[8] = 0xCC;
         }
     }
 
+    fseek(f, 0, SEEK_SET);
     if(fwrite(fbuff, 1, fsize, f) != fsize) {
         printf("fail to write %s\n", argv[1]);
         goto fclose_and_fail;
     }
 
+    fclose(f);
+    vsf_arch_shutdown();
     return 0;
 
 fclose_and_fail:
@@ -180,6 +191,8 @@ int vsf_linux_create_fhs(void)
     busybox_install();
 
     // 3. install executables
+    extern int mount_main(int argc, char *argv[]);
+    busybox_bind(VSF_LINUX_CFG_BIN_PATH "/mount", mount_main);
     busybox_bind(VSF_LINUX_CFG_BIN_PATH "/elfpatch", __elfpatch_main);
 
     return 0;
