@@ -41,7 +41,7 @@
 #endif
 
 #define VSF_USE_LINUX                                   ENABLED
-#   define VSF_LINUX_CFG_STACKSIZE                      4096
+#   define VSF_LINUX_CFG_STACKSIZE                      8192
 #   define VSF_USE_POSIX                                ENABLED
 #   define VSF_LINUX_USE_SIMPLE_LIBC                    ENABLED
 #   define VSF_LINUX_USE_BUSYBOX                        ENABLED
