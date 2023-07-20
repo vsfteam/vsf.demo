@@ -28,17 +28,26 @@
 /*============================ MACROS ========================================*/
 
 // components
+
 #define VSF_USE_TRACE                                   ENABLED
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
 #define VSF_USE_LOADER                                  ENABLED
 #   define VSF_LOADER_USE_ELF                           ENABLED
+#define VSF_USE_SCSI                                    ENABLED
+#   define VSF_SCSI_USE_VIRTUAL_SCSI                    ENABLED
+#   define VSF_SCSI_USE_MAL_SCSI                        ENABLED
 #define VSF_USE_MAL                                     ENABLED
+#   define VSF_MAL_USE_FAKEFAT32_MAL                    ENABLED
 #define VSF_USE_FS                                      ENABLED
 #   define VSF_FS_USE_ROMFS                             ENABLED
+#   define VSF_FS_USE_MEMFS                             ENABLED
+#   define VSF_FS_USE_FATFS                             ENABLED
 #define VSF_USE_INPUT                                   ENABLED
 #if VSF_USE_LWIP == ENABLED
 #   define VSF_USE_TCPIP                                ENABLED
 #endif
+#define VSF_USE_USB_DEVICE                              ENABLED
+#   define VSF_USBD_USE_MSC                             ENABLED
 
 #define VSF_USE_LINUX                                   ENABLED
 #   define VSF_LINUX_CFG_STACKSIZE                      8192
@@ -67,6 +76,9 @@
 #define VSF_USE_SIMPLE_SSCANF                           ENABLED
 
 // APP configuration
+
+#define APP_CFG_USBD_VID                                0xA7A8
+#define APP_CFG_USBD_PID                                0x2349
 
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/

@@ -152,8 +152,16 @@
 #define APP_MSCBOOT_CFG_READ_ALIGN                      (0)
 #define APP_MSCBOOT_CFG_READ_BLOCK_SIZE                 (0)
 
+#define APP_BOOT0_KEY_PORT                              vsf_hw_gpio1
+#define APP_BOOT0_KEY_PIN                               6
+#define APP_BOOT0_KEY_IS_DOWN                           (!(vsf_gpio_read(&APP_BOOT0_KEY_PORT) & (1 << APP_BOOT0_KEY_PIN)))
+
+#define APP_BOOT1_KEY_PORT                              vsf_hw_gpio1
+#define APP_BOOT1_KEY_PIN                               7
+#define APP_BOOT1_KEY_IS_DOWN                           (!(vsf_gpio_read(&APP_BOOT1_KEY_PORT) & (1 << APP_BOOT1_KEY_PIN)))
+
 #define app_mscboot_init()
-#define app_mscboot_check()                             (!(vsf_gpio_read(&vsf_hw_gpio1) & (1 << 6)))
+#define app_mscboot_check()                             APP_BOOT0_KEY_IS_DOWN
 #define app_mscboot_fini()
 #define app_mscboot_boot()                                                      \
     do {                                                                        \
