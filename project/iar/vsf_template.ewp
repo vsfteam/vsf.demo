@@ -5019,7 +5019,7 @@
                                             <state>__CPU_ARM9__</state>
                                             <state>__Allwinner__</state>
                                             <state>__F1C100S__</state>
-                                            <state>__OOC_CPP__</state>
+                                            <state>__VSF_CPP__</state>
                                             <state>_DLIB_FILE_DESCRIPTOR=1</state>
                                             <state>LV_CONF_INCLUDE_SIMPLE</state>
                                             <state>HAS_STD_MALLOC</state>
