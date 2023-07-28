@@ -174,6 +174,29 @@ static void GPIO_Iomux(uint32_t Pin, uint32_t Function)
     GPIO->ALT[Port] = (GPIO->ALT[Port] & Mask) | Function;
 }
 
+static void __vsf_debug_stream_uart_evthandler( void *target_ptr,
+                                                vsf_usart_t *usart_ptr,
+                                                vsf_usart_irq_mask_t irq_mask)
+{
+    vsf_usart_t *usart = target_ptr;
+
+    switch (irq_mask) {
+    case VSF_USART_IRQ_MASK_RX:
+        while (true) {
+            uint_fast16_t data_size = vsf_usart_rxfifo_get_data_count(usart);
+            if (!data_size) { break; }
+
+            uint8_t *ptr;
+            uint_fast32_t buf_size = vsf_stream_get_wbuf(&VSF_DEBUG_STREAM_RX.use_as__vsf_stream_t, &ptr);
+            data_size = vsf_min(data_size, buf_size);
+
+            vsf_usart_rxfifo_read(usart, ptr, data_size);
+            vsf_stream_write(&VSF_DEBUG_STREAM_RX.use_as__vsf_stream_t, NULL, data_size);
+        }
+        break;
+    }
+}
+
 static void __VSF_DEBUG_STREAM_TX_INIT(void)
 {
     static bool is_inited = false;
@@ -186,6 +209,11 @@ static void __VSF_DEBUG_STREAM_TX_INIT(void)
         vsf_usart_init(&vsf_hw_usart0, &(vsf_usart_cfg_t){
             .mode           = VSF_USART_8_BIT_LENGTH | VSF_USART_NO_PARITY | VSF_USART_1_STOPBIT,
             .baudrate       = DBG_UART_BR,
+            .isr            = {
+                .handler_fn = __vsf_debug_stream_uart_evthandler,
+                .target_ptr = &vsf_hw_usart0,
+                .prio       = vsf_arch_prio_0,
+            },
         });
 
         vsf_stream_connect_tx(&VSF_DEBUG_STREAM_RX.use_as__vsf_stream_t);
