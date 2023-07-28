@@ -215,6 +215,7 @@ static void __VSF_DEBUG_STREAM_TX_INIT(void)
                 .prio       = vsf_arch_prio_0,
             },
         });
+        vsf_usart_irq_enable(&vsf_hw_usart0, VSF_USART_IRQ_MASK_RX);
 
         vsf_stream_connect_tx(&VSF_DEBUG_STREAM_RX.use_as__vsf_stream_t);
     }
