@@ -78,12 +78,21 @@
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   4
 #   define VSF_HEAP_SIZE                                0x50000
 
+#define VSF_USE_USB_DEVICE                              DISABLED
+
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
  *----------------------------------------------------------------------------*/
 
 #define VSF_CFG_DEBUG_STREAM_TX_T                       vsf_stream_t
 #define VSF_CFG_DEBUG_STREAM_RX_T                       vsf_mem_stream_t
+
+#define __APP_MSCBOOT_BOOTLOADER_SIZE                   (64 * 1024)
+#define APP_MSCBOOT_CFG_FW_SIZE                         (512 * 1024)
+#define APP_MSCBOOT_CFG_FW_ADDR                         __APP_MSCBOOT_BOOTLOADER_SIZE
+#define APP_MSCBOOT_CFG_ROMFS_SIZE                      (2048 * 1024)
+#define APP_MSCBOOT_CFG_ROMFS_ADDR                      (APP_MSCBOOT_CFG_FW_ADDR + APP_MSCBOOT_CFG_FW_SIZE)
+#define APP_MSCBOOT_CFG_FLASH_ADDR                      0x01000000
 
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/

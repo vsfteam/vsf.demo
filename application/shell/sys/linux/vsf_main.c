@@ -49,7 +49,7 @@
 
 /*============================ MACROS ========================================*/
 
-#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
+#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
 
 #if     VSF_USBD_CFG_SPEED == USB_SPEED_HIGH
 #   define __APP_CFG_MSC_BULK_SIZE                  64
@@ -85,7 +85,7 @@
 /*============================ TYPES =========================================*/
 /*============================ PROTOTYPES ====================================*/
 
-#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
+#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
 dcl_vsf_peda_methods(static, __usr_mscboot_on_romfs_read)
 dcl_vsf_peda_methods(static, __usr_mscboot_on_romfs_write)
 #endif
@@ -93,7 +93,7 @@ dcl_vsf_peda_methods(static, __usr_mscboot_on_romfs_write)
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 
-#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
+#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
 
 static vk_fakefat32_file_t __usr_fakefat32_root[2] = {
     {
@@ -130,7 +130,7 @@ static vsf_eda_t *__usr_mscboot_eda = NULL;
 
 /*============================ IMPLEMENTATION ================================*/
 
-#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
+#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
 
 // msc update for romfs
 
@@ -347,7 +347,6 @@ int vsf_linux_create_fhs(void)
     vsf_linux_vfs_init();
 
     // 1. hardware driver
-    vsf_board_init_linux();
 
     // 2. fs
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
@@ -369,6 +368,8 @@ int vsf_linux_create_fhs(void)
         busybox_install();
     } else {
         setenv("PATH", VSF_LINUX_CFG_PATH, true);
+
+        mkdir("/bin", 0);
         if (symlink("/usr/bin/init", "/bin/init") < 0) {
             printf("busybox found in /usr/bin, but init not found\n");
         }
@@ -386,6 +387,7 @@ int vsf_linux_create_fhs(void)
 #endif
 
     // 3. install executables
+    vsf_board_init_linux();
 
     return 0;
 }
@@ -396,7 +398,7 @@ int VSF_USER_ENTRY(int argc, char *argv[])
     vsf_board_init();
     vsf_start_trace();
 
-#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
+#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
     if (APP_BOOT1_KEY_IS_DOWN) {
         vk_usbd_init(&__app_usbd_msc);
         vk_usbd_connect(&__app_usbd_msc);

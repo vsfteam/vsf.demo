@@ -46,8 +46,10 @@
 #if VSF_USE_LWIP == ENABLED
 #   define VSF_USE_TCPIP                                ENABLED
 #endif
-#define VSF_USE_USB_DEVICE                              ENABLED
-#   define VSF_USBD_USE_MSC                             ENABLED
+#ifndef VSF_USE_USB_DEVICE
+#   define VSF_USE_USB_DEVICE                           ENABLED
+#       define VSF_USBD_USE_MSC                         ENABLED
+#endif
 
 #define VSF_USE_LINUX                                   ENABLED
 #   define VSF_LINUX_CFG_STACKSIZE                      8192

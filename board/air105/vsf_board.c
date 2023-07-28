@@ -24,6 +24,17 @@
 #   include <unistd.h>
 #endif
 
+#ifdef FALSE
+#   undef FALSE
+#endif
+#ifdef TRUE
+#   undef TRUE
+#endif
+#include "air105.h"
+#include "io_map.h"
+#include "platform_define.h"
+#include "resource_map.h"
+
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
@@ -155,9 +166,12 @@ vsf_mem_stream_t VSF_DEBUG_STREAM_RX = {
     .size       = sizeof(__vsf_debug_stream_rx_buff),
 };
 
-static void __vsf_debug_stream_on_rx(char ch)
+static void GPIO_Iomux(uint32_t Pin, uint32_t Function)
 {
-    VSF_STREAM_WRITE(&VSF_DEBUG_STREAM_RX, (uint8_t *)&ch, 1);
+    uint8_t Port = (Pin >> 4);
+    uint32_t Mask = ~(0x03 << ((Pin & 0x0000000f) * 2));
+    Function = Function << ((Pin & 0x0000000f) * 2);
+    GPIO->ALT[Port] = (GPIO->ALT[Port] & Mask) | Function;
 }
 
 static void __VSF_DEBUG_STREAM_TX_INIT(void)
@@ -166,14 +180,25 @@ static void __VSF_DEBUG_STREAM_TX_INIT(void)
     if (!is_inited) {
         is_inited = true;
 
+        GPIO_Iomux(DBG_UART_TX_PIN, DBG_UART_TX_AF);
+        GPIO_Iomux(DBG_UART_RX_PIN, DBG_UART_RX_AF);
+
+        vsf_usart_init(&vsf_hw_usart0, &(vsf_usart_cfg_t){
+            .mode           = VSF_USART_8_BIT_LENGTH | VSF_USART_NO_PARITY | VSF_USART_1_STOPBIT,
+            .baudrate       = DBG_UART_BR,
+        });
+
         vsf_stream_connect_tx(&VSF_DEBUG_STREAM_RX.use_as__vsf_stream_t);
     }
 }
 
 static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size)
 {
-    while (size-- > 0) {
-//        log_putbyte(*buf++);
+    uint_fast16_t written_size;
+    while (size > 0) {
+        written_size = vsf_usart_txfifo_write(&vsf_hw_usart0, buf, size);
+        buf += written_size;
+        size -= written_size;
     }
 }
 
