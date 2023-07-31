@@ -1,0 +1,38 @@
+{
+	"folders": [
+		{
+			"name": "project",
+			"path": "."
+		},
+		{
+			"name": "application",
+			"path": "../../../application/kernel/helloworld"
+		},
+		{
+			"name": "board",
+			"path": "../../../board/linux"
+		},
+		{
+			"name": "vsf",
+//			it's good to support environment variable here, but vscode doesn't
+//			"path": "${env:VSF_PATH}/source"
+//			TODO: set to real path of VSF if env:VSF_PATH is used
+			"path": "../../../vsf/source"
+		},
+	],
+	"settings": {
+		"C_Cpp.default.defines": [
+			"__LINUX__",
+			"__CPU_WEBASSEMBLY__"
+		],
+		"C_Cpp.default.cStandard": "c11",
+		"C_Cpp.default.cppStandard": "c++14",
+		"C_Cpp.default.includePath": [
+			"../../../config",
+			"${env:VSF_PATH}/source",
+			"${env:VSF_PATH}/source/shell/sys/linux/include",
+			"../../../application/kernel/helloworld",
+		],
+		"files.associations": {},
+	}
+}
