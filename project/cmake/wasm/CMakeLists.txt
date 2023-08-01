@@ -7,7 +7,7 @@ endif()
 message(STATUS "VSF_PATH: $ENV{VSF_PATH}")
 
 # board and application settings
-set(BOARD_PATH ../../../board/linux)
+set(BOARD_PATH ../../../board/wasm)
 set(APPLICATION_PATH ../../../application/kernel/helloworld)
 
 project(vsf_template)
