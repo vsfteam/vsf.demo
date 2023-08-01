@@ -39,6 +39,8 @@
  * Architecture Configurations                                                *
  *----------------------------------------------------------------------------*/
 
+#define VSF_ASSERT                                      assert
+
 #define VSF_ARCH_LIMIT_NO_SET_STACK
 #define VSF_OS_CFG_ADD_EVTQ_TO_IDLE                     ENABLED
 // cpu usage is not supported in windows/linux/macos
