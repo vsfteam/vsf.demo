@@ -341,6 +341,11 @@ vsf_component_peda_ifs_entry(__usr_mscboot_on_romfs_write, vk_memfs_callback_wri
 
 // linux
 
+WEAK(vsf_board_init_linux)
+void vsf_board_init_linux(void)
+{
+}
+
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
