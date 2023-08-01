@@ -397,8 +397,12 @@ int vsf_linux_create_fhs(void)
     return 0;
 }
 
+#ifdef __CPU_WEBASSEMBLY__
+int VSF_USER_ENTRY(void)
+#else
 // TODO: SDL require that main need argc and argv
 int VSF_USER_ENTRY(int argc, char *argv[])
+#endif
 {
     vsf_board_init();
     vsf_start_trace();
