@@ -94,13 +94,13 @@
 #define VSF_USBH_USE_HUB                                DISABLED
 
 #define VSF_LINUX_HOSTFS_TYPE                           "linfs"
+#define VSF_LINUX_CFG_WRAPPER                           ENABLED
 #define VSF_LINUX_SOCKET_CFG_WRAPPER                    ENABLED
+#define VSF_LINUX_LIBC_CFG_WRAPPER                      ENABLED
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
  *----------------------------------------------------------------------------*/
-
-#define VSF_LINUX_CFG_WRAPPER                           ENABLED
 
 #define APP_DISP_SDL2_HEIGHT                            800
 #define APP_DISP_SDL2_WIDTH                             480
