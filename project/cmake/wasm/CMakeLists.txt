@@ -17,6 +17,9 @@ set(VSF_TARGET webassembly/emscripten)
 # if compiler is not set, cmake will find one
 
 # VSF_USE configurations
+# include below to use linux
+#set(VSF_USE_LINUX 1)
+#    set(VSF_LINUX_USE_SIMPLE_LIBC 1)
 
 # include vsf cmake script
 set(VSF_CONFIG_PATH ${APPLICATION_PATH})

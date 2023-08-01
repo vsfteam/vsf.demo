@@ -100,6 +100,8 @@
  * Application Configurations                                                 *
  *----------------------------------------------------------------------------*/
 
+#define VSF_LINUX_CFG_WRAPPER                           ENABLED
+
 #define APP_DISP_SDL2_HEIGHT                            800
 #define APP_DISP_SDL2_WIDTH                             480
 #define APP_DISP_SDL2_COLOR                             VSF_DISP_COLOR_RGB565
