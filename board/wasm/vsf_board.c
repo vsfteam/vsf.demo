@@ -31,6 +31,10 @@
  *   Include Directories:
  *     application/app/distbus
  *
+ * If VSF_USE_LINUX is enabled:
+ *   Configuration:
+ *     VSF_USE_LOADER and related VSF_LINUX_USE_APPLET MUST be disabled
+ *
  */
 
 /*============================ INCLUDES ======================================*/
