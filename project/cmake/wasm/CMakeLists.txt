@@ -10,6 +10,12 @@ message(STATUS "VSF_PATH: $ENV{VSF_PATH}")
 set(BOARD_PATH ../../../board/wasm)
 set(APPLICATION_PATH ../../../application/kernel/helloworld)
 
+# add -g for debug
+set(CMAKE_C_FLAGS 
+    "-g"
+    CACHE INTERNAL "C compiler common flags"
+)
+
 project(vsf_template)
 set(VSF_TARGET webassembly/emscripten)
 
