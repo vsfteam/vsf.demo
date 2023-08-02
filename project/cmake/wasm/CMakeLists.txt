@@ -8,7 +8,7 @@ message(STATUS "VSF_PATH: $ENV{VSF_PATH}")
 
 # board and application settings
 set(BOARD_PATH ../../../board/wasm)
-set(APPLICATION_PATH ../../../application/kernel/helloworld)
+set(APPLICATION_PATH ../../../application/shell/sys/linux/kernel)
 
 # add -g for debug
 set(CMAKE_C_FLAGS 
@@ -24,8 +24,8 @@ set(VSF_TARGET webassembly/emscripten)
 
 # VSF_USE configurations
 # include below to use linux
-#set(VSF_USE_LINUX 1)
-#    set(VSF_LINUX_USE_SIMPLE_LIBC 1)
+set(VSF_USE_LINUX 1)
+    set(VSF_LINUX_USE_SIMPLE_LIBC 1)
 
 # include vsf cmake script
 set(VSF_CONFIG_PATH ${APPLICATION_PATH})
@@ -39,6 +39,10 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC
     __VSF__
     __VSF_CPP__
 )
+target_link_options(${CMAKE_PROJECT_NAME} PUBLIC
+    --emrun
+)
+set(CMAKE_EXECUTABLE_SUFFIX ".html")
 
 # add user application source code/include directories
 add_subdirectory(${BOARD_PATH} ${CMAKE_CURRENT_BINARY_DIR}/board_bin)
