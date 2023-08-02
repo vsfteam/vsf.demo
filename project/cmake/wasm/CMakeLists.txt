@@ -11,6 +11,7 @@ set(BOARD_PATH ../../../board/wasm)
 set(APPLICATION_PATH ../../../application/shell/sys/linux/kernel)
 
 # add -g for debug
+# remove -g, remove --emrun, add -O3 for release
 set(CMAKE_C_FLAGS 
     "-g"
     CACHE INTERNAL "C compiler common flags"

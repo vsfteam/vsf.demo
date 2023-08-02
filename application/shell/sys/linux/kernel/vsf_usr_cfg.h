@@ -31,7 +31,12 @@
 
 #define VSF_USE_TRACE                                   ENABLED
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
-#define VSF_USE_LOADER                                  ENABLED
+// currently, dynamic loader is not support for wasm in vsf
+#ifdef __CPU_WEBASSEMBLY__
+#   define VSF_USE_LOADER                               DISABLED
+#else
+#   define VSF_USE_LOADER                               ENABLED
+#endif
 #   define VSF_LOADER_USE_ELF                           ENABLED
 #define VSF_USE_SCSI                                    ENABLED
 #   define VSF_SCSI_USE_VIRTUAL_SCSI                    ENABLED
@@ -74,8 +79,10 @@
 #   define VSF_LINUX_CFG_INIT_SCRIPT_FILE               "/usr/etc/startup.sh"
 #   define VSF_LINUX_CFG_PATH                           "/bin:/usr/bin"
 
-#define VSF_USE_SIMPLE_SPRINTF                          ENABLED
-#define VSF_USE_SIMPLE_SSCANF                           ENABLED
+#ifndef __CPU_WEBASSEMBLY__
+#   define VSF_USE_SIMPLE_SPRINTF                       ENABLED
+#   define VSF_USE_SIMPLE_SSCANF                        ENABLED
+#endif
 
 // APP configuration
 
