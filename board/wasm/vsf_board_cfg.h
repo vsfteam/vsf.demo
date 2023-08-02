@@ -53,6 +53,9 @@
 #   define VSF_LINUX_USART_CFG_USE_AS_HW_USART          DISABLED
 #endif
 
+// enable VSF_WASM_CFG_USE_INPUT only if available
+//#define VSF_WASM_CFG_USE_INPUT                          ENABLED
+
 /*----------------------------------------------------------------------------*
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/
