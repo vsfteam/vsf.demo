@@ -63,6 +63,7 @@
 #define VSF_HAL_USE_GPIO                                ENABLED
 #define VSF_HAL_USE_USART                               ENABLED
 #define VSF_HAL_USE_USBD                                DISABLED
+#define VSF_HAL_USE_USBH                                ENABLED
 #define VSF_HAL_USE_DEBUG_STREAM                        ENABLED
 #   define VSF_DEBUG_STREAM_CFG_HW_PRIORITY             vsf_arch_prio_0
 #define VSF_HAL_USE_DISTBUS                             ENABLED
@@ -89,11 +90,9 @@
 // acutally VSF_DISTBUS_TRANSPORT_USE_STREAM is not in vsf, but in application/app/distbus
 #   define VSF_DISTBUS_TRANSPORT_USE_STREAM             ENABLED
 #define VSF_USE_USB_DEVICE                              VSF_HAL_USE_USBD
+#define VSF_USE_USB_HOST                                VSF_HAL_USE_USBH
 
-#define VSF_USBH_USE_HCD_LIBUSB                         ENABLED
-#   define VSF_LIBUSB_HCD_CFG_DEV_NUM                   1
-#   define VSF_LIBUSB_HCD_DEV0_VID                      0x0A5C      // BCM20702 bthci
-#   define VSF_LIBUSB_HCD_DEV0_PID                      0x21E8
+#define VSF_USBH_USE_HCD_WEBUSB                         ENABLED
 #define VSF_USBH_CFG_EDA_PRIORITY                       vsf_prio_0
 #define VSF_USBH_CFG_ENABLE_ROOT_HUB                    DISABLED
 #define VSF_USBH_USE_HUB                                DISABLED

@@ -16,6 +16,10 @@ set(CMAKE_C_FLAGS
     "-g"
     CACHE INTERNAL "C compiler common flags"
 )
+set(CMAKE_CXX_FLAGS 
+    "-g"
+    CACHE INTERNAL "CXX compiler common flags"
+)
 
 project(vsf_template)
 set(VSF_TARGET webassembly/emscripten)

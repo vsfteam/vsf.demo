@@ -89,7 +89,7 @@ static void __user_hal_distbus_on_remote_connected(vsf_hal_distbus_t *hal_distbu
 /*============================ LOCAL VARIABLES ===============================*/
 
 #if VSF_USE_USB_HOST == ENABLED
-static const vk_libusb_hcd_param_t __libusb_hcd_param = {
+static const vk_webusb_hcd_param_t __webusb_hcd_param = {
     .priority                   = APP_CFG_USBH_ARCH_PRIO,
 };
 #endif
@@ -117,8 +117,8 @@ vsf_board_t vsf_board = {
 #endif
 #if VSF_USE_USB_HOST == ENABLED
     .usbh_dev                   = {
-        .drv                    = &vk_libusb_hcd_drv,
-        .param                  = (void *)&__libusb_hcd_param,
+        .drv                    = &vk_webusb_hcd_drv,
+        .param                  = (void *)&__webusb_hcd_param,
     },
 #endif
 #if VSF_USE_FS == ENABLED
