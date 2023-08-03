@@ -69,7 +69,11 @@
 #   define VSF_LINUX_USE_DEVFS                          ENABLED
 #       define VSF_LINUX_DEVFS_USE_RAND                 ENABLED
 #   define VSF_LINUX_CFG_FD_BITMAP_SIZE                 256
-#   define VSF_LINUX_USE_LIBUSB                         VSF_USE_USB_HOST
+#   if VSF_USE_USB_HOST == ENABLED && VSF_USBH_USE_LIBUSB == ENABLED
+#       define VSF_LINUX_USE_LIBUSB                     ENABLED
+#   else
+#       define VSF_LINUX_USE_LIBUSB                     DISABLED
+#   endif
 #   define VSF_LINUX_CFG_PLS_NUM                        16
 #   define VSF_LINUX_CFG_TLS_NUM                        64
 #   if VSF_USE_LOADER == ENABLED
