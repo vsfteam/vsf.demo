@@ -84,6 +84,8 @@
  *----------------------------------------------------------------------------*/
 
 #define VSF_DISP_USE_SDL2                               ENABLED
+// to avoid requestAnimationFrame warning, use SDL_RENDERER_PRESENTVSYNC
+#   define VSF_DISP_SDL2_RENDERER_FLAG                  SDL_RENDERER_PRESENTVSYNC
 #define VSF_FS_USE_LINFS                                ENABLED
 #define VSF_USE_HEAP                                    ENABLED
 #define VSF_USE_DISTBUS                                 ENABLED
@@ -91,6 +93,7 @@
 #   define VSF_DISTBUS_TRANSPORT_USE_STREAM             ENABLED
 #define VSF_USE_USB_DEVICE                              VSF_HAL_USE_USBD
 #define VSF_USE_USB_HOST                                VSF_HAL_USE_USBH
+#define VSF_USE_UI                                      ENABLED
 
 #define VSF_USBH_USE_HCD_WEBUSB                         ENABLED
 #define VSF_USBH_CFG_EDA_PRIORITY                       vsf_prio_0
