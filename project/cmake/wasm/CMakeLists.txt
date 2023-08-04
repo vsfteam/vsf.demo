@@ -31,6 +31,8 @@ set(VSF_TARGET webassembly/emscripten)
 # include below to use linux
 set(VSF_USE_LINUX 1)
     set(VSF_LINUX_USE_SIMPLE_LIBC 1)
+set(VSF_USE_DISP 1)
+    set(VSF_DISP_USE_SDL2 1)
 
 # include vsf cmake script
 set(VSF_CONFIG_PATH ${APPLICATION_PATH})
