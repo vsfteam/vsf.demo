@@ -122,6 +122,8 @@
 
 #define VSF_USBD_USE_DCD_DWCOTG                         ENABLED
 #   define VSF_USBD_CFG_SPEED                           USB_SPEED_HIGH
+// #if VSF_USBD_CFG_SPEED == USB_SPEED_HIGH will not work
+#   define VSF_USBD_CFG_SPEED_HIGH
 
 // debug stream is implemented in vsf_board.c
 #if VSF_HAL_USE_DEBUG_STREAM == DISABLED && VSF_HAL_USE_USART == ENABLED

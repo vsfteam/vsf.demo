@@ -51,12 +51,12 @@
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
 
-#if     VSF_USBD_CFG_SPEED == USB_SPEED_HIGH
-#   define __APP_CFG_MSC_BULK_SIZE                  64
-#elif   VSF_USBD_CFG_SPEED == USB_SPEED_FULL
+#if     defined(VSF_USBD_CFG_SPEED_HIGH)
 #   define __APP_CFG_MSC_BULK_SIZE                  512
-#else
-#   error TODO: add support to current USB speed
+#   define __APP_CFG_HID_INT_SIZE                   1024
+#elif   defined(VSF_USBD_CFG_SPEED_FULL)
+#   define __APP_CFG_MSC_BULK_SIZE                  64
+#   define __APP_CFG_HID_INT_SIZE                   512
 #endif
 
 #ifndef APP_CFG_FAKEFAT32_SECTOR_SIZE
@@ -123,7 +123,7 @@ static vk_fakefat32_mal_t __app_fakefat32_mal = {
     },
 };
 
-static bool __usr_flash_is_inited = false;
+static vsf_mutex_t __user_flash_mutex;
 static vsf_eda_t *__usr_mscboot_eda = NULL;
 
 #endif
@@ -150,20 +150,44 @@ static vk_mal_scsi_t __app_mal_scsi = {
     .mal                = &__app_fakefat32_mal.use_as__vk_mal_t,
 };
 
-describe_usbd(__app_usbd_msc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED)
-    usbd_common_desc_iad(__app_usbd_msc,
+static const uint8_t __hid_report_desc[] = {
+    0x06, 0x00, 0xFF,   // Usage Page (Vendor)
+    0x09, 0x01,         // Usage (0x01)
+    0xA1, 0x01,         // Collection (Application)
+    0x15, 0x00,         //   Logical Minimum (0)
+    0x26, 0xFF, 0x00,   //   Logical Maximum (255)
+    0x75, 0x08,         //   Report Size (8)
+    0x96, (__APP_CFG_HID_INT_SIZE >> 0) & 0xFF, (__APP_CFG_HID_INT_SIZE >> 8) & 0xFF,
+                        //   Report Count (__APP_CFG_HID_INT_SIZE)
+    0x09, 0x01,         //   Usage (0x01)
+    0x81, 0x02,         //   Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
+    0x96, (__APP_CFG_HID_INT_SIZE >> 0) & 0xFF, (__APP_CFG_HID_INT_SIZE >> 8) & 0xFF,
+                        //   Report Count (__APP_CFG_HID_INT_SIZE)
+    0x09, 0x01,         //   Usage (0x01)
+    0x91, 0x02,         //   Output (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position,Non-volatile)
+    0xC0,               // End Collection
+};
+static uint8_t __hid_in_buffer[__APP_CFG_HID_INT_SIZE];
+static vk_usbd_hid_report_t __hid_reports[] = {
+    VSF_USBD_HID_REPORT(USB_HID_REPORT_INPUT, 1, __hid_in_buffer, sizeof(__hid_in_buffer), 0),
+    VSF_USBD_HID_REPORT(USB_HID_REPORT_OUTPUT, 1, NULL, __APP_CFG_HID_INT_SIZE, 0),
+};
+static vsf_eda_t __hid_eda;
+
+describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED)
+    usbd_common_desc_iad(__app_usbd,
                         // str_product, str_vendor, str_serial
-                        u"VSF-USBD-Simplest", u"SimonQian", u"1.0.0",
+                        u"VSFLinux.Romfs", u"VSF", u"1.0.0",
                         // ep0_size
                         64,
                         // total function descriptor size
-                        USB_DESC_MSCBOT_IAD_LEN,
+                        USB_DESC_MSCBOT_IAD_LEN + USB_DESC_HID_IAD_LEN,
                         // total function interface number
-                        USB_MSCBOT_IFS_NUM,
+                        USB_MSCBOT_IFS_NUM + USB_HID_IFS_NUM,
                         // attribute, max_power
                         USB_CONFIG_ATT_WAKEUP, 100
     )
-        usbd_mscbot_desc_iad(__app_usbd_msc,
+        usbd_mscbot_desc_iad(__app_usbd,
                         // interface
                         0,
                         // function string index(start from 0)
@@ -173,12 +197,30 @@ describe_usbd(__app_usbd_msc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_S
                         // bulk ep size
                         __APP_CFG_MSC_BULK_SIZE
         )
-    usbd_func_desc(__app_usbd_msc)
-        usbd_func_str_desc(__app_usbd_msc, 0, u"VSF-MSC0")
-    usbd_std_desc_table(__app_usbd_msc)
-        usbd_func_str_desc_table(__app_usbd_msc, 0)
-    usbd_func(__app_usbd_msc)
-        usbd_mscbot_func(__app_usbd_msc,
+        usbd_hid_desc_iad(__app_usbd,
+                        // interface
+                        1,
+                        // function string index(start from 0)
+                        1,
+                        // hid subclass, protocol
+                        0, 0,
+                        // bcd_version, country_code
+                        0x0111, 0,
+                        // report_desc_len
+                        sizeof(__hid_report_desc),
+                        // interrupt ep in, size, interval
+                        2, __APP_CFG_HID_INT_SIZE, 1,
+                        // interrupt ep out, size, interval
+                        2, __APP_CFG_HID_INT_SIZE, 1
+        )
+    usbd_func_desc(__app_usbd)
+        usbd_func_str_desc(__app_usbd, 0, u"Romfs.MSC")
+        usbd_func_str_desc(__app_usbd, 1, u"Romfs.HID")
+    usbd_std_desc_table(__app_usbd)
+        usbd_func_str_desc_table(__app_usbd, 0)
+        usbd_func_str_desc_table(__app_usbd, 1)
+    usbd_func(__app_usbd)
+        usbd_mscbot_func(__app_usbd,
                         // function index
                         0,
                         // bulk in ep, bulk out ep
@@ -190,9 +232,22 @@ describe_usbd(__app_usbd_msc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_S
                         // stream
                         &__app_usbd_msc_stream.use_as__vsf_stream_t
         )
-    usbd_ifs(__app_usbd_msc)
-        usbd_mscbot_ifs(__app_usbd_msc, 0)
-end_describe_usbd(__app_usbd_msc, VSF_USB_DC0)
+        usbd_hid_func(__app_usbd,
+                        // function index
+                        1,
+                        // interrupt in ep, interrupt out ep, out ep size
+                        2, 2, __APP_CFG_HID_INT_SIZE,
+                        // report_num, reports, has_report_id
+                        dimof(__hid_reports), __hid_reports, false,
+                        // report_desc, report_desc_size
+                        __hid_report_desc, sizeof(__hid_report_desc),
+                        // notify_eda, notifier
+                        true, &__hid_eda
+        )
+    usbd_ifs(__app_usbd)
+        usbd_mscbot_ifs(__app_usbd, 0)
+        usbd_hid_ifs(__app_usbd, 1)
+end_describe_usbd(__app_usbd, VSF_USB_DC0)
 
 static void __usr_flash_isrhandler( void *target_ptr,
                                     vsf_flash_t *flash_ptr,
@@ -211,6 +266,8 @@ static void __usr_flash_init(void)
     };
     vsf_flash_init(&APP_MSCBOOT_CFG_FLASH, &cfg);
     vsf_flash_enable(&APP_MSCBOOT_CFG_FLASH);
+
+    vsf_eda_mutex_init(&__user_flash_mutex);
 }
 
 static uint32_t __usr_flash_read(uint64_t offset, uint32_t size, uint8_t *buff)
@@ -263,11 +320,11 @@ vsf_component_peda_ifs_entry(__usr_mscboot_on_romfs_read, vk_memfs_callback_read
 
     switch (evt) {
     case VSF_EVT_INIT:
-        if (!__usr_flash_is_inited) {
-            __usr_flash_is_inited = true;
-            __usr_flash_init();
+        if (VSF_ERR_NONE != vsf_eda_mutex_enter(&__user_flash_mutex)) {
+            break;
         }
-
+        // fall through
+    case VSF_EVT_SYNC:
         vsf_local.offset += APP_MSCBOOT_CFG_ROMFS_ADDR;
         vsf_local.rsize = 0;
         __usr_mscboot_eda = vsf_eda_get_cur();
@@ -301,11 +358,11 @@ vsf_component_peda_ifs_entry(__usr_mscboot_on_romfs_write, vk_memfs_callback_wri
 
     switch (evt) {
     case VSF_EVT_INIT:
-        if (!__usr_flash_is_inited) {
-            __usr_flash_is_inited = true;
-            __usr_flash_init();
+        if (VSF_ERR_NONE != vsf_eda_mutex_enter(&__user_flash_mutex)) {
+            break;
         }
-
+        // fall through
+    case VSF_EVT_SYNC:
         vsf_local.offset += APP_MSCBOOT_CFG_ROMFS_ADDR;
         vsf_local.wsize = 0;
         __usr_mscboot_eda = vsf_eda_get_cur();
@@ -409,8 +466,10 @@ int VSF_USER_ENTRY(int argc, char *argv[])
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
     if (APP_BOOT1_KEY_IS_DOWN) {
-        vk_usbd_init(&__app_usbd_msc);
-        vk_usbd_connect(&__app_usbd_msc);
+        __usr_flash_init();
+
+        vk_usbd_init(&__app_usbd);
+        vk_usbd_connect(&__app_usbd);
     } else
 #endif
     {
