@@ -53,10 +53,8 @@
 
 #if     defined(VSF_USBD_CFG_SPEED_HIGH)
 #   define __APP_CFG_MSC_BULK_SIZE                  512
-#   define __APP_CFG_HID_INT_SIZE                   1024
 #elif   defined(VSF_USBD_CFG_SPEED_FULL)
 #   define __APP_CFG_MSC_BULK_SIZE                  64
-#   define __APP_CFG_HID_INT_SIZE                   512
 #endif
 
 #ifndef APP_CFG_FAKEFAT32_SECTOR_SIZE
@@ -135,44 +133,36 @@ static vsf_eda_t *__usr_mscboot_eda = NULL;
 // msc update for romfs
 
 describe_mem_stream(__app_usbd_msc_stream, 1024)
-static const vk_virtual_scsi_param_t __app_scsi_param = {
+static const vk_virtual_scsi_param_t __app_mscbot_scsi_param = {
     .block_size             = APP_CFG_FAKEFAT32_SECTOR_SIZE,
     .block_num              = APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE,
-    .vendor                 = "Simon   ",
-    .product                = "VSFDriver       ",
+    .vendor                 = "VSFTeam ",
+    .product                = "VSF.Romfs MSCBOT",
     .revision               = "1.00",
     .type                   = SCSI_PDT_DIRECT_ACCESS_BLOCK,
 };
-static vk_mal_scsi_t __app_mal_scsi = {
+static vk_mal_scsi_t __app_mscbot_mal_scsi = {
     .drv                = &vk_virtual_scsi_drv,
-    .param              = (void *)&__app_scsi_param,
+    .param              = (void *)&__app_mscbot_scsi_param,
     .virtual_scsi_drv   = &vk_mal_virtual_scsi_drv,
     .mal                = &__app_fakefat32_mal.use_as__vk_mal_t,
 };
 
-static const uint8_t __hid_report_desc[] = {
-    0x06, 0x00, 0xFF,   // Usage Page (Vendor)
-    0x09, 0x01,         // Usage (0x01)
-    0xA1, 0x01,         // Collection (Application)
-    0x15, 0x00,         //   Logical Minimum (0)
-    0x26, 0xFF, 0x00,   //   Logical Maximum (255)
-    0x75, 0x08,         //   Report Size (8)
-    0x96, (__APP_CFG_HID_INT_SIZE >> 0) & 0xFF, (__APP_CFG_HID_INT_SIZE >> 8) & 0xFF,
-                        //   Report Count (__APP_CFG_HID_INT_SIZE)
-    0x09, 0x01,         //   Usage (0x01)
-    0x81, 0x02,         //   Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
-    0x96, (__APP_CFG_HID_INT_SIZE >> 0) & 0xFF, (__APP_CFG_HID_INT_SIZE >> 8) & 0xFF,
-                        //   Report Count (__APP_CFG_HID_INT_SIZE)
-    0x09, 0x01,         //   Usage (0x01)
-    0x91, 0x02,         //   Output (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position,Non-volatile)
-    0xC0,               // End Collection
+describe_mem_stream(__app_usbd_mschid_stream, 1024)
+static const vk_virtual_scsi_param_t __app_mschid_scsi_param = {
+    .block_size             = APP_CFG_FAKEFAT32_SECTOR_SIZE,
+    .block_num              = APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE,
+    .vendor                 = "VSFTeam ",
+    .product                = "VSF.Romfs MSCHID",
+    .revision               = "1.00",
+    .type                   = SCSI_PDT_DIRECT_ACCESS_BLOCK,
 };
-static uint8_t __hid_in_buffer[__APP_CFG_HID_INT_SIZE];
-static vk_usbd_hid_report_t __hid_reports[] = {
-    VSF_USBD_HID_REPORT(USB_HID_REPORT_INPUT, 1, __hid_in_buffer, sizeof(__hid_in_buffer), 0),
-    VSF_USBD_HID_REPORT(USB_HID_REPORT_OUTPUT, 1, NULL, __APP_CFG_HID_INT_SIZE, 0),
+static vk_mal_scsi_t __app_mschid_mal_scsi = {
+    .drv                = &vk_virtual_scsi_drv,
+    .param              = (void *)&__app_mschid_scsi_param,
+    .virtual_scsi_drv   = &vk_mal_virtual_scsi_drv,
+    .mal                = &__app_fakefat32_mal.use_as__vk_mal_t,
 };
-static vsf_eda_t __hid_eda;
 
 describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED)
     usbd_common_desc_iad(__app_usbd,
@@ -183,7 +173,7 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         // total function descriptor size
                         USB_DESC_MSCBOT_IAD_LEN + USB_DESC_HID_IAD_LEN,
                         // total function interface number
-                        USB_MSCBOT_IFS_NUM + USB_HID_IFS_NUM,
+                        USB_MSCBOT_IFS_NUM + USB_MSCHID_IFS_NUM,
                         // attribute, max_power
                         USB_CONFIG_ATT_WAKEUP, 100
     )
@@ -197,21 +187,13 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         // bulk ep size
                         __APP_CFG_MSC_BULK_SIZE
         )
-        usbd_hid_desc_iad(__app_usbd,
+        usbd_mschid_desc_iad(__app_usbd,
                         // interface
                         1,
                         // function string index(start from 0)
                         1,
-                        // hid subclass, protocol
-                        0, 0,
-                        // bcd_version, country_code
-                        0x0111, 0,
-                        // report_desc_len
-                        sizeof(__hid_report_desc),
-                        // interrupt ep in, size, interval
-                        2, __APP_CFG_HID_INT_SIZE, 1,
-                        // interrupt ep out, size, interval
-                        2, __APP_CFG_HID_INT_SIZE, 1
+                        // interrupt in ep, interrupt out ep
+                        2, 2
         )
     usbd_func_desc(__app_usbd)
         usbd_func_str_desc(__app_usbd, 0, u"Romfs.MSC")
@@ -228,25 +210,25 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         // max lun(logic unit number)
                         0,
                         // scsi_dev
-                        &__app_mal_scsi.use_as__vk_scsi_t,
+                        &__app_mscbot_mal_scsi.use_as__vk_scsi_t,
                         // stream
                         &__app_usbd_msc_stream.use_as__vsf_stream_t
         )
-        usbd_hid_func(__app_usbd,
+        usbd_mschid_func(__app_usbd,
                         // function index
                         1,
                         // interrupt in ep, interrupt out ep, out ep size
-                        2, 2, __APP_CFG_HID_INT_SIZE,
-                        // report_num, reports, has_report_id
-                        dimof(__hid_reports), __hid_reports, false,
-                        // report_desc, report_desc_size
-                        __hid_report_desc, sizeof(__hid_report_desc),
-                        // notify_eda, notifier
-                        true, &__hid_eda
+                        2, 2,
+                        // max lun(logic unit number)
+                        0,
+                        // scsi_dev
+                        &__app_mschid_mal_scsi.use_as__vk_scsi_t,
+                        // stream
+                        &__app_usbd_mschid_stream.use_as__vsf_stream_t
         )
     usbd_ifs(__app_usbd)
         usbd_mscbot_ifs(__app_usbd, 0)
-        usbd_hid_ifs(__app_usbd, 1)
+        usbd_mschid_ifs(__app_usbd, 1)
 end_describe_usbd(__app_usbd, VSF_USB_DC0)
 
 static void __usr_flash_isrhandler( void *target_ptr,
