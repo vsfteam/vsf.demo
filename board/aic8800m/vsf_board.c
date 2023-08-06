@@ -75,10 +75,10 @@ struct rwnx_hw hw_env;
 
 #if VSF_USE_USB_DEVICE == ENABLED
 static const vk_dwcotg_dcd_param_t __dwcotg_dcd_param = {
-    .op                 = &VSF_USB_DC0_IP,
-    .speed              = VSF_USBD_CFG_SPEED,
-        .ulpi_en            = true,
-        .dma_en             = false,
+    .op                         = &VSF_USB_DC0_IP,
+    .speed                      = VSF_USBD_CFG_SPEED,
+        .ulpi_en                = true,
+        .dma_en                 = false,
 };
 #endif
 

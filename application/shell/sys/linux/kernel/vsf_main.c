@@ -315,6 +315,7 @@ vsf_component_peda_ifs_entry(__usr_mscboot_on_romfs_read, vk_memfs_callback_read
     case VSF_EVT_USER:
         if (!vsf_local.size) {
             __usr_mscboot_eda = NULL;
+            vsf_eda_mutex_leave(&__user_flash_mutex);
             vsf_eda_return(vsf_local.rsize);
             break;
         }
@@ -353,6 +354,7 @@ vsf_component_peda_ifs_entry(__usr_mscboot_on_romfs_write, vk_memfs_callback_wri
     case VSF_EVT_USER:
         if (!vsf_local.size) {
             __usr_mscboot_eda = NULL;
+            vsf_eda_mutex_leave(&__user_flash_mutex);
             vsf_eda_return(vsf_local.wsize);
             break;
         }
