@@ -31,6 +31,8 @@
  *   vsf/source/shell/sys/linux/lib/3rd-party/fnmatch
  *   vsf/source/shell/sys/linux/lib/3rd-party/glob
  *   vsf/source/shell/sys/linux/lib/3rd-party/regex
+ *   optional:
+ *   ./vsf_linux_package_manager.c for package manager
  *
  * Linker:
  *   If bootloader is used, set image base to the APP address
@@ -386,6 +388,11 @@ void vsf_board_init_linux(void)
 {
 }
 
+WEAK(vsf_linux_install_package_manager)
+void vsf_linux_install_package_manager(void)
+{
+}
+
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
@@ -413,6 +420,7 @@ int vsf_linux_create_fhs(void)
     }
 
     if (install_embedded_busybox) {
+        vsf_linux_install_package_manager();
         busybox_install();
     } else {
         setenv("PATH", VSF_LINUX_CFG_PATH, true);
@@ -461,7 +469,7 @@ int VSF_USER_ENTRY(int argc, char *argv[])
     }
 #endif
 
-    vsf_trace_info("start linux..." VSF_TRACE_CFG_LINEEND);
+    vsf_trace_info("start linux %s..." VSF_TRACE_CFG_LINEEND, __usr_linux_boot ? "boot" : "");
     vsf_linux_stdio_stream_t stream = {
         .in     = (vsf_stream_t *)&VSF_DEBUG_STREAM_RX,
         .out    = (vsf_stream_t *)&VSF_DEBUG_STREAM_TX,
