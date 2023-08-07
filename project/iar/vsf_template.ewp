@@ -4724,6 +4724,12 @@
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\usb\device\class\HID\vsf_usbd_HID_desc.h</name>
                             </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\device\class\HID\vsf_usbd_hidmsc.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\device\class\HID\vsf_usbd_hidmsc.h</name>
+                            </file>
                         </group>
                         <group>
                             <name>MSC</name>

@@ -171,9 +171,9 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         // ep0_size
                         64,
                         // total function descriptor size
-                        USB_DESC_MSCBOT_IAD_LEN + USB_DESC_HID_IAD_LEN,
+                        USB_DESC_MSCBOT_IAD_LEN + USB_DESC_HIDMSC_IAD_LEN,
                         // total function interface number
-                        USB_MSCBOT_IFS_NUM + USB_MSCHID_IFS_NUM,
+                        USB_MSCBOT_IFS_NUM + USB_HIDMSC_IFS_NUM,
                         // attribute, max_power
                         USB_CONFIG_ATT_WAKEUP, 100
     )
@@ -187,7 +187,7 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         // bulk ep size
                         __APP_CFG_MSC_BULK_SIZE
         )
-        usbd_mschid_desc_iad(__app_usbd,
+        usbd_hidmsc_desc_iad(__app_usbd,
                         // interface
                         1,
                         // function string index(start from 0)
@@ -214,13 +214,11 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         // stream
                         &__app_usbd_msc_stream.use_as__vsf_stream_t
         )
-        usbd_mschid_func(__app_usbd,
+        usbd_hidmsc_func(__app_usbd,
                         // function index
                         1,
                         // interrupt in ep, interrupt out ep, out ep size
                         2, 2,
-                        // max lun(logic unit number)
-                        0,
                         // scsi_dev
                         &__app_mschid_mal_scsi.use_as__vk_scsi_t,
                         // stream
@@ -228,7 +226,7 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
         )
     usbd_ifs(__app_usbd)
         usbd_mscbot_ifs(__app_usbd, 0)
-        usbd_mschid_ifs(__app_usbd, 1)
+        usbd_hidmsc_ifs(__app_usbd, 1)
 end_describe_usbd(__app_usbd, VSF_USB_DC0)
 
 static void __usr_flash_isrhandler( void *target_ptr,
