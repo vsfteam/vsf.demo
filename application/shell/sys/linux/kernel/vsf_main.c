@@ -124,6 +124,7 @@ static vk_fakefat32_mal_t __app_fakefat32_mal = {
 static vsf_mutex_t __user_flash_mutex;
 static vsf_eda_t *__usr_mscboot_eda = NULL;
 
+static bool __usr_linux_boot = false;
 #endif
 
 /*============================ IMPLEMENTATION ================================*/
@@ -394,20 +395,23 @@ int vsf_linux_create_fhs(void)
 
     // 2. fs
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
-    bool install_embedded_busybox = false;
-    static vk_romfs_info_t __usr_romfs_info = {
-        .root.header = (vk_romfs_header_t *)(APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR),
-    };
-    mkdir("/usr", 0);
-    if (mount(NULL, "usr", &vk_romfs_op, 0, (const void *)&__usr_romfs_info) != 0) {
-        printf("Fail to mount /usr from romfs, install embedded busybox instead.\n");
-        install_embedded_busybox = true;
-    } else {
-        if (access("/usr/bin/busybox", X_OK) != 0) {
-            printf("Can not find valid busybox in /usr/bin/, install embedded busybox instead.\n");
+    bool install_embedded_busybox = __usr_linux_boot;
+    if (!__usr_linux_boot) {
+        static vk_romfs_info_t __usr_romfs_info = {
+            .root.header = (vk_romfs_header_t *)(APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR),
+        };
+        mkdir("/usr", 0);
+        if (mount(NULL, "usr", &vk_romfs_op, 0, (const void *)&__usr_romfs_info) != 0) {
+            printf("Fail to mount /usr from romfs, install embedded busybox instead.\n");
             install_embedded_busybox = true;
+        } else {
+            if (access("/usr/bin/busybox", X_OK) != 0) {
+                printf("Can not find valid busybox in /usr/bin/, install embedded busybox instead.\n");
+                install_embedded_busybox = true;
+            }
         }
     }
+
     if (install_embedded_busybox) {
         busybox_install();
     } else {
@@ -452,17 +456,18 @@ int VSF_USER_ENTRY(int argc, char *argv[])
 
         vk_usbd_init(&__app_usbd);
         vk_usbd_connect(&__app_usbd);
-    } else
-#endif
-    {
-        vsf_trace_info("start linux..." VSF_TRACE_CFG_LINEEND);
-        vsf_linux_stdio_stream_t stream = {
-            .in     = (vsf_stream_t *)&VSF_DEBUG_STREAM_RX,
-            .out    = (vsf_stream_t *)&VSF_DEBUG_STREAM_TX,
-            .err    = (vsf_stream_t *)&VSF_DEBUG_STREAM_TX,
-        };
-        vsf_linux_init(&stream);
+
+        __usr_linux_boot = true;
     }
+#endif
+
+    vsf_trace_info("start linux..." VSF_TRACE_CFG_LINEEND);
+    vsf_linux_stdio_stream_t stream = {
+        .in     = (vsf_stream_t *)&VSF_DEBUG_STREAM_RX,
+        .out    = (vsf_stream_t *)&VSF_DEBUG_STREAM_TX,
+        .err    = (vsf_stream_t *)&VSF_DEBUG_STREAM_TX,
+    };
+    vsf_linux_init(&stream);
     return 0;
 }
 
