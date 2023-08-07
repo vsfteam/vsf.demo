@@ -25,7 +25,7 @@ int __vpm_main(int argc, char *argv[])
     int result = 0;
     if (argc < 2) {
     show_help:
-        printf("vpm(Versaloon Package Manager)\n");
+        printf("vpm(VSF.Linux Package Manager)\n");
         printf("Usage: %s command\n\n", argv[0]);
         printf("\
 vpm is commandline package manager for vsf.linux\n\n\
