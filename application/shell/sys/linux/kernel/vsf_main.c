@@ -405,7 +405,9 @@ int vsf_linux_create_fhs(void)
     bool install_embedded_busybox = __usr_linux_boot;
     if (!__usr_linux_boot) {
         static vk_romfs_info_t __usr_romfs_info = {
-            .root.header = (vk_romfs_header_t *)(APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR),
+            .image      = (vk_romfs_header_t *)(APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR),
+            .image_size = APP_MSCBOOT_CFG_ROMFS_SIZE,
+            .is_chained = true,
         };
         mkdir("/usr", 0);
         if (mount(NULL, "usr", &vk_romfs_op, 0, (const void *)&__usr_romfs_info) != 0) {

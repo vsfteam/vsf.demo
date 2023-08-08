@@ -10,6 +10,11 @@ int __vpm_remove_packages(char *argv[])
     return 0;
 }
 
+int __vpm_upgrade_packages(void)
+{
+    return 0;
+}
+
 int __vpm_list_local_packages(void)
 {
     return 0;
@@ -46,6 +51,8 @@ commands:\n\
         return __vpm_install_packages(&argv[2]);
     } else if (!strcmp(argv[1], "remove")) {
         return __vpm_remove_packages(&argv[2]);
+    } else if (!strcmp(argv[1], "remove")) {
+        return __vpm_upgrade_packages();
     } else {
         printf("unsupported command: %s\n\n", argv[1]);
         result = -1;
