@@ -6,6 +6,8 @@
 #define REPO_HOST_PORT                  "443"
 #define REPO_PATH                       "/vsf-linux/MCULinux.repo/raw/main/" VSF_BOARD_ARCH_STR "/romfs/"
 
+#define mbedtls_trace(...)
+
 #include <mbedtls/net_sockets.h>
 #include <mbedtls/ssl.h>
 #include <mbedtls/entropy.h>
@@ -45,28 +47,28 @@ void mbedtls_session_cleanup(mbedtls_session_t *session)
 int mbedtls_session_write(mbedtls_session_t *session, uint8_t *buf, uint16_t len)
 {
     int ret, result = 0;
-    printf("  > Write to server:");
+    mbedtls_trace("  > Write to server:");
     while (len > 0) {
         ret = mbedtls_ssl_write(&session->ssl, buf, len);
         if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE) {
             continue;
         }
         if (ret < 0) {
-            printf(" failed\n  ! mbedtls_ssl_write returned %d\n\n", ret);
+            mbedtls_trace(" failed\n  ! mbedtls_ssl_write returned %d\n\n", ret);
             return -1;
         }
         buf += ret;
         len -= ret;
         result += ret;
     }
-    printf(" %d bytes written\n\n", result);
+    mbedtls_trace(" %d bytes written\n\n", result);
     return result;
 }
 
 int mbedtls_session_read(mbedtls_session_t *session, uint8_t *buf, uint16_t len)
 {
     int ret, result = 0;
-    printf("  < Read from server:");
+    mbedtls_trace("  < Read from server:");
     while (len > 0) {
         ret = mbedtls_ssl_read(&session->ssl, buf, len);
         if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE) {
@@ -76,14 +78,14 @@ int mbedtls_session_read(mbedtls_session_t *session, uint8_t *buf, uint16_t len)
             break;
         }
         if (ret < 0) {
-            printf("failed\n  ! mbedtls_ssl_read returned %d\n\n", ret);
+            mbedtls_trace("failed\n  ! mbedtls_ssl_read returned %d\n\n", ret);
             return ret;
         }
         buf += ret;
         len -= ret;
         result += ret;
     }
-    printf(" %d bytes read\n\n", result);
+    mbedtls_trace(" %d bytes read\n\n", result);
     return result;
 }
 
@@ -101,41 +103,41 @@ int mbedtls_session_start(mbedtls_session_t *session,
 
     mbedtls_ctr_drbg_init(&session->ctr_drbg);
     mbedtls_entropy_init(&session->entropy);
-    printf("\n  . Seeding the random number generator...");
+    mbedtls_trace("\n  . Seeding the random number generator...");
     ret = mbedtls_ctr_drbg_seed(&session->ctr_drbg, mbedtls_entropy_func, &session->entropy, NULL, 0);
     if (ret != 0) {
-        printf(" failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret);
+        mbedtls_trace(" failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret);
         goto free_entropy_and_fail;
     }
-    printf(" ok\n");
+    mbedtls_trace(" ok\n");
 
-    printf("  . Loading the CA root certificate ...");
+    mbedtls_trace("  . Loading the CA root certificate ...");
     mbedtls_x509_crt_init(&session->cacert);
     ret = mbedtls_x509_crt_parse(&session->cacert, cert, cert_len);
     if (ret < 0) {
-        printf(" failed\n  !  mbedtls_x509_crt_parse returned -0x%x\n\n", (unsigned int)-ret);
+        mbedtls_trace(" failed\n  !  mbedtls_x509_crt_parse returned -0x%x\n\n", (unsigned int)-ret);
         goto free_cert_and_fail;
     }
-    printf(" ok (%d skipped)\n", ret);
+    mbedtls_trace(" ok (%d skipped)\n", ret);
 
-    printf("  . Connecting to tcp/%s/%s...", host, port);
+    mbedtls_trace("  . Connecting to tcp/%s/%s...", host, port);
     mbedtls_net_init(&session->server_fd);
     if ((ret = mbedtls_net_connect(&session->server_fd, host, port, MBEDTLS_NET_PROTO_TCP)) != 0) {
-        printf(" failed\n  ! mbedtls_net_connect returned %d\n\n", ret);
+        mbedtls_trace(" failed\n  ! mbedtls_net_connect returned %d\n\n", ret);
         goto free_server_fd_and_fail;
     }
-    printf(" ok\n");
+    mbedtls_trace(" ok\n");
 
-    printf("  . Setting up the SSL/TLS structure...");
+    mbedtls_trace("  . Setting up the SSL/TLS structure...");
     mbedtls_ssl_config_init(&session->conf);
     if ((ret = mbedtls_ssl_config_defaults(&session->conf,
                     MBEDTLS_SSL_IS_CLIENT,
                     MBEDTLS_SSL_TRANSPORT_STREAM,
                     MBEDTLS_SSL_PRESET_DEFAULT)) != 0) {
-        printf(" failed\n  ! mbedtls_ssl_config_defaults returned %d\n\n", ret);
+        mbedtls_trace(" failed\n  ! mbedtls_ssl_config_defaults returned %d\n\n", ret);
         goto free_conf_and_fail;
     }
-    printf(" ok\n");
+    mbedtls_trace(" ok\n");
 
     mbedtls_ssl_conf_authmode(&session->conf, MBEDTLS_SSL_VERIFY_OPTIONAL);
     mbedtls_ssl_conf_ca_chain(&session->conf, &session->cacert, NULL);
@@ -145,36 +147,36 @@ int mbedtls_session_start(mbedtls_session_t *session,
     mbedtls_ssl_init(&session->ssl);
     ret = mbedtls_ssl_setup(&session->ssl, &session->conf);
     if (ret != 0) {
-        printf(" failed\n  ! mbedtls_ssl_setup returned %d\n\n", ret);
+        mbedtls_trace(" failed\n  ! mbedtls_ssl_setup returned %d\n\n", ret);
         goto free_ssl_and_fail;
     }
     ret = mbedtls_ssl_set_hostname(&session->ssl, host);
     if (ret != 0) {
-        printf(" failed\n  ! mbedtls_ssl_set_hostname returned %d\n\n", ret);
+        mbedtls_trace(" failed\n  ! mbedtls_ssl_set_hostname returned %d\n\n", ret);
         goto free_ssl_and_fail;
     }
     mbedtls_ssl_set_bio(&session->ssl, &session->server_fd, mbedtls_net_send, mbedtls_net_recv, NULL);
 
-    printf("  . Performing the SSL/TLS handshake...");
+    mbedtls_trace("  . Performing the SSL/TLS handshake...");
     while ((ret = mbedtls_ssl_handshake(&session->ssl)) != 0) {
         if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE) {
-            printf(" failed\n  ! mbedtls_ssl_handshake returned -0x%x\n\n", (unsigned int)-ret);
+            mbedtls_trace(" failed\n  ! mbedtls_ssl_handshake returned -0x%x\n\n", (unsigned int)-ret);
             goto free_ssl_and_fail;
         }
     }
-    printf(" ok\n");
+    mbedtls_trace(" ok\n");
 
-    printf("  . Verifying peer X.509 certificate...");
+    mbedtls_trace("  . Verifying peer X.509 certificate...");
     {
         uint32_t flags = mbedtls_ssl_get_verify_result(&session->ssl);
         if (flags != 0) {
             char vrfy_buf[512];
 
-            printf(" failed\n");
+            mbedtls_trace(" failed\n");
             mbedtls_x509_crt_verify_info(vrfy_buf, sizeof(vrfy_buf), "  ! ", flags);
-            printf("%s\n", vrfy_buf);
+            mbedtls_trace("%s\n", vrfy_buf);
         } else {
-            printf(" ok\n");
+            mbedtls_trace(" ok\n");
         }
     }
 
@@ -236,13 +238,13 @@ User-Agent: %s\r\n\
 Accept: */*\r\n\
 Connection: close\r\n\
 \r\n", verb, path, host, "vsf");
-    printf("http request:\n%s", session->buffer);
+    mbedtls_trace("http request:\n%s", session->buffer);
     result = mbedtls_session_write(session, session->buffer, result);
     if (result < 0) {
         return result;
     }
 
-    printf("http response:\n");
+    mbedtls_trace("http response:\n");
 read_more:
     if (session->cur_size >= sizeof(session->buffer)) {
         mbedtls_https_close(https);
@@ -264,7 +266,7 @@ read_more:
         }
         line = (char *)session->cur_buffer;
         *tmp++ = '\0';
-        printf("%s\n", line);
+        mbedtls_trace("%s\n", line);
         session->cur_size -= tmp - line;
         session->cur_buffer = (uint8_t *)tmp;
 
