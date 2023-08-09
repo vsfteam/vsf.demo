@@ -50,6 +50,7 @@
 #define VSF_USE_INPUT                                   ENABLED
 #if VSF_USE_LWIP == ENABLED
 #   define VSF_USE_TCPIP                                ENABLED
+#   define VSF_USE_MBEDTLS                              ENABLED
 #endif
 #ifndef VSF_USE_USB_DEVICE
 #   define VSF_USE_USB_DEVICE                           ENABLED
