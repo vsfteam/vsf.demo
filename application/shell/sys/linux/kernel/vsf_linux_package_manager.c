@@ -3,7 +3,8 @@
 #include <unistd.h>
 
 #define REPO_HOST_NAME                  "gitee.com"
-#define REPO_HOST_PORT                  "80"
+#define REPO_HOST_PORT                  "443"
+#define REPO_PATH                       "/vsf-linux/MCULinux.repo/raw/main/" VSF_BOARD_ARCH_STR "/romfs/"
 
 #include <mbedtls/net_sockets.h>
 #include <mbedtls/ssl.h>
@@ -215,13 +216,15 @@ void mbedtls_https_close(mbedtls_https_ctx_t *https)
     mbedtls_session_close(&https->session);
 }
 
-int mbedtls_https_start(mbedtls_https_ctx_t *https, const char *verb, char *path, const char *fmt)
+int mbedtls_https_start(mbedtls_https_ctx_t *https,
+        const char *host, const char *port,
+        const char *verb, char *path)
 {
     mbedtls_session_t *session = &https->session;
 
     int result = mbedtls_session_start(session,
                     (const unsigned char *)mbedtls_test_cas_pem, mbedtls_test_cas_pem_len,
-                    REPO_HOST_NAME, REPO_HOST_PORT);
+                    host, port);
     if (result != 0) {
         return result;
     }
@@ -336,6 +339,27 @@ static int __vpm_list_local_packages(void)
 
 static int __vpm_list_remote_packages(void)
 {
+    mbedtls_https_ctx_t *https = (mbedtls_https_ctx_t *)calloc(1, sizeof(mbedtls_https_ctx_t));
+    if (NULL == https) {
+        printf("failed to allocate https context\n");
+        return -1;
+    }
+
+    uint8_t buf[256];
+    strcpy((char *)buf, REPO_PATH);
+    strcat((char *)buf, "list.txt");
+    if (mbedtls_https_start(https, REPO_HOST_NAME, REPO_HOST_PORT, "GET", (char *)buf) < 0) {
+        printf("failed to start https\n");
+        return -1;
+    }
+
+    int rsize;
+    do {
+        rsize = mbedtls_https_read(https, buf, sizeof(buf));
+        if (rsize > 0) {
+            write(STDOUT_FILENO, buf, rsize);
+        }
+    } while (rsize > 0);
     return 0;
 }
 

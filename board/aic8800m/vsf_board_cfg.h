@@ -39,6 +39,8 @@
 #define VSF_ARCH_USE_THREAD_REG                         ENABLED
 #define VSF_SYSTIMER_FREQ                               (240UL * 1000 * 1000)
 
+#define VSF_BOARD_ARCH_STR                              "CortexM4"
+
 /*----------------------------------------------------------------------------*
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/
