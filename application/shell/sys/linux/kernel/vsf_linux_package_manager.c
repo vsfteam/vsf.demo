@@ -230,14 +230,15 @@ int mbedtls_https_start(mbedtls_https_ctx_t *https,
     }
 
     result = sprintf((char *)session->buffer, "%s %s HTTP/1.1\r\nUser-Agent: %s\r\nAccept: */*\r\n\r\n", verb, path, "vsf");
+    printf("http request:\n%s", session->buffer);
     result = mbedtls_session_write(session, session->buffer, result);
     if (result < 0) {
         return result;
     }
 
+    printf("http response:\n");
 read_more:
     if (session->cur_size >= sizeof(session->buffer)) {
-    failed:
         mbedtls_https_close(https);
         return -1;
     }
@@ -257,15 +258,13 @@ read_more:
         }
         line = (char *)session->cur_buffer;
         *tmp++ = '\0';
+        printf("%s\n", line);
         session->cur_size -= tmp - line;
         session->cur_buffer = (uint8_t *)tmp;
 
         if (strstr(line, "HTTP/1.") != NULL) {
             line += sizeof("HTTP/1.x ") - 1;
             https->resp_status = atoi(line);
-            if (https->resp_status != 200) {
-                goto failed;
-            }
             continue;
         }
         if (strstr(line, "Content-Length:")) {
@@ -353,13 +352,15 @@ static int __vpm_list_remote_packages(void)
         return -1;
     }
 
-    int rsize;
-    do {
-        rsize = mbedtls_https_read(https, buf, sizeof(buf));
+    int rsize, remain = https->content_length;
+    while (remain > 0) {
+        rsize = vsf_min(sizeof(buf), remain);
+        rsize = mbedtls_https_read(https, buf, rsize);
         if (rsize > 0) {
             write(STDOUT_FILENO, buf, rsize);
         }
-    } while (rsize > 0);
+        remain -= rsize;
+    }
     return 0;
 }
 
