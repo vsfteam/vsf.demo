@@ -1,3 +1,5 @@
+#define __VSF_ROMFS_CLASS_INHERIT__
+
 #include <unistd.h>
 
 #define REPO_HOST_NAME                  "gitee.com"
@@ -17,6 +19,10 @@ typedef struct mbedtls_session_t {
     mbedtls_ctr_drbg_context ctr_drbg;
     mbedtls_net_context server_fd;
     mbedtls_x509_crt cacert;
+
+    uint8_t buffer[1024];
+    uint8_t *cur_buffer;
+    uint16_t cur_size;
 } mbedtls_session_t;
 
 static void __mbedtls_debug(void *ctx, int level, const char *file, int line, const char *str)
@@ -187,9 +193,32 @@ free_entropy_and_fail:
     return -1;
 }
 
-int mbedtls_https_start(mbedtls_session_t *session, const char *verb, char *path, const char *fmt)
+WEAK(strnchr)
+char * strnchr(const char *s, size_t n, int c)
 {
-    char buf[1024];
+    do {
+        if (*s == c) {
+            return (char*)s;
+        }
+    } while (--n && *s++);
+    return NULL;
+}
+
+typedef struct mbedtls_https_ctx_t {
+    mbedtls_session_t session;
+    int resp_status;
+    int content_length;
+} mbedtls_https_ctx_t;
+
+void mbedtls_https_close(mbedtls_https_ctx_t *https)
+{
+    mbedtls_session_close(&https->session);
+}
+
+int mbedtls_https_start(mbedtls_https_ctx_t *https, const char *verb, char *path, const char *fmt)
+{
+    mbedtls_session_t *session = &https->session;
+
     int result = mbedtls_session_start(session,
                     (const unsigned char *)mbedtls_test_cas_pem, mbedtls_test_cas_pem_len,
                     REPO_HOST_NAME, REPO_HOST_PORT);
@@ -197,13 +226,83 @@ int mbedtls_https_start(mbedtls_session_t *session, const char *verb, char *path
         return result;
     }
 
-    result = sprintf(buf, "%s %s HTTP/1.1\r\nUser-Agent: %s\r\nAccept: */*\r\n\r\n", verb, path, "vsf");
-    return mbedtls_session_write(session, (uint8_t *)buf, result);
+    result = sprintf((char *)session->buffer, "%s %s HTTP/1.1\r\nUser-Agent: %s\r\nAccept: */*\r\n\r\n", verb, path, "vsf");
+    result = mbedtls_session_write(session, session->buffer, result);
+    if (result < 0) {
+        return result;
+    }
+
+read_more:
+    if (session->cur_size >= sizeof(session->buffer)) {
+    failed:
+        mbedtls_https_close(https);
+        return -1;
+    }
+    result = mbedtls_session_read(session, session->buffer + session->cur_size, sizeof(session->buffer) - session->cur_size);
+    if (result < 0) {
+        return result;
+    }
+    session->cur_size = result + session->cur_size;
+    session->cur_buffer = session->buffer;
+
+    char *tmp, *line;
+    while (session->cur_size > 0) {
+        tmp = strnchr((const char *)session->cur_buffer, session->cur_size, '\n');
+        if (NULL == tmp) {
+            memcpy(session->buffer, session->cur_buffer, session->cur_size);
+            goto read_more;
+        }
+        line = (char *)session->cur_buffer;
+        *tmp++ = '\0';
+        session->cur_size -= tmp - line;
+        session->cur_buffer = (uint8_t *)tmp;
+
+        if (strstr(line, "HTTP/1.") != NULL) {
+            line += sizeof("HTTP/1.x ") - 1;
+            https->resp_status = atoi(line);
+            if (https->resp_status != 200) {
+                goto failed;
+            }
+            continue;
+        }
+        if (strstr(line, "Content-Length:")) {
+            line += sizeof("Content-Length:") - 1;
+            while (*line && isspace(*line)) { line++; }
+
+            https->content_length = atoi(line);
+            continue;
+        }
+        if (*line == '\0' || *line == '\r') {
+            break;
+        }
+    }
+    return 0;
 }
 
-void mbedtls_https_close(mbedtls_session_t *session)
+int mbedtls_https_read(mbedtls_https_ctx_t *https, uint8_t *buf, uint16_t len)
 {
-    mbedtls_session_close(session);
+    mbedtls_session_t *session = &https->session;
+    int result = 0;
+again:
+    if (session->cur_size > 0) {
+        uint16_t cur_size = vsf_min(len, session->cur_size);
+        memcpy(buf, session->cur_buffer, cur_size);
+        len -= cur_size;
+        buf += cur_size;
+        session->cur_size -= cur_size;
+        session->cur_buffer += cur_size;
+        result += cur_size;
+    }
+    if (len > 0) {
+        int rxlen = mbedtls_session_read(session, session->buffer, sizeof(session->buffer));
+        if (rxlen < 0) {
+            return result;
+        }
+        session->cur_size = rxlen;
+        session->cur_buffer = session->buffer;
+        goto again;
+    }
+    return result;
 }
 
 static int __vpm_install_packages(char *argv[])
@@ -213,16 +312,25 @@ static int __vpm_install_packages(char *argv[])
 
 static int __vpm_remove_packages(char *argv[])
 {
-    return 0;
+    printf("not supported yet\n");
+    return -1;
 }
 
 static int __vpm_upgrade_packages(void)
 {
-    return 0;
+    printf("not supported yet\n");
+    return -1;
 }
 
 static int __vpm_list_local_packages(void)
 {
+#define APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR        (APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR)
+    vk_romfs_header_t *image = (vk_romfs_header_t *)APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
+    while ( (image != NULL) && vsf_romfs_is_image_valid(image)
+        &&  ((uintptr_t)image - APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR < APP_MSCBOOT_CFG_ROMFS_SIZE)) {
+        printf("%s\n", image->name);
+        image = vsf_romfs_chain_get_next(image);
+    }
     return 0;
 }
 
@@ -242,7 +350,7 @@ int __vpm_main(int argc, char *argv[])
 vpm is commandline package manager for vsf.linux\n\n\
 commands:\n\
   list-local - list local installed pakcages\n\
-  list-remote - list remote availabed packages\n\
+  list-remote - list remote available packages\n\
   install - install packages\n\
   remove - remove packages\n\
   upgrade - upgrade installed packages\n");
