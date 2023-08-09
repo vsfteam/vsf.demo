@@ -229,7 +229,13 @@ int mbedtls_https_start(mbedtls_https_ctx_t *https,
         return result;
     }
 
-    result = sprintf((char *)session->buffer, "%s %s HTTP/1.1\r\nUser-Agent: %s\r\nAccept: */*\r\n\r\n", verb, path, "vsf");
+    result = sprintf((char *)session->buffer, "\
+%s %s HTTP/1.1\r\n\
+Host: %s\r\n\
+User-Agent: %s\r\n\
+Accept: */*\r\n\
+Connection: close\r\n\
+\r\n", verb, path, host, "vsf");
     printf("http request:\n%s", session->buffer);
     result = mbedtls_session_write(session, session->buffer, result);
     if (result < 0) {
