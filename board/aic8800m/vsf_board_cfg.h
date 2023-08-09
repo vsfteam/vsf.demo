@@ -142,11 +142,19 @@
 
 #define APP_CFG_USBH_ARCH_PRIO                          vsf_arch_prio_0
 
+// flash layout for linux:
+//  bootloader: 64K @ 0
+//  fw: 1M - 64K(bootloader) - 64K(/root) - 4K(chip_config) @ 64K
+//  romfs: 1M @ 1M - 64K(/root) - 4K(chip_config)
+//  /root: 64K @ 2M - 64K(/root) - 4K(chip_config)
+//  chip_config: 4K @ 2M - 4K
 #define __APP_MSCBOOT_BOOTLOADER_SIZE                   (64 * 1024)
-#define APP_MSCBOOT_CFG_FW_SIZE                         ((512 + 256) * 1024)
+#define APP_MSCBOOT_CFG_FW_SIZE                         ((1024 - 64 - 64 - 4) * 1024)
 #define APP_MSCBOOT_CFG_FW_ADDR                         __APP_MSCBOOT_BOOTLOADER_SIZE
 #define APP_MSCBOOT_CFG_ROMFS_SIZE                      (1024 * 1024)
 #define APP_MSCBOOT_CFG_ROMFS_ADDR                      (APP_MSCBOOT_CFG_FW_ADDR + APP_MSCBOOT_CFG_FW_SIZE)
+#define APP_MSCBOOT_CFG_ROOT_SIZE                       (64 * 1024)
+#define APP_MSCBOOT_CFG_ROOT_ADDR                       (APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_ROMFS_SIZE)
 #define APP_MSCBOOT_CFG_FLASH                           vsf_hw_flash0
 #define APP_MSCBOOT_CFG_FLASH_ADDR                      0x08000000
 #define APP_MSCBOOT_CFG_ERASE_ALIGN                     (4 * 1024)
