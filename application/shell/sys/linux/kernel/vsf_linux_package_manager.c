@@ -21,7 +21,7 @@ static int __vpm_install_package(char *package)
             printf("%s already installed\n", package);
             return -1;
         }
-        image = vsf_romfs_chain_get_next(image);
+        image = (vk_romfs_header_t *)((uint8_t *)image + be32_to_cpu(image->size));
     }
 
     vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) + sizeof(mbedtls_session_t) + __VPM_BUF_SIZE + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
@@ -65,16 +65,10 @@ static int __vpm_install_package(char *package)
                     goto do_exit;
                 }
 
-                if ((uintptr_t)image == APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR) {
-                    curptr_flash = (uint8_t *)image;
-                    remain = be32_to_cpu(header.size);
-                    header.size = 0;
-                } else {
-                    rsize -= sizeof(header);
-                    curbuf = buf + sizeof(header);
-                    curptr_flash = (uint8_t *)&image[1];
-                    remain = be32_to_cpu(header.size) - sizeof(header);
-                }
+                rsize -= sizeof(header);
+                curbuf = buf + sizeof(header);
+                curptr_flash = (uint8_t *)&image[1];
+                remain = be32_to_cpu(header.size) - sizeof(header);
 
                 uint8_t *curptr_flash_aligned = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
                 memcpy(cache, curptr_flash_aligned, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
@@ -92,6 +86,7 @@ static int __vpm_install_package(char *package)
                     curptr_cache += result;
                     curbuf += result;
                     rsize -= result;
+                    remain -= result;
                 }
                 result = curptr_cache - cache;
                 if (result >= APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
@@ -106,7 +101,6 @@ static int __vpm_install_package(char *package)
         } else if (!rsize) {
             break;
         }
-        remain -= rsize;
     }
     if (!http->content_length || !remain) {
         curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
@@ -122,6 +116,7 @@ static int __vpm_install_package(char *package)
             curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
             memcpy(cache, curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
             memcpy(&cache[(uint8_t *)image - curptr_flash], &header, sizeof(header));
+            curptr_flash -= APP_MSCBOOT_CFG_FLASH_ADDR;
             vsf_flash_erase(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
             vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, cache, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
         }
