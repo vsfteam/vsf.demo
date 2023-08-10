@@ -252,11 +252,7 @@ static void __usr_flash_isrhandler( void *target_ptr,
 
 static void __usr_flash_init(void)
 {
-    vsf_flash_cfg_t cfg     = {
-        .isr                = {
-            .handler_fn     = __usr_flash_isrhandler,
-        },
-    };
+    vsf_flash_cfg_t cfg = { 0 };
     vsf_flash_init(&APP_MSCBOOT_CFG_FLASH, &cfg);
     vsf_flash_enable(&APP_MSCBOOT_CFG_FLASH);
 
@@ -470,10 +466,9 @@ int VSF_USER_ENTRY(int argc, char *argv[])
     vsf_board_init();
     vsf_start_trace();
 
+    __usr_flash_init();
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
     if (APP_BOOT1_KEY_IS_DOWN) {
-        __usr_flash_init();
-
         vk_usbd_init(&__app_usbd);
         vk_usbd_connect(&__app_usbd);
 
