@@ -94,12 +94,6 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ PROTOTYPES ====================================*/
-
-#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
-dcl_vsf_peda_methods(static, __usr_mscboot_on_romfs_read)
-dcl_vsf_peda_methods(static, __usr_mscboot_on_romfs_write)
-#endif
-
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 
@@ -113,9 +107,8 @@ static vk_fakefat32_file_t __usr_fakefat32_root[2] = {
     {
         .name               = "usr.romfs",
         .size               = APP_MSCBOOT_CFG_ROMFS_SIZE,
-        .attr               = VSF_FILE_ATTR_READ | VSF_FILE_ATTR_WRITE,
-        .callback.fn_read   = (vsf_peda_evthandler_t)vsf_peda_func(__usr_mscboot_on_romfs_read),
-        .callback.fn_write  = (vsf_peda_evthandler_t)vsf_peda_func(__usr_mscboot_on_romfs_write),
+        .attr               = VSF_FILE_ATTR_READ,
+        .f.buff             = (uint8_t *)(APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_FLASH_ADDR),
     }
 };
 
@@ -132,9 +125,6 @@ static vk_fakefat32_mal_t __app_fakefat32_mal = {
         .d.child_num        = dimof(__usr_fakefat32_root),
     },
 };
-
-static vsf_mutex_t __user_flash_mutex;
-static vsf_eda_t *__usr_mscboot_eda = NULL;
 
 static bool __usr_linux_boot = false;
 #endif
@@ -161,22 +151,6 @@ static vk_mal_scsi_t __app_mscbot_mal_scsi = {
     .mal                = &__app_fakefat32_mal.use_as__vk_mal_t,
 };
 
-describe_mem_stream(__app_usbd_mschid_stream, 1024)
-static const vk_virtual_scsi_param_t __app_mschid_scsi_param = {
-    .block_size             = APP_CFG_FAKEFAT32_SECTOR_SIZE,
-    .block_num              = APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE,
-    .vendor                 = "VSFTeam ",
-    .product                = "VSF.Romfs MSCHID",
-    .revision               = "1.00",
-    .type                   = SCSI_PDT_DIRECT_ACCESS_BLOCK,
-};
-static vk_mal_scsi_t __app_mschid_mal_scsi = {
-    .drv                = &vk_virtual_scsi_drv,
-    .param              = (void *)&__app_mschid_scsi_param,
-    .virtual_scsi_drv   = &vk_mal_virtual_scsi_drv,
-    .mal                = &__app_fakefat32_mal.use_as__vk_mal_t,
-};
-
 describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED)
     usbd_common_desc_iad(__app_usbd,
                         // str_product, str_vendor, str_serial
@@ -184,9 +158,9 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         // ep0_size
                         64,
                         // total function descriptor size
-                        USB_DESC_MSCBOT_IAD_LEN + USB_DESC_HIDMSC_IAD_LEN,
+                        USB_DESC_MSCBOT_IAD_LEN,
                         // total function interface number
-                        USB_MSCBOT_IFS_NUM + USB_HIDMSC_IFS_NUM,
+                        USB_MSCBOT_IFS_NUM,
                         // attribute, max_power
                         USB_CONFIG_ATT_WAKEUP, 100
     )
@@ -200,20 +174,10 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         // bulk ep size
                         __APP_CFG_MSC_BULK_SIZE
         )
-        usbd_hidmsc_desc_iad(__app_usbd,
-                        // interface
-                        1,
-                        // function string index(start from 0)
-                        1,
-                        // interrupt in ep, interrupt out ep
-                        2, 2
-        )
     usbd_func_desc(__app_usbd)
         usbd_func_str_desc(__app_usbd, 0, u"Romfs.MSC")
-        usbd_func_str_desc(__app_usbd, 1, u"Romfs.HID")
     usbd_std_desc_table(__app_usbd)
         usbd_func_str_desc_table(__app_usbd, 0)
-        usbd_func_str_desc_table(__app_usbd, 1)
     usbd_func(__app_usbd)
         usbd_mscbot_func(__app_usbd,
                         // function index
@@ -227,163 +191,9 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         // stream
                         &__app_usbd_msc_stream.use_as__vsf_stream_t
         )
-        usbd_hidmsc_func(__app_usbd,
-                        // function index
-                        1,
-                        // interrupt in ep, interrupt out ep, out ep size
-                        2, 2,
-                        // scsi_dev
-                        &__app_mschid_mal_scsi.use_as__vk_scsi_t,
-                        // stream
-                        &__app_usbd_mschid_stream.use_as__vsf_stream_t
-        )
     usbd_ifs(__app_usbd)
         usbd_mscbot_ifs(__app_usbd, 0)
-        usbd_hidmsc_ifs(__app_usbd, 1)
 end_describe_usbd(__app_usbd, VSF_USB_DC0)
-
-static void __usr_flash_isrhandler( void *target_ptr,
-                                    vsf_flash_t *flash_ptr,
-                                    vsf_flash_irq_mask_t mask)
-{
-    VSF_ASSERT(__usr_mscboot_eda != NULL);
-    vsf_eda_post_evt(__usr_mscboot_eda, VSF_EVT_USER);
-}
-
-static void __usr_flash_init(void)
-{
-    vsf_flash_cfg_t cfg = { 0 };
-    vsf_flash_init(&APP_MSCBOOT_CFG_FLASH, &cfg);
-    vsf_flash_enable(&APP_MSCBOOT_CFG_FLASH);
-
-    vsf_eda_mutex_init(&__user_flash_mutex);
-}
-
-static uint32_t __usr_flash_read(uint64_t offset, uint32_t size, uint8_t *buff)
-{
-    uint32_t cur_size;
-
-#if APP_MSCBOT_CFG_READ_ALIGN != 0
-    VSF_ASSERT(!(offset & (APP_MSCBOT_CFG_READ_ALIGN - 1)));
-#endif
-
-    cur_size = 0 == APP_MSCBOOT_CFG_READ_BLOCK_SIZE ? size : APP_MSCBOOT_CFG_READ_BLOCK_SIZE;
-    VSF_ASSERT(cur_size <= size);
-    vsf_flash_read(&APP_MSCBOOT_CFG_FLASH, offset, buff, cur_size);
-    return cur_size;
-}
-
-// return 1 to indicate erasing
-static uint32_t __usr_flash_write(uint64_t offset, uint32_t size, uint8_t *buff)
-{
-    uint32_t cur_size;
-
-    if (size & 1) {
-        // erase done
-        size &= ~1;
-    } else {
-        // write done, need erase next block?
-        VSF_ASSERT(APP_MSCBOOT_CFG_ERASE_ALIGN != 0);
-        if (!(offset & (APP_MSCBOOT_CFG_ERASE_ALIGN - 1))) {
-            cur_size = 0 == APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE ? size : APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
-            vsf_flash_erase(&APP_MSCBOOT_CFG_FLASH, offset, cur_size);
-            return 1;
-        }
-    }
-
-#if APP_MSCBOT_CFG_WRITE_ALIGN != 0
-    VSF_ASSERT(!(offset & (APP_MSCBOT_CFG_WRITE_ALIGN - 1)));
-#endif
-
-    cur_size = 0 == APP_MSCBOOT_CFG_WRITE_BLOCK_SIZE ? size : APP_MSCBOOT_CFG_WRITE_BLOCK_SIZE;
-    VSF_ASSERT(cur_size <= size);
-    vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, offset, buff, cur_size);
-    return cur_size;
-}
-
-vsf_component_peda_ifs_entry(__usr_mscboot_on_romfs_read, vk_memfs_callback_read)
-{
-    vsf_peda_begin();
-
-    uint32_t cur_size;
-
-    switch (evt) {
-    case VSF_EVT_INIT:
-        if (VSF_ERR_NONE != vsf_eda_mutex_enter(&__user_flash_mutex)) {
-            break;
-        }
-        // fall through
-    case VSF_EVT_SYNC:
-        vsf_local.offset += APP_MSCBOOT_CFG_ROMFS_ADDR;
-        vsf_local.rsize = 0;
-        __usr_mscboot_eda = vsf_eda_get_cur();
-        VSF_ASSERT(__usr_mscboot_eda != NULL);
-        // fall through
-    case VSF_EVT_USER:
-        if (!vsf_local.size) {
-            __usr_mscboot_eda = NULL;
-            vsf_eda_mutex_leave(&__user_flash_mutex);
-            vsf_eda_return(vsf_local.rsize);
-            break;
-        }
-
-        cur_size = 0 == APP_MSCBOOT_CFG_READ_BLOCK_SIZE ? vsf_local.size : APP_MSCBOOT_CFG_READ_BLOCK_SIZE;
-        VSF_ASSERT(cur_size <= vsf_local.size);
-        cur_size = __usr_flash_read(vsf_local.offset, cur_size, vsf_local.buff);
-        vsf_local.offset += cur_size;
-        vsf_local.buff += cur_size;
-        vsf_local.rsize += cur_size;
-        vsf_local.size -= cur_size;
-        break;
-    }
-
-    vsf_peda_end();
-}
-
-vsf_component_peda_ifs_entry(__usr_mscboot_on_romfs_write, vk_memfs_callback_write)
-{
-    vsf_peda_begin();
-
-    uint32_t cur_size;
-
-    switch (evt) {
-    case VSF_EVT_INIT:
-        if (VSF_ERR_NONE != vsf_eda_mutex_enter(&__user_flash_mutex)) {
-            break;
-        }
-        // fall through
-    case VSF_EVT_SYNC:
-        vsf_local.offset += APP_MSCBOOT_CFG_ROMFS_ADDR;
-        vsf_local.wsize = 0;
-        __usr_mscboot_eda = vsf_eda_get_cur();
-        VSF_ASSERT(__usr_mscboot_eda != NULL);
-        // fall through
-    case VSF_EVT_USER:
-        if (!vsf_local.size) {
-            __usr_mscboot_eda = NULL;
-            vsf_eda_mutex_leave(&__user_flash_mutex);
-            vsf_eda_return(vsf_local.wsize);
-            break;
-        }
-
-        cur_size = 0 == APP_MSCBOOT_CFG_WRITE_BLOCK_SIZE ? vsf_local.size : APP_MSCBOOT_CFG_WRITE_BLOCK_SIZE;
-        VSF_ASSERT(cur_size <= vsf_local.size);
-        cur_size = __usr_flash_write(vsf_local.offset, cur_size, vsf_local.buff);
-        if (1 == cur_size) {
-            vsf_local.size |= 1;
-            break;
-        } else {
-            vsf_local.size &= ~1;
-            vsf_local.offset += cur_size;
-            vsf_local.buff += cur_size;
-            vsf_local.wsize += cur_size;
-            vsf_local.size -= cur_size;
-        }
-        break;
-    }
-
-    vsf_peda_end();
-}
 
 #endif
 
@@ -466,7 +276,6 @@ int VSF_USER_ENTRY(int argc, char *argv[])
     vsf_board_init();
     vsf_start_trace();
 
-    __usr_flash_init();
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
     if (APP_BOOT1_KEY_IS_DOWN) {
         vk_usbd_init(&__app_usbd);

@@ -91,6 +91,10 @@ static int __vpm_install_package(char *package)
                 result = curptr_cache - cache;
                 if (result >= APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
                     curptr_flash -= APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
+                    if ((uintptr_t)curptr_flash >= APP_MSCBOOT_CFG_ROOT_ADDR) {
+                        printf("not enough romfs space\n");
+                        goto do_exit;
+                    }
                     vsf_flash_erase(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
                     vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, cache, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
                     curptr_flash += APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
@@ -105,6 +109,10 @@ static int __vpm_install_package(char *package)
     if (!http->content_length || !remain) {
         curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
         curptr_flash -= APP_MSCBOOT_CFG_FLASH_ADDR;
+        if ((uintptr_t)curptr_flash >= APP_MSCBOOT_CFG_ROOT_ADDR) {
+            printf("not enough romfs space\n");
+            goto do_exit;
+        }
         vsf_flash_erase(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
         if (curptr_cache != cache) {
             *(uint32_t *)curptr_cache = 0xFFFFFFFF;
@@ -121,7 +129,7 @@ static int __vpm_install_package(char *package)
             vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, cache, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
         }
 
-        printf("success\r\n");
+        printf("success\n");
         result = 0;
     } else {
         printf("connection closed before all data received, remaining %d\n", remain);
@@ -142,10 +150,86 @@ static int __vpm_install_packages(char *argv[])
     return 0;
 }
 
-static int __vpm_remove_packages(char *argv[])
+static bool __vpm_is_to_uninstall(vk_romfs_header_t *image, char *argv[])
 {
-    printf("not supported yet\n");
-    return -1;
+    while (*argv != NULL) {
+        if ((strstr((const char *)image->name, *argv) != NULL) && (' ' == image->name[strlen(*argv)])) {
+            return true;
+        }
+        argv++;
+    }
+    return false;
+}
+
+static int __vpm_uninstall_packages(char *argv[])
+{
+    vk_romfs_header_t *image = (vk_romfs_header_t *)APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
+    while ( (image != NULL) && vsf_romfs_is_image_valid(image)
+        &&  ((uintptr_t)image - APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR < APP_MSCBOOT_CFG_ROMFS_SIZE)
+        &&  !__vpm_is_to_uninstall(image, argv)) {
+        image = vsf_romfs_chain_get_next(image);
+    }
+    if (NULL == image) {
+        printf("not found\n");
+        return 0;
+    }
+
+    uint8_t *cache = (uint8_t *)malloc(APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+    if (NULL == cache) {
+        printf("failed to flash cache\n");
+        return -1;
+    }
+
+    uint8_t *curptr_flash = (uint8_t *)image, *curptr_cache;
+    uint8_t *curptr_flash_aligned = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
+    memcpy(cache, curptr_flash_aligned, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+    curptr_cache = &cache[curptr_flash - curptr_flash_aligned];
+
+    uint8_t *cur_image_pos;
+    uint32_t image_size, cur_size;
+    printf("uninstall %s\n", image->name);
+    image = vsf_romfs_chain_get_next(image);
+    while (image != NULL) {
+        if (!__vpm_is_to_uninstall(image, argv)) {
+            cur_image_pos = (uint8_t *)image;
+            image_size = be32_to_cpu(image->size);
+            while (image_size > 0) {
+                cur_size = curptr_cache - cache;
+                if (cur_size < APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
+                    cur_size = APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE - cur_size;
+                    cur_size = vsf_min(cur_size, image_size);
+                    memcpy(curptr_cache, cur_image_pos, cur_size);
+                    cur_image_pos += cur_size;
+                    curptr_flash += cur_size;
+                    curptr_cache += cur_size;
+                    image_size -= cur_size;
+                }
+                cur_size = curptr_cache - cache;
+                if (cur_size >= APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
+                    curptr_flash -= APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
+                    vsf_flash_erase(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+                    vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, cache, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+                    curptr_flash += APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
+                    curptr_cache = cache;
+                }
+            }
+        } else {
+            printf("uninstall %s\n", image->name);
+        }
+
+        image = vsf_romfs_chain_get_next(image);
+    }
+
+    curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
+    curptr_flash -= APP_MSCBOOT_CFG_FLASH_ADDR;
+    vsf_flash_erase(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+    if (curptr_cache != cache) {
+        *(uint32_t *)curptr_cache = 0xFFFFFFFF;
+        vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, cache, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+    }
+
+    free(cache);
+    return 0;
 }
 
 static int __vpm_list_local_packages(void)
@@ -217,7 +301,7 @@ commands:\n\
   list-local - list local installed pakcages\n\
   list-remote - list remote available packages\n\
   install - install packages\n\
-  remove - remove packages\n");
+  uninstall - uninstall packages\n");
         return result;
     }
 
@@ -227,8 +311,8 @@ commands:\n\
         return __vpm_list_remote_packages();
     } else if (!strcmp(argv[1], "install")) {
         return __vpm_install_packages(&argv[2]);
-    } else if (!strcmp(argv[1], "remove")) {
-        return __vpm_remove_packages(&argv[2]);
+    } else if (!strcmp(argv[1], "uninstall")) {
+        return __vpm_uninstall_packages(&argv[2]);
     } else {
         printf("unsupported command: %s\n\n", argv[1]);
         result = -1;
@@ -238,5 +322,9 @@ commands:\n\
 
 void vsf_linux_install_package_manager(void)
 {
+    vsf_flash_cfg_t cfg = { 0 };
+    vsf_flash_init(&APP_MSCBOOT_CFG_FLASH, &cfg);
+    vsf_flash_enable(&APP_MSCBOOT_CFG_FLASH);
+
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/vpm", __vpm_main);
 }

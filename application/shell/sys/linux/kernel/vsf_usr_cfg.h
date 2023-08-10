@@ -55,7 +55,6 @@
 #ifndef VSF_USE_USB_DEVICE
 #   define VSF_USE_USB_DEVICE                           ENABLED
 #       define VSF_USBD_USE_MSC                         ENABLED
-#       define VSF_USBD_USE_HID                         ENABLED
 #endif
 
 #define VSF_USE_LINUX                                   ENABLED
