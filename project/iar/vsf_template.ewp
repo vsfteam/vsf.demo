@@ -3371,6 +3371,18 @@
                         <configuration>vsf_template_aic8800</configuration>
                     </excluded>
                     <group>
+                        <name>extension</name>
+                        <group>
+                            <name>tls_session</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\extension\tls_session\mbedtls_tls_session.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\extension\tls_session\mbedtls_tls_session.h</name>
+                            </file>
+                        </group>
+                    </group>
+                    <group>
                         <name>port</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\port\platform_vsf.c</name>
@@ -4570,6 +4582,21 @@
                     <file>
                         <name>$PROJ_DIR$\..\..\vsf\source\component\tcpip\netdrv\vsf_netdrv.h</name>
                     </file>
+                </group>
+                <group>
+                    <name>protocol</name>
+                    <group>
+                        <name>http</name>
+                        <group>
+                            <name>client</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.h</name>
+                            </file>
+                        </group>
+                    </group>
                 </group>
                 <file>
                     <name>$PROJ_DIR$\..\..\vsf\source\component\tcpip\vsf_tcpip.h</name>

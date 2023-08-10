@@ -27,7 +27,8 @@
  *   vsf/source/shell/sys/linux/include
  *   vsf/source/shell/sys/linux/include/simple_libc if VSF_LINUX_USE_SIMPLE_LIBC is enabled
  *   optional:
- *   vsf/source/component/3rd-party/mbedtls/raw/include for package manager, need VSF_USE_LWIP from vsf_board
+ *    for package manager, need VSF_USE_LWIP from vsf_board
+ *     vsf/source/component/3rd-party/mbedtls/raw/include
  *
  * Pre-defined:
  *   __unix__ for net_sockets/timing/entropy_poll in mbedtls
@@ -37,8 +38,11 @@
  *   vsf/source/shell/sys/linux/lib/3rd-party/glob
  *   vsf/source/shell/sys/linux/lib/3rd-party/regex
  *   optional:
- *   ./vsf_linux_package_manager.c for package manager, need VSF_USE_LWIP from vsf_board
- *   vsf/source/component/3rd-party/mbedtls/* for package manager, need VSF_USE_LWIP from vsf_board
+ *    for package manager, need VSF_USE_LWIP from vsf_board
+ *     ./vsf_linux_package_manager.c
+ *     vsf/source/component/3rd-party/mbedtls/raw/library/*
+ *     vsf/source/component/3rd-party/mbedtls/port/*
+ *     vsf/source/component/3rd-party/mbedtls/extension/tls_session_client/*
  *
  * Linker:
  *   If bootloader is used, set image base to the APP address

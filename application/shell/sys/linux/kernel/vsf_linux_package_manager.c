@@ -2,321 +2,83 @@
 
 #include <unistd.h>
 
-#define REPO_HOST_NAME                  "gitee.com"
-#define REPO_HOST_PORT                  "443"
-#define REPO_PATH                       "/vsf-linux/MCULinux.repo/raw/main/" VSF_BOARD_ARCH_STR "/romfs/"
+#define APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR    (APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR)
 
-#define mbedtls_trace(...)
+#define REPO_HOST_NAME                      "gitee.com"
+#define REPO_HOST_PORT                      "443"
+#define REPO_PATH                           "/vsf-linux/MCULinux.repo/raw/main/" VSF_BOARD_ARCH_STR "/romfs/"
 
-#include <mbedtls/net_sockets.h>
-#include <mbedtls/ssl.h>
-#include <mbedtls/entropy.h>
-#include <mbedtls/ctr_drbg.h>
-#include <mbedtls/error.h>
-#include <mbedtls/certs.h>
+#define __VPM_BUF_SIZE                      512
 
-typedef struct mbedtls_session_t {
-    mbedtls_ssl_context ssl;
-    mbedtls_ssl_config conf;
-    mbedtls_entropy_context entropy;
-    mbedtls_ctr_drbg_context ctr_drbg;
-    mbedtls_net_context server_fd;
-    mbedtls_x509_crt cacert;
-
-    uint8_t buffer[1024];
-    uint8_t *cur_buffer;
-    uint16_t cur_size;
-} mbedtls_session_t;
-
-static void __mbedtls_debug(void *ctx, int level, const char *file, int line, const char *str)
+static int __vpm_install_package(char *package)
 {
-    (void)level;
-    fprintf((FILE *)ctx, "%s:%04d: %s", file, line, str);
-}
-
-void mbedtls_session_cleanup(mbedtls_session_t *session)
-{
-    mbedtls_net_free(&session->server_fd);
-    mbedtls_x509_crt_free(&session->cacert);
-    mbedtls_ssl_free(&session->ssl);
-    mbedtls_ssl_config_free(&session->conf);
-    mbedtls_ctr_drbg_free(&session->ctr_drbg);
-    mbedtls_entropy_free(&session->entropy);
-}
-
-int mbedtls_session_write(mbedtls_session_t *session, uint8_t *buf, uint16_t len)
-{
-    int ret, result = 0;
-    mbedtls_trace("  > Write to server:");
-    while (len > 0) {
-        ret = mbedtls_ssl_write(&session->ssl, buf, len);
-        if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE) {
-            continue;
-        }
-        if (ret < 0) {
-            mbedtls_trace(" failed\n  ! mbedtls_ssl_write returned %d\n\n", ret);
+    vk_romfs_header_t *image = (vk_romfs_header_t *)APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
+    char *tmp;
+    while ( (image != NULL) && vsf_romfs_is_image_valid(image)
+        &&  ((uintptr_t)image - APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR < APP_MSCBOOT_CFG_ROMFS_SIZE)) {
+        tmp = strstr((const char *)image->name, package);
+        if (tmp != NULL && tmp[strlen(package)] == ' ') {
+            printf("%s already installed\n", package);
             return -1;
         }
-        buf += ret;
-        len -= ret;
-        result += ret;
-    }
-    mbedtls_trace(" %d bytes written\n\n", result);
-    return result;
-}
-
-int mbedtls_session_read(mbedtls_session_t *session, uint8_t *buf, uint16_t len)
-{
-    int ret, result = 0;
-    mbedtls_trace("  < Read from server:");
-    while (len > 0) {
-        ret = mbedtls_ssl_read(&session->ssl, buf, len);
-        if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE) {
-            continue;
-        }
-        if (ret == MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY || ret == 0) {
-            break;
-        }
-        if (ret < 0) {
-            mbedtls_trace("failed\n  ! mbedtls_ssl_read returned %d\n\n", ret);
-            return ret;
-        }
-        buf += ret;
-        len -= ret;
-        result += ret;
-    }
-    mbedtls_trace(" %d bytes read\n\n", result);
-    return result;
-}
-
-void mbedtls_session_close(mbedtls_session_t *session)
-{
-    mbedtls_ssl_close_notify(&session->ssl);
-    mbedtls_session_cleanup(session);
-}
-
-int mbedtls_session_start(mbedtls_session_t *session,
-        const unsigned char *cert, size_t cert_len,
-        const char *host, const char *port)
-{
-    int ret;
-
-    mbedtls_ctr_drbg_init(&session->ctr_drbg);
-    mbedtls_entropy_init(&session->entropy);
-    mbedtls_trace("\n  . Seeding the random number generator...");
-    ret = mbedtls_ctr_drbg_seed(&session->ctr_drbg, mbedtls_entropy_func, &session->entropy, NULL, 0);
-    if (ret != 0) {
-        mbedtls_trace(" failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret);
-        goto free_entropy_and_fail;
-    }
-    mbedtls_trace(" ok\n");
-
-    mbedtls_trace("  . Loading the CA root certificate ...");
-    mbedtls_x509_crt_init(&session->cacert);
-    ret = mbedtls_x509_crt_parse(&session->cacert, cert, cert_len);
-    if (ret < 0) {
-        mbedtls_trace(" failed\n  !  mbedtls_x509_crt_parse returned -0x%x\n\n", (unsigned int)-ret);
-        goto free_cert_and_fail;
-    }
-    mbedtls_trace(" ok (%d skipped)\n", ret);
-
-    mbedtls_trace("  . Connecting to tcp/%s/%s...", host, port);
-    mbedtls_net_init(&session->server_fd);
-    if ((ret = mbedtls_net_connect(&session->server_fd, host, port, MBEDTLS_NET_PROTO_TCP)) != 0) {
-        mbedtls_trace(" failed\n  ! mbedtls_net_connect returned %d\n\n", ret);
-        goto free_server_fd_and_fail;
-    }
-    mbedtls_trace(" ok\n");
-
-    mbedtls_trace("  . Setting up the SSL/TLS structure...");
-    mbedtls_ssl_config_init(&session->conf);
-    if ((ret = mbedtls_ssl_config_defaults(&session->conf,
-                    MBEDTLS_SSL_IS_CLIENT,
-                    MBEDTLS_SSL_TRANSPORT_STREAM,
-                    MBEDTLS_SSL_PRESET_DEFAULT)) != 0) {
-        mbedtls_trace(" failed\n  ! mbedtls_ssl_config_defaults returned %d\n\n", ret);
-        goto free_conf_and_fail;
-    }
-    mbedtls_trace(" ok\n");
-
-    mbedtls_ssl_conf_authmode(&session->conf, MBEDTLS_SSL_VERIFY_OPTIONAL);
-    mbedtls_ssl_conf_ca_chain(&session->conf, &session->cacert, NULL);
-    mbedtls_ssl_conf_rng(&session->conf, mbedtls_ctr_drbg_random, &session->ctr_drbg);
-    mbedtls_ssl_conf_dbg(&session->conf, __mbedtls_debug, stdout);
-
-    mbedtls_ssl_init(&session->ssl);
-    ret = mbedtls_ssl_setup(&session->ssl, &session->conf);
-    if (ret != 0) {
-        mbedtls_trace(" failed\n  ! mbedtls_ssl_setup returned %d\n\n", ret);
-        goto free_ssl_and_fail;
-    }
-    ret = mbedtls_ssl_set_hostname(&session->ssl, host);
-    if (ret != 0) {
-        mbedtls_trace(" failed\n  ! mbedtls_ssl_set_hostname returned %d\n\n", ret);
-        goto free_ssl_and_fail;
-    }
-    mbedtls_ssl_set_bio(&session->ssl, &session->server_fd, mbedtls_net_send, mbedtls_net_recv, NULL);
-
-    mbedtls_trace("  . Performing the SSL/TLS handshake...");
-    while ((ret = mbedtls_ssl_handshake(&session->ssl)) != 0) {
-        if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE) {
-            mbedtls_trace(" failed\n  ! mbedtls_ssl_handshake returned -0x%x\n\n", (unsigned int)-ret);
-            goto free_ssl_and_fail;
-        }
-    }
-    mbedtls_trace(" ok\n");
-
-    mbedtls_trace("  . Verifying peer X.509 certificate...");
-    {
-        uint32_t flags = mbedtls_ssl_get_verify_result(&session->ssl);
-        if (flags != 0) {
-            char vrfy_buf[512];
-
-            mbedtls_trace(" failed\n");
-            mbedtls_x509_crt_verify_info(vrfy_buf, sizeof(vrfy_buf), "  ! ", flags);
-            mbedtls_trace("%s\n", vrfy_buf);
-        } else {
-            mbedtls_trace(" ok\n");
-        }
+        image = vsf_romfs_chain_get_next(image);
     }
 
-    return 0;
-
-free_ssl_and_fail:
-    mbedtls_ssl_free(&session->ssl);
-free_conf_and_fail:
-    mbedtls_ssl_config_free(&session->conf);
-free_server_fd_and_fail:
-    mbedtls_net_free(&session->server_fd);
-free_cert_and_fail:
-    mbedtls_x509_crt_free(&session->cacert);
-free_entropy_and_fail:
-    mbedtls_ctr_drbg_free(&session->ctr_drbg);
-    mbedtls_entropy_free(&session->entropy);
-    return -1;
-}
-
-WEAK(strnchr)
-char * strnchr(const char *s, size_t n, int c)
-{
-    do {
-        if (*s == c) {
-            return (char*)s;
-        }
-    } while (--n && *s++);
-    return NULL;
-}
-
-typedef struct mbedtls_https_ctx_t {
-    mbedtls_session_t session;
-    int resp_status;
-    int content_length;
-} mbedtls_https_ctx_t;
-
-void mbedtls_https_close(mbedtls_https_ctx_t *https)
-{
-    mbedtls_session_close(&https->session);
-}
-
-int mbedtls_https_start(mbedtls_https_ctx_t *https,
-        const char *host, const char *port,
-        const char *verb, char *path)
-{
-    mbedtls_session_t *session = &https->session;
-
-    int result = mbedtls_session_start(session,
-                    (const unsigned char *)mbedtls_test_cas_pem, mbedtls_test_cas_pem_len,
-                    host, port);
-    if (result != 0) {
-        return result;
-    }
-
-    result = sprintf((char *)session->buffer, "\
-%s %s HTTP/1.1\r\n\
-Host: %s\r\n\
-User-Agent: %s\r\n\
-Accept: */*\r\n\
-Connection: close\r\n\
-\r\n", verb, path, host, "vsf");
-    mbedtls_trace("http request:\n%s", session->buffer);
-    result = mbedtls_session_write(session, session->buffer, result);
-    if (result < 0) {
-        return result;
-    }
-
-    mbedtls_trace("http response:\n");
-read_more:
-    if (session->cur_size >= sizeof(session->buffer)) {
-        mbedtls_https_close(https);
+    vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) + sizeof(mbedtls_session_t) + __VPM_BUF_SIZE);
+    if (NULL == http) {
+        printf("failed to allocate http context\n");
         return -1;
     }
-    result = mbedtls_session_read(session, session->buffer + session->cur_size, sizeof(session->buffer) - session->cur_size);
-    if (result < 0) {
-        return result;
+    mbedtls_session_t *session = (mbedtls_session_t *)&http[1];
+    memset(session, 0, sizeof(*session));
+    http->op = &vsf_mbedtls_http_op;
+    http->param = session;
+    vsf_http_client_init(http);
+
+    uint8_t *buf = (uint8_t *)&session[1];
+    int result = 0, rsize, remain;
+    strcpy((char *)buf, REPO_PATH);
+    strcat((char *)buf, package);
+    strcat((char *)buf, ".img");
+    if (    (vsf_http_client_request(http, REPO_HOST_NAME, REPO_HOST_PORT, "GET", (char *)buf, NULL, 0) < 0)
+        ||  (http->resp_status != 200)) {
+        printf("failed to start http\n");
+        result = -1;
+        goto do_exit;
     }
-    session->cur_size = result + session->cur_size;
-    session->cur_buffer = session->buffer;
 
-    char *tmp, *line;
-    while (session->cur_size > 0) {
-        tmp = strnchr((const char *)session->cur_buffer, session->cur_size, '\n');
-        if (NULL == tmp) {
-            memcpy(session->buffer, session->cur_buffer, session->cur_size);
-            goto read_more;
-        }
-        line = (char *)session->cur_buffer;
-        *tmp++ = '\0';
-        mbedtls_trace("%s\n", line);
-        session->cur_size -= tmp - line;
-        session->cur_buffer = (uint8_t *)tmp;
-
-        if (strstr(line, "HTTP/1.") != NULL) {
-            line += sizeof("HTTP/1.x ") - 1;
-            https->resp_status = atoi(line);
-            continue;
-        }
-        if (strstr(line, "Content-Length:")) {
-            line += sizeof("Content-Length:") - 1;
-            while (*line && isspace(*line)) { line++; }
-
-            https->content_length = atoi(line);
-            continue;
-        }
-        if (*line == '\0' || *line == '\r') {
+    remain = http->content_length;
+    if (!remain) {
+        remain = INT_MAX;
+    }
+    while (remain > 0) {
+        rsize = vsf_min(__VPM_BUF_SIZE, remain);
+        rsize = vsf_http_client_read(http, buf, rsize);
+        if (rsize > 0) {
+//            write(STDOUT_FILENO, buf, rsize);
+        } else if (!rsize) {
             break;
         }
+        remain -= rsize;
     }
-    return 0;
-}
+    if (!http->content_length || !remain) {
+        // success
+    } else {
+        printf("connection closed before all data received, remaining %d\n", remain);
+        result = -1;
+    }
 
-int mbedtls_https_read(mbedtls_https_ctx_t *https, uint8_t *buf, uint16_t len)
-{
-    mbedtls_session_t *session = &https->session;
-    int result = 0;
-again:
-    if (session->cur_size > 0) {
-        uint16_t cur_size = vsf_min(len, session->cur_size);
-        memcpy(buf, session->cur_buffer, cur_size);
-        len -= cur_size;
-        buf += cur_size;
-        session->cur_size -= cur_size;
-        session->cur_buffer += cur_size;
-        result += cur_size;
-    }
-    if (len > 0) {
-        int rxlen = mbedtls_session_read(session, session->buffer, sizeof(session->buffer));
-        if (rxlen < 0) {
-            return result;
-        }
-        session->cur_size = rxlen;
-        session->cur_buffer = session->buffer;
-        goto again;
-    }
+do_exit:
+    vsf_http_client_close(http);
+    free(http);
     return result;
 }
 
 static int __vpm_install_packages(char *argv[])
 {
+    while (*argv != NULL) {
+        __vpm_install_package(*argv++);
+    }
     return 0;
 }
 
@@ -334,7 +96,6 @@ static int __vpm_upgrade_packages(void)
 
 static int __vpm_list_local_packages(void)
 {
-#define APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR        (APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR)
     vk_romfs_header_t *image = (vk_romfs_header_t *)APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
     while ( (image != NULL) && vsf_romfs_is_image_valid(image)
         &&  ((uintptr_t)image - APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR < APP_MSCBOOT_CFG_ROMFS_SIZE)) {
@@ -346,30 +107,47 @@ static int __vpm_list_local_packages(void)
 
 static int __vpm_list_remote_packages(void)
 {
-    mbedtls_https_ctx_t *https = (mbedtls_https_ctx_t *)calloc(1, sizeof(mbedtls_https_ctx_t));
-    if (NULL == https) {
-        printf("failed to allocate https context\n");
+    vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) + sizeof(mbedtls_session_t) + __VPM_BUF_SIZE);
+    if (NULL == http) {
+        printf("failed to allocate http context\n");
         return -1;
     }
+    mbedtls_session_t *session = (mbedtls_session_t *)&http[1];
+    memset(session, 0, sizeof(*session));
+    http->op = &vsf_mbedtls_http_op;
+    http->param = session;
+    vsf_http_client_init(http);
 
-    uint8_t buf[256];
+    uint8_t *buf = (uint8_t *)&session[1];
+    int result = 0, rsize, remain;
     strcpy((char *)buf, REPO_PATH);
     strcat((char *)buf, "list.txt");
-    if (mbedtls_https_start(https, REPO_HOST_NAME, REPO_HOST_PORT, "GET", (char *)buf) < 0) {
-        printf("failed to start https\n");
-        return -1;
+    if (    (vsf_http_client_request(http, REPO_HOST_NAME, REPO_HOST_PORT, "GET", (char *)buf, NULL, 0) < 0)
+        ||  (http->resp_status != 200)) {
+        printf("failed to start http\n");
+        result = -1;
+        goto do_exit;
     }
 
-    int rsize, remain = https->content_length;
+    remain = http->content_length;
+    if (!remain) {
+        remain = INT_MAX;
+    }
     while (remain > 0) {
-        rsize = vsf_min(sizeof(buf), remain);
-        rsize = mbedtls_https_read(https, buf, rsize);
+        rsize = vsf_min(__VPM_BUF_SIZE, remain);
+        rsize = vsf_http_client_read(http, buf, rsize);
         if (rsize > 0) {
             write(STDOUT_FILENO, buf, rsize);
+        } else if (!rsize) {
+            break;
         }
         remain -= rsize;
     }
-    return 0;
+
+do_exit:
+    vsf_http_client_close(http);
+    free(http);
+    return result;
 }
 
 int __vpm_main(int argc, char *argv[])
