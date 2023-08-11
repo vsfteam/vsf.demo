@@ -165,12 +165,17 @@ static bool __vpm_is_to_uninstall(vk_romfs_header_t *image, char *argv[])
 static int __vpm_uninstall_packages(char *argv[])
 {
     vk_romfs_header_t *image = (vk_romfs_header_t *)APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
-    while ( (image != NULL) && vsf_romfs_is_image_valid(image)
+    if (!vsf_romfs_is_image_valid(image)) {
+        goto not_found;
+    }
+
+    while ( (image != NULL)
         &&  ((uintptr_t)image - APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR < APP_MSCBOOT_CFG_ROMFS_SIZE)
         &&  !__vpm_is_to_uninstall(image, argv)) {
         image = vsf_romfs_chain_get_next(image);
     }
     if (NULL == image) {
+    not_found:
         printf("not found\n");
         return 0;
     }
