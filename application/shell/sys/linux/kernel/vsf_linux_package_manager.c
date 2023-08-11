@@ -1,6 +1,7 @@
 #define __VSF_ROMFS_CLASS_INHERIT__
 
 #include <unistd.h>
+#include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
 
 #define APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR    (APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR)
 
