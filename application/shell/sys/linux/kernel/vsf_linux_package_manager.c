@@ -7,9 +7,11 @@
 
 #define REPO_HOST_NAME                      "gitee.com"
 #define REPO_HOST_PORT                      "443"
-#define REPO_PATH                           "/vsf-linux/MCULinux.repo/raw/main/" VSF_BOARD_ARCH_STR "/romfs/"
+#define REPO_PATH                           "/vsf-linux/MCULinux.repo/raw/main/"
 
 #define __VPM_BUF_SIZE                      512
+
+static char *__vpm_repo_path = NULL;
 
 static int __vpm_install_package(char *package)
 {
@@ -39,7 +41,8 @@ static int __vpm_install_package(char *package)
     uint8_t *buf = (uint8_t *)&session[1], *cache = buf + __VPM_BUF_SIZE;
     uint8_t *curbuf, *curptr_flash = NULL, *curptr_cache;
     int result = 0, rsize, remain;
-    strcpy((char *)buf, REPO_PATH);
+    strcpy((char *)buf, __vpm_repo_path);
+    strcat((char *)buf, VSF_BOARD_ARCH_STR "/romfs/");
     strcat((char *)buf, package);
     strcat((char *)buf, ".img");
     if (    (vsf_http_client_request(http, REPO_HOST_NAME, REPO_HOST_PORT, "GET", (char *)buf, NULL, 0) < 0)
@@ -264,7 +267,8 @@ static int __vpm_list_remote_packages(void)
 
     uint8_t *buf = (uint8_t *)&session[1];
     int result = 0, rsize, remain;
-    strcpy((char *)buf, REPO_PATH);
+    strcpy((char *)buf, __vpm_repo_path);
+    strcat((char *)buf, VSF_BOARD_ARCH_STR "/romfs/");
     strcat((char *)buf, "list.txt");
     if (    (vsf_http_client_request(http, REPO_HOST_NAME, REPO_HOST_PORT, "GET", (char *)buf, NULL, 0) < 0)
         ||  (http->resp_status != 200)) {
@@ -307,7 +311,8 @@ commands:\n\
   list-local - list local installed pakcages\n\
   list-remote - list remote available packages\n\
   install - install packages\n\
-  uninstall - uninstall packages\n");
+  uninstall - uninstall packages\n\
+  repo - set repo path\n");
         return result;
     }
 
@@ -319,6 +324,24 @@ commands:\n\
         return __vpm_install_packages(&argv[2]);
     } else if (!strcmp(argv[1], "uninstall")) {
         return __vpm_uninstall_packages(&argv[2]);
+    } else if (!strcmp(argv[1], "repo")) {
+        if (2 == argc) {
+        } else if (3 == argc) {
+            if (__vpm_repo_path != NULL) {
+                free(__vpm_repo_path);
+            }
+            __vpm_repo_path = strdup(argv[2]);
+            if (NULL == __vpm_repo_path) {
+                printf("fail to duplicate repo url\n");
+                return -1;
+            }
+        } else {
+            printf("Usage: %s %s REPO_URL\n", argv[0], argv[1]);
+            return -1;
+        }
+
+        printf("repo: %s\n", __vpm_repo_path);
+        return 0;
     } else {
         printf("unsupported command: %s\n\n", argv[1]);
         result = -1;
@@ -332,5 +355,7 @@ void vsf_linux_install_package_manager(void)
     vsf_flash_init(&APP_MSCBOOT_CFG_FLASH, &cfg);
     vsf_flash_enable(&APP_MSCBOOT_CFG_FLASH);
 
+    __vpm_repo_path = strdup(REPO_PATH);
+    VSF_ASSERT(__vpm_repo_path != NULL);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/vpm", __vpm_main);
 }
