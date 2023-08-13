@@ -59,6 +59,10 @@
 #include <sys/mount.h>
 #include <vsf_board.h>
 
+#if VSF_USE_MBEDTLS == ENABLED
+#   include "component/3rd-party/mbedtls/extension/vplt/mbedtls_vplt.h"
+#endif
+
 /*============================ MACROS ========================================*/
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
@@ -260,7 +264,10 @@ int vsf_linux_create_fhs(void)
     busybox_install();
 #endif
 
-    // 3. install executables
+    // 3. install executables and built-in libraries
+#if VSF_USE_MBEDTLS == ENABLED
+    vsf_vplt_load_dyn((vsf_vplt_info_t *)&vsf_mbedtls_vplt.info);
+#endif
     vsf_board_init_linux();
 
     return 0;
