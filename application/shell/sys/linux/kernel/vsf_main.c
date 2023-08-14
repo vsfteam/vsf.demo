@@ -26,6 +26,7 @@
  * Include Directories necessary for linux:
  *   vsf/source/shell/sys/linux/include
  *   vsf/source/shell/sys/linux/include/simple_libc if VSF_LINUX_USE_SIMPLE_LIBC is enabled
+ *   vsf/source/component/3rd-party/littlefs/raw for littlefs of /root
  *   optional:
  *    for package manager, need VSF_USE_LWIP from vsf_board
  *     vsf/source/component/3rd-party/mbedtls/raw/include
@@ -40,6 +41,8 @@
  *   optional:
  *    for package manager, need VSF_USE_LWIP from vsf_board
  *     ./vsf_linux_package_manager.c
+ *     vsf/source/component/3rd-party/littlefs/port/*
+ *     vsf/source/component/3rd-party/littlefs/raw/*
  *     vsf/source/component/3rd-party/mbedtls/raw/library/*
  *     vsf/source/component/3rd-party/mbedtls/port/*
  *     vsf/source/component/3rd-party/mbedtls/extension/tls_session_client/*
@@ -61,6 +64,9 @@
 
 #if VSF_USE_MBEDTLS == ENABLED
 #   include "component/3rd-party/mbedtls/extension/vplt/mbedtls_vplt.h"
+#endif
+#if VSF_FS_USE_LITTLEFS == ENABLED
+#   include "component/3rd-party/littlefs/port/lfs_port.h"
 #endif
 
 /*============================ MACROS ========================================*/
@@ -133,6 +139,13 @@ static vk_fakefat32_mal_t __app_fakefat32_mal = {
 #   endif
 
 static bool __usr_linux_boot = false;
+#endif
+
+#if VSF_HAL_USE_FLASH == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
+vk_hw_flash_mal_t flash_mal = {
+    .drv                    = &vk_hw_flash_mal_drv,
+    .flash                  = &APP_MSCBOOT_CFG_FLASH,
+};
 #endif
 
 /*============================ IMPLEMENTATION ================================*/
@@ -223,6 +236,45 @@ int vsf_linux_create_fhs(void)
     // 1. hardware driver
 
     // 2. fs
+#if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
+    static vk_mim_mal_t __root_mal = {
+        .drv            = &vk_mim_mal_drv,
+        .host_mal       = &flash_mal.use_as__vk_mal_t,
+        .size           = APP_MSCBOOT_CFG_ROOT_SIZE,
+        .offset         = APP_MSCBOOT_CFG_ROOT_ADDR,
+    };
+    vsf_hw_flash_init(&APP_MSCBOOT_CFG_FLASH, NULL);
+    vk_mal_init(&flash_mal.use_as__vk_mal_t);
+    vk_mal_init(&__root_mal.use_as__vk_mal_t);
+
+    vsf_flash_capability_t cap = vsf_hw_flash_capability(&APP_MSCBOOT_CFG_FLASH);
+    static vk_lfs_info_t __root_fs = {
+        .config         = {
+            .context    = &__root_mal.use_as__vk_mal_t,
+            .read       = vsf_lfs_mal_read,
+            .prog       = vsf_lfs_mal_prog,
+            .erase      = vsf_lfs_mal_erase,
+            .sync       = vsf_lfs_mal_sync,
+            .lookahead_size = 8,
+            .block_cycles   = 500,
+        },
+    };
+    __root_fs.config.read_size = cap.write_sector_size,
+    __root_fs.config.prog_size = cap.write_sector_size,
+    __root_fs.config.block_size = cap.erase_sector_size,
+    __root_fs.config.block_count = APP_MSCBOOT_CFG_ROOT_SIZE / cap.erase_sector_size,
+    __root_fs.config.cache_size = cap.erase_sector_size,
+    __root_fs.config.read_buffer = vsf_heap_malloc(__root_fs.config.cache_size);
+    __root_fs.config.prog_buffer = vsf_heap_malloc(__root_fs.config.cache_size);
+    static uint8_t __lookahead_buffer[8];
+    __root_fs.config.lookahead_buffer = __lookahead_buffer;
+
+    mkdir("/root", 0);
+    if (mount(NULL, "root", &vk_lfs_op, 0, (const void *)&__root_fs) != 0) {
+        printf("Fail to mount /root.\n");
+    }
+#endif
+
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
     bool install_embedded_busybox = __usr_linux_boot;
     if (!__usr_linux_boot) {

@@ -29,6 +29,7 @@
 
 // components
 
+#define VSF_USE_LITTLEFS                                ENABLED
 #define VSF_USE_TRACE                                   ENABLED
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
 // currently, dynamic loader is not support for wasm in vsf
@@ -43,10 +44,12 @@
 #   define VSF_SCSI_USE_MAL_SCSI                        ENABLED
 #define VSF_USE_MAL                                     ENABLED
 #   define VSF_MAL_USE_FAKEFAT32_MAL                    ENABLED
+#   define VSF_MAL_USE_HW_FLASH_MAL                     ENABLED
 #define VSF_USE_FS                                      ENABLED
 #   define VSF_FS_USE_ROMFS                             ENABLED
 #   define VSF_FS_USE_MEMFS                             ENABLED
 #   define VSF_FS_USE_FATFS                             ENABLED
+#   define VSF_FS_USE_LITTLEFS                          VSF_USE_LITTLEFS
 #define VSF_USE_INPUT                                   ENABLED
 #if VSF_USE_LWIP == ENABLED
 #   define VSF_USE_TCPIP                                ENABLED
