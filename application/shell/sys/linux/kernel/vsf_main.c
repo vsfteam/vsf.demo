@@ -65,7 +65,8 @@
 #if VSF_USE_MBEDTLS == ENABLED
 #   include "component/3rd-party/mbedtls/extension/vplt/mbedtls_vplt.h"
 #endif
-#if VSF_FS_USE_LITTLEFS == ENABLED
+#if     defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE)    \
+    &&  defined(APP_MSCBOOT_CFG_ROOT_ADDR) && (VSF_FS_USE_LITTLEFS == ENABLED)
 #   include "component/3rd-party/littlefs/port/lfs_port.h"
 #endif
 
@@ -234,6 +235,11 @@ int vsf_linux_create_fhs(void)
     vsf_linux_vfs_init();
 
     // 1. hardware driver
+#if VSF_HAL_USE_FLASH == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
+    vsf_hw_flash_init(flash_mal.flash, NULL);
+    vsf_flash_enable(flash_mal.flash);
+    vk_mal_init(&flash_mal.use_as__vk_mal_t);
+#endif
 
     // 2. fs
 #if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
@@ -243,8 +249,6 @@ int vsf_linux_create_fhs(void)
         .size           = APP_MSCBOOT_CFG_ROOT_SIZE,
         .offset         = APP_MSCBOOT_CFG_ROOT_ADDR,
     };
-    vsf_hw_flash_init(&APP_MSCBOOT_CFG_FLASH, NULL);
-    vk_mal_init(&flash_mal.use_as__vk_mal_t);
     vk_mal_init(&__root_mal.use_as__vk_mal_t);
 
     vsf_flash_capability_t cap = vsf_hw_flash_capability(&APP_MSCBOOT_CFG_FLASH);

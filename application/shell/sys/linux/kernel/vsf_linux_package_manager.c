@@ -14,6 +14,13 @@
 
 #define __VPM_BUF_SIZE                      512
 
+extern vk_hw_flash_mal_t flash_mal;
+static vk_mim_mal_t __romfs_mal = {
+    .drv            = &vk_mim_mal_drv,
+    .host_mal       = &flash_mal.use_as__vk_mal_t,
+    .size           = APP_MSCBOOT_CFG_ROMFS_SIZE,
+    .offset         = APP_MSCBOOT_CFG_ROMFS_ADDR,
+};
 static char *__vpm_repo_path = NULL;
 
 static int __vpm_install_package(char *package)
@@ -99,14 +106,14 @@ static int __vpm_install_package(char *package)
                 }
                 result = curptr_cache - cache;
                 if (result >= APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
-                    curptr_flash -= APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
+                    curptr_flash -= APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
                     if ((uintptr_t)curptr_flash >= APP_MSCBOOT_CFG_ROOT_ADDR) {
                         printf("not enough romfs space\n");
                         goto do_exit;
                     }
-                    vsf_flash_erase(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-                    vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, cache, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-                    curptr_flash += APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
+                    vk_mal_erase(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+                    vk_mal_write(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
+                    curptr_flash += APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
                     curptr_cache = cache;
                     printf("*");
                 }
@@ -117,15 +124,15 @@ static int __vpm_install_package(char *package)
     }
     if (!http->content_length || !remain) {
         curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
-        curptr_flash -= APP_MSCBOOT_CFG_FLASH_ADDR;
+        curptr_flash -= APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
         if ((uintptr_t)curptr_flash >= APP_MSCBOOT_CFG_ROOT_ADDR) {
             printf("not enough romfs space\n");
             goto do_exit;
         }
-        vsf_flash_erase(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+        vk_mal_erase(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
         if (curptr_cache != cache) {
             *(uint32_t *)curptr_cache = 0xFFFFFFFF;
-            vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, cache, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+            vk_mal_write(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
         }
 
         if (header.size != 0) {
@@ -133,9 +140,9 @@ static int __vpm_install_package(char *package)
             curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
             memcpy(cache, curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
             memcpy(&cache[(uint8_t *)image - curptr_flash], &header, sizeof(header));
-            curptr_flash -= APP_MSCBOOT_CFG_FLASH_ADDR;
-            vsf_flash_erase(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-            vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, cache, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+            curptr_flash -= APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
+            vk_mal_erase(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+            vk_mal_write(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
         }
 
         printf("success\n");
@@ -225,10 +232,10 @@ static int __vpm_uninstall_packages(char *argv[])
                 }
                 cur_size = curptr_cache - cache;
                 if (cur_size >= APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
-                    curptr_flash -= APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
-                    vsf_flash_erase(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-                    vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, cache, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-                    curptr_flash += APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
+                    curptr_flash -= APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
+                    vk_mal_erase(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+                    vk_mal_write(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
+                    curptr_flash += APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
                     curptr_cache = cache;
                 }
             }
@@ -240,11 +247,11 @@ static int __vpm_uninstall_packages(char *argv[])
     }
 
     curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
-    curptr_flash -= APP_MSCBOOT_CFG_FLASH_ADDR;
-    vsf_flash_erase(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+    curptr_flash -= APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
+    vk_mal_erase(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
     if (curptr_cache != cache) {
         *(uint32_t *)curptr_cache = 0xFFFFFFFF;
-        vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, (uintptr_t)curptr_flash, cache, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+        vk_mal_write(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
     }
 
     free(cache);
@@ -370,12 +377,6 @@ commands:\n\
 
 void vsf_linux_install_package_manager(void)
 {
-#ifdef APP_MSCBOOT_CFG_FLASH
-    vsf_flash_cfg_t cfg = { 0 };
-    vsf_flash_init(&APP_MSCBOOT_CFG_FLASH, &cfg);
-    vsf_flash_enable(&APP_MSCBOOT_CFG_FLASH);
-#endif
-
     __vpm_repo_path = strdup(REPO_PATH);
     VSF_ASSERT(__vpm_repo_path != NULL);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/vpm", __vpm_main);
