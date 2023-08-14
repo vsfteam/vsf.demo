@@ -30,7 +30,7 @@ static int __vpm_install_package(char *package)
         image = (vk_romfs_header_t *)((uint8_t *)image + be32_to_cpu(image->size));
     }
 
-#if VSF_USE_MBEDTLS == ENABLED
+#if VSF_USE_MBEDTLS == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
     vk_romfs_header_t header = { 0 };
     vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) + sizeof(mbedtls_session_t) + __VPM_BUF_SIZE + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
     if (NULL == http) {
@@ -192,7 +192,7 @@ static int __vpm_uninstall_packages(char *argv[])
         return 0;
     }
 
-#if defined(APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) && defined(APP_MSCBOOT_CFG_ERASE_ALIGN) && defined(APP_MSCBOOT_CFG_FLASH)
+#if defined(APP_MSCBOOT_CFG_FLASH)
     uint8_t *cache = (uint8_t *)malloc(APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
     if (NULL == cache) {
         printf("failed to flash cache\n");
