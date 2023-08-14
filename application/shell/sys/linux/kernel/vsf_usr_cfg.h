@@ -59,6 +59,20 @@
 #   define VSF_USE_USB_DEVICE                           ENABLED
 #       define VSF_USBD_USE_MSC                         ENABLED
 #endif
+#ifndef VSF_USE_USB_HOST
+#   define VSF_USE_USB_HOST                             ENABLED
+#       define VSF_USBH_USE_HUB                         ENABLED
+#       define VSF_USBH_USE_LIBUSB                      ENABLED
+#       define VSF_USBH_USE_CDC                         ENABLED
+#       define VSF_USBH_USE_ECM                         ENABLED
+#       define VSF_USBH_USE_HID                         ENABLED
+#       define VSF_USBH_USE_DS4                         ENABLED
+#       define VSF_USBH_USE_DS5                         ENABLED
+#       define VSF_USBH_USE_NSPRO                       ENABLED
+#       define VSF_USBH_USE_XB360                       ENABLED
+#       define VSF_USBH_USE_XB1                         ENABLED
+#       define VSF_USBH_USE_MSC                         ENABLED
+#endif
 
 #define VSF_USE_LINUX                                   ENABLED
 #   define VSF_LINUX_CFG_STACKSIZE                      8192

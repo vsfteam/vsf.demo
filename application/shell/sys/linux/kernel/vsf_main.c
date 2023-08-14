@@ -229,6 +229,59 @@ void vsf_linux_install_package_manager(void)
 {
 }
 
+#if VSF_USE_USB_HOST == ENABLED
+static int __usbh_main(int argc, char *argv[])
+{
+    static bool __usbh_inited = false;
+    if (!__usbh_inited) {
+        __usbh_inited = true;
+        vk_usbh_init(&vsf_board.usbh_dev);
+
+#   if VSF_USBH_USE_LIBUSB == ENABLED
+        static vk_usbh_class_t __usbh_libusb = { .drv = &vk_usbh_libusb_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_libusb);
+#   endif
+#   if VSF_USBH_USE_HUB == ENABLED
+        static vk_usbh_class_t __usbh_hub = { .drv = &vk_usbh_hub_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_hub);
+#   endif
+#   if VSF_USBH_USE_ECM == ENABLED
+        static vk_usbh_class_t __usbh_ecm = { .drv = &vk_usbh_ecm_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ecm);
+#   endif
+#   if VSF_USBH_USE_HID == ENABLED
+        static vk_usbh_class_t __usbh_hid = { .drv = &vk_usbh_hid_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_hid);
+#   endif
+#   if VSF_USBH_USE_DS4 == ENABLED
+        static vk_usbh_class_t __usbh_ds4 = { .drv = &vk_usbh_ds4_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ds4);
+#   endif
+#   if VSF_USBH_USE_DS5 == ENABLED
+//        static vk_usbh_class_t __usbh_ds5 = { .drv = &vk_usbh_ds5_drv };
+//        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ds5);
+#   endif
+#   if VSF_USBH_USE_NSPRO == ENABLED
+        static vk_usbh_class_t __usbh_nspro = { .drv = &vk_usbh_nspro_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_nspro);
+#   endif
+#   if VSF_USBH_USE_XB360 == ENABLED
+        static vk_usbh_class_t __usbh_xb360 = { .drv = &vk_usbh_xb360_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_xb360);
+#   endif
+#   if VSF_USBH_USE_XB1 == ENABLED
+        static vk_usbh_class_t __usbh_xb1 = { .drv = &vk_usbh_xb1_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_xb1);
+#   endif
+#   if VSF_USBH_USE_MSC == ENABLED
+        static vk_usbh_class_t __usbh_msc = { .drv = &vk_usbh_msc_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_msc);
+#   endif
+    }
+    return 0;
+}
+#endif
+
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
@@ -325,6 +378,11 @@ int vsf_linux_create_fhs(void)
     // 3. install executables and built-in libraries
 #if VSF_USE_MBEDTLS == ENABLED
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&vsf_mbedtls_vplt.info);
+#endif
+#if VSF_USE_USB_HOST == ENABLED
+    if (!__usr_linux_boot) {
+        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/usbhost", __usbh_main);
+    }
 #endif
     vsf_board_init_linux();
 
