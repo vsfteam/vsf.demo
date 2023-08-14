@@ -101,8 +101,9 @@
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 
-#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
+#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
 
+#   if VSF_USE_USB_DEVICE == ENABLED
 static vk_fakefat32_file_t __usr_fakefat32_root[2] = {
     {
         .name               = "mscboot",
@@ -129,6 +130,7 @@ static vk_fakefat32_mal_t __app_fakefat32_mal = {
         .d.child_num        = dimof(__usr_fakefat32_root),
     },
 };
+#   endif
 
 static bool __usr_linux_boot = false;
 #endif

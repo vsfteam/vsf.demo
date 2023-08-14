@@ -1,7 +1,10 @@
 #define __VSF_ROMFS_CLASS_INHERIT__
 
 #include <unistd.h>
-#include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
+
+#if VSF_USE_MBEDTLS == ENABLED
+#   include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
+#endif
 
 #define APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR    (APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR)
 
@@ -15,7 +18,7 @@ static char *__vpm_repo_path = NULL;
 
 static int __vpm_install_package(char *package)
 {
-    vk_romfs_header_t *image = (vk_romfs_header_t *)APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR, header = { 0 };
+    vk_romfs_header_t *image = (vk_romfs_header_t *)APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
     char *tmp;
     while ( (image != NULL) && vsf_romfs_is_image_valid(image)
         &&  ((uintptr_t)image - APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR < APP_MSCBOOT_CFG_ROMFS_SIZE)) {
@@ -27,6 +30,8 @@ static int __vpm_install_package(char *package)
         image = (vk_romfs_header_t *)((uint8_t *)image + be32_to_cpu(image->size));
     }
 
+#if VSF_USE_MBEDTLS == ENABLED
+    vk_romfs_header_t header = { 0 };
     vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) + sizeof(mbedtls_session_t) + __VPM_BUF_SIZE + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
     if (NULL == http) {
         printf("failed to allocate http context\n");
@@ -34,12 +39,7 @@ static int __vpm_install_package(char *package)
     }
     mbedtls_session_t *session = (mbedtls_session_t *)&http[1];
     memset(session, 0, sizeof(*session));
-#if VSF_USE_MBEDTLS == ENABLED
     http->op = &vsf_mbedtls_http_op;
-#else
-    printf("mbedtls is needed for the current command\n");
-    return -1;
-#endif
     http->param = session;
     vsf_http_client_init(http);
 
@@ -149,6 +149,10 @@ do_exit:
     vsf_http_client_close(http);
     free(http);
     return result;
+#else
+    printf("mbedtls is needed for the current command\n");
+    return -1;
+#endif
 }
 
 static int __vpm_install_packages(char *argv[])
@@ -188,6 +192,7 @@ static int __vpm_uninstall_packages(char *argv[])
         return 0;
     }
 
+#if defined(APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) && defined(APP_MSCBOOT_CFG_ERASE_ALIGN) && defined(APP_MSCBOOT_CFG_FLASH)
     uint8_t *cache = (uint8_t *)malloc(APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
     if (NULL == cache) {
         printf("failed to flash cache\n");
@@ -244,6 +249,10 @@ static int __vpm_uninstall_packages(char *argv[])
 
     free(cache);
     return 0;
+#else
+    printf("flash operation is not enabled for the current command\n");
+    return -1;
+#endif
 }
 
 static int __vpm_list_local_packages(void)
@@ -259,6 +268,7 @@ static int __vpm_list_local_packages(void)
 
 static int __vpm_list_remote_packages(void)
 {
+#if VSF_USE_MBEDTLS == ENABLED
     vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) + sizeof(mbedtls_session_t) + __VPM_BUF_SIZE);
     if (NULL == http) {
         printf("failed to allocate http context\n");
@@ -266,12 +276,7 @@ static int __vpm_list_remote_packages(void)
     }
     mbedtls_session_t *session = (mbedtls_session_t *)&http[1];
     memset(session, 0, sizeof(*session));
-#if VSF_USE_MBEDTLS == ENABLED
     http->op = &vsf_mbedtls_http_op;
-#else
-    printf("mbedtls is needed for the current command\n");
-    return -1;
-#endif
     http->param = session;
     vsf_http_client_init(http);
 
@@ -306,6 +311,10 @@ do_exit:
     vsf_http_client_close(http);
     free(http);
     return result;
+#else
+    printf("mbedtls is needed for the current command\n");
+    return -1;
+#endif
 }
 
 int __vpm_main(int argc, char *argv[])
@@ -361,9 +370,11 @@ commands:\n\
 
 void vsf_linux_install_package_manager(void)
 {
+#ifdef APP_MSCBOOT_CFG_FLASH
     vsf_flash_cfg_t cfg = { 0 };
     vsf_flash_init(&APP_MSCBOOT_CFG_FLASH, &cfg);
     vsf_flash_enable(&APP_MSCBOOT_CFG_FLASH);
+#endif
 
     __vpm_repo_path = strdup(REPO_PATH);
     VSF_ASSERT(__vpm_repo_path != NULL);
