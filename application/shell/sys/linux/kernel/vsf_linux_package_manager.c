@@ -34,7 +34,12 @@ static int __vpm_install_package(char *package)
     }
     mbedtls_session_t *session = (mbedtls_session_t *)&http[1];
     memset(session, 0, sizeof(*session));
+#if VSF_USE_MBEDTLS == ENABLED
     http->op = &vsf_mbedtls_http_op;
+#else
+    printf("mbedtls is needed for the current command\n");
+    return -1;
+#endif
     http->param = session;
     vsf_http_client_init(http);
 
@@ -261,7 +266,12 @@ static int __vpm_list_remote_packages(void)
     }
     mbedtls_session_t *session = (mbedtls_session_t *)&http[1];
     memset(session, 0, sizeof(*session));
+#if VSF_USE_MBEDTLS == ENABLED
     http->op = &vsf_mbedtls_http_op;
+#else
+    printf("mbedtls is needed for the current command\n");
+    return -1;
+#endif
     http->param = session;
     vsf_http_client_init(http);
 
