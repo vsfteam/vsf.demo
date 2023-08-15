@@ -104,7 +104,7 @@
 
 #endif
 
-#define APP_CONFIG_FILE                             "/root/cfg.h"
+#define APP_CONFIG_FILE                             "/root/appcfg"
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/

@@ -14,7 +14,10 @@
 
 #define __VPM_BUF_SIZE                      512
 
+extern int app_config_read(const char *cfgname, char *cfgvalue, size_t valuelen);
+extern int app_config_write(const char *cfgname, char *cfgvalue);
 extern vk_hw_flash_mal_t flash_mal;
+
 static vk_mim_mal_t __romfs_mal = {
     .drv            = &vk_mim_mal_drv,
     .host_mal       = &flash_mal.use_as__vk_mal_t,
@@ -361,6 +364,7 @@ commands:\n\
                 printf("fail to duplicate repo url\n");
                 return -1;
             }
+            app_config_write("vpm-repo", __vpm_repo_path);
         } else {
             printf("Usage: %s %s REPO_URL\n", argv[0], argv[1]);
             return -1;
@@ -377,7 +381,13 @@ commands:\n\
 
 void vsf_linux_install_package_manager(void)
 {
-    __vpm_repo_path = strdup(REPO_PATH);
+    char path[256];
+    if (app_config_read("vpm-repo", path, sizeof(path))) {
+        __vpm_repo_path = strdup(REPO_PATH);
+    } else {
+        __vpm_repo_path = strdup(path);
+    }
     VSF_ASSERT(__vpm_repo_path != NULL);
+
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/vpm", __vpm_main);
 }
