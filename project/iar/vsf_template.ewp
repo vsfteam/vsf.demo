@@ -2283,6 +2283,36 @@
                     </group>
                 </group>
                 <group>
+                    <name>littlefs</name>
+                    <group>
+                        <name>port</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\port\lfs_port.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\port\lfs_port.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\port\lfs_util_vsf.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>raw</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw\lfs.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw\lfs.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw\lfs_util.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw\lfs_util.h</name>
+                        </file>
+                    </group>
+                </group>
+                <group>
                     <name>lua</name>
                     <excluded>
                         <configuration>vsf_template_aic8800</configuration>
@@ -3381,6 +3411,15 @@
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\extension\tls_session\mbedtls_tls_session.h</name>
                             </file>
                         </group>
+                        <group>
+                            <name>vplt</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\extension\vplt\mbedtls_vplt.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\extension\vplt\mbedtls_vplt.h</name>
+                            </file>
+                        </group>
                     </group>
                     <group>
                         <name>port</name>
@@ -4331,6 +4370,15 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\component\fs\driver\fatfs\vsf_fatfs.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>littlefs</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\fs\driver\littlefs\vsf_littlefs.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\fs\driver\littlefs\vsf_littlefs.h</name>
                         </file>
                     </group>
                     <group>
