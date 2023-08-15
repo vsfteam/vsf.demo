@@ -23,6 +23,13 @@
 
 /*============================ INCLUDES ======================================*/
 
+// re-write VSF_ASSERT to bypass __EXPR string
+extern void vsf_trace_assert(const char *expr, const char *file, int line, const char *func);
+#define VSF_ASSERT(__EXPR)                                                      \
+    ((__EXPR)                                                                   \
+    ? (void)0                                                                   \
+    : vsf_trace_assert(NULL, __FILE__, __LINE__, __FUNCTION__))
+
 #include "vsf_board_cfg.h"
 
 /*============================ MACROS ========================================*/
