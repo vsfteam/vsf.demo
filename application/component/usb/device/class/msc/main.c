@@ -30,6 +30,11 @@
  *
  * Linker:
  *   Set image base to the start address of flash, so the mscboot will be executed on power up
+ *
+ * Optimization:
+ *   define empty VSF_ASSERT(...)
+ *   disable VSF_USE_TRACE
+ *
  */
 
 /*============================ INCLUDES ======================================*/
