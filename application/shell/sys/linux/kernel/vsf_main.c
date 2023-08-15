@@ -426,23 +426,8 @@ int vsf_linux_create_fhs(void)
     };
     vk_mal_init(&__root_mal.use_as__vk_mal_t);
 
-    vsf_flash_capability_t cap = vsf_hw_flash_capability(&APP_MSCBOOT_CFG_FLASH);
-    static vk_lfs_info_t __root_fs = {
-        .config         = {
-            .context    = &__root_mal.use_as__vk_mal_t,
-            .read       = vsf_lfs_mal_read,
-            .prog       = vsf_lfs_mal_prog,
-            .erase      = vsf_lfs_mal_erase,
-            .sync       = vsf_lfs_mal_sync,
-            .lookahead_size = 8,
-            .block_cycles   = 500,
-        },
-    };
-    __root_fs.config.read_size = cap.write_sector_size,
-    __root_fs.config.prog_size = cap.write_sector_size,
-    __root_fs.config.block_size = cap.erase_sector_size,
-    __root_fs.config.block_count = APP_MSCBOOT_CFG_ROOT_SIZE / cap.erase_sector_size,
-    __root_fs.config.cache_size = cap.erase_sector_size,
+    static vk_lfs_info_t __root_fs;
+    vsf_lfs_bind_mal(&__root_fs.config, &__root_mal.use_as__vk_mal_t);
 
     mkdir("/root", 0);
     if (mount(NULL, "root", &vk_lfs_op, 0, (const void *)&__root_fs) != 0) {
