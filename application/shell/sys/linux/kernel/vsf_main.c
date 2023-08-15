@@ -26,13 +26,15 @@
  * Include Directories necessary for linux:
  *   vsf/source/shell/sys/linux/include
  *   vsf/source/shell/sys/linux/include/simple_libc if VSF_LINUX_USE_SIMPLE_LIBC is enabled
- *   vsf/source/component/3rd-party/littlefs/raw for littlefs of /root
+ *   vsf/source/component/3rd-party/littlefs/port
+ *   vsf/source/component/3rd-party/littlefs/raw
  *   optional:
  *    for package manager, need VSF_USE_LWIP from vsf_board
  *     vsf/source/component/3rd-party/mbedtls/raw/include
  *
  * Pre-defined:
  *   __unix__ for net_sockets/timing/entropy_poll in mbedtls
+ *   LFS_CONFIG to lfs_util_vsf.h
  *
  * Sources necessary for linux:
  *   vsf/source/shell/sys/linux/lib/3rd-party/fnmatch
@@ -101,6 +103,8 @@
 #endif
 
 #endif
+
+#define APP_CONFIG_FILE                             "/root/cfg.h"
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
@@ -229,6 +233,124 @@ void vsf_linux_install_package_manager(void)
 {
 }
 
+#if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
+static char * __app_config_read(FILE *f)
+{
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    if (size > 0) {
+        char *buffer = malloc(size);
+        if (size != fread(buffer, 1, size, f)) {
+            free(buffer);
+            return NULL;
+        }
+        return buffer;
+    }
+    return NULL;
+}
+
+int app_config_read(const char *cfgname, char *cfgvalue, size_t valuelen)
+{
+    FILE *f = fopen(APP_CONFIG_FILE, "r");
+    if (NULL == f) {
+        return -1;
+    }
+
+    int namelen = strlen(cfgname);
+    char *token = malloc(namelen + 3), *data, *start, *value, *end;
+    if (NULL == token) {
+        goto close_and_fail;
+    }
+    sprintf(token, "\n%s:", cfgname);
+
+    data = __app_config_read(f);
+    if (NULL == data) {
+        goto free_token_and_fail;
+    }
+
+    start = strstr(data, token);
+    if (NULL == start) {
+        goto not_found;
+    }
+
+    value = start + strlen(token);
+    end = strchr(value, '\n');
+    if (end != NULL) {
+        *end = '\0';
+    }
+    strncpy(cfgvalue, value, valuelen);
+    return 0;
+
+not_found:
+    free(data);
+free_token_and_fail:
+    free(token);
+close_and_fail:
+    fclose(f);
+    return -1;
+}
+
+int app_config_write(const char *cfgname, char *cfgvalue)
+{
+    FILE *f = fopen(APP_CONFIG_FILE, "r+");
+    if (NULL == f) {
+        f = fopen(APP_CONFIG_FILE, "w+");
+        if (NULL == f) {
+            return -1;
+        }
+    }
+
+    int result = -1;
+    int namelen = strlen(cfgname);
+    char *token = malloc(namelen + 3), *data, *start, *value, *end;
+    if (NULL == token) {
+        goto close_and_fail;
+    }
+    sprintf(token, "\n%s:", cfgname);
+
+    data = __app_config_read(f);
+    if (NULL == data) {
+        goto write_cfg;
+    }
+
+    start = strstr(data, token);
+    if (NULL == start) {
+        goto write_cfg;
+    }
+
+    value = start + strlen(token);
+    if ((value == strstr(value, cfgvalue)) && (value[strlen(cfgvalue)] == '\n')) {
+        result = 0;
+        goto done;
+    }
+
+    fclose(f);
+    truncate(APP_CONFIG_FILE, 0);
+    f = fopen(APP_CONFIG_FILE, "r");
+
+    end = strchr(value, '\n');
+    if (end != NULL) {
+        strcpy(start, end);
+    }
+    fwrite(data, 1, strlen(data), f);
+
+write_cfg:
+    fprintf(f, "%s%s:%s\n", NULL == data ? "\n" : "", cfgname, cfgvalue);
+    result = 0;
+
+done:
+    if (data != NULL) {
+        free(data);
+    }
+    free(token);
+close_and_fail:
+    fclose(f);
+    return result;
+}
+#endif
+
 #if VSF_USE_USB_HOST == ENABLED
 static int __usbh_main(int argc, char *argv[])
 {
@@ -321,10 +443,6 @@ int vsf_linux_create_fhs(void)
     __root_fs.config.block_size = cap.erase_sector_size,
     __root_fs.config.block_count = APP_MSCBOOT_CFG_ROOT_SIZE / cap.erase_sector_size,
     __root_fs.config.cache_size = cap.erase_sector_size,
-    __root_fs.config.read_buffer = vsf_heap_malloc(__root_fs.config.cache_size);
-    __root_fs.config.prog_buffer = vsf_heap_malloc(__root_fs.config.cache_size);
-    static uint8_t __lookahead_buffer[8];
-    __root_fs.config.lookahead_buffer = __lookahead_buffer;
 
     mkdir("/root", 0);
     if (mount(NULL, "root", &vk_lfs_op, 0, (const void *)&__root_fs) != 0) {

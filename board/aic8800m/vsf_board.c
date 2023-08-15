@@ -101,6 +101,18 @@ vsf_board_t vsf_board = {
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ IMPLEMENTATION ================================*/
 
+WEAK(app_config_read)
+int app_config_read(const char *cfgname, char *cfgvalue, size_t valuelen)
+{
+    return -1;
+}
+
+WEAK(app_config_write)
+int app_config_write(const char *cfgname, char *cfgvalue)
+{
+    return -1;
+}
+
 #if VSF_USE_USB_DEVICE == ENABLED
 vsf_usb_dc_from_dwcotg_ip(0, vsf_board.dwcotg_dcd, VSF_USB_DC0)
 #endif
@@ -250,6 +262,9 @@ static int __wifi_connect_main(int argc, char *argv[])
             }
         UNLOCK_TCPIP_CORE();
 #endif
+
+        app_config_write("wifi_ssid", ssid);
+        app_config_write("wifi_pass", pass);
         return 0;
     } else {
         printf("fail to connect %s.\r\n", argv[1]);
@@ -265,6 +280,13 @@ int fhost_application_init(void)
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/wifi_scan", __wifi_scan_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/wifi_connect", __wifi_connect_main);
 #endif
+
+    char ssid[33], pass[33];
+    if (    !app_config_read("wifi_ssid", ssid, sizeof(ssid))
+        &&  !app_config_read("wifi_pass", pass, sizeof(pass))) {
+        char *argv[4] = { "wifi_connect", ssid, pass, NULL };
+        __wifi_connect_main(dimof(argv) - (NULL == pass ? 2 : 1), argv);
+    }
     return 0;
 }
 #endif
