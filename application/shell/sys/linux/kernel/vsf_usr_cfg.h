@@ -34,6 +34,10 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 
 /*============================ MACROS ========================================*/
 
+// kernel
+#define VSF_OS_CFG_EDA_FRAME_POOL_SIZE                  64
+#define VSF_OS_CFG_EDA_FRAME_POOL_EXTRA_SIZE            128
+
 // components
 
 #define VSF_USE_LITTLEFS                                ENABLED
@@ -112,6 +116,9 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_USE_SIMPLE_SPRINTF                       ENABLED
 #   define VSF_USE_SIMPLE_SSCANF                        ENABLED
 #endif
+
+#define VSF_LINUX_SIMPLE_STDLIB_CFG_HEAP_MONITOR        ENABLED
+#define VSF_LINUX_SIMPLE_STDLIB_HEAP_MONITOR_TRACE_DEPTH    1024
 
 // APP configuration
 
