@@ -356,11 +356,7 @@ close_and_fail:
 
 static int __appcfg_main(int argc, char *argv[])
 {
-    if ((argc != 3) && (argc != 1)) {
-        printf("format: %s [CONFIG_NAME CONFIG_VALUE]\n", argv[0]);
-        return -1;
-    }
-
+    int ret = 0;
     if (1 == argc) {
         int fd = open(APP_CONFIG_FILE, 0);
         if (fd < 0) {
@@ -369,17 +365,27 @@ static int __appcfg_main(int argc, char *argv[])
         }
         sendfile(STDOUT_FILENO, fd, NULL, -1);
         close(fd);
-        return 0;
-    } else {
+    } else if (2 == argc) {
+        char buffer[64];
+        ret = app_config_read(argv[1], buffer, sizeof(buffer));
+        if (ret != 0) {
+            printf("appcfg: fail to get %s\n", argv[1]);
+        } else {
+            printf("appcfg: %s=%s\n", argv[1], buffer);
+        }
+    } else if (3 == argc) {
         printf("appcfg: %s=%s ... ", argv[1], argv[2]);
-        int ret = app_config_write(argv[1], argv[2]);
+        ret = app_config_write(argv[1], argv[2]);
         if (ret != 0) {
             printf("failed\n");
         } else {
             printf("succeed\n");
         }
-        return ret;
+    } else {
+        printf("format: %s [CONFIG_NAME [CONFIG_VALUE]]\n", argv[0]);
+        ret = -1;
     }
+    return ret;
 }
 #endif
 
