@@ -282,10 +282,12 @@ int fhost_application_init(void)
 #endif
 
     char ssid[33], pass[33];
-    if (    !app_config_read("wifi_ssid", ssid, sizeof(ssid))
-        &&  !app_config_read("wifi_pass", pass, sizeof(pass))) {
-        char *argv[4] = { "wifi_connect", ssid, pass, NULL };
-        __wifi_connect_main(dimof(argv) - (NULL == pass ? 2 : 1), argv);
+    if (!app_config_read("wifi_autostart", ssid, sizeof(ssid)) && !strcmp(ssid, "on")) {
+        if (    !app_config_read("wifi_ssid", ssid, sizeof(ssid))
+            &&  !app_config_read("wifi_pass", pass, sizeof(pass))) {
+            char *argv[4] = { "wifi_connect", ssid, pass, NULL };
+            __wifi_connect_main(dimof(argv) - (NULL == pass ? 2 : 1), argv);
+        }
     }
     return 0;
 }

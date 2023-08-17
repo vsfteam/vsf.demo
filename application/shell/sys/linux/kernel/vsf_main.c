@@ -61,7 +61,10 @@
 /*============================ INCLUDES ======================================*/
 
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/mount.h>
+#include <sys/sendfile.h>
+
 #include <vsf_board.h>
 
 #if VSF_USE_MBEDTLS == ENABLED
@@ -241,11 +244,12 @@ static char * __app_config_read(FILE *f)
     fseek(f, 0, SEEK_SET);
 
     if (size > 0) {
-        char *buffer = malloc(size);
+        char *buffer = malloc(size + 1);
         if (size != fread(buffer, 1, size, f)) {
             free(buffer);
             return NULL;
         }
+        buffer[size] = '\0';
         return buffer;
     }
     return NULL;
@@ -349,6 +353,34 @@ close_and_fail:
     fclose(f);
     return result;
 }
+
+static int __appcfg_main(int argc, char *argv[])
+{
+    if ((argc != 3) && (argc != 1)) {
+        printf("format: %s [CONFIG_NAME CONFIG_VALUE]\n", argv[0]);
+        return -1;
+    }
+
+    if (1 == argc) {
+        int fd = open(APP_CONFIG_FILE, 0);
+        if (fd < 0) {
+            printf("appcfg: not exists at " APP_CONFIG_FILE "\n");
+            return -1;
+        }
+        sendfile(STDOUT_FILENO, fd, NULL, -1);
+        close(fd);
+        return 0;
+    } else {
+        printf("appcfg: %s=%s ... ", argv[1], argv[2]);
+        int ret = app_config_write(argv[1], argv[2]);
+        if (ret != 0) {
+            printf("failed\n");
+        } else {
+            printf("succeed\n");
+        }
+        return ret;
+    }
+}
 #endif
 
 #if VSF_USE_USB_HOST == ENABLED
@@ -367,7 +399,7 @@ static int __usbh_main(int argc, char *argv[])
         static vk_usbh_class_t __usbh_hub = { .drv = &vk_usbh_hub_drv };
         vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_hub);
 #   endif
-#   if VSF_USBH_USE_ECM == ENABLED
+#   if VSF_USBH_USE_ECM == ENABLED && VSF_USE_TCPIP == ENABLED
         static vk_usbh_class_t __usbh_ecm = { .drv = &vk_usbh_ecm_drv };
         vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ecm);
 #   endif
@@ -433,6 +465,7 @@ int vsf_linux_create_fhs(void)
     if (mount(NULL, "root", &vk_lfs_op, 0, (const void *)&__root_fs) != 0) {
         printf("Fail to mount /root.\n");
     }
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/appcfg", __appcfg_main);
 #endif
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
