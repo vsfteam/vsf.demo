@@ -13,6 +13,7 @@
 #define REPO_PATH                           "/vsf-linux/MCULinux.repo/raw/main/"
 
 #define __VPM_BUF_SIZE                      512
+#define __VPM_HOST_PATH_SIZE                512
 
 extern int app_config_read(const char *cfgname, char *cfgvalue, size_t valuelen);
 extern int app_config_write(const char *cfgname, char *cfgvalue);
@@ -24,7 +25,28 @@ static vk_mim_mal_t __romfs_mal = {
     .size           = APP_MSCBOOT_CFG_ROMFS_SIZE,
     .offset         = APP_MSCBOOT_CFG_ROMFS_ADDR,
 };
-static char *__vpm_repo_path = NULL;
+
+#if VSF_USE_MBEDTLS == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
+static void __vpm_parse_host_path(char *buf, int bufsize, char **host, char **path)
+{
+    char *cur = buf;
+    int curbufsize = bufsize, cursize;
+    if (app_config_read("vpm-host", cur, curbufsize)) {
+        cur = REPO_HOST_NAME;
+        cursize = 0;
+    } else {
+        cursize = strlen(cur);
+    }
+    *host = cur;
+
+    cur += cursize;
+    curbufsize -= cursize;
+    if (app_config_read("vpm-path", cur, curbufsize)) {
+        cur = REPO_PATH;
+    }
+    *path = cur;
+}
+#endif
 
 static int __vpm_install_package(char *package)
 {
@@ -42,7 +64,9 @@ static int __vpm_install_package(char *package)
 
 #if VSF_USE_MBEDTLS == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
     vk_romfs_header_t header = { 0 };
-    vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) + sizeof(mbedtls_session_t) + __VPM_BUF_SIZE + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+    vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) +
+                    sizeof(mbedtls_session_t) + __VPM_BUF_SIZE +
+                    APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE + __VPM_HOST_PATH_SIZE);
     if (NULL == http) {
         printf("failed to allocate http context\n");
         return -1;
@@ -54,13 +78,16 @@ static int __vpm_install_package(char *package)
     vsf_http_client_init(http);
 
     uint8_t *buf = (uint8_t *)&session[1], *cache = buf + __VPM_BUF_SIZE;
+    char *host = (char *)cache + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, *path;
+    __vpm_parse_host_path(host, __VPM_HOST_PATH_SIZE, &host, &path);
+
     uint8_t *curbuf, *curptr_flash = NULL, *curptr_cache;
     int result = 0, rsize, remain;
-    strcpy((char *)buf, __vpm_repo_path);
+    strcpy((char *)buf, path);
     strcat((char *)buf, VSF_BOARD_ARCH_STR "/romfs/");
     strcat((char *)buf, package);
     strcat((char *)buf, ".img");
-    if (    (vsf_http_client_request(http, REPO_HOST_NAME, REPO_HOST_PORT, "GET", (char *)buf, NULL, 0) < 0)
+    if (    (vsf_http_client_request(http, host, REPO_HOST_PORT, "GET", (char *)buf, NULL, 0) < 0)
         ||  (http->resp_status != 200)) {
         printf("failed to start http\n");
         result = -1;
@@ -279,7 +306,8 @@ static int __vpm_list_local_packages(void)
 static int __vpm_list_remote_packages(void)
 {
 #if VSF_USE_MBEDTLS == ENABLED
-    vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) + sizeof(mbedtls_session_t) + __VPM_BUF_SIZE);
+    vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) +
+                    sizeof(mbedtls_session_t) + __VPM_BUF_SIZE + __VPM_HOST_PATH_SIZE);
     if (NULL == http) {
         printf("failed to allocate http context\n");
         return -1;
@@ -291,11 +319,14 @@ static int __vpm_list_remote_packages(void)
     vsf_http_client_init(http);
 
     uint8_t *buf = (uint8_t *)&session[1];
+    char *host = (char *)buf + __VPM_BUF_SIZE, *path;
+    __vpm_parse_host_path(host, __VPM_HOST_PATH_SIZE, &host, &path);
+
     int result = 0, rsize, remain;
-    strcpy((char *)buf, __vpm_repo_path);
+    strcpy((char *)buf, path);
     strcat((char *)buf, VSF_BOARD_ARCH_STR "/romfs/");
     strcat((char *)buf, "list.txt");
-    if (    (vsf_http_client_request(http, REPO_HOST_NAME, REPO_HOST_PORT, "GET", (char *)buf, NULL, 0) < 0)
+    if (    (vsf_http_client_request(http, host, REPO_HOST_PORT, "GET", (char *)buf, NULL, 0) < 0)
         ||  (http->resp_status != 200)) {
         printf("failed to start http\n");
         result = -1;
@@ -355,22 +386,21 @@ commands:\n\
         return __vpm_uninstall_packages(&argv[2]);
     } else if (!strcmp(argv[1], "repo")) {
         if (2 == argc) {
-        } else if (3 == argc) {
-            if (__vpm_repo_path != NULL) {
-                free(__vpm_repo_path);
-            }
-            __vpm_repo_path = strdup(argv[2]);
-            if (NULL == __vpm_repo_path) {
-                printf("fail to duplicate repo url\n");
-                return -1;
-            }
-            app_config_write("vpm-repo", __vpm_repo_path);
+        } else if (4 == argc) {
+            app_config_write("vpm-host", argv[2]);
+            app_config_write("vpm-path", argv[3]);
         } else {
-            printf("Usage: %s %s REPO_URL\n", argv[0], argv[1]);
+            printf("Usage: %s repo HOST REPO_URL\n", argv[0]);
+            printf("  eg: %s repo gitee.com /USER/REPO.repo/raw/main/\n", argv[0]);
+            printf("  eg: %s repo raw.githubusercontent.com /USER/REPO/master/\n", argv[0]);
             return -1;
         }
 
-        printf("repo: %s\n", __vpm_repo_path);
+        char buffer[256], *ptr;
+        ptr = app_config_read("vpm-host", buffer, sizeof(buffer)) ? REPO_HOST_NAME : buffer;
+        printf("host: %s\n", ptr);
+        ptr = app_config_read("vpm-path", buffer, sizeof(buffer)) ? REPO_PATH : buffer;
+        printf("path: %s\n", ptr);
         return 0;
     } else {
         printf("unsupported command: %s\n\n", argv[1]);
@@ -381,13 +411,5 @@ commands:\n\
 
 void vsf_linux_install_package_manager(void)
 {
-    char path[256];
-    if (app_config_read("vpm-repo", path, sizeof(path))) {
-        __vpm_repo_path = strdup(REPO_PATH);
-    } else {
-        __vpm_repo_path = strdup(path);
-    }
-    VSF_ASSERT(__vpm_repo_path != NULL);
-
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/vpm", __vpm_main);
 }
