@@ -232,7 +232,7 @@ void vsf_board_init_linux(void)
 }
 
 WEAK(vsf_linux_install_package_manager)
-void vsf_linux_install_package_manager(void)
+void vsf_linux_install_package_manager(vk_romfs_info_t *fsinfo, bool can_uninstall, bool can_install)
 {
 }
 
@@ -476,12 +476,13 @@ int vsf_linux_create_fhs(void)
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
     bool install_embedded_busybox = __usr_linux_boot;
+    static vk_romfs_info_t __usr_romfs_info = {
+        .image      = (vk_romfs_header_t *)(APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR),
+        .image_size = APP_MSCBOOT_CFG_ROMFS_SIZE,
+        .is_chained = true,
+        .alignment  = APP_MSCBOOT_CFG_ERASE_ALIGN,
+    };
     if (!__usr_linux_boot) {
-        static vk_romfs_info_t __usr_romfs_info = {
-            .image      = (vk_romfs_header_t *)(APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR),
-            .image_size = APP_MSCBOOT_CFG_ROMFS_SIZE,
-            .is_chained = true,
-        };
         mkdir("/usr", 0);
         if (mount(NULL, "usr", &vk_romfs_op, 0, (const void *)&__usr_romfs_info) != 0) {
             printf("Fail to mount /usr from romfs, install embedded busybox instead.\n");
@@ -495,11 +496,12 @@ int vsf_linux_create_fhs(void)
     }
 
     if (install_embedded_busybox) {
-        vsf_linux_install_package_manager();
+        vsf_linux_install_package_manager(&__usr_romfs_info, true, true);
         busybox_install();
     } else {
-        setenv("PATH", VSF_LINUX_CFG_PATH, true);
+        vsf_linux_install_package_manager(&__usr_romfs_info, false, true);
 
+        setenv("PATH", VSF_LINUX_CFG_PATH, true);
         mkdir("/bin", 0);
         if (symlink("/usr/bin/init", "/bin/init") < 0) {
             printf("busybox found in /usr/bin, but init not found\n");

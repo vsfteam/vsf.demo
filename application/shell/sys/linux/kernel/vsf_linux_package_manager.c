@@ -1,12 +1,11 @@
 #define __VSF_ROMFS_CLASS_INHERIT__
+#define __VSF_HW_FLASH_MAL_CLASS_INHERIT__
 
 #include <unistd.h>
 
 #if VSF_USE_MBEDTLS == ENABLED
 #   include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
 #endif
-
-#define APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR    (APP_MSCBOOT_CFG_FLASH_ADDR + APP_MSCBOOT_CFG_ROMFS_ADDR)
 
 #define REPO_HOST_NAME                      "gitee.com"
 #define REPO_HOST_PORT                      "443"
@@ -19,12 +18,12 @@ extern int app_config_read(const char *cfgname, char *cfgvalue, size_t valuelen)
 extern int app_config_write(const char *cfgname, char *cfgvalue);
 extern vk_hw_flash_mal_t flash_mal;
 
-static vk_mim_mal_t __romfs_mal = {
-    .drv            = &vk_mim_mal_drv,
-    .host_mal       = &flash_mal.use_as__vk_mal_t,
-    .size           = APP_MSCBOOT_CFG_ROMFS_SIZE,
-    .offset         = APP_MSCBOOT_CFG_ROMFS_ADDR,
-};
+struct __vpm_t {
+    vk_romfs_info_t *fsinfo;
+    vk_mim_mal_t mal;
+    bool can_uninstall;
+    bool can_install;
+} static __vpm;
 
 #if VSF_USE_MBEDTLS == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
 static void __vpm_parse_host_path(char *buf, int bufsize, char **host, char **path)
@@ -50,16 +49,19 @@ static void __vpm_parse_host_path(char *buf, int bufsize, char **host, char **pa
 
 static int __vpm_install_package(char *package)
 {
-    vk_romfs_header_t *image = (vk_romfs_header_t *)APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
+    vk_romfs_header_t *image = (vk_romfs_header_t *)__vpm.fsinfo->image;
     char *tmp;
-    while ( (image != NULL) && vsf_romfs_is_image_valid(image)
-        &&  ((uintptr_t)image - APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR < APP_MSCBOOT_CFG_ROMFS_SIZE)) {
+    while ((image != NULL) && vsf_romfs_is_image_valid(image)) {
         tmp = strstr((const char *)image->name, package);
         if (tmp != NULL && tmp[strlen(package)] == ' ') {
             printf("%s already installed\n", package);
             return -1;
         }
-        image = (vk_romfs_header_t *)((uint8_t *)image + be32_to_cpu(image->size));
+        image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, true);
+    }
+    if (NULL == image) {
+        printf("not enough romfs space\n");
+        return -1;
     }
 
 #if VSF_USE_MBEDTLS == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
@@ -136,14 +138,14 @@ static int __vpm_install_package(char *package)
                 }
                 result = curptr_cache - cache;
                 if (result >= APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
-                    curptr_flash -= APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
+                    curptr_flash -= (uintptr_t)__vpm.fsinfo->image + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
                     if ((uintptr_t)curptr_flash >= APP_MSCBOOT_CFG_ROOT_ADDR) {
                         printf("not enough romfs space\n");
                         goto do_exit;
                     }
-                    vk_mal_erase(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-                    vk_mal_write(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
-                    curptr_flash += APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
+                    vk_mal_erase(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+                    vk_mal_write(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
+                    curptr_flash += (uintptr_t)__vpm.fsinfo->image + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
                     curptr_cache = cache;
                     printf("*");
                 }
@@ -154,15 +156,15 @@ static int __vpm_install_package(char *package)
     }
     if (!http->content_length || !remain) {
         curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
-        curptr_flash -= APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
+        curptr_flash -= (uintptr_t)__vpm.fsinfo->image;
         if ((uintptr_t)curptr_flash >= APP_MSCBOOT_CFG_ROOT_ADDR) {
             printf("not enough romfs space\n");
             goto do_exit;
         }
-        vk_mal_erase(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+        vk_mal_erase(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
         if (curptr_cache != cache) {
             *(uint32_t *)curptr_cache = 0xFFFFFFFF;
-            vk_mal_write(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
+            vk_mal_write(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
         }
 
         if (header.size != 0) {
@@ -170,9 +172,9 @@ static int __vpm_install_package(char *package)
             curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
             memcpy(cache, curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
             memcpy(&cache[(uint8_t *)image - curptr_flash], &header, sizeof(header));
-            curptr_flash -= APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
-            vk_mal_erase(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-            vk_mal_write(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
+            curptr_flash -= (uintptr_t)__vpm.fsinfo->image;
+            vk_mal_erase(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+            vk_mal_write(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
         }
 
         printf("success\n");
@@ -213,15 +215,14 @@ static bool __vpm_is_to_uninstall(vk_romfs_header_t *image, char *argv[])
 
 static int __vpm_uninstall_packages(char *argv[])
 {
-    vk_romfs_header_t *image = (vk_romfs_header_t *)APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
+    vk_romfs_header_t *image = (vk_romfs_header_t *)__vpm.fsinfo->image;
     if (!vsf_romfs_is_image_valid(image)) {
         goto not_found;
     }
 
     while ( (image != NULL)
-        &&  ((uintptr_t)image - APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR < APP_MSCBOOT_CFG_ROMFS_SIZE)
         &&  !__vpm_is_to_uninstall(image, argv)) {
-        image = vsf_romfs_chain_get_next(image);
+        image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, false);
     }
     if (NULL == image) {
     not_found:
@@ -244,7 +245,7 @@ static int __vpm_uninstall_packages(char *argv[])
     uint8_t *cur_image_pos;
     uint32_t image_size, cur_size;
     printf("uninstall %s\n", image->name);
-    image = vsf_romfs_chain_get_next(image);
+    image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, false);
     while (image != NULL) {
         if (!__vpm_is_to_uninstall(image, argv)) {
             cur_image_pos = (uint8_t *)image;
@@ -262,10 +263,10 @@ static int __vpm_uninstall_packages(char *argv[])
                 }
                 cur_size = curptr_cache - cache;
                 if (cur_size >= APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
-                    curptr_flash -= APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
-                    vk_mal_erase(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-                    vk_mal_write(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
-                    curptr_flash += APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
+                    curptr_flash -= (uintptr_t)__vpm.fsinfo->image + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
+                    vk_mal_erase(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+                    vk_mal_write(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
+                    curptr_flash += (uintptr_t)__vpm.fsinfo->image + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
                     curptr_cache = cache;
                 }
             }
@@ -273,15 +274,15 @@ static int __vpm_uninstall_packages(char *argv[])
             printf("uninstall %s\n", image->name);
         }
 
-        image = vsf_romfs_chain_get_next(image);
+        image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, false);
     }
 
     curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
-    curptr_flash -= APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
-    vk_mal_erase(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
+    curptr_flash -= (uintptr_t)__vpm.fsinfo->image;
+    vk_mal_erase(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
     if (curptr_cache != cache) {
         *(uint32_t *)curptr_cache = 0xFFFFFFFF;
-        vk_mal_write(&__romfs_mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
+        vk_mal_write(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
     }
 
     free(cache);
@@ -294,11 +295,11 @@ static int __vpm_uninstall_packages(char *argv[])
 
 static int __vpm_list_local_packages(void)
 {
-    vk_romfs_header_t *image = (vk_romfs_header_t *)APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR;
+    vk_romfs_header_t *image = (vk_romfs_header_t *)__vpm.fsinfo->image;
     while ( (image != NULL) && vsf_romfs_is_image_valid(image)
-        &&  ((uintptr_t)image - APP_MSCBOOT_CFG_ROMFS_FLASH_ADDR < APP_MSCBOOT_CFG_ROMFS_SIZE)) {
+        &&  ((uint8_t *)image - (uint8_t *)__vpm.fsinfo->image < __vpm.fsinfo->image_size)) {
         printf("%s\n", image->name);
-        image = vsf_romfs_chain_get_next(image);
+        image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, false);
     }
     return 0;
 }
@@ -381,8 +382,16 @@ commands:\n\
     } else if (!strcmp(argv[1], "list-remote")) {
         return __vpm_list_remote_packages();
     } else if (!strcmp(argv[1], "install")) {
+        if (!__vpm.can_install) {
+            printf("vpm: Can not install packages in current mode, Please reboot to LinuxBoot mode\n");
+            return -1;
+        }
         return __vpm_install_packages(&argv[2]);
     } else if (!strcmp(argv[1], "uninstall")) {
+        if (!__vpm.can_uninstall) {
+            printf("vpm: Can not uninstall packages in current mode, Please reboot to LinuxBoot mode\n");
+            return -1;
+        }
         return __vpm_uninstall_packages(&argv[2]);
     } else if (!strcmp(argv[1], "repo")) {
         if (2 == argc) {
@@ -409,7 +418,15 @@ commands:\n\
     }
 }
 
-void vsf_linux_install_package_manager(void)
+void vsf_linux_install_package_manager(vk_romfs_info_t *fsinfo, bool can_uninstall, bool can_install)
 {
+    __vpm.mal.drv = &vk_mim_mal_drv;
+    __vpm.mal.host_mal = &flash_mal.use_as__vk_mal_t;
+    __vpm.mal.size = fsinfo->image_size;
+    __vpm.mal.offset = (uintptr_t)fsinfo->image - flash_mal.cap.base_address;
+
+    __vpm.fsinfo = fsinfo;
+    __vpm.can_uninstall = can_uninstall;
+    __vpm.can_install = can_install;
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/vpm", __vpm_main);
 }
