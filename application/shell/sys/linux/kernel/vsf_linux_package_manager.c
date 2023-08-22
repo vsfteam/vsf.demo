@@ -16,11 +16,10 @@
 
 extern int app_config_read(const char *cfgname, char *cfgvalue, size_t valuelen);
 extern int app_config_write(const char *cfgname, char *cfgvalue);
-extern vk_hw_flash_mal_t flash_mal;
+extern vk_cached_mal_t romfs_mal;
 
 struct __vpm_t {
     vk_romfs_info_t *fsinfo;
-    vk_mim_mal_t mal;
     bool can_uninstall;
     bool can_install;
 } static __vpm;
@@ -67,8 +66,7 @@ static int __vpm_install_package(char *package)
 #if VSF_USE_MBEDTLS == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
     vk_romfs_header_t header = { 0 };
     vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) +
-                    sizeof(mbedtls_session_t) + __VPM_BUF_SIZE +
-                    APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE + __VPM_HOST_PATH_SIZE);
+                    sizeof(mbedtls_session_t) + __VPM_BUF_SIZE + __VPM_HOST_PATH_SIZE);
     if (NULL == http) {
         printf("failed to allocate http context\n");
         return -1;
@@ -78,12 +76,13 @@ static int __vpm_install_package(char *package)
     http->op = &vsf_mbedtls_http_op;
     http->param = session;
     vsf_http_client_init(http);
+    vk_mal_init(&romfs_mal.use_as__vk_mal_t);
 
-    uint8_t *buf = (uint8_t *)&session[1], *cache = buf + __VPM_BUF_SIZE;
-    char *host = (char *)cache + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, *path;
+    uint8_t *buf = (uint8_t *)&session[1];
+    char *host = (char *)buf + __VPM_BUF_SIZE, *path;
     __vpm_parse_host_path(host, __VPM_HOST_PATH_SIZE, &host, &path);
 
-    uint8_t *curbuf, *curptr_flash = NULL, *curptr_cache;
+    uint64_t flash_addr = (uint64_t)&image[1] - (uint64_t)__vpm.fsinfo->image;
     int result = 0, rsize, remain;
     strcpy((char *)buf, path);
     strcat((char *)buf, VSF_BOARD_ARCH_STR "/romfs/");
@@ -105,76 +104,16 @@ static int __vpm_install_package(char *package)
         rsize = vsf_min(__VPM_BUF_SIZE, remain);
         rsize = vsf_http_client_read(http, buf, rsize);
         if (rsize > 0) {
-            curbuf = buf;
-            if (NULL == curptr_flash) {
-                header = *(vk_romfs_header_t *)buf;
-                if (!vsf_romfs_is_image_valid(&header) || (rsize <= sizeof(header))) {
-                    printf("invalid romfs image\n");
-                    goto do_exit;
-                }
-
-                rsize -= sizeof(header);
-                curbuf = buf + sizeof(header);
-                curptr_flash = (uint8_t *)&image[1];
-                remain = be32_to_cpu(header.size) - sizeof(header);
-
-                uint8_t *curptr_flash_aligned = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
-                memcpy(cache, curptr_flash_aligned, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-                curptr_cache = &cache[curptr_flash - curptr_flash_aligned];
-            }
-
-            // write curbuf:rsize to cached curptr_flash
-            while (rsize > 0) {
-                result = curptr_cache - cache;
-                if (result < APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
-                    result = APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE - result;
-                    result = vsf_min(result, rsize);
-                    memcpy(curptr_cache, curbuf, result);
-                    curptr_flash += result;
-                    curptr_cache += result;
-                    curbuf += result;
-                    rsize -= result;
-                    remain -= result;
-                }
-                result = curptr_cache - cache;
-                if (result >= APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
-                    curptr_flash -= (uintptr_t)__vpm.fsinfo->image + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
-                    if ((uintptr_t)curptr_flash >= APP_MSCBOOT_CFG_ROOT_ADDR) {
-                        printf("not enough romfs space\n");
-                        goto do_exit;
-                    }
-                    vk_mal_erase(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-                    vk_mal_write(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
-                    curptr_flash += (uintptr_t)__vpm.fsinfo->image + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
-                    curptr_cache = cache;
-                    printf("*");
-                }
-            }
+            vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, rsize, buf);
+            flash_addr += rsize;
         } else if (!rsize) {
             break;
         }
     }
     if (!http->content_length || !remain) {
-        curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
-        curptr_flash -= (uintptr_t)__vpm.fsinfo->image;
-        if ((uintptr_t)curptr_flash >= APP_MSCBOOT_CFG_ROOT_ADDR) {
-            printf("not enough romfs space\n");
-            goto do_exit;
-        }
-        vk_mal_erase(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-        if (curptr_cache != cache) {
-            *(uint32_t *)curptr_cache = 0xFFFFFFFF;
-            vk_mal_write(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
-        }
-
         if (header.size != 0) {
-            curptr_flash = (uint8_t *)image;
-            curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
-            memcpy(cache, curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-            memcpy(&cache[(uint8_t *)image - curptr_flash], &header, sizeof(header));
-            curptr_flash -= (uintptr_t)__vpm.fsinfo->image;
-            vk_mal_erase(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-            vk_mal_write(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
+            flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
+            vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header), (uint8_t *)&header);
         }
 
         printf("success\n");
@@ -187,6 +126,8 @@ static int __vpm_install_package(char *package)
 do_exit:
     vsf_http_client_close(http);
     free(http);
+
+    vk_mal_fini(&romfs_mal.use_as__vk_mal_t);
     return result;
 #else
     printf("mbedtls is needed for the current command\n");
@@ -231,45 +172,17 @@ static int __vpm_uninstall_packages(char *argv[])
     }
 
 #if defined(APP_MSCBOOT_CFG_FLASH)
-    uint8_t *cache = (uint8_t *)malloc(APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-    if (NULL == cache) {
-        printf("failed to flash cache\n");
-        return -1;
-    }
+    vk_mal_init(&romfs_mal.use_as__vk_mal_t);
 
-    uint8_t *curptr_flash = (uint8_t *)image, *curptr_cache;
-    uint8_t *curptr_flash_aligned = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
-    memcpy(cache, curptr_flash_aligned, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-    curptr_cache = &cache[curptr_flash - curptr_flash_aligned];
-
-    uint8_t *cur_image_pos;
-    uint32_t image_size, cur_size;
+    uint64_t flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
+    uint32_t image_size;
     printf("uninstall %s\n", image->name);
     image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, false);
     while (image != NULL) {
         if (!__vpm_is_to_uninstall(image, argv)) {
-            cur_image_pos = (uint8_t *)image;
             image_size = be32_to_cpu(image->size);
-            while (image_size > 0) {
-                cur_size = curptr_cache - cache;
-                if (cur_size < APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
-                    cur_size = APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE - cur_size;
-                    cur_size = vsf_min(cur_size, image_size);
-                    memcpy(curptr_cache, cur_image_pos, cur_size);
-                    cur_image_pos += cur_size;
-                    curptr_flash += cur_size;
-                    curptr_cache += cur_size;
-                    image_size -= cur_size;
-                }
-                cur_size = curptr_cache - cache;
-                if (cur_size >= APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) {
-                    curptr_flash -= (uintptr_t)__vpm.fsinfo->image + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
-                    vk_mal_erase(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-                    vk_mal_write(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
-                    curptr_flash += (uintptr_t)__vpm.fsinfo->image + APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE;
-                    curptr_cache = cache;
-                }
-            }
+            vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, image_size, (uint8_t *)image);
+            flash_addr += image_size;
         } else {
             printf("uninstall %s\n", image->name);
         }
@@ -277,15 +190,10 @@ static int __vpm_uninstall_packages(char *argv[])
         image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, false);
     }
 
-    curptr_flash = (uint8_t *)((uintptr_t)curptr_flash & ~(APP_MSCBOOT_CFG_ERASE_ALIGN - 1));
-    curptr_flash -= (uintptr_t)__vpm.fsinfo->image;
-    vk_mal_erase(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE);
-    if (curptr_cache != cache) {
-        *(uint32_t *)curptr_cache = 0xFFFFFFFF;
-        vk_mal_write(&__vpm.mal.use_as__vk_mal_t, (uintptr_t)curptr_flash, APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE, cache);
-    }
+    vk_romfs_header_t header = { 0 };
+    vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header), (uint8_t *)&header);
 
-    free(cache);
+    vk_mal_fini(&romfs_mal.use_as__vk_mal_t);
     return 0;
 #else
     printf("flash operation is not enabled for the current command\n");
@@ -420,11 +328,6 @@ commands:\n\
 
 void vsf_linux_install_package_manager(vk_romfs_info_t *fsinfo, bool can_uninstall, bool can_install)
 {
-    __vpm.mal.drv = &vk_mim_mal_drv;
-    __vpm.mal.host_mal = &flash_mal.use_as__vk_mal_t;
-    __vpm.mal.size = fsinfo->image_size;
-    __vpm.mal.offset = (uintptr_t)fsinfo->image - flash_mal.cap.base_address;
-
     __vpm.fsinfo = fsinfo;
     __vpm.can_uninstall = can_uninstall;
     __vpm.can_install = can_install;

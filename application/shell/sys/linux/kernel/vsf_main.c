@@ -154,6 +154,26 @@ vk_hw_flash_mal_t flash_mal = {
     .drv                    = &vk_hw_flash_mal_drv,
     .flash                  = &APP_MSCBOOT_CFG_FLASH,
 };
+#   if defined(APP_MSCBOOT_CFG_ROOT_SIZE) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
+vk_mim_mal_t root_mal = {
+    .drv                    = &vk_mim_mal_drv,
+    .host_mal               = &flash_mal.use_as__vk_mal_t,
+    .size                   = APP_MSCBOOT_CFG_ROOT_SIZE,
+    .offset                 = APP_MSCBOOT_CFG_ROOT_ADDR,
+};
+#   endif
+#   if defined(APP_MSCBOOT_CFG_ROMFS_SIZE) && defined(APP_MSCBOOT_CFG_ROMFS_ADDR)
+static vk_mim_mal_t __romfs_mal = {
+    .drv                    = &vk_mim_mal_drv,
+    .host_mal               = &flash_mal.use_as__vk_mal_t,
+    .size                   = APP_MSCBOOT_CFG_ROMFS_SIZE,
+    .offset                 = APP_MSCBOOT_CFG_ROMFS_ADDR,
+};
+vk_cached_mal_t romfs_mal = {
+    .drv                    = &vk_cached_mal_drv,
+    .host_mal               = &__romfs_mal.use_as__vk_mal_t,
+};
+#   endif
 #endif
 
 /*============================ IMPLEMENTATION ================================*/
@@ -456,16 +476,10 @@ int vsf_linux_create_fhs(void)
 
     // 2. fs
 #if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
-    static vk_mim_mal_t __root_mal = {
-        .drv            = &vk_mim_mal_drv,
-        .host_mal       = &flash_mal.use_as__vk_mal_t,
-        .size           = APP_MSCBOOT_CFG_ROOT_SIZE,
-        .offset         = APP_MSCBOOT_CFG_ROOT_ADDR,
-    };
-    vk_mal_init(&__root_mal.use_as__vk_mal_t);
+    vk_mal_init(&root_mal.use_as__vk_mal_t);
 
     static vk_lfs_info_t __root_fs;
-    vsf_lfs_bind_mal(&__root_fs.config, &__root_mal.use_as__vk_mal_t);
+    vsf_lfs_bind_mal(&__root_fs.config, &root_mal.use_as__vk_mal_t);
 
     mkdir("/root", 0);
     if (mount(NULL, "root", &vk_lfs_op, 0, (const void *)&__root_fs) != 0) {
