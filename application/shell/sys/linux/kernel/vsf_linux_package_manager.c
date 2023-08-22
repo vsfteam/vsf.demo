@@ -82,7 +82,7 @@ static int __vpm_install_package(char *package)
     char *host = (char *)buf + __VPM_BUF_SIZE, *path;
     __vpm_parse_host_path(host, __VPM_HOST_PATH_SIZE, &host, &path);
 
-    uint64_t flash_addr = (uint64_t)&image[1] - (uint64_t)__vpm.fsinfo->image;
+    uint64_t flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
     int result = 0, rsize, remain;
     strcpy((char *)buf, path);
     strcat((char *)buf, VSF_BOARD_ARCH_STR "/romfs/");
@@ -104,8 +104,13 @@ static int __vpm_install_package(char *package)
         rsize = vsf_min(__VPM_BUF_SIZE, remain);
         rsize = vsf_http_client_read(http, buf, rsize);
         if (rsize > 0) {
+            if (0 == header.size) {
+                header = *(vk_romfs_header_t *)buf;
+                memset(buf, 0xFF, sizeof(header));
+            }
             vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, rsize, buf);
             flash_addr += rsize;
+            printf("*");
         } else if (!rsize) {
             break;
         }

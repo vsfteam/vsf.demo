@@ -557,11 +557,12 @@ int VSF_USER_ENTRY(int argc, char *argv[])
     vsf_board_init();
     vsf_start_trace();
 
-#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
+#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
     if (APP_BOOT1_KEY_IS_DOWN) {
+#   if VSF_USE_USB_DEVICE == ENABLED
         vk_usbd_init(&__app_usbd);
         vk_usbd_connect(&__app_usbd);
-
+#   endif
         __usr_linux_boot = true;
     }
 #endif
