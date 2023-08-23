@@ -162,7 +162,7 @@ void __vsf_usbh_free(void *buffer)
 static int __wifi_ap_main(int argc, char *argv[])
 {
     if (argc < 3) {
-        printf("format: %s SSID PASSWD [CHANNEL]\r\n", argv[0]);
+        printf("format: %s SSID PASSWD [CHANNEL]\n", argv[0]);
         return -1;
     }
 
@@ -173,16 +173,16 @@ static int __wifi_ap_main(int argc, char *argv[])
         VSF_ASSERT(channel <= 14);
 
         if (14 == channel) {
-            printf("warning: wifi 2.4G channel 14 is illegal in some countries.\r\n");
+            printf("warning: wifi 2.4G channel 14 is illegal in some countries.\n");
         }
     }
     set_ap_channel_num(channel);
     set_mac_address(NULL);
     int ret = wlan_start_ap(0, (uint8_t *)ssid, (uint8_t *)pass);
     if (!ret) {
-        printf("wifi ap started.\r\n");
+        printf("wifi ap started.\n");
     } else {
-        printf("fail to start wifi ap.\r\n");
+        printf("fail to start wifi ap.\n");
     }
     return 0;
 }
@@ -194,24 +194,24 @@ static int __wifi_scan_main(int argc, char *argv[])
 
     struct fhost_cntrl_link *cntrl_link = fhost_cntrl_cfgrwnx_link_open();
     if (cntrl_link == NULL) {
-        printf("fail to open link\r\n");
+        printf("fail to open link\n");
         return -1;
     }
     if (fhost_set_vif_type(cntrl_link, fhost_vif_idx, VIF_UNKNOWN, false) ||
         fhost_set_vif_type(cntrl_link, fhost_vif_idx, VIF_STA, false)) {
         fhost_cntrl_cfgrwnx_link_close(cntrl_link);
-        printf("fail to set link type to sta\r\n");
+        printf("fail to set link type to sta\n");
         return -1;
     }
 
     int nb_res = fhost_scan(cntrl_link, fhost_vif_idx, NULL);
-    printf("%d scan results:\r\n", nb_res);
+    printf("%d scan results:\n", nb_res);
 
     nb_res = 0;
     struct mac_scan_result result;
     while (fhost_get_scan_results(cntrl_link, nb_res++, 1, &result)) {
         result.ssid.array[result.ssid.length] = '\0'; // set ssid string ending
-        printf("(%3d dBm) CH=%3d BSSID=%02x:%02x:%02x:%02x:%02x:%02x SSID=%s\r\n",
+        printf("(%3d dBm) CH=%3d BSSID=%02x:%02x:%02x:%02x:%02x:%02x SSID=%s\n",
             (int8_t)result.rssi, phy_freq_to_channel(result.chan->band, result.chan->freq),
             ((uint8_t *)result.bssid.array)[0], ((uint8_t *)result.bssid.array)[1],
             ((uint8_t *)result.bssid.array)[2], ((uint8_t *)result.bssid.array)[3],
@@ -225,9 +225,20 @@ static int __wifi_scan_main(int argc, char *argv[])
 
 static int __wifi_connect_main(int argc, char *argv[])
 {
-    if (argc < 2) {
-        printf("format: %s SSID [PASSWD]\r\n", argv[0]);
-        return -1;
+    char __ssid[33], __pass[33];
+    char *ssid, *pass;
+    if (1 == argc) {
+        if (    app_config_read("wifi_ssid", __ssid, sizeof(__ssid))
+            ||  app_config_read("wifi_pass", __pass, sizeof(__pass))) {
+            printf("ssid/pass not found in app_config\n", argv[0]);
+            printf("format: %s [SSID [PASSWD]]\n", argv[0]);
+            return -1;
+        }
+        ssid = __ssid;
+        pass = __pass;
+    } else {
+        ssid = argv[1];
+        pass = argc >= 3 ? argv[2] : "";
     }
 
     if (wlan_get_connect_status()) {
@@ -239,7 +250,6 @@ static int __wifi_connect_main(int argc, char *argv[])
 #endif
     }
 
-    char *ssid = argv[1], *pass = argc >= 3 ? argv[2] : "";
     set_mac_address(NULL);
     // wlan_start_sta MUST be called with higher priority than internal wpa(AIC8800_OSAL_CFG_PRIORITY_BASE).
     vsf_prio_t prio = vsf_thread_set_priority(AIC8800_OSAL_CFG_PRIORITY_BASE + 1);
@@ -247,7 +257,7 @@ static int __wifi_connect_main(int argc, char *argv[])
     vsf_thread_set_priority(prio);
 
     if (wlan_get_connect_status()) {
-        printf("wifi connected.\r\n");
+        printf("wifi connected.\n");
 
 #if APP_USE_LINUX_DEMO == ENABLED && APP_USE_LINUX_HTTPD_DEMO == ENABLED
         // start mdns, not ready
@@ -267,7 +277,7 @@ static int __wifi_connect_main(int argc, char *argv[])
         app_config_write("wifi_pass", pass);
         return 0;
     } else {
-        printf("fail to connect %s.\r\n", argv[1]);
+        printf("fail to connect %s.\n", argv[1]);
         return -1;
     }
 }
@@ -281,13 +291,10 @@ int fhost_application_init(void)
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/wifi_connect", __wifi_connect_main);
 #endif
 
-    char ssid[33], pass[33];
-    if (!app_config_read("wifi_autostart", ssid, sizeof(ssid)) && !strcmp(ssid, "on")) {
-        if (    !app_config_read("wifi_ssid", ssid, sizeof(ssid))
-            &&  !app_config_read("wifi_pass", pass, sizeof(pass))) {
-            char *argv[4] = { "wifi_connect", ssid, pass, NULL };
-            __wifi_connect_main(dimof(argv) - (NULL == pass ? 2 : 1), argv);
-        }
+    char config[16];
+    if (!app_config_read("wifi_autostart", config, sizeof(config)) && !strcmp(config, "on")) {
+        char *argv[2] = { "wifi_connect", NULL };
+        __wifi_connect_main(dimof(argv) - 1, argv);
     }
     return 0;
 }
