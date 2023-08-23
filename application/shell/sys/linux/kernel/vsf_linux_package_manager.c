@@ -117,18 +117,12 @@ static int __vpm_install_package(char *package)
     }
     if (!http->content_length || !remain) {
         if (header.size != 0) {
+            vk_romfs_header_t header_zero = { 0 };
+            flash_addr = (flash_addr + __vpm.fsinfo->alignment - 1) & ~(__vpm.fsinfo->alignment - 1);
+            vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header_zero), (uint8_t *)&header_zero);
+
             flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
             vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header), (uint8_t *)&header);
-            // sync
-            vk_mal_fini(&romfs_mal.use_as__vk_mal_t);
-            vk_mal_init(&romfs_mal.use_as__vk_mal_t);
-
-            vk_romfs_header_t *image_next = vsf_romfs_chain_get_next(__vpm.fsinfo, image, false);
-            if (image_next != NULL) {
-                vk_romfs_header_t header = { 0 };
-                flash_addr = (uint64_t)image_next - (uint64_t)__vpm.fsinfo->image;
-                vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header), (uint8_t *)&header);
-            }
         }
 
         printf("success\n");
@@ -192,8 +186,8 @@ static int __vpm_uninstall_packages(char *argv[])
     uint64_t flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
     uint32_t image_size;
     printf("uninstall %s\n", image->name);
-    image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, true);
-    while ((image != NULL) && vsf_romfs_is_image_valid(image)) {
+    image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, false);
+    while (image != NULL) {
         if (!__vpm_is_to_uninstall(image, argv)) {
             image_size = be32_to_cpu(image->size);
             vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, image_size, (uint8_t *)image);
@@ -202,18 +196,12 @@ static int __vpm_uninstall_packages(char *argv[])
             printf("uninstall %s\n", image->name);
         }
 
-        image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, true);
+        image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, false);
     }
 
-    // sync
-    vk_mal_fini(&romfs_mal.use_as__vk_mal_t);
-    vk_mal_init(&romfs_mal.use_as__vk_mal_t);
-
-    if (image != NULL) {
-        vk_romfs_header_t header = { 0 };
-        flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
-        vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header), (uint8_t *)&header);
-    }
+    vk_romfs_header_t header = { 0 };
+    flash_addr = (flash_addr + __vpm.fsinfo->alignment - 1) & ~(__vpm.fsinfo->alignment - 1);
+    vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header), (uint8_t *)&header);
 
     vk_mal_fini(&romfs_mal.use_as__vk_mal_t);
     return 0;
