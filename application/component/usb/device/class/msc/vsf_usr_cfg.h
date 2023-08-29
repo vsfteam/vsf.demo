@@ -30,6 +30,9 @@
 #define VSF_HAL_USE_RNG                                 DISABLED
 #define VSF_HAL_USE_SPI                                 DISABLED
 
+// disable assert to save code size
+#define VSF_ASSERT(...)
+
 /*============================ INCLUDES ======================================*/
 
 #include "vsf_board_cfg.h"
@@ -42,7 +45,8 @@
 #define VSF_KERNEL_CFG_EDA_SUBCALL_HAS_RETURN_VALUE     DISABLED
 
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
-#define VSF_USE_TRACE                                   ENABLED
+// disable trace to save code size
+#define VSF_USE_TRACE                                   DISABLED
 #define VSF_USE_SCSI                                    ENABLED
 #   define VSF_SCSI_USE_VIRTUAL_SCSI                    ENABLED
 #   define VSF_SCSI_USE_MAL_SCSI                        ENABLED
