@@ -32,10 +32,6 @@
 #define VSF_USE_USB_DEVICE                              ENABLED
 #   define VSF_USBD_USE_DFU                             ENABLED
 
-// Application configuration
-#define APP_CFG_USBD_VID                                0xA7A8
-#define APP_CFG_USBD_PID                                0x2348
-
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
