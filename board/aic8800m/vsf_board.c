@@ -285,17 +285,17 @@ static int __wifi_connect_main(int argc, char *argv[])
 
 int fhost_application_init(void)
 {
-#if VSF_USE_LINUX == ENABLED
+#   if VSF_USE_LINUX == ENABLED
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/wifi_ap", __wifi_ap_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/wifi_scan", __wifi_scan_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/wifi_connect", __wifi_connect_main);
-#endif
 
     char config[16];
     if (!app_config_read("wifi_autostart", config, sizeof(config)) && !strcmp(config, "on")) {
         char *argv[2] = { "wifi_connect", NULL };
         __wifi_connect_main(dimof(argv) - 1, argv);
     }
+#   endif
     return 0;
 }
 #endif
