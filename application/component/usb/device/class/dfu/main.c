@@ -57,7 +57,7 @@ static vsf_err_t __dfu_vendor_prepare(vk_usbd_dev_t *dev);
 
 /*============================ LOCAL VARIABLES ===============================*/
 
-describe_usbd(__user_usbd_dfu, APP_CFG_USBD_VID, APP_CFG_USBD_PID, APP_CFG_USBD_SPEED, 0x210, 0x0409, 0x0001)
+describe_usbd(__user_usbd_dfu, APP_CFG_USBD_VID, APP_CFG_USBD_PID, APP_CFG_USBD_SPEED, 0x210, 0x0409, 0x0000)
     usbd_common_desc(   __user_usbd_dfu,
                         // str_product, str_vendor, str_serial
                         APP_CFG_USBD_PRODUCT_STR, APP_CFG_USBD_VENDOR_STR, APP_CFG_USBD_SERIAL_STR,
