@@ -277,6 +277,7 @@ static char * __app_config_read(FILE *f)
 
 int app_config_read(const char *cfgname, char *cfgvalue, size_t valuelen)
 {
+    int result = -1;
     FILE *f = fopen(APP_CONFIG_FILE, "r");
     if (NULL == f) {
         return -1;
@@ -305,7 +306,7 @@ int app_config_read(const char *cfgname, char *cfgvalue, size_t valuelen)
         *end = '\0';
     }
     strncpy(cfgvalue, value, valuelen);
-    return 0;
+    result = 0;
 
 not_found:
     free(data);
@@ -313,7 +314,7 @@ free_token_and_fail:
     free(token);
 close_and_fail:
     fclose(f);
-    return -1;
+    return result;
 }
 
 int app_config_write(const char *cfgname, char *cfgvalue)
