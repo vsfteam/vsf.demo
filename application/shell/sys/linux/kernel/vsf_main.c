@@ -523,12 +523,14 @@ int vsf_linux_create_fhs(void)
         }
     }
 
-    if (install_embedded_busybox) {
+    if (__usr_linux_boot) {
         vsf_linux_install_package_manager(&__romfs_info, true, true);
-        busybox_install();
     } else {
         vsf_linux_install_package_manager(&__romfs_info, false, true);
-
+    }
+    if (install_embedded_busybox) {
+        busybox_install();
+    } else {
         setenv("PATH", VSF_LINUX_CFG_PATH, true);
         mkdir("/bin", 0);
         if (symlink("/usr/bin/init", "/bin/init") < 0) {
