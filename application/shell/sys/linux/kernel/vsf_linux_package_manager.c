@@ -46,6 +46,11 @@ static void __vpm_parse_host_path(char *buf, int bufsize, char **host, char **pa
 }
 #endif
 
+WEAK(vpm_on_installed)
+void vpm_on_installed(void)
+{
+}
+
 static int __vpm_install_package(char *package)
 {
     vk_romfs_header_t *image = (vk_romfs_header_t *)__vpm.fsinfo->image;
@@ -146,10 +151,13 @@ do_exit:
 
 static int __vpm_install_packages(char *argv[])
 {
+    int num_installed = 0;
     while (*argv != NULL) {
-        __vpm_install_package(*argv++);
+        if (!__vpm_install_package(*argv++)) {
+            num_installed++;
+        }
     }
-    return 0;
+    return num_installed;
 }
 
 static bool __vpm_is_to_uninstall(vk_romfs_header_t *image, char *argv[])
@@ -304,7 +312,11 @@ commands:\n\
             printf("vpm: Can not install packages in current mode, Please reboot to LinuxBoot mode\n");
             return -1;
         }
-        return __vpm_install_packages(&argv[2]);
+        if (__vpm_install_packages(&argv[2]) > 0) {
+            vpm_on_installed();
+            return 0;
+        }
+        return -1;
     } else if (!strcmp(argv[1], "uninstall")) {
         if (!__vpm.can_uninstall) {
             printf("vpm: Can not uninstall packages in current mode, Please reboot to LinuxBoot mode\n");
