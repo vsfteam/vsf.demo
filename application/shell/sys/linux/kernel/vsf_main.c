@@ -176,6 +176,21 @@ vk_cached_mal_t romfs_mal = {
 #   endif
 #endif
 
+#if VSF_HAL_USE_MMC == ENABLED
+static vsf_mmc_probe_t __mmc_probe = {
+    .working_clock_hz       = 50 * 1000 * 1000,
+    .uhs_en                 = false,
+};
+enum __mmc_state_t {
+    MMC_STATE_WAIT_DET = 0,
+    MMC_STATE_WAIT_DET_STABLE,
+    MMC_STATE_PROBING,
+    MMC_STATE_PROBE_SUCCESS,
+    MMC_STATE_PROBE_FAIL,
+} static __mmc_state = MMC_STATE_WAIT_DET;
+static vsf_teda_t __mmc_task;
+#endif
+
 /*============================ IMPLEMENTATION ================================*/
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
@@ -463,6 +478,85 @@ static int __usbh_main(int argc, char *argv[])
 }
 #endif
 
+#if VSF_HAL_USE_MMC == ENABLED
+static void __mmc_probe_irqhandler(vsf_mmc_t *mmc_ptr, vsf_mmc_probe_t *probe, vsf_mmc_irq_mask_t irq_mask, vsf_mmc_transact_status_t status, uint32_t resp[4])
+{
+    vsf_err_t err = vsf_mmc_probe_irqhandler(mmc_ptr, probe, irq_mask, status, resp);
+    switch (err) {
+    case VSF_ERR_NOT_READY:
+        if (probe->delay_ms > 0) {
+            vsf_teda_set_timer_ex(&__mmc_task, vsf_systimer_ms_to_tick(probe->delay_ms));
+        }
+        break;
+    case VSF_ERR_NONE:
+        __mmc_state = MMC_STATE_PROBE_SUCCESS;
+        goto notify_task;
+    default:
+        __mmc_state = MMC_STATE_PROBE_FAIL;
+    notify_task:
+        vsf_eda_post_evt(&__mmc_task.use_as__vsf_eda_t, VSF_EVT_USER);
+        break;
+    }
+}
+
+static void __mmc_irqhandler(void *target_ptr, vsf_mmc_t *mmc_ptr, vsf_mmc_irq_mask_t irq_mask, vsf_mmc_transact_status_t status, uint32_t resp[4])
+{
+    if (__mmc_state == MMC_STATE_PROBING) {
+        __mmc_probe_irqhandler(mmc_ptr, (vsf_mmc_probe_t *)target_ptr, irq_mask, status, resp);
+    }
+}
+
+static void __mmc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
+{
+    vsf_mmc_t *mmc = vsf_board.mmc;
+
+    switch (evt) {
+    case VSF_EVT_TIMER:
+        if (__mmc_state == MMC_STATE_PROBING) {
+            __mmc_probe_irqhandler(mmc, &__mmc_probe, 0, 0, NULL);
+            break;
+        }
+        // none probing state, fall through
+    case VSF_EVT_INIT:
+        if (!(vsf_gpio_read(vsf_board.mmc_det_port) & (1 << vsf_board.mmc_det_pin))) {
+            __mmc_state = MMC_STATE_WAIT_DET;
+            vsf_teda_set_timer_ms(100);
+            break;
+        }
+        if (MMC_STATE_WAIT_DET == __mmc_state) {
+            __mmc_state = MMC_STATE_WAIT_DET_STABLE;
+            vsf_teda_set_timer_ms(100);
+            break;
+        }
+
+        vsf_mmc_init(mmc, &(vsf_mmc_cfg_t){
+            .mode               = MMC_MODE_HOST,
+            .isr                = {
+                .handler_fn     = __mmc_irqhandler,
+                .target_ptr     = &__mmc_probe,
+                .prio           = vsf_arch_prio_0,
+            },
+        });
+
+        __mmc_probe.voltage     = vsf_board.mmc_voltage;
+        __mmc_probe.bus_width   = vsf_board.mmc_bus_width;
+        __mmc_state             = MMC_STATE_PROBING;
+        vsf_mmc_probe_start(mmc, &__mmc_probe);
+        break;
+    case VSF_EVT_USER:
+        if (MMC_STATE_PROBE_SUCCESS == __mmc_state) {
+            vsf_trace_debug("mmc_probe done\n");
+            vsf_trace_debug("mmc.high_capacity : %d\n", __mmc_probe.high_capacity);
+            vsf_trace_debug("mmc.version : %08X\n", __mmc_probe.version);
+            vsf_trace_debug("mmc.capacity : %lld MB\n", __mmc_probe.capacity / 2000);
+        } else {
+            vsf_trace_debug("mmc_probe failed\n");
+        }
+        break;
+    }
+}
+#endif
+
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
 static bool __romfs_installed = false;
 static vk_romfs_info_t __romfs_info = {
@@ -547,6 +641,13 @@ int vsf_linux_create_fhs(void)
     }
 #else
     busybox_install();
+#endif
+
+#if VSF_HAL_USE_MMC == ENABLED
+    vsf_teda_start(&__mmc_task, &(vsf_eda_cfg_t){
+        .fn.evthandler          = __mmc_evthandler,
+        .priority               = vsf_prio_0,
+    });
 #endif
 
     // 3. install executables and built-in libraries
