@@ -3492,6 +3492,9 @@
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\common.h</name>
                             </file>
                             <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\constant_time.c</name>
+                            </file>
+                            <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ctr_drbg.c</name>
                             </file>
                             <file>
