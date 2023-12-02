@@ -21,6 +21,14 @@
  *
  * Dependency:
  *
+ * Submodule:
+ *   vsf
+ *     source/component/3rd-party/btstack/raw if VSF_USE_BTSTACK is enabled
+ *     source/component/3rd-party/littlefs/raw
+ *     source/component/3rd-party/mbedtls/raw
+ *     source/component/3rd-party/PLOOC/raw
+ *     source/hal/driver/AIC/AIC8800/vendor for AIC8800M(not for AIC8800M40B/AIC8800M80)
+ *
  * Board:
  *
  * Include Directories necessary for linux:
