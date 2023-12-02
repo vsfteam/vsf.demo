@@ -26,6 +26,7 @@
  * Include Directories necessary for linux:
  *   vsf/source/shell/sys/linux/include
  *   vsf/source/shell/sys/linux/include/simple_libc if VSF_LINUX_USE_SIMPLE_LIBC is enabled
+ *   vsf/source/shell/sys/linux/include/libusb if VSF_USBH_USE_LIBUSB is enabled
  *   vsf/source/component/3rd-party/littlefs/port
  *   vsf/source/component/3rd-party/littlefs/raw
  *   optional:
@@ -53,8 +54,8 @@
  *   If bootloader is used, set image base to the APP address
  *
  * Compiler:
- *   Avoid to use static-base reigster and veneer register, which will be used by applet.
- *   For ARM, should be R9 and R12
+ *   Avoid to use static-base reigster, which will be used by applet.
+ *   For ARM, should be R9
  *
  */
 

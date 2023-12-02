@@ -2,9 +2,9 @@
 /*-Editor annotation file-*/
 /* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_4.xml" */
 /*-Specials-*/
-define symbol __ICFEDIT_intvec_start__ = 0x08010000;
+define symbol __ICFEDIT_intvec_start__ = 0x08000000;
 /*-Memory Regions-*/
-define symbol __ICFEDIT_region_IROM1_start__ = 0x08010000;
+define symbol __ICFEDIT_region_IROM1_start__ = 0x08000000;
 define symbol __ICFEDIT_region_IROM1_end__   = 0x081FBFFF;
 define symbol __ICFEDIT_region_IROM2_start__ = 0x0;
 define symbol __ICFEDIT_region_IROM2_end__   = 0x0;
@@ -15,7 +15,7 @@ define symbol __ICFEDIT_region_EROM2_end__   = 0x0;
 define symbol __ICFEDIT_region_EROM3_start__ = 0x0;
 define symbol __ICFEDIT_region_EROM3_end__   = 0x0;
 define symbol __ICFEDIT_region_IRAM1_start__ = 0x001A0000;
-define symbol __ICFEDIT_region_IRAM1_end__   = 0x001C7FFF;
+define symbol __ICFEDIT_region_IRAM1_end__   = 0x001BFFFF;
 define symbol __ICFEDIT_region_IRAM2_start__ = 0x0;
 define symbol __ICFEDIT_region_IRAM2_end__   = 0x0;
 define symbol __ICFEDIT_region_ERAM1_start__ = 0x0;
@@ -164,10 +164,10 @@ if (!isempty(ERAM_region))
   place in ERAM_region  { readwrite section application_specific_rw };
 }
 
-/* 320KB from 0x00100000 is used as gram */
-/* 64KB from 0x00150000 is used as sharedmen and stacks */
-define symbol __shared_memory_start__        = 0x00150000;
-define symbol __shared_memory_end__          = 0x0015FFFF;
+/* 384KB from 0x00100000 is used as heap */
+/* 32KB from 0x00150000 is used as sharedmen and stacks */
+define symbol __shared_memory_start__        = 0x001C0000;
+define symbol __shared_memory_end__          = 0x001C7FFF;
 define region shared_region = mem:[from __shared_memory_start__ to __shared_memory_end__];
 define block shared_block { readwrite section SHAREDRAM, block CSTACK, block PROC_STACK };
 place in shared_region { block shared_block };

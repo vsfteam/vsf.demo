@@ -62,9 +62,8 @@
 #ifndef VSF_HAL_USE_SPI
 #   define VSF_HAL_USE_SPI                              ENABLED
 #endif
-#ifndef VSF_HAL_USE_MMC
-#   define VSF_HAL_USE_MMC                              ENABLED
-#endif
+#undef VSF_HAL_USE_MMC
+#define VSF_HAL_USE_MMC                                 DISABLED
 #ifndef VSF_HAL_USE_I2S
 #   define VSF_HAL_USE_I2S                              ENABLED
 #endif
@@ -111,7 +110,7 @@
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   4
 #   define VSF_HEAP_ADDR                                0x00100000
-#   define VSF_HEAP_SIZE                                0x50000
+#   define VSF_HEAP_SIZE                                0x60000
 
 #define VSF_USBH_USE_HCD_DWCOTG                         ENABLED
 //  AIC8800 need this
@@ -149,8 +148,9 @@
 //  /root: 64K @ 2M(flash_size) - 64K(/root) - 4K(chip_config)
 //  chip_config: 4K @ 2M(flash_size) - 4K
 #define __APP_FLASH_SIZE                                (2048 * 1024)
-#define __APP_BOOTLOADER_SIZE                           (32 * 1024)
-#define __APP_ROMFS_SIZE                                (512 * 1024)
+//#define __APP_BOOTLOADER_SIZE                           (32 * 1024)
+#define __APP_BOOTLOADER_SIZE                           (0 * 1024)
+#define __APP_ROMFS_SIZE                                (1024 * 1024)
 #define __APP_ROOT_SIZE                                 (64 * 1024)
 #define __APP_WIFI_CFG_SIZE                             (4 * 1024)
 #define __APP_APP_SIZE                                  (__APP_FLASH_SIZE - __APP_BOOTLOADER_SIZE - __APP_ROMFS_SIZE - __APP_ROOT_SIZE - __APP_WIFI_CFG_SIZE)
