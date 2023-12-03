@@ -101,12 +101,6 @@ int hwtest_main(int argc, char **argv)
     vsf_thread_wfe(VSF_EVT_USER);
 #endif
 
-#if VSF_USE_USB_DEVICE == ENABLED
-#endif
-
-#if VSF_USE_USB_HOST == ENABLED
-#endif
-
 #if VSF_HAL_USE_MMC == ENABLED
     DIR *dp = opendir("/mnt/mmc");
     if (NULL == dp) {
@@ -122,5 +116,8 @@ int hwtest_main(int argc, char **argv)
     }
 #endif
 
+#if VSF_USE_USB_HOST == ENABLED
+    system("usbhost");
+#endif
     return 0;
 }
