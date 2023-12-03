@@ -1,5 +1,6 @@
-#define __VSF_DISP_CLASS_INHERIT__
+#define __VSF_DISP_CLASS_INHERIT__      // for disp->ui_on_ready
 #include <unistd.h>
+#include <dirent.h>
 #include <vsf_board.h>
 
 #if VSF_USE_UI == ENABLED
@@ -52,15 +53,16 @@ static void __i2c_isrhandler(void *target_ptr, vsf_i2c_t *i2c_ptr, vsf_i2c_irq_m
     } else {
         if (irq_mask & (VSF_I2C_IRQ_MASK_MASTER_ADDRESS_NACK | VSF_I2C_IRQ_MASK_MASTER_ERROR)) {
             vsf_trace_info("__ ");
-        } else if (irq_mask & VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE) {
-            vsf_trace_info("%02X ", slave_addr);
+        } else if (irq_mask & (VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE | VSF_I2C_IRQ_MASK_MASTER_NACK_DETECT)) {
+            vsf_trace_info("%02x ", slave_addr);
         }
         if (++slave_addr > 0x77) {
+            vsf_trace_info(VSF_TRACE_CFG_LINEEND);
             vsf_eda_post_evt((vsf_eda_t *)target_ptr, VSF_EVT_USER);
             return;
         }
         if (!(slave_addr & 0x0F)) {
-            vsf_trace_info(VSF_TRACE_CFG_LINEEND "%02X: ", slave_addr & 0xF0);
+            vsf_trace_info(VSF_TRACE_CFG_LINEEND "%02x: ", slave_addr & 0xF0);
         }
     }
 
@@ -106,6 +108,18 @@ int hwtest_main(int argc, char **argv)
 #endif
 
 #if VSF_HAL_USE_MMC == ENABLED
+    DIR *dp = opendir("/mnt/mmc");
+    if (NULL == dp) {
+        vsf_trace_error("invalid mount entry for mmc" VSF_TRACE_CFG_LINEEND);
+    } else {
+        struct dirent *dentry = readdir(dp);
+        if (NULL == dentry) {
+            vsf_trace_error("sd card not mounted" VSF_TRACE_CFG_LINEEND);
+        } else {
+            vsf_trace_error("sd card mounted ok" VSF_TRACE_CFG_LINEEND);
+        }
+        closedir(dp);
+    }
 #endif
 
     return 0;
