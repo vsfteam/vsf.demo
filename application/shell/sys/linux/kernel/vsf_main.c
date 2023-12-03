@@ -49,6 +49,7 @@
  *   vsf/source/shell/sys/linux/lib/3rd-party/fnmatch
  *   vsf/source/shell/sys/linux/lib/3rd-party/glob
  *   vsf/source/shell/sys/linux/lib/3rd-party/regex
+ *   ./hwtest_main.c
  *   optional:
  *    for package manager, need VSF_USE_LWIP from vsf_board
  *     ./vsf_linux_package_manager.c
@@ -583,6 +584,12 @@ void vpm_on_installed(void)
 }
 #endif
 
+WEAK(hwtest_main)
+int hwtest_main(int argc, char **argv)
+{
+    return 0;
+}
+
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
@@ -669,6 +676,9 @@ int vsf_linux_create_fhs(void)
     }
 #endif
     vsf_board_init_linux();
+
+    extern int hwtest_main(int argc, char **argv);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/hwtest", hwtest_main);
 
     return 0;
 }
