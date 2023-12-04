@@ -440,6 +440,76 @@ static int __appcfg_main(int argc, char *argv[])
 #endif
 
 #if VSF_USE_USB_HOST == ENABLED
+
+#   if VSF_USE_SCSI == ENABLED && VSF_USE_MAL == ENABLED && VSF_MAL_USE_SCSI_MAL == ENABLED
+typedef struct vsf_scsi_mounter_t {
+    implement(vk_scsi_mal_t)
+    implement(vk_malfs_mounter_t)
+    vsf_mutex_t __mutex;
+    vsf_eda_t eda;
+    enum {
+        STATE_INIT,
+        STATE_OPEN_DIR,
+        STATE_MBR_MOUNT,
+    } state;
+    bool is_mounted;
+} vsf_scsi_mounter_t;
+static vsf_scsi_mounter_t __usr_scsi_mounter;
+
+void __user_scsi_mounter(vsf_eda_t *eda, vsf_evt_t evt)
+{
+    vsf_scsi_mounter_t *mounter = container_of(eda, vsf_scsi_mounter_t, eda);
+
+    switch (evt) {
+    case VSF_EVT_INIT:
+        mounter->mutex = &mounter->__mutex;
+        mounter->state = STATE_INIT;
+        vk_mal_init(&mounter->use_as__vk_mal_t);
+        break;
+    case VSF_EVT_RETURN:
+        if (vsf_eda_get_return_value() != VSF_ERR_NONE) {
+            vsf_trace_error("fail to mount scsi drive" VSF_TRACE_CFG_LINEEND);
+            break;
+        }
+        switch (mounter->state) {
+        case STATE_INIT:
+            mounter->state = STATE_OPEN_DIR;
+            vk_file_open(NULL, "/mnt/scsi", &mounter->dir);
+            break;
+        case STATE_OPEN_DIR:
+            mounter->mal = &mounter->use_as__vk_mal_t;
+            mounter->state = STATE_MBR_MOUNT;
+            vk_malfs_mount_mbr(&mounter->use_as__vk_malfs_mounter_t);
+            break;
+        case STATE_MBR_MOUNT:
+            vsf_trace_debug("scsi mounted at /mnt/scsi" VSF_TRACE_CFG_LINEEND);
+            break;
+        }
+        break;
+    }
+}
+
+void vsf_scsi_on_new(vk_scsi_t *scsi)
+{
+    if (!__usr_scsi_mounter.is_mounted) {
+        __usr_scsi_mounter.is_mounted = true;
+        __usr_scsi_mounter.scsi = scsi;
+        __usr_scsi_mounter.drv = &vk_scsi_mal_drv;
+        vsf_eda_start(&__usr_scsi_mounter.eda, &(vsf_eda_cfg_t){
+            .fn.evthandler      = __user_scsi_mounter,
+            .priority           = vsf_prio_0,
+        });
+    }
+}
+
+void vsf_scsi_on_delete(vk_scsi_t *scsi)
+{
+    if (scsi == __usr_scsi_mounter.scsi) {
+        __usr_scsi_mounter.is_mounted = false;
+    }
+}
+#   endif
+
 static int __usbh_main(int argc, char *argv[])
 {
     static bool __usbh_inited = false;
@@ -486,6 +556,9 @@ static int __usbh_main(int argc, char *argv[])
 #   if VSF_USBH_USE_MSC == ENABLED
         static vk_usbh_class_t __usbh_msc = { .drv = &vk_usbh_msc_drv };
         vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_msc);
+#       if VSF_USE_SCSI == ENABLED && VSF_USE_MAL == ENABLED && VSF_MAL_USE_SCSI_MAL == ENABLED
+        mkdirs("/mnt/scsi", 0);
+#       endif
 #   endif
     }
     return 0;
@@ -553,7 +626,7 @@ static void __mmc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
             vsf_heap_free(__mmc_mounter);
             __mmc_mounter = NULL;
             if (VSF_ERR_NONE == vsf_eda_get_return_value()) {
-                vsf_trace_debug("mounted at /mnt/mmc" VSF_TRACE_CFG_LINEEND);
+                vsf_trace_debug("mmc mounted at /mnt/mmc" VSF_TRACE_CFG_LINEEND);
             } else {
                 vsf_heap_free(__mmc_fs_mutex);
                 __mmc_fs_mutex = NULL;

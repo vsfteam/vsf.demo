@@ -56,6 +56,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #define VSF_USE_MAL                                     ENABLED
 #   define VSF_MAL_USE_MMC_MAL                          ENABLED
 #   define VSF_MAL_USE_FAKEFAT32_MAL                    ENABLED
+#   define VSF_MAL_USE_SCSI_MAL                         ENABLED
 #   define VSF_MAL_USE_HW_FLASH_MAL                     ENABLED
 #define VSF_USE_FS                                      ENABLED
 #   define VSF_FS_USE_ROMFS                             ENABLED
