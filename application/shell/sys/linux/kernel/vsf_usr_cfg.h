@@ -120,7 +120,6 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #endif
 
 #define VSF_LINUX_SIMPLE_STDLIB_CFG_HEAP_MONITOR        ENABLED
-//#define VSF_LINUX_SIMPLE_STDLIB_HEAP_MONITOR_TRACE_DEPTH    1024
 
 // APP configuration
 
