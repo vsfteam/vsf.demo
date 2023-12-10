@@ -229,7 +229,7 @@ static vk_mal_scsi_t __app_mscbot_romfs_mal_scsi = {
 };
 
 #   if VSF_HAL_USE_MMC == ENABLED
-static const vk_virtual_scsi_param_t __app_mscbot_tf_scsi_param = {
+static vk_virtual_scsi_param_t __app_mscbot_tf_scsi_param = {
     .block_size         = 0,
     .block_num          = 0,
     .vendor             = "VSFTeam ",
@@ -746,32 +746,33 @@ int vsf_linux_create_fhs(void)
     busybox_install();
 #endif
 
-#if VSF_HAL_USE_MMC == ENABLED
-    __mmc_mal.mmc           = vsf_board.mmc;
-    __mmc_mal.hw_priority   = vsf_arch_prio_0;
-    __mmc_mal.voltage       = vsf_board.mmc_voltage;
-    __mmc_mal.bus_width     = vsf_board.mmc_bus_width;
-    __mmc_mal.drv           = &vk_mmc_mal_drv;
-
-    if (!__usr_linux_boot) {
-        vsf_teda_start(&__mmc_task, &(vsf_eda_cfg_t){
-            .fn.evthandler  = __mmc_evthandler,
-            .priority       = vsf_prio_0,
-        });
-        mkdirs("/mnt/mmc", 0);
-    }
-#endif
-
     // 3. install executables and built-in libraries
 #if VSF_USE_MBEDTLS == ENABLED
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&vsf_mbedtls_vplt.info);
 #endif
     vsf_board_init_linux();
 
-    extern int hwtest_main(int argc, char **argv);
-    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/hwtest", hwtest_main);
+#if VSF_HAL_USE_MMC == ENABLED
+    __mmc_mal.mmc           = vsf_board.mmc;
+    __mmc_mal.hw_priority   = vsf_arch_prio_0;
+    __mmc_mal.voltage       = vsf_board.mmc_voltage;
+    __mmc_mal.bus_width     = vsf_board.mmc_bus_width;
+    __mmc_mal.drv           = &vk_mmc_mal_drv;
+#endif
 
     if (!__usr_linux_boot) {
+#if VSF_HAL_USE_MMC == ENABLED
+        vsf_teda_start(&__mmc_task, &(vsf_eda_cfg_t){
+            .fn.evthandler  = __mmc_evthandler,
+            .priority       = vsf_prio_0,
+        });
+        mkdirs("/mnt/mmc", 0);
+#endif
+
+        // some hw are maybe not available in boot mode, add hwtest in non-boot mode
+        extern int hwtest_main(int argc, char **argv);
+        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/hwtest", hwtest_main);
+
 #if VSF_USE_USB_HOST == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/usbhost", __usbh_main);
 #endif
