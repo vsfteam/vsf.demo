@@ -212,25 +212,44 @@ static vsf_mutex_t *__mmc_fs_mutex;
 // msc update for romfs
 
 describe_mem_stream(__app_usbd_msc_stream, 1024)
-static const vk_virtual_scsi_param_t __app_mscbot_scsi_param = {
-    .block_size             = APP_CFG_FAKEFAT32_SECTOR_SIZE,
-    .block_num              = APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE,
-    .vendor                 = "VSFTeam ",
-    .product                = "VSF.Romfs MSCBOT",
-    .revision               = "1.00",
-    .type                   = SCSI_PDT_DIRECT_ACCESS_BLOCK,
+static const vk_virtual_scsi_param_t __app_mscbot_romfs_scsi_param = {
+    .block_size         = APP_CFG_FAKEFAT32_SECTOR_SIZE,
+    .block_num          = APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE,
+    .vendor             = "VSFTeam ",
+    .product            = "VSF.Romfs MSCBOT",
+    .revision           = "1.00",
+    .serial             = "12345678",
+    .type               = SCSI_PDT_DIRECT_ACCESS_BLOCK,
 };
-static vk_mal_scsi_t __app_mscbot_mal_scsi = {
+static vk_mal_scsi_t __app_mscbot_romfs_mal_scsi = {
     .drv                = &vk_virtual_scsi_drv,
-    .param              = (void *)&__app_mscbot_scsi_param,
+    .param              = (void *)&__app_mscbot_romfs_scsi_param,
     .virtual_scsi_drv   = &vk_mal_virtual_scsi_drv,
     .mal                = &__app_fakefat32_mal.use_as__vk_mal_t,
 };
 
+#   if VSF_HAL_USE_MMC == ENABLED
+static const vk_virtual_scsi_param_t __app_mscbot_tf_scsi_param = {
+    .block_size         = 0,
+    .block_num          = 0,
+    .vendor             = "VSFTeam ",
+    .product            = "VSF.TF MSCBOT   ",
+    .revision           = "1.00",
+    .serial             = "87654321",
+    .type               = SCSI_PDT_DIRECT_ACCESS_BLOCK,
+};
+static vk_mal_scsi_t __app_mscbot_tf_mal_scsi = {
+    .drv                = &vk_virtual_scsi_drv,
+    .param              = (void *)&__app_mscbot_tf_scsi_param,
+    .virtual_scsi_drv   = &vk_mal_virtual_scsi_drv,
+    .mal                = &__mmc_mal.use_as__vk_mal_t,
+};
+#   endif
+
 describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED)
     usbd_common_desc_iad(__app_usbd,
                         // str_product, str_vendor, str_serial
-                        u"VSFLinux.Romfs", u"VSF", u"1.0.0",
+                        u"VSFLinux.Boot", u"VSF", u"1.0.0",
                         // ep0_size
                         64,
                         // total function descriptor size
@@ -260,12 +279,13 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         0,
                         // bulk in ep, bulk out ep
                         1, 1,
-                        // max lun(logic unit number)
-                        0,
-                        // scsi_dev
-                        &__app_mscbot_mal_scsi.use_as__vk_scsi_t,
                         // stream
-                        &__app_usbd_msc_stream.use_as__vsf_stream_t
+                        &__app_usbd_msc_stream.use_as__vsf_stream_t,
+                        // scsi_dev(s)
+                        &__app_mscbot_romfs_mal_scsi.use_as__vk_scsi_t
+#   if VSF_HAL_USE_MMC == ENABLED
+                        ,&__app_mscbot_tf_mal_scsi.use_as__vk_scsi_t
+#   endif
         )
     usbd_ifs(__app_usbd)
         usbd_mscbot_ifs(__app_usbd, 0)
@@ -571,7 +591,7 @@ static void __mmc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
     switch (evt) {
     case VSF_EVT_TIMER:
     case VSF_EVT_INIT:
-        if (!(vsf_gpio_read(vsf_board.mmc_det_port) & (1 << vsf_board.mmc_det_pin))) {
+        if (!VSF_BOARD_MMC_DETECTED()) {
             // TODO: unmount fs if mounted, mal_fini if initialized
             __mmc_state = MMC_STATE_WAIT_DET;
         set_timer:
@@ -584,11 +604,6 @@ static void __mmc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
         }
         __mmc_state = MMC_STATE_MAL;
 
-        __mmc_mal.mmc           = vsf_board.mmc;
-        __mmc_mal.hw_priority   = vsf_arch_prio_0;
-        __mmc_mal.voltage       = vsf_board.mmc_voltage;
-        __mmc_mal.bus_width     = vsf_board.mmc_bus_width;
-        __mmc_mal.drv           = &vk_mmc_mal_drv;
         vk_mal_init(&__mmc_mal.use_as__vk_mal_t);
         break;
     case VSF_EVT_RETURN:
@@ -732,27 +747,45 @@ int vsf_linux_create_fhs(void)
 #endif
 
 #if VSF_HAL_USE_MMC == ENABLED
-    vsf_teda_start(&__mmc_task, &(vsf_eda_cfg_t){
-        .fn.evthandler          = __mmc_evthandler,
-        .priority               = vsf_prio_0,
-    });
-    mkdirs("/mnt/mmc", 0);
+    __mmc_mal.mmc           = vsf_board.mmc;
+    __mmc_mal.hw_priority   = vsf_arch_prio_0;
+    __mmc_mal.voltage       = vsf_board.mmc_voltage;
+    __mmc_mal.bus_width     = vsf_board.mmc_bus_width;
+    __mmc_mal.drv           = &vk_mmc_mal_drv;
+
+    if (!__usr_linux_boot) {
+        vsf_teda_start(&__mmc_task, &(vsf_eda_cfg_t){
+            .fn.evthandler  = __mmc_evthandler,
+            .priority       = vsf_prio_0,
+        });
+        mkdirs("/mnt/mmc", 0);
+    }
 #endif
 
     // 3. install executables and built-in libraries
 #if VSF_USE_MBEDTLS == ENABLED
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&vsf_mbedtls_vplt.info);
 #endif
-#if VSF_USE_USB_HOST == ENABLED
-    if (!__usr_linux_boot) {
-        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/usbhost", __usbh_main);
-    }
-#endif
     vsf_board_init_linux();
 
     extern int hwtest_main(int argc, char **argv);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/hwtest", hwtest_main);
 
+    if (!__usr_linux_boot) {
+#if VSF_USE_USB_HOST == ENABLED
+        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/usbhost", __usbh_main);
+#endif
+    } else {
+#if VSF_USE_USB_DEVICE == ENABLED
+#   if VSF_HAL_USE_MMC == ENABLED
+        usbd_mscbot_scsi_config(__app_usbd, 0, 1, !VSF_BOARD_MMC_DETECTED());
+#   endif
+        usbd_mscbot_scsi_config(__app_usbd, 0, 0, false);
+
+        vk_usbd_init(&__app_usbd);
+        vk_usbd_connect(&__app_usbd);
+#endif
+    }
     return 0;
 }
 
@@ -768,10 +801,6 @@ int VSF_USER_ENTRY(int argc, char *argv[])
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
     if (APP_BOOT1_KEY_IS_DOWN) {
-#   if VSF_USE_USB_DEVICE == ENABLED
-        vk_usbd_init(&__app_usbd);
-        vk_usbd_connect(&__app_usbd);
-#   endif
         __usr_linux_boot = true;
     }
 #endif
