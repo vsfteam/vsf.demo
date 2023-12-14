@@ -502,7 +502,11 @@ void __user_scsi_mounter(vsf_eda_t *eda, vsf_evt_t evt)
             vk_malfs_mount_mbr(&mounter->use_as__vk_malfs_mounter_t);
             break;
         case STATE_MBR_MOUNT:
-            vsf_trace_debug("scsi mounted at /mnt/scsi" VSF_TRACE_CFG_LINEEND);
+            if (mounter->partition_mounted > 0) {
+                vsf_trace_debug("scsi mounted at /mnt/scsi" VSF_TRACE_CFG_LINEEND);
+            } else {
+                vsf_trace_debug("no supported partition" VSF_TRACE_CFG_LINEEND);
+            }
             break;
         }
         break;
@@ -638,15 +642,23 @@ static void __mmc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
                 goto mmc_mal_close;
             }
         } else if (MMC_STATE_FS_MOUNT == __mmc_state) {
+            vsf_err_t mount_err = __mmc_mounter->err;
+            uint8_t partition_mounted = __mmc_mounter->partition_mounted;
             vsf_heap_free(__mmc_mounter);
             __mmc_mounter = NULL;
-            if (VSF_ERR_NONE == vsf_eda_get_return_value()) {
-                vsf_trace_debug("mmc mounted at /mnt/mmc" VSF_TRACE_CFG_LINEEND);
-            } else {
+
+            if (0 == partition_mounted) {
                 vsf_heap_free(__mmc_fs_mutex);
                 __mmc_fs_mutex = NULL;
-                vsf_trace_debug("fail to mount mmc" VSF_TRACE_CFG_LINEEND);
+
+                if (mount_err != VSF_ERR_NONE) {
+                    vsf_trace_debug("fail to mount mmc" VSF_TRACE_CFG_LINEEND);
+                } else {
+                    vsf_trace_debug("no supported partition" VSF_TRACE_CFG_LINEEND);
+                }
                 goto mmc_mal_close;
+            } else {
+                vsf_trace_debug("mmc mounted at /mnt/mmc" VSF_TRACE_CFG_LINEEND);
             }
         }
         break;
