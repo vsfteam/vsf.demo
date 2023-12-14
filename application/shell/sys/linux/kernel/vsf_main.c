@@ -499,7 +499,7 @@ void __user_scsi_mounter(vsf_eda_t *eda, vsf_evt_t evt)
         case STATE_OPEN_DIR:
             mounter->mal = &mounter->use_as__vk_mal_t;
             mounter->state = STATE_MBR_MOUNT;
-            vk_malfs_mount_mbr(&mounter->use_as__vk_malfs_mounter_t);
+            vk_malfs_mount(&mounter->use_as__vk_malfs_mounter_t);
             break;
         case STATE_MBR_MOUNT:
             if (mounter->partition_mounted > 0) {
@@ -636,7 +636,7 @@ static void __mmc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
                 __mmc_mounter->mal = &__mmc_mal.use_as__vk_mal_t;
                 __mmc_mounter->mutex = (vsf_mutex_t *)__mmc_fs_mutex;
                 __mmc_state = MMC_STATE_FS_MOUNT;
-                vk_malfs_mount_mbr(__mmc_mounter);
+                vk_malfs_mount(__mmc_mounter);
             } else {
                 vsf_trace_debug("fail to open /mnt/mmc" VSF_TRACE_CFG_LINEEND);
                 goto mmc_mal_close;
