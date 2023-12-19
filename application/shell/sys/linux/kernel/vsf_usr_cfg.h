@@ -35,8 +35,13 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 /*============================ MACROS ========================================*/
 
 // kernel
-#define VSF_OS_CFG_EDA_FRAME_POOL_SIZE                  64
-#define VSF_OS_CFG_EDA_FRAME_POOL_EXTRA_SIZE            128
+#define VSF_OS_CFG_EDA_FRAME_POOL_SIZE                  32
+// define VSF_OS_CFG_EDA_FRAME_POOL_EXTRA_SIZE to 16 * sizeof(uintptr_t)
+#ifdef __VSF64__
+#   define VSF_OS_CFG_EDA_FRAME_POOL_EXTRA_SIZE         (16 * 8)
+#else
+#   define VSF_OS_CFG_EDA_FRAME_POOL_EXTRA_SIZE         (16 * 4)
+#endif
 
 // components
 
@@ -62,6 +67,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_FS_USE_ROMFS                             ENABLED
 #   define VSF_FS_USE_MEMFS                             ENABLED
 #   define VSF_FS_USE_FATFS                             ENABLED
+#   define VSF_FS_USE_EXFATFS                           ENABLED
 #   define VSF_FS_USE_LITTLEFS                          VSF_USE_LITTLEFS
 #define VSF_USE_INPUT                                   ENABLED
 #if VSF_USE_LWIP == ENABLED
