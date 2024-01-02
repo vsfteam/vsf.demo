@@ -100,7 +100,8 @@
 #endif
 #ifndef APP_CFG_FAKEFAT32_SIZE
 //  0x1000 + reserved sector size(64)
-#   define APP_CFG_FAKEFAT32_SIZE                   (APP_CFG_FAKEFAT32_SECTOR_SIZE * (0x10000 + 64))
+// for iOS/MacOS support, need 0x10000 + 0x457, no idea why
+#   define APP_CFG_FAKEFAT32_SIZE                   (APP_CFG_FAKEFAT32_SECTOR_SIZE * (0x10000 + 0x457))
 #endif
 #ifndef APP_CFG_FAKEFAT32_SECTORS_PER_CLUSTER
 #   define APP_CFG_FAKEFAT32_SECTORS_PER_CLUSTER    1
