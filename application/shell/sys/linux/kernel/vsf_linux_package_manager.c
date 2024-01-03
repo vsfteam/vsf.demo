@@ -2,6 +2,7 @@
 #define __VSF_HW_FLASH_MAL_CLASS_INHERIT__
 
 #include <unistd.h>
+#include <stdio.h>
 
 #if VSF_USE_MBEDTLS == ENABLED
 #   include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
@@ -149,11 +150,136 @@ do_exit:
 #endif
 }
 
+static int __vpm_install_local_package(char *path)
+{
+    uint8_t *buffer = NULL;
+    FILE *f = NULL;
+    long fsize, remain;
+    size_t cursize;
+    vk_romfs_header_t *image;
+    int result = -1;
+    uint64_t flash_addr;
+    char *package, *version;
+    vk_romfs_header_t header;
+
+    f = fopen(path, "rb");
+    if (NULL == f) {
+        printf("failed to open %s\n", path);
+        return -1;
+    }
+    fseek(f, 0, SEEK_END);
+    fsize = remain = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    if (fsize < sizeof(*image)) {
+        printf("invalid romfs image %s\n", path);
+        goto do_exit_close_file;
+    }
+
+    buffer = malloc(4096);
+    if (NULL == buffer) {
+        printf("failed to allocate buffer\n");
+        goto do_exit_close_file;
+    }
+
+    cursize = vsf_min(4096, remain);
+    if (cursize != fread(buffer, 1, cursize, f)) {
+        printf("failed to read %s\n", path);
+        goto do_exit_free_buffer;
+    }
+    remain -= cursize;
+
+    image = (vk_romfs_header_t *)buffer;
+    if (!vsf_romfs_is_image_valid(image)) {
+        printf("invalid package %s\n", path);
+        goto do_exit_free_buffer;
+    }
+
+    package = strdup(image->name);
+    if (NULL == package) {
+        printf("fail to allocate name for package %s\n", image->name);
+        goto do_exit_free_buffer;
+    }
+    version = strchr(package, ' ');
+    if (version != NULL) {
+        *version = '\0';
+    }
+
+    header = *(vk_romfs_header_t *)buffer;
+    memset(buffer, 0xFF, sizeof(header));
+
+    image = (vk_romfs_header_t *)__vpm.fsinfo->image;
+    char *tmp;
+    while ((image != NULL) && vsf_romfs_is_image_valid(image)) {
+        tmp = strstr((const char *)image->name, package);
+        if (tmp != NULL && tmp[strlen(package)] == ' ') {
+            printf("%s already installed\n", package);
+            goto do_exit_free_package;
+        }
+        image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, true);
+    }
+    if (NULL == image) {
+        printf("not enough romfs space\n");
+        goto do_exit_free_package;
+    }
+
+    printf("installing %s:", package);
+    vk_mal_init(&romfs_mal.use_as__vk_mal_t);
+    flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
+    vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, cursize, buffer);
+    flash_addr += cursize;
+    while (remain > 0) {
+        cursize = vsf_min(4096, remain);
+        if (cursize != fread(buffer, 1, cursize, f)) {
+            printf("failed to read %s\n", path);
+            goto do_exit_mal_fini;
+        }
+        remain -= cursize;
+
+        vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, cursize, buffer);
+        flash_addr += cursize;
+        printf("*");
+    }
+
+    if (header.size != 0) {
+        vk_romfs_header_t header_zero = { 0 };
+        flash_addr = (flash_addr + __vpm.fsinfo->alignment - 1) & ~(__vpm.fsinfo->alignment - 1);
+        vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header_zero), (uint8_t *)&header_zero);
+
+        flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
+        vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header), (uint8_t *)&header);
+    }
+
+    printf("success\n");
+    result = 0;
+
+do_exit_mal_fini:
+    vk_mal_fini(&romfs_mal.use_as__vk_mal_t);
+do_exit_free_package:
+    free(package);
+do_exit_free_buffer:
+    free(buffer);
+do_exit_close_file:
+    fclose(f);
+
+    return result;
+}
+
 static int __vpm_install_packages(char *argv[])
 {
     int num_installed = 0;
     while (*argv != NULL) {
         if (!__vpm_install_package(*argv++)) {
+            num_installed++;
+        }
+    }
+    return num_installed;
+}
+
+static int __vpm_install_local_packages(char *argv[])
+{
+    int num_installed = 0;
+    while (*argv != NULL) {
+        if (!__vpm_install_local_package(*argv++)) {
             num_installed++;
         }
     }
@@ -298,6 +424,7 @@ commands:\n\
   list-local - list local installed pakcages\n\
   list-remote - list remote available packages\n\
   install - install packages\n\
+  install-local - install packages in local storage\n\
   uninstall - uninstall packages\n\
   repo - set repo path\n");
         return result;
@@ -313,6 +440,16 @@ commands:\n\
             return -1;
         }
         if (__vpm_install_packages(&argv[2]) > 0) {
+            vpm_on_installed();
+            return 0;
+        }
+        return -1;
+    } else if (!strcmp(argv[1], "install-local")) {
+        if (!__vpm.can_install) {
+            printf("vpm: Can not install packages in current mode, Please reboot to LinuxBoot mode\n");
+            return -1;
+        }
+        if (__vpm_install_local_packages(&argv[2]) > 0) {
             vpm_on_installed();
             return 0;
         }
