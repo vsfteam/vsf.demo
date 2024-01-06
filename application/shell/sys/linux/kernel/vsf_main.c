@@ -217,7 +217,7 @@ static vsf_mutex_t *__mmc_fs_mutex;
 // msc update for romfs
 
 describe_mem_stream(__app_usbd_msc_stream, 2 * APP_CFG_FAKEFAT32_SECTOR_SIZE)
-static const vk_virtual_scsi_param_t __app_mscbot_romfs_scsi_param = {
+static vk_virtual_scsi_param_t __app_mscbot_romfs_scsi_param = {
     .block_size         = APP_CFG_FAKEFAT32_SECTOR_SIZE,
     .block_num          = APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE,
     .vendor             = "VSFTeam ",
