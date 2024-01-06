@@ -539,6 +539,28 @@ void vsf_scsi_on_delete(vk_scsi_t *scsi)
 }
 #   endif
 
+#   if VSF_USBH_USE_UAC == ENABLED
+void vsf_usbh_uac_on_new(void *uac, usb_uac_ac_interface_header_desc_t *ac_header)
+{
+    vk_usbh_uac_stream_t * stream;
+
+    vsf_trace(VSF_TRACE_INFO, "usbh_uac: new dev" VSF_TRACE_CFG_LINEEND);
+    // TODO: parse UAC units
+    vsf_trace(VSF_TRACE_INFO, "  descriptors:" VSF_TRACE_CFG_LINEEND);
+    vsf_trace_buffer(VSF_TRACE_INFO, ac_header, ac_header->wTotalLength);
+
+    for (int i = 0; i < ac_header->bInCollection; i++) {
+        stream = vsf_usbh_uac_get_stream_info(uac, i);
+        vsf_trace(VSF_TRACE_INFO, "  stream%d:" VSF_TRACE_CFG_LINEEND, i);
+        vsf_trace(VSF_TRACE_INFO, "    direction: %s" VSF_TRACE_CFG_LINEEND, stream->is_in ? "IN" : "OUT");
+        vsf_trace(VSF_TRACE_INFO, "    format: 0x%04X" VSF_TRACE_CFG_LINEEND, stream->format);
+        vsf_trace(VSF_TRACE_INFO, "    channel_num: %d" VSF_TRACE_CFG_LINEEND, stream->channel_num);
+        vsf_trace(VSF_TRACE_INFO, "    sample_size: %d" VSF_TRACE_CFG_LINEEND, stream->sample_size);
+        vsf_trace(VSF_TRACE_INFO, "    sample_rate: %d" VSF_TRACE_CFG_LINEEND, stream->sample_rate);
+    }
+}
+#   endif
+
 static int __usbh_main(int argc, char *argv[])
 {
     static bool __usbh_inited = false;
@@ -588,6 +610,14 @@ static int __usbh_main(int argc, char *argv[])
 #       if VSF_USE_SCSI == ENABLED && VSF_USE_MAL == ENABLED && VSF_MAL_USE_SCSI_MAL == ENABLED
         mkdirs("/mnt/scsi", 0);
 #       endif
+#   endif
+#   if VSF_USBH_USE_UAC == ENABLED
+        static vk_usbh_class_t __usbh_uac = { .drv = &vk_usbh_uac_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_uac);
+#   endif
+#   if VSF_USBH_USE_UVC == ENABLED
+        static vk_usbh_class_t __usbh_uvc = { .drv = &vk_usbh_uvc_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_uvc);
 #   endif
     }
     return 0;
