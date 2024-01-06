@@ -92,7 +92,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #       define VSF_USBH_USE_XB1                         ENABLED
 #       define VSF_USBH_USE_MSC                         ENABLED
 #       define VSF_USBH_USE_UAC                         ENABLED
-//#       define VSF_USBH_USE_UVC                         ENABLED
+#       define VSF_USBH_USE_UVC                         ENABLED
 #endif
 
 #define VSF_USE_LINUX                                   ENABLED

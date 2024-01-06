@@ -542,13 +542,9 @@ void vsf_scsi_on_delete(vk_scsi_t *scsi)
 #   if VSF_USBH_USE_UAC == ENABLED
 void vsf_usbh_uac_on_new(void *uac, usb_uac_ac_interface_header_desc_t *ac_header)
 {
-    vk_usbh_uac_stream_t * stream;
+    vk_usbh_uac_stream_t *stream;
 
     vsf_trace(VSF_TRACE_INFO, "usbh_uac: new dev" VSF_TRACE_CFG_LINEEND);
-    // TODO: parse UAC units
-    vsf_trace(VSF_TRACE_INFO, "  descriptors:" VSF_TRACE_CFG_LINEEND);
-    vsf_trace_buffer(VSF_TRACE_INFO, ac_header, ac_header->wTotalLength);
-
     for (int i = 0; i < ac_header->bInCollection; i++) {
         stream = vsf_usbh_uac_get_stream_info(uac, i);
         vsf_trace(VSF_TRACE_INFO, "  stream%d:" VSF_TRACE_CFG_LINEEND, i);
@@ -557,6 +553,38 @@ void vsf_usbh_uac_on_new(void *uac, usb_uac_ac_interface_header_desc_t *ac_heade
         vsf_trace(VSF_TRACE_INFO, "    channel_num: %d" VSF_TRACE_CFG_LINEEND, stream->channel_num);
         vsf_trace(VSF_TRACE_INFO, "    sample_size: %d" VSF_TRACE_CFG_LINEEND, stream->sample_size);
         vsf_trace(VSF_TRACE_INFO, "    sample_rate: %d" VSF_TRACE_CFG_LINEEND, stream->sample_rate);
+    }
+}
+#   endif
+
+#   if VSF_USBH_USE_UVC == ENABLED
+void vsf_usbh_uvc_on_new(void *uvc, usb_uvc_vc_interface_header_desc_t *vc_header,
+        usb_uvc_vs_interface_header_desc_t *vs_header)
+{
+    usb_uvc_format_desc_t *format;
+    usb_uvc_frame_desc_t *frame, *tmp;
+    uint16_t size;
+
+    vsf_trace(VSF_TRACE_INFO, "usbh_uvc: new dev" VSF_TRACE_CFG_LINEEND);
+    for (int i = 0; i < vs_header->bNumFormats; i++) {
+        format = vsf_usbh_uac_get_format(uvc, i);
+        vsf_trace(VSF_TRACE_INFO, "  format%d:" VSF_TRACE_CFG_LINEEND, i);
+        vsf_trace(VSF_TRACE_INFO, "    type: %d" VSF_TRACE_CFG_LINEEND, format->bDescriptorSubtype);
+
+        frame = (usb_uvc_frame_desc_t *)format;
+        size = vs_header->wTotalLength - ((uint8_t *)frame - (uint8_t *)vs_header);
+        for (int j = 0; j < format->bNumFrameDescriptors; j++) {
+            vsf_usbh_uac_get_desc((uint8_t *)frame + frame->bLength, size, format->bDescriptorSubtype + 1, (void **)&tmp);
+            size -= (uint8_t *)tmp - (uint8_t *)frame;
+            frame = tmp;
+
+            vsf_trace(VSF_TRACE_INFO, "    frame%d:" VSF_TRACE_CFG_LINEEND, j);
+            vsf_trace(VSF_TRACE_INFO, "      resolution: %d x %d" VSF_TRACE_CFG_LINEEND, frame->wWidth, frame->wHeight);
+
+            for (int k = 0; k < frame->bFrameIntervalType; k++) {
+                vsf_trace(VSF_TRACE_INFO, "      fps: %dHz" VSF_TRACE_CFG_LINEEND, 10000000 / frame->dwFrameInterval[k]);
+            }
+        }
     }
 }
 #   endif
