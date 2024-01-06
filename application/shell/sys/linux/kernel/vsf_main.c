@@ -96,7 +96,7 @@
 #endif
 
 #ifndef APP_CFG_FAKEFAT32_SECTOR_SIZE
-#   define APP_CFG_FAKEFAT32_SECTOR_SIZE            512
+#   define APP_CFG_FAKEFAT32_SECTOR_SIZE            512ULL
 #endif
 #ifndef APP_CFG_FAKEFAT32_SIZE
 //  0x1000 + reserved sector size(64)
@@ -110,6 +110,10 @@
 // Check FAT32 limits, refer to: https://en.wikipedia.org/wiki/Design_of_the_FAT_file_system#Size_limits
 #if (((APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE) - 64) / APP_CFG_FAKEFAT32_SECTORS_PER_CLUSTER) < 65525
 #   warning invalid FAT32 minimum size limits, increase APP_CFG_FAKEFAT32_SIZE
+#endif
+#if     (APP_CFG_FAKEFAT32_SECTOR_SIZE > 4096) ||                               \
+        ((APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE) > 0xF0000000)
+#   error not supported
 #endif
 
 #if VSF_USBD_CFG_AUTOSETUP != ENABLED
@@ -212,7 +216,7 @@ static vsf_mutex_t *__mmc_fs_mutex;
 
 // msc update for romfs
 
-describe_mem_stream(__app_usbd_msc_stream, 1024)
+describe_mem_stream(__app_usbd_msc_stream, 2 * APP_CFG_FAKEFAT32_SECTOR_SIZE)
 static const vk_virtual_scsi_param_t __app_mscbot_romfs_scsi_param = {
     .block_size         = APP_CFG_FAKEFAT32_SECTOR_SIZE,
     .block_num          = APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE,
