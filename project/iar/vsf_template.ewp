@@ -5059,6 +5059,15 @@
                             </file>
                         </group>
                         <group>
+                            <name>UVC</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\host\class\UVC\vsf_usbh_uvc.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\host\class\UVC\vsf_usbh_uvc.h</name>
+                            </file>
+                        </group>
+                        <group>
                             <name>XB1</name>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\usb\host\class\XB1\vsf_usbh_xb1.c</name>

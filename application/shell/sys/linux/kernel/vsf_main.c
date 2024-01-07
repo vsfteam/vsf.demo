@@ -567,14 +567,14 @@ void vsf_usbh_uvc_on_new(void *uvc, usb_uvc_vc_interface_header_desc_t *vc_heade
 
     vsf_trace(VSF_TRACE_INFO, "usbh_uvc: new dev" VSF_TRACE_CFG_LINEEND);
     for (int i = 0; i < vs_header->bNumFormats; i++) {
-        format = vsf_usbh_uac_get_format(uvc, i);
+        format = vsf_usbh_uvc_get_format(uvc, i);
         vsf_trace(VSF_TRACE_INFO, "  format%d:" VSF_TRACE_CFG_LINEEND, i);
         vsf_trace(VSF_TRACE_INFO, "    type: %d" VSF_TRACE_CFG_LINEEND, format->bDescriptorSubtype);
 
         frame = (usb_uvc_frame_desc_t *)format;
         size = vs_header->wTotalLength - ((uint8_t *)frame - (uint8_t *)vs_header);
         for (int j = 0; j < format->bNumFrameDescriptors; j++) {
-            vsf_usbh_uac_get_desc((uint8_t *)frame + frame->bLength, size, format->bDescriptorSubtype + 1, (void **)&tmp);
+            vsf_usbh_uvc_get_desc((uint8_t *)frame + frame->bLength, size, format->bDescriptorSubtype + 1, (void **)&tmp);
             size -= (uint8_t *)tmp - (uint8_t *)frame;
             frame = tmp;
 
