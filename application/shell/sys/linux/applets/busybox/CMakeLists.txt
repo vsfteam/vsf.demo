@@ -37,7 +37,7 @@ target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
 
 # add user application source code/include directories
 vsf_add_compile_definitions(
-    __linux__           # DO NOT define __linux__ until mount/mount2 are implemented for busybox
+#    __linux__           # DO NOT define __linux__ until mount/mount2 are implemented for busybox
     BB_GLOBAL_CONST=    # avoid busybox optimization, which will cause hardfault on CortexM, refer to BB_GLOBAL_CONST in libbb.h
 )
 vsf_add_include_directories(
