@@ -1,3 +1,6 @@
 [submodule "vsf"]
 	path = vsf
 	url = ../vsf.git
+[submodule "application/shell/sys/linux/applets/busybox/raw"]
+	path = application/shell/sys/linux/applets/busybox/raw
+	url = ../../mirror/busybox.git
