@@ -3,7 +3,6 @@
 ## Submodule
 - vsf
   - PLOOC
-  - CMSIS(source/utilities/compiler/arm/3rd-party/CMSIS) for arm Cortex chips
 - application/shell/sys/linux/applets/busybox/raw
 
 ## patch
