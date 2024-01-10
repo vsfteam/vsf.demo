@@ -13,7 +13,7 @@
 - cmake: https://github.com/Kitware/CMake/releases
 - ninja: https://github.com/ninja-build/ninja/releases
 
-# Commands(current directory is application/shell/sys/linux/applets/busybox)
+## Commands(current directory is application/shell/sys/linux/applets/busybox)
 > mkdir build
 > cd build
 > cmake -G Ninja ..
