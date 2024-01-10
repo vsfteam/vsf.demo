@@ -31,6 +31,7 @@ file(GLOB_RECURSE MPY_SOURCES
     raw/extmod/modhashlib.c
     raw/extmod/modheapq.c
     raw/extmod/modjson.c
+    raw/extmod/modmachine.c
     raw/extmod/modnetwork.c
 #    raw/extmod/modos.c
     raw/extmod/modplatform.c
