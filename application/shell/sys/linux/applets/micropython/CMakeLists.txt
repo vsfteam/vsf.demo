@@ -38,7 +38,7 @@ target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
 # add user application source code/include directories
 vsf_add_include_directories(
     ../include
-    .
+    ./port
 )
 set(mpy_variant standard)
 include(micropython.cmake)

@@ -9,7 +9,6 @@ file(GLOB_RECURSE MPY_SOURCES
     raw/ports/unix/gccollect.c
     raw/ports/unix/input.c
     raw/ports/unix/main.c
-    raw/ports/unix/modmachine.c
     raw/ports/unix/modsocket.c
     raw/ports/unix/modtermios.c
     raw/ports/unix/mpthreadport.c
