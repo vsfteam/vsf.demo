@@ -89,8 +89,15 @@
 
 // Type definitions for the specific machine based on the word size.
 #ifndef MICROPY_OBJ_REPR
-typedef intptr_t mp_int_t; // must be pointer size
-typedef uintptr_t mp_uint_t; // must be pointer size
+#ifdef __LP64__
+typedef long mp_int_t; // must be pointer size
+typedef unsigned long mp_uint_t; // must be pointer size
+#else
+// These are definitions for machines where sizeof(int) == sizeof(void*),
+// regardless of actual size.
+typedef int mp_int_t; // must be pointer size
+typedef unsigned int mp_uint_t; // must be pointer size
+#endif
 #else
 // Assume that if we already defined the obj repr then we also defined types.
 #endif
@@ -144,11 +151,8 @@ typedef long mp_off_t;
 #define MICROPY_STACKLESS_STRICT    (0)
 #endif
 
-// If settrace is enabled then we need code saving.
-#if MICROPY_PY_SYS_SETTRACE
-#define MICROPY_PERSISTENT_CODE_SAVE (1)
-#define MICROPY_COMP_CONST (0)
-#endif
+// Implementation of the machine module.
+#define MICROPY_PY_MACHINE_INCLUDEFILE "ports/unix/modmachine.c"
 
 // Unix-specific configuration of machine.mem*.
 #define MICROPY_MACHINE_MEM_GET_READ_ADDR   mod_machine_mem_get_addr
@@ -234,21 +238,11 @@ static inline unsigned long mp_random_seed_init(void) {
 #include <stdio.h>
 #endif
 
-// If threading is enabled, configure the atomic section.
-#if MICROPY_PY_THREAD
-#define MICROPY_BEGIN_ATOMIC_SECTION() (mp_thread_unix_begin_atomic_section(), 0xffffffff)
-#define MICROPY_END_ATOMIC_SECTION(x) (void)x; mp_thread_unix_end_atomic_section()
-#endif
-
 // In lieu of a WFI(), slow down polling from being a tight loop.
-#ifndef MICROPY_EVENT_POLL_HOOK
-#define MICROPY_EVENT_POLL_HOOK \
-    do { \
-        extern void mp_handle_pending(bool); \
-        mp_handle_pending(true); \
-        usleep(500); /* equivalent to mp_hal_delay_us(500) */ \
-    } while (0);
-#endif
+//
+// Note that we don't delay for the full TIMEOUT_MS, as execution
+// can't be woken from the delay.
+#define MICROPY_INTERNAL_WFE(TIMEOUT_MS) mp_hal_delay_us(500)
 
 // Configure the implementation of machine.idle().
 #include <sched.h>

@@ -51,10 +51,6 @@ file(GLOB_RECURSE MPY_SOURCES
     raw/shared/runtime/gchelper_generic.c
 
     ${MPY_CORE_FILES}
-
-    # vsf modules/port for micropython
-    $ENV{VSF_PATH}/source/script/python/al/micropython/vsf_micropython.c
-    $ENV{VSF_PATH}/source/script/python/module/os/vsf_python_module_os.c
 )
 vsf_add_compile_definitions(
     ${VSF_TARGET_DEFINITIONS}
@@ -79,5 +75,9 @@ vsf_add_include_directories(
     $ENV{VSF_PATH}/source/component/3rd-party/mbedtls/raw/include
 )
 vsf_add_sources(
+    # vsf modules/port for micropython
+    $ENV{VSF_PATH}/source/component/script/python/al/micropython/vsf_micropython.c
+    $ENV{VSF_PATH}/source/component/script/python/module/os/vsf_python_module_os.c
+
     ${MPY_SOURCES}
 )
