@@ -340,7 +340,6 @@ vsf_add_include_directories(
     raw/include
 
     ${VSF_COMMON_INCLUDE_DIRECTORIES}
-    $ENV{VSF_PATH}/source/shell/sys/linux/include
 )
 vsf_add_sources(
     ${BUSYBOX_SOURCES}
@@ -355,11 +354,5 @@ if (NOT DEFINED VSF_APPLET)
     )
     vsf_add_sources(
         port/vsf_porting/libbb_dynlib.c
-    )
-endif()
-
-if(VSF_LINUX_USE_SIMPLE_LIBC)
-    vsf_add_include_directories(
-        $ENV{VSF_PATH}/source/shell/sys/linux/include/simple_libc
     )
 endif()
