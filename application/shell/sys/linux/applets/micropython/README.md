@@ -3,6 +3,7 @@
 ## Submodule
 - vsf
   - PLOOC
+  - source/component/3rd-party/mbedtls/raw
 - application/shell/sys/linux/applets/micropython/raw
 
 ## patch
