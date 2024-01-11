@@ -111,8 +111,10 @@
 #if (((APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE) - 64) / APP_CFG_FAKEFAT32_SECTORS_PER_CLUSTER) < 65525
 #   warning invalid FAT32 minimum size limits, increase APP_CFG_FAKEFAT32_SIZE
 #endif
-#if     (APP_CFG_FAKEFAT32_SECTOR_SIZE > 4096) ||                               \
-        ((APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE) > 0xF0000000)
+// max sector_size is 4K, max volume size is 8T
+#if     (APP_CFG_FAKEFAT32_SECTOR_SIZE > 4096)
+    ||  (APP_CFG_FAKEFAT32_SIZE > 0x80000000000ULL)
+    ||  ((APP_CFG_FAKEFAT32_SIZE / APP_CFG_FAKEFAT32_SECTOR_SIZE) >= 0x100000000ULL)
 #   error not supported
 #endif
 
