@@ -5,9 +5,6 @@
   - PLOOC
 - application/shell/sys/linux/applets/iperf/raw
 
-## patch
-- modify heap_size in ports/unix/main.c, to fit the ram of current target.
-
 ## Compiler and Utilities
 - arm-none-eabi-gcc: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
 - cmake: https://github.com/Kitware/CMake/releases
