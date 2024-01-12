@@ -7,3 +7,6 @@
 [submodule "application/shell/sys/linux/applets/micropython/raw"]
 	path = application/shell/sys/linux/applets/micropython/raw
 	url = ../../micropython/micropython.git
+[submodule "application/shell/sys/linux/applets/iperf/raw"]
+	path = application/shell/sys/linux/applets/iperf/raw
+	url = ../../esnet/iperf.git
