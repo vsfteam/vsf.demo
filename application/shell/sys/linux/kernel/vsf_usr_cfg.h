@@ -124,6 +124,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 
 #ifndef __CPU_WEBASSEMBLY__
 #   define VSF_USE_SIMPLE_SPRINTF                       ENABLED
+#       define VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT         ENABLED
 #   define VSF_USE_SIMPLE_SSCANF                        ENABLED
 #endif
 
