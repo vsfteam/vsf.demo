@@ -110,13 +110,13 @@
 #define HAVE_SYS_TYPES_H 1
 
 /* Have TCP_CONGESTION sockopt. */
-#define HAVE_TCP_CONGESTION 1
+//#undef HAVE_TCP_CONGESTION
 
 /* Have tcpi_snd_wnd field in tcp_info. */
 #define HAVE_TCP_INFO_SND_WND 1
 
 /* Have TCP_USER_TIMEOUT sockopt. */
-#define HAVE_TCP_USER_TIMEOUT 1
+//#undef HAVE_TCP_USER_TIMEOUT
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
