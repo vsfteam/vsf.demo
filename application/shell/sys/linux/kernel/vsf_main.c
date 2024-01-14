@@ -24,10 +24,13 @@
  * Submodule:
  *   vsf
  *     source/component/3rd-party/btstack/raw if VSF_USE_BTSTACK is enabled
- *     source/component/3rd-party/littlefs/raw
  *     source/component/3rd-party/mbedtls/raw
  *     source/component/3rd-party/PLOOC/raw
- *     source/hal/driver/AIC/AIC8800/vendor for AIC8800M(not for AIC8800M40B/AIC8800M80)
+ *   optional:
+ *    for root directory in embedded hardware, littlefs is used
+ *     source/component/3rd-party/littlefs/raw
+ *    for AIC8800M(not for AIC8800M40B/AIC8800M80)
+ *     source/hal/driver/AIC/AIC8800/vendor
  *
  * Board:
  *
@@ -35,9 +38,10 @@
  *   vsf/source/shell/sys/linux/include
  *   vsf/source/shell/sys/linux/include/simple_libc if VSF_LINUX_USE_SIMPLE_LIBC is enabled
  *   vsf/source/shell/sys/linux/include/libusb if VSF_USBH_USE_LIBUSB is enabled
- *   vsf/source/component/3rd-party/littlefs/port
- *   vsf/source/component/3rd-party/littlefs/raw
  *   optional:
+ *    for root directory in embedded hardware, littlefs is used
+ *     vsf/source/component/3rd-party/littlefs/port
+ *     vsf/source/component/3rd-party/littlefs/raw
  *    for package manager, need VSF_USE_LWIP from vsf_board
  *     vsf/source/component/3rd-party/mbedtls/raw/include
  *
@@ -48,13 +52,14 @@
  * Sources necessary for linux:
  *   vsf/source/shell/sys/linux/lib/3rd-party/fnmatch
  *   vsf/source/shell/sys/linux/lib/3rd-party/glob
- *   vsf/source/shell/sys/linux/lib/3rd-party/regex
+ *   vsf/source/shell/sys/linux/lib/3rd-party/regex excluding engine.c
  *   ./hwtest_main.c
  *   optional:
- *    for package manager, need VSF_USE_LWIP from vsf_board
- *     ./vsf_linux_package_manager.c
+ *    for root directory in embedded hardware, littlefs is used
  *     vsf/source/component/3rd-party/littlefs/port/*
  *     vsf/source/component/3rd-party/littlefs/raw/*
+ *    for package manager, need VSF_USE_LWIP from vsf_board
+ *     ./vsf_linux_package_manager.c
  *     vsf/source/component/3rd-party/mbedtls/raw/library/*
  *     vsf/source/component/3rd-party/mbedtls/port/*
  *     vsf/source/component/3rd-party/mbedtls/extension/tls_session_client/*
@@ -837,7 +842,20 @@ int vsf_linux_create_fhs(void)
     __mmc_mal.drv           = &vk_mmc_mal_drv;
 #endif
 
-    if (!__usr_linux_boot) {
+#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
+    if (__usr_linux_boot) {
+#   if VSF_USE_USB_DEVICE == ENABLED
+#       if VSF_HAL_USE_MMC == ENABLED
+        usbd_mscbot_scsi_config(__app_usbd, 0, 1, !VSF_BOARD_MMC_DETECTED());
+#       endif
+        usbd_mscbot_scsi_config(__app_usbd, 0, 0, false);
+
+        vk_usbd_init(&__app_usbd);
+        vk_usbd_connect(&__app_usbd);
+#   endif
+    } else
+#endif
+    {
 #if VSF_HAL_USE_MMC == ENABLED
         vsf_teda_start(&__mmc_task, &(vsf_eda_cfg_t){
             .fn.evthandler  = __mmc_evthandler,
@@ -852,16 +870,6 @@ int vsf_linux_create_fhs(void)
 
 #if VSF_USE_USB_HOST == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/usbhost", __usbh_main);
-#endif
-    } else {
-#if VSF_USE_USB_DEVICE == ENABLED
-#   if VSF_HAL_USE_MMC == ENABLED
-        usbd_mscbot_scsi_config(__app_usbd, 0, 1, !VSF_BOARD_MMC_DETECTED());
-#   endif
-        usbd_mscbot_scsi_config(__app_usbd, 0, 0, false);
-
-        vk_usbd_init(&__app_usbd);
-        vk_usbd_connect(&__app_usbd);
 #endif
     }
     return 0;
@@ -881,9 +889,11 @@ int VSF_USER_ENTRY(int argc, char *argv[])
     if (APP_BOOT1_KEY_IS_DOWN) {
         __usr_linux_boot = true;
     }
+    vsf_trace_info("start linux %s..." VSF_TRACE_CFG_LINEEND, __usr_linux_boot ? "boot" : "");
+#else
+    vsf_trace_info("start linux ..." VSF_TRACE_CFG_LINEEND);
 #endif
 
-    vsf_trace_info("start linux %s..." VSF_TRACE_CFG_LINEEND, __usr_linux_boot ? "boot" : "");
     vsf_linux_stdio_stream_t stream = {
         .in     = (vsf_stream_t *)&VSF_DEBUG_STREAM_RX,
         .out    = (vsf_stream_t *)&VSF_DEBUG_STREAM_TX,

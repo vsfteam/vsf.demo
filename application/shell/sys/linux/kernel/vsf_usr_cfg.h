@@ -32,6 +32,10 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 
 #include "vsf_board_cfg.h"
 
+// for compiler related configuration, eg: __VSF64__, __IS_COMPILER_XXXX__, etc
+#define __VSF_HEADER_ONLY_SHOW_COMPILER_INFO__
+#include "utilities/compiler/compiler.h"
+
 /*============================ MACROS ========================================*/
 
 // kernel
@@ -80,7 +84,6 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #endif
 #ifndef VSF_USE_USB_HOST
 #   define VSF_USE_USB_HOST                             ENABLED
-#       define VSF_USBH_USE_HUB                         ENABLED
 #       define VSF_USBH_USE_LIBUSB                      ENABLED
 #       define VSF_USBH_USE_CDC                         ENABLED
 #       define VSF_USBH_USE_ECM                         ENABLED
@@ -103,7 +106,13 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_LINUX_CFG_LINK_FILE                      ENABLED
 #   define VSF_LINUX_USE_SOCKET                         ENABLED
 #       define VSF_LINUX_SOCKET_USE_UNIX                ENABLED
-#       define VSF_LINUX_SOCKET_USE_INET                VSF_USE_TCPIP
+#       if defined(__WIN__) || defined(__LINUX__)
+            // windows and linux uses host socket for linux socket support
+#           define VSF_LINUX_SOCKET_USE_INET            ENABLED
+#           define VSF_LINUX_SOCKET_CFG_WRAPPER         ENABLED
+#       else
+#           define VSF_LINUX_SOCKET_USE_INET            VSF_USE_TCPIP
+#       endif
 #   define VSF_LINUX_USE_PROCFS                         ENABLED
 #   define VSF_LINUX_USE_DEVFS                          ENABLED
 #       define VSF_LINUX_DEVFS_USE_RAND                 ENABLED

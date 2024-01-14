@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <stdio.h>
 
+#if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
+
 #if VSF_USE_MBEDTLS == ENABLED
 #   include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
 #endif
@@ -492,3 +494,5 @@ void vsf_linux_install_package_manager(vk_romfs_info_t *fsinfo, bool can_uninsta
     __vpm.can_install = can_install;
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/vpm", __vpm_main);
 }
+
+#endif      // APP_MSCBOOT_CFG_FLASH && APP_MSCBOOT_CFG_ROOT_SIZE && APP_MSCBOOT_CFG_ROOT_ADDR

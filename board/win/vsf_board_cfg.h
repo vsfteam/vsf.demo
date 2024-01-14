@@ -55,6 +55,10 @@
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
+#define VSF_HAL_USE_FLASH                               DISABLED
+#define VSF_HAL_USE_I2C                                 DISABLED
+#define VSF_HAL_USE_MMC                                 DISABLED
+
 #define VSF_HAL_USE_GPIO                                ENABLED
 #define VSF_HAL_USE_USART                               ENABLED
 #define VSF_HAL_USE_DEBUG_STREAM                        ENABLED
