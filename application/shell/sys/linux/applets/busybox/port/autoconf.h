@@ -2,7 +2,7 @@
  * Automatically generated C config: don't edit
  * Busybox version: 1.37.0.git
  */
-#define AUTOCONF_TIMESTAMP "2023-07-19 21:32:29 CST"
+#define AUTOCONF_TIMESTAMP "2024-01-17 02:03:06 CST"
 
 #define CONFIG_HAVE_DOT_CONFIG 1
 #define ENABLE_HAVE_DOT_CONFIG 1
@@ -4928,26 +4928,46 @@
 #define ENABLE_NBDCLIENT 0
 #define IF_NBDCLIENT(...)
 #define IF_NOT_NBDCLIENT(...) __VA_ARGS__
-#undef CONFIG_NC
-#define ENABLE_NC 0
-#define IF_NC(...)
-#define IF_NOT_NC(...) __VA_ARGS__
-#undef CONFIG_NETCAT
-#define ENABLE_NETCAT 0
-#define IF_NETCAT(...)
-#define IF_NOT_NETCAT(...) __VA_ARGS__
-#undef CONFIG_NC_SERVER
-#define ENABLE_NC_SERVER 0
-#define IF_NC_SERVER(...)
-#define IF_NOT_NC_SERVER(...) __VA_ARGS__
-#undef CONFIG_NC_EXTRA
-#define ENABLE_NC_EXTRA 0
-#define IF_NC_EXTRA(...)
-#define IF_NOT_NC_EXTRA(...) __VA_ARGS__
-#undef CONFIG_NC_110_COMPAT
-#define ENABLE_NC_110_COMPAT 0
-#define IF_NC_110_COMPAT(...)
-#define IF_NOT_NC_110_COMPAT(...) __VA_ARGS__
+#define CONFIG_NC 1
+#define ENABLE_NC 1
+#ifdef MAKE_SUID
+# define IF_NC(...) __VA_ARGS__ "CONFIG_NC"
+#else
+# define IF_NC(...) __VA_ARGS__
+#endif
+#define IF_NOT_NC(...)
+#define CONFIG_NETCAT 1
+#define ENABLE_NETCAT 1
+#ifdef MAKE_SUID
+# define IF_NETCAT(...) __VA_ARGS__ "CONFIG_NETCAT"
+#else
+# define IF_NETCAT(...) __VA_ARGS__
+#endif
+#define IF_NOT_NETCAT(...)
+#define CONFIG_NC_SERVER 1
+#define ENABLE_NC_SERVER 1
+#ifdef MAKE_SUID
+# define IF_NC_SERVER(...) __VA_ARGS__ "CONFIG_NC_SERVER"
+#else
+# define IF_NC_SERVER(...) __VA_ARGS__
+#endif
+#define IF_NOT_NC_SERVER(...)
+#define CONFIG_NC_EXTRA 1
+#define ENABLE_NC_EXTRA 1
+#ifdef MAKE_SUID
+# define IF_NC_EXTRA(...) __VA_ARGS__ "CONFIG_NC_EXTRA"
+#else
+# define IF_NC_EXTRA(...) __VA_ARGS__
+#endif
+#define IF_NOT_NC_EXTRA(...)
+#define CONFIG_NC_110_COMPAT 1
+#define ENABLE_NC_110_COMPAT 1
+#ifdef MAKE_SUID
+# define IF_NC_110_COMPAT(...) __VA_ARGS__ "CONFIG_NC_110_COMPAT"
+#else
+# define IF_NC_110_COMPAT(...) __VA_ARGS__
+#endif
+#define IF_NOT_NC_110_COMPAT(...)
 #undef CONFIG_NETSTAT
 #define ENABLE_NETSTAT 0
 #define IF_NETSTAT(...)
