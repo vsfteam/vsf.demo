@@ -6,7 +6,7 @@
 - application/shell/sys/linux/applets/busybox/raw
 
 ## patch
-- apply busybox.patch to application/shell/sys/linux/applets/busybox/raw
+- apply patch/vsf_applet_porting.patch to application/shell/sys/linux/applets/busybox/raw
 
 ## Compiler and Utilities
 - arm-none-eabi-gcc: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
