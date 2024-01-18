@@ -63,6 +63,9 @@ vsf_add_compile_definitions(
     MICROPY_PY_SSL=1
     MICROPY_SSL_MBEDTLS=1
 
+    # alloca support
+    alloca=__builtin_alloca
+
     # vsf use micropython
     VSF_USE_MICROPYTHON=1
 )
