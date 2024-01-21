@@ -15,7 +15,9 @@
 - ninja: https://github.com/ninja-build/ninja/releases
 
 ## Commands(current directory is application/shell/sys/linux/applets/micropython)
+```
 > mkdir build
 > cd build
 > cmake -G Ninja ..
 > ninja
+```
