@@ -75,6 +75,9 @@
 
 /*============================ INCLUDES ======================================*/
 
+// for vsf_linux_fs_bind_xxx
+#define __VSF_LINUX_FS_CLASS_INHERIT__
+
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/mount.h>
@@ -770,6 +773,29 @@ int vsf_linux_create_fhs(void)
     vsf_hw_flash_init(flash_mal.flash, NULL);
     vsf_flash_enable(flash_mal.flash);
     vk_mal_init(&flash_mal.use_as__vk_mal_t);
+#endif
+
+    vsf_linux_fs_bind_pipe("/dev/ptyp0", "/dev/ttyp0", true);
+#if VSF_USE_UI == ENABLED
+    if (vsf_board.display_dev != NULL) {
+        vsf_linux_fs_bind_disp("/dev/fb0", vsf_board.display_dev);
+    }
+#endif
+#if VSF_USE_INPUT == ENABLED && VSF_INPUT_CFG_REGISTRATION_MECHANISM == ENABLED
+    static vk_input_notifier_t notifier = {
+        .mask =     (1 << VSF_INPUT_TYPE_GAMEPAD)
+                |   (1 << VSF_INPUT_TYPE_KEYBOARD)
+                |   (1 << VSF_INPUT_TYPE_TOUCHSCREEN)
+                |   (1 << VSF_INPUT_TYPE_MOUSE),
+    };
+    vsf_linux_fs_bind_input("/dev/input/event0", &notifier);
+#endif
+#if VSF_USE_AUDIO == ENABLED
+    vk_audio_init(vsf_board.audio_dev);
+#   if VSF_LINUX_USE_DEVFS == ENABLED && VSF_LINUX_DEVFS_USE_ALSA == ENABLED
+    vsf_linux_fs_bind_audio("/dev/snd", 0, vsf_board.audio_dev);
+    vsf_linux_fs_bind_audio_timer("/dev/snd/timer");
+#   endif
 #endif
 
     // 2. fs
