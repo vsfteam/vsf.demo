@@ -22,7 +22,7 @@ set(CMAKE_CXX_FLAGS
 )
 include($ENV{VSF_PATH}/script/cmake/compilers/gnuarmemb.cmake)
 
-project(micropython C CXX ASM)
+project(pikapython C CXX ASM)
 
 # target & configurations
 set(VSF_TARGET CortexM4)
@@ -39,5 +39,4 @@ target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
 vsf_add_include_directories(
     ../include
 )
-set(mpy_variant standard)
-include(micropython.cmake)
+include(pikapython.cmake)
