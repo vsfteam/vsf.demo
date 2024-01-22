@@ -14,7 +14,7 @@ Extract the downloaded file to raw directory.
 - cmake: https://github.com/Kitware/CMake/releases
 - ninja: https://github.com/ninja-build/ninja/releases
 
-## Commands(current directory is application/shell/sys/linux/applets/micropython)
+## Commands(current directory is application/shell/sys/linux/applets/pikapython)
 ```
 > mkdir build
 > cd build
