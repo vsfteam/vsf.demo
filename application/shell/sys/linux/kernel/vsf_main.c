@@ -42,7 +42,7 @@
  *    for root directory in embedded hardware, littlefs is used
  *     vsf/source/component/3rd-party/littlefs/port
  *     vsf/source/component/3rd-party/littlefs/raw
- *    for package manager, need VSF_USE_LWIP from vsf_board
+ *    for package manager, need VSF_USE_TCPIP from vsf_board
  *     vsf/source/component/3rd-party/mbedtls/raw/include
  *
  * Pre-defined:
@@ -58,7 +58,7 @@
  *    for root directory in embedded hardware, littlefs is used
  *     vsf/source/component/3rd-party/littlefs/port/*
  *     vsf/source/component/3rd-party/littlefs/raw/*
- *    for package manager, need VSF_USE_LWIP from vsf_board
+ *    for package manager, need VSF_USE_TCPIP from vsf_board
  *     ./vsf_linux_package_manager.c
  *     vsf/source/component/3rd-party/mbedtls/raw/library/*
  *     vsf/source/component/3rd-party/mbedtls/port/*

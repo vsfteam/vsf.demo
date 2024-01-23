@@ -74,7 +74,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_FS_USE_EXFATFS                           ENABLED
 #   define VSF_FS_USE_LITTLEFS                          VSF_USE_LITTLEFS
 #define VSF_USE_INPUT                                   ENABLED
-#if VSF_USE_LWIP == ENABLED
+#if VSF_USE_LWIP == ENABLED || defined(__WIN__)
 #   define VSF_USE_TCPIP                                ENABLED
 #   define VSF_USE_MBEDTLS                              ENABLED
 #endif
