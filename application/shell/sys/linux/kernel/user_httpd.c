@@ -93,7 +93,7 @@ static int __user_httpd_terminal_on_open(vsf_linux_httpd_request_t *req)
             }
             ctx->fd_master = master;
             ctx->pid_child = pid;
-            req->target = (char *)ctx;
+            req->target = ctx;
         }
         break;
     }
