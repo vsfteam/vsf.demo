@@ -808,6 +808,9 @@
     <Filter Include="vsf\component\3rd-party\mbedtls\raw\library">
       <UniqueIdentifier>{d7029589-cf35-4a0f-8ebc-250519d4adf5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\shell\sys\linux\app\httpd\urihandler\websocket">
+      <UniqueIdentifier>{d7346f8c-e376-4eda-b672-3c1f144d4e8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2112,6 +2115,12 @@
     <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_mac.h">
       <Filter>vsf\component\3rd-party\mbedtls\raw\library</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\app\httpd\urihandler\websocket\__vsf_linux_urihandler_websocket.h">
+      <Filter>vsf\shell\sys\linux\app\httpd\urihandler\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\pty.h">
+      <Filter>vsf\shell\sys\linux\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3176,6 +3185,9 @@
     <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_mac.c">
       <Filter>vsf\component\3rd-party\mbedtls\raw\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_httpd.c">
+      <Filter>application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">
@@ -3228,6 +3240,9 @@
     </None>
     <None Include="..\..\vsf\source\hal\driver\common\dac\dac_template.inc">
       <Filter>vsf\hal\driver\common\dac</Filter>
+    </None>
+    <None Include="..\..\vsf\source\shell\sys\linux\app\httpd\urihandler\websocket\__vsf_linux_urihandler_websocket.inc">
+      <Filter>vsf\shell\sys\linux\app\httpd\urihandler\websocket</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

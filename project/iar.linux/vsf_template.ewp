@@ -1133,6 +1133,9 @@
     <group>
         <name>application</name>
         <file>
+            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\user_httpd.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\vsf_linux_package_manager.c</name>
         </file>
         <file>
@@ -8888,6 +8891,9 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\pthread.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\pty.h</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\pwd.h</name>

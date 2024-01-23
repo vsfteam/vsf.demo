@@ -342,6 +342,7 @@
     <ClInclude Include="..\..\vsf\source\shell\media\sdl2\include\SDL2\SDL_version.h" />
     <ClInclude Include="..\..\vsf\source\shell\media\sdl2\vsf_sdl2_cfg.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\app\httpd\urihandler\file\__vsf_linux_urihandler_file.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\app\httpd\urihandler\websocket\__vsf_linux_urihandler_websocket.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\app\httpd\vsf_linux_httpd.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\app\ntp\vsf_linux_ntp.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\app\telnetd\vsf_linux_telnetd.h" />
@@ -366,6 +367,7 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\net\if.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\poll.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\pthread.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\pty.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\pwd.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\sched.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\semaphore.h" />
@@ -458,6 +460,7 @@
     <ClCompile Include="..\..\application\app\distbus\transport\stream\vsf_distbus_transport_stream.c" />
     <ClCompile Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\hwtest_main.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_httpd.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\vsf_linux_package_manager.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\vsf_main.c" />
     <ClCompile Include="..\..\board\win\vsf_board.c" />
@@ -834,6 +837,7 @@
     <None Include="..\..\vsf\source\hal\driver\common\timer\timer_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\usart\usart_template.inc" />
     <None Include="..\..\vsf\source\shell\sys\linux\app\httpd\urihandler\file\__vsf_linux_urihandler_file.inc" />
+    <None Include="..\..\vsf\source\shell\sys\linux\app\httpd\urihandler\websocket\__vsf_linux_urihandler_websocket.inc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

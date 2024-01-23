@@ -763,6 +763,12 @@ int hwtest_main(int argc, char **argv)
     return 0;
 }
 
+WEAK(usr_httpd_start)
+int usr_httpd_start(void)
+{
+    return 0;
+}
+
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
@@ -775,7 +781,7 @@ int vsf_linux_create_fhs(void)
     vk_mal_init(&flash_mal.use_as__vk_mal_t);
 #endif
 
-    vsf_linux_fs_bind_pipe("/dev/ptyp0", "/dev/ttyp0", true);
+    vsf_linux_create_pty(1);
 #if VSF_USE_UI == ENABLED
     if (vsf_board.display_dev != NULL) {
         vsf_linux_fs_bind_disp("/dev/fb0", vsf_board.display_dev);
@@ -854,6 +860,10 @@ int vsf_linux_create_fhs(void)
     busybox_install();
 #endif
 
+#if VSF_USE_TCPIP == ENABLED
+    usr_httpd_start();
+#endif
+
     // 3. install executables and built-in libraries
 #if VSF_USE_MBEDTLS == ENABLED
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&vsf_mbedtls_vplt.info);
@@ -891,7 +901,6 @@ int vsf_linux_create_fhs(void)
 #endif
 
         // some hw are maybe not available in boot mode, add hwtest in non-boot mode
-        extern int hwtest_main(int argc, char **argv);
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/hwtest", hwtest_main);
 
 #if VSF_USE_USB_HOST == ENABLED
