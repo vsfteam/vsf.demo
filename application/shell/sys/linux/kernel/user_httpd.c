@@ -29,6 +29,7 @@ static const char __user_httpd_root[] = VSF_STR(
 </html>
 );
 
+#define __VSF_LINUX_FS_CLASS_INHERIT__
 #include <unistd.h>
 #include <pty.h>
 
@@ -39,6 +40,7 @@ static int __user_httpd_terminal_on_open(vsf_linux_httpd_request_t *req);
 static void __user_httpd_terminal_on_error(vsf_linux_httpd_request_t *req);
 static void __user_httpd_terminal_on_close(vsf_linux_httpd_request_t *req);
 static void __user_httpd_terminal_on_message(vsf_linux_httpd_request_t *req, uint8_t *buf, uint32_t len);
+static int __user_httpd_terminal_poll(vsf_linux_httpd_request_t *req, fd_set *rset, fd_set *wset, bool prepare);
 
 static const vsf_linux_httpd_urihandler_t __user_httpd_urihandler[] = {
     {
@@ -62,14 +64,19 @@ static const vsf_linux_httpd_urihandler_t __user_httpd_urihandler[] = {
             .on_close       = __user_httpd_terminal_on_close,
             .on_message     = __user_httpd_terminal_on_message,
         },
+        .poll_fn            = __user_httpd_terminal_poll,
     },
 };
 
+typedef struct __user_httpd_terminal_ctx_t {
+    int fd_master;
+    pid_t pid_child;
+} __user_httpd_terminal_ctx_t;
+
 static int __user_httpd_terminal_on_open(vsf_linux_httpd_request_t *req)
 {
-    vsf_linux_httpd_session_t *session = container_of(req, vsf_linux_httpd_session_t, request);
     int master = -1;
-    int pid = forkpty(&master, NULL, NULL, NULL);
+    pid_t pid = forkpty(&master, NULL, NULL, NULL);
 
     switch (pid) {
     case -1:
@@ -78,11 +85,16 @@ static int __user_httpd_terminal_on_open(vsf_linux_httpd_request_t *req)
     case 0:
         execl("/bin/sh", "sh", NULL);
         break;
-    default:
-        if (session->fd_stream_out >= 0) {
-            close(session->fd_stream_out);
+    default: {
+            __user_httpd_terminal_ctx_t *ctx = malloc(sizeof(*ctx));
+            if (NULL == ctx) {
+                VSF_LINUX_ASSERT(false);
+                return -1;
+            }
+            ctx->fd_master = master;
+            ctx->pid_child = pid;
+            req->target = (char *)ctx;
         }
-        session->fd_stream_out = master;
         break;
     }
     return 0;
@@ -94,12 +106,62 @@ static void __user_httpd_terminal_on_error(vsf_linux_httpd_request_t *req)
 
 static void __user_httpd_terminal_on_close(vsf_linux_httpd_request_t *req)
 {
+    free(req->target);
+    req->target = NULL;
 }
 
 static void __user_httpd_terminal_on_message(vsf_linux_httpd_request_t *req, uint8_t *buf, uint32_t len)
 {
-    vsf_linux_httpd_session_t *session = container_of(req, vsf_linux_httpd_session_t, request);
-    write(session->fd_stream_out, buf, len);
+    __user_httpd_terminal_ctx_t *ctx = req->target;
+    if (ctx->fd_master >= 0) {
+        write(ctx->fd_master, buf, len);
+    }
+}
+
+static int __user_httpd_terminal_poll(vsf_linux_httpd_request_t *req, fd_set *rset, fd_set *wset, bool prepare)
+{
+    __user_httpd_terminal_ctx_t *ctx = req->target;
+    if (NULL == ctx) {
+        return 0;
+    }
+    if (ctx->fd_master < 0) {
+        return -1;
+    }
+
+    if (prepare) {
+        FD_SET(ctx->fd_master, rset);
+        return ctx->fd_master;
+    } else {
+        int result = 0;
+        vsf_linux_fd_t *sfd = vsf_linux_fd_get(ctx->fd_master);
+        vsf_linux_stream_priv_t *priv = (vsf_linux_stream_priv_t *)sfd->priv;
+        uint8_t *ptr_src;
+        uint_fast32_t size_src, size_dst;
+        vsf_stream_t *stream;
+        uint8_t header[2];
+
+        if (FD_ISSET(ctx->fd_master, rset)) {
+            result++;
+
+            stream = req->stream_out;
+            if (stream != NULL) {
+                size_src = vsf_stream_get_rbuf(priv->stream_rx, &ptr_src);
+                // max frame size for websocket with 2-byte header
+                size_src = vsf_min(size_src, 125);
+
+                size_dst = vsf_stream_get_free_size(stream);
+                // reserve 2-byte websocket header in dest
+                size_src = vsf_min(size_src, size_dst - 2);
+
+                header[0] = 0x81;
+                header[1] = size_src;
+                vsf_stream_write(stream, header, 2);
+                vsf_stream_write(stream, ptr_src, size_src);
+                read(ctx->fd_master, ptr_src, size_src);
+            }
+        }
+        return result;
+    }
 }
 
 int usr_httpd_start(void)
