@@ -3611,6 +3611,18 @@
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto.c</name>
                             </file>
                             <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_aead.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_aead.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_cipher.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_cipher.h</name>
+                            </file>
+                            <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_client.c</name>
                             </file>
                             <file>
@@ -3629,10 +3641,22 @@
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_ecp.h</name>
                             </file>
                             <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_hash.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_hash.h</name>
+                            </file>
+                            <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_invasive.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_its.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_mac.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_mac.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_random_impl.h</name>
@@ -3648,9 +3672,6 @@
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_se.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_service_integration.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_slot_management.c</name>
@@ -3696,9 +3717,6 @@
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_cookie.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_invasive.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_msg.c</name>

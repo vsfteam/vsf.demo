@@ -28,6 +28,26 @@
     <ClInclude Include="..\..\application\shell\sys\linux\kernel\vsf_usr_cfg.h" />
     <ClInclude Include="..\..\board\win\vsf_board.h" />
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\tls_session\mbedtls_tls_session.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\vplt\mbedtls_vplt.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\port\platform_vsf.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\check_crypto_config.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\common.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_aead.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_cipher.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_core.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_driver_wrappers.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_ecp.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_hash.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_invasive.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_its.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_mac.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_random_impl.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_rsa.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_se.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_slot_management.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_storage.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_tls13_keys.h" />
     <ClInclude Include="..\..\vsf\source\component\av\audio\decoder\wav\vsf_wav.h" />
     <ClInclude Include="..\..\vsf\source\component\av\audio\driver\winsound\vsf_winsound.h" />
     <ClInclude Include="..\..\vsf\source\component\av\audio\vsf_audio.h" />
@@ -441,6 +461,103 @@
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\vsf_linux_package_manager.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\vsf_main.c" />
     <ClCompile Include="..\..\board\win\vsf_board.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\tls_session\mbedtls_tls_session.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\vplt\mbedtls_vplt.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\port\platform_vsf.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\aes.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\aesni.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\arc4.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\aria.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\asn1parse.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\asn1write.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\base64.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\bignum.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\blowfish.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\camellia.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ccm.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\certs.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\chacha20.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\chachapoly.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\cipher.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\cipher_wrap.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\cmac.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\constant_time.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ctr_drbg.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\debug.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\des.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\dhm.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ecdh.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ecdsa.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ecjpake.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ecp.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ecp_curves.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\entropy.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\entropy_poll.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\error.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\gcm.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\havege.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\hkdf.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\hmac_drbg.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\md.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\md2.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\md4.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\md5.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\memory_buffer_alloc.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\net_sockets.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\nist_kw.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\oid.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\padlock.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\pem.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\pk.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\pkcs11.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\pkcs12.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\pkcs5.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\pkparse.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\pkwrite.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\pk_wrap.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\platform.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\platform_util.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\poly1305.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_aead.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_cipher.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_client.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_driver_wrappers.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_ecp.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_hash.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_mac.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_rsa.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_se.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_slot_management.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_storage.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_its_file.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ripemd160.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\rsa.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\rsa_internal.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\sha1.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\sha256.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\sha512.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_cache.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_ciphersuites.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_cli.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_cookie.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_msg.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_srv.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_ticket.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_tls.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_tls13_keys.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\threading.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\timing.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\version.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\version_features.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\x509.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\x509write_crt.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\x509write_csr.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\x509_create.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\x509_crl.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\x509_crt.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\x509_csr.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\xtea.c" />
     <ClCompile Include="..\..\vsf\source\component\av\audio\decoder\wav\vsf_wav.c" />
     <ClCompile Include="..\..\vsf\source\component\av\audio\driver\winsound\vsf_winsound.c" />
     <ClCompile Include="..\..\vsf\source\component\av\audio\vsf_audio.c" />
@@ -795,7 +912,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\kernel\helloworld;$(ProjectDir)..\..\vsf\source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>false</ExceptionHandling>
@@ -823,7 +940,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>false</ExceptionHandling>
