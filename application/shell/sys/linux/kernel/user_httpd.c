@@ -73,30 +73,32 @@ typedef struct __user_httpd_terminal_ctx_t {
     int fd_master;
     pid_t pid_child;
 } __user_httpd_terminal_ctx_t;
+static __user_httpd_terminal_ctx_t __user_httpd_terminal_ctx = {
+    .fd_master = -1,
+    .pid_child = -1,
+};
 
 static int __user_httpd_terminal_on_open(vsf_linux_httpd_request_t *req)
 {
-    int master = -1;
-    pid_t pid = forkpty(&master, NULL, NULL, NULL);
+    if (__user_httpd_terminal_ctx.fd_master >= 0) {
+        req->target = &__user_httpd_terminal_ctx;
+    } else {
+        int master = -1;
+        pid_t pid = forkpty(&master, NULL, NULL, NULL);
 
-    switch (pid) {
-    case -1:
-        printf("fail to forkpty\n");
-        return -1;
-    case 0:
-        execl("/bin/sh", "sh", NULL);
-        break;
-    default: {
-            __user_httpd_terminal_ctx_t *ctx = malloc(sizeof(*ctx));
-            if (NULL == ctx) {
-                VSF_LINUX_ASSERT(false);
-                return -1;
-            }
-            ctx->fd_master = master;
-            ctx->pid_child = pid;
-            req->target = ctx;
+        switch (pid) {
+        case -1:
+            printf("fail to forkpty\n");
+            return -1;
+        case 0:
+            execl("/bin/sh", "sh", NULL);
+            break;
+        default:
+            __user_httpd_terminal_ctx.fd_master = master;
+            __user_httpd_terminal_ctx.pid_child = pid;
+            req->target = &__user_httpd_terminal_ctx;
+            break;
         }
-        break;
     }
     return 0;
 }
@@ -107,7 +109,6 @@ static void __user_httpd_terminal_on_error(vsf_linux_httpd_request_t *req)
 
 static void __user_httpd_terminal_on_close(vsf_linux_httpd_request_t *req)
 {
-    free(req->target);
     req->target = NULL;
 }
 
