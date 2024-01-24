@@ -158,7 +158,7 @@ int usr_httpd_start(void)
 
         static vsf_linux_httpd_t __user_httpd = {
             .port               = 80,
-            .backlog            = 1,
+            .backlog            = 4,
 
             .num_of_urihandler  = dimof(__user_httpd_urihandler),
             .urihandler         = (vsf_linux_httpd_urihandler_t *)__user_httpd_urihandler,
