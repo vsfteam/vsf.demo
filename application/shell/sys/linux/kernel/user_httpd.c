@@ -20,6 +20,7 @@ static const char __user_httpd_root[] = VSF_STR(
 
       term.onData((data) => {
         socket.send(data);
+        term.write(data);
       });
       socket.onmessage = (event) => {
         term.write(event.data);
@@ -33,13 +34,13 @@ static const char __user_httpd_root[] = VSF_STR(
 #include <unistd.h>
 #include <pty.h>
 
-#define __VSF_LINUX_HTTPD_CLASS_INHERIT__
 #include "shell/sys/linux/app/httpd/vsf_linux_httpd.h"
 
 static int __user_httpd_terminal_on_open(vsf_linux_httpd_request_t *req);
 static void __user_httpd_terminal_on_error(vsf_linux_httpd_request_t *req);
 static void __user_httpd_terminal_on_close(vsf_linux_httpd_request_t *req);
-static void __user_httpd_terminal_on_message(vsf_linux_httpd_request_t *req, uint8_t *buf, uint32_t len);
+static void __user_httpd_terminal_on_message(vsf_linux_httpd_request_t *req,
+    const vsf_linux_httpd_urihandler_websocket_t *websocket_ctx, uint8_t *buf, uint32_t len);
 static int __user_httpd_terminal_poll(vsf_linux_httpd_request_t *req, fd_set *rset, fd_set *wset, bool prepare);
 
 static const vsf_linux_httpd_urihandler_t __user_httpd_urihandler[] = {
@@ -110,7 +111,8 @@ static void __user_httpd_terminal_on_close(vsf_linux_httpd_request_t *req)
     req->target = NULL;
 }
 
-static void __user_httpd_terminal_on_message(vsf_linux_httpd_request_t *req, uint8_t *buf, uint32_t len)
+static void __user_httpd_terminal_on_message(vsf_linux_httpd_request_t *req,
+    const vsf_linux_httpd_urihandler_websocket_t *websocket_ctx, uint8_t *buf, uint32_t len)
 {
     __user_httpd_terminal_ctx_t *ctx = req->target;
     if (ctx->fd_master >= 0) {
@@ -118,7 +120,8 @@ static void __user_httpd_terminal_on_message(vsf_linux_httpd_request_t *req, uin
     }
 }
 
-static int __user_httpd_terminal_poll(vsf_linux_httpd_request_t *req, fd_set *rset, fd_set *wset, bool prepare)
+static int __user_httpd_terminal_poll(vsf_linux_httpd_request_t *req,
+    fd_set *rset, fd_set *wset, bool prepare)
 {
     __user_httpd_terminal_ctx_t *ctx = req->target;
     if (NULL == ctx) {
@@ -131,36 +134,18 @@ static int __user_httpd_terminal_poll(vsf_linux_httpd_request_t *req, fd_set *rs
     if (prepare) {
         FD_SET(ctx->fd_master, rset);
         return ctx->fd_master;
-    } else {
-        int result = 0;
+    } else if (FD_ISSET(ctx->fd_master, rset)) {
         vsf_linux_fd_t *sfd = vsf_linux_fd_get(ctx->fd_master);
         vsf_linux_stream_priv_t *priv = (vsf_linux_stream_priv_t *)sfd->priv;
         uint8_t *ptr_src;
-        uint_fast32_t size_src, size_dst;
-        vsf_stream_t *stream;
-        uint8_t header[2];
-
-        if (FD_ISSET(ctx->fd_master, rset)) {
-            result++;
-
-            stream = req->stream_out;
-            if (stream != NULL) {
-                size_src = vsf_stream_get_rbuf(priv->stream_rx, &ptr_src);
-                // max frame size for websocket with 2-byte header
-                size_src = vsf_min(size_src, 125);
-
-                size_dst = vsf_stream_get_free_size(stream);
-                // reserve 2-byte websocket header in dest
-                size_src = vsf_min(size_src, size_dst - 2);
-
-                header[0] = 0x81;
-                header[1] = size_src;
-                vsf_stream_write(stream, header, 2);
-                vsf_stream_write(stream, ptr_src, size_src);
-                read(ctx->fd_master, ptr_src, size_src);
-            }
+        int size_src = vsf_stream_get_rbuf(priv->stream_rx, &ptr_src);
+        int realsize = vsf_linux_httpd_websocket_write(req, ptr_src, size_src, true);
+        if (realsize > 0) {
+            read(ctx->fd_master, ptr_src, size_src);
         }
-        return result;
+        return 1;
+    } else {
+        return 0;
     }
 }
 
