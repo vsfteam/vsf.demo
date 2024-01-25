@@ -769,6 +769,12 @@ int usr_httpd_start(void)
     return 0;
 }
 
+static int __reset_main(int argc, char **argv)
+{
+    vsf_arch_reset();
+    return 0;
+}
+
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
@@ -869,6 +875,7 @@ int vsf_linux_create_fhs(void)
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&vsf_mbedtls_vplt.info);
 #endif
     vsf_board_init_linux();
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/reset", __reset_main);
 
 #if VSF_HAL_USE_MMC == ENABLED
     __mmc_mal.mmc           = vsf_board.mmc;
