@@ -40,6 +40,10 @@
 #include "wlan_if.h"
 #endif
 
+#if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
+#   include "lwip/apps/mdns.h"
+#endif
+
 /*============================ MACROS ========================================*/
 
 #if __VSF_OS_SWI_NUM > 0
@@ -223,6 +227,13 @@ static int __wifi_scan_main(int argc, char *argv[])
     return 0;
 }
 
+#if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
+static void __mdns_httpd_srv_txt(struct mdns_service *service, void *txt_usrdata)
+{
+    mdns_resp_add_service_txtitem(service, "path=/", sizeof("path=/") - 1);
+}
+#endif
+
 static int __wifi_connect_main(int argc, char *argv[])
 {
     char __ssid[33], __pass[33];
@@ -242,7 +253,7 @@ static int __wifi_connect_main(int argc, char *argv[])
     }
 
     if (wlan_get_connect_status()) {
-#if APP_USE_LINUX_DEMO == ENABLED && APP_USE_LINUX_HTTPD_DEMO == ENABLED
+#if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
         net_if_t *netif = fhost_to_net_if(0);
         LOCK_TCPIP_CORE();
             mdns_resp_remove_netif(netif);
@@ -259,16 +270,14 @@ static int __wifi_connect_main(int argc, char *argv[])
     if (wlan_get_connect_status()) {
         printf("wifi connected.\n");
 
-#if APP_USE_LINUX_DEMO == ENABLED && APP_USE_LINUX_HTTPD_DEMO == ENABLED
+#if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
         // start mdns, not ready
         net_if_t *netif = fhost_to_net_if(0);
         LOCK_TCPIP_CORE();
             mdns_resp_init();
             if (ERR_OK == mdns_resp_add_netif(netif, "vsf", 60 * 10)) {
-#if APP_USE_LINUX_DEMO == ENABLED && APP_USE_LINUX_HTTPD_DEMO == ENABLED
                 mdns_resp_add_service(netif, "vsfweb", "_http",
                     DNSSD_PROTO_TCP, 80, 3600, __mdns_httpd_srv_txt, NULL);
-#endif
             }
         UNLOCK_TCPIP_CORE();
 #endif
