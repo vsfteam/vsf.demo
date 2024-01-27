@@ -763,10 +763,78 @@ int hwtest_main(int argc, char **argv)
     return 0;
 }
 
-WEAK(usr_httpd_start)
-int usr_httpd_start(void)
+WEAK(app_httpd_terminal_start)
+int app_httpd_terminal_start(void)
 {
     return 0;
+}
+
+typedef struct app_mdns_service_record_t {
+    vsf_dlist_node_t node;
+    const char *name;
+    uint16_t port;
+} app_mdns_service_record_t;
+static vsf_dlist_t __app_mdns_service_record_list = { 0 };
+static bool __app_wifi_connected = false;
+
+void app_wifi_sta_on_connected(void)
+{
+    vsf_dlist_t *list = NULL;
+    vsf_protect_t orig = vsf_protect_sched();
+    if (!__app_wifi_connected) {
+        __app_wifi_connected = true;
+        list = &__app_mdns_service_record_list;
+    }
+    vsf_unprotect_sched(orig);
+
+    if (list != NULL) {
+        app_mdns_service_record_t *record = NULL;
+        do {
+            vsf_dlist_queue_dequeue(app_mdns_service_record_t, node, list, record);
+            app_mdns_add_httpd_service(record->name, record->port);
+            vsf_dlist_remove(app_mdns_service_record_t, node, list, record);
+            free(record);
+        } while (record != NULL);
+    }
+}
+
+#if VSF_USE_LWIP == ENABLED
+#   include "lwip/tcpip.h"
+#   include "lwip/apps/mdns.h"
+
+#   if LWIP_MDNS_RESPONDER
+static void __app_mdns_httpd_srv_txt(struct mdns_service *service, void *txt_usrdata)
+{
+    mdns_resp_add_service_txtitem(service, "path=/", sizeof("path=/") - 1);
+}
+#   endif
+#endif
+
+void app_mdns_add_httpd_service(const char *name, uint_fast16_t port)
+{
+#if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
+    vsf_protect_t orig = vsf_protect_sched();
+    if (__app_wifi_connected) {
+        vsf_unprotect_sched(orig);
+
+        LOCK_TCPIP_CORE();
+            extern struct netif * app_wifi_get_netif(void);
+            struct netif *netif = app_wifi_get_netif();
+            mdns_resp_add_service(netif, name, "_http",
+                    DNSSD_PROTO_TCP, port, 3600, __app_mdns_httpd_srv_txt, NULL);
+        UNLOCK_TCPIP_CORE();
+    } else {
+        app_mdns_service_record_t *record = malloc(sizeof(*record));
+        if (record != NULL) {
+            vsf_dlist_init_node(app_mdns_service_record_t, node, record);
+            record->name = name;
+            record->port = port;
+            vsf_dlist_queue_enqueue(app_mdns_service_record_t, node,
+                    &__app_mdns_service_record_list, record);
+        }
+        vsf_unprotect_sched(orig);
+    }
+#endif
 }
 
 static int __reset_main(int argc, char **argv)
@@ -774,6 +842,18 @@ static int __reset_main(int argc, char **argv)
     vsf_arch_reset();
     return 0;
 }
+
+// application vpls
+// add application func/var declare in vsf_usr_cfg.h
+typedef struct vsf_app_vplt_t {
+    vsf_vplt_info_t info;
+    VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_mdns_add_httpd_service);
+} vsf_app_vplt_t;
+
+static __VSF_VPLT_DECORATOR__ vsf_app_vplt_t __vsf_app_vplt = {
+    VSF_APPLET_VPLT_INFO(vsf_app_vplt_t, 0, 0, true),
+    VSF_APPLET_VPLT_ENTRY_FUNC(app_mdns_add_httpd_service),
+};
 
 int vsf_linux_create_fhs(void)
 {
@@ -867,10 +947,11 @@ int vsf_linux_create_fhs(void)
 #endif
 
 #if VSF_USE_TCPIP == ENABLED
-    usr_httpd_start();
+    app_httpd_terminal_start();
 #endif
 
     // 3. install executables and built-in libraries
+    vsf_vplt_load_dyn((vsf_vplt_info_t *)&__vsf_app_vplt.info);
 #if VSF_USE_MBEDTLS == ENABLED
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&vsf_mbedtls_vplt.info);
 #endif

@@ -244,6 +244,8 @@
                     <state>CFG_EXT_AIC1000</state>
                     <state>LWIP_NO_STDINT_H=1</state>
                     <state>LWIP_SO_RCVBUF=1</state>
+                    <state>MEMP_NUM_TCP_PCB=16</state>
+                    <state>MEMP_NUM_NETCONN=16</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>

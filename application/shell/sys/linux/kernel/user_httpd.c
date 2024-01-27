@@ -150,20 +150,22 @@ static int __user_httpd_terminal_poll(vsf_linux_httpd_request_t *req,
     }
 }
 
-int usr_httpd_start(void)
+int app_httpd_terminal_start(void)
 {
-    static bool __httpd_started = false;
-    if (!__httpd_started) {
-        __httpd_started = true;
+    static bool __httpd_webterminal_started = false;
+    if (!__httpd_webterminal_started) {
+        __httpd_webterminal_started = true;
 
-        static vsf_linux_httpd_t __user_httpd = {
+        static vsf_linux_httpd_t __user_httpd_webterminal = {
             .port               = 80,
             .backlog            = 4,
 
             .num_of_urihandler  = dimof(__user_httpd_urihandler),
             .urihandler         = (vsf_linux_httpd_urihandler_t *)__user_httpd_urihandler,
         };
-        vsf_linux_httpd_start(&__user_httpd);
+        vsf_linux_httpd_start(&__user_httpd_webterminal);
+
+        app_mdns_add_httpd_service("webterminal", 80);
         return 0;
     }
 

@@ -148,6 +148,11 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
+
+// application APIs
+
+extern void app_mdns_add_httpd_service(const char *name, uint_fast16_t port);
+
 /*============================ INCLUDES ======================================*/
 
 #endif
