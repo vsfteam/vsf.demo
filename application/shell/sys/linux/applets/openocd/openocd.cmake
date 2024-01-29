@@ -322,6 +322,7 @@ file(GLOB OPENOCD_SOURCES
 vsf_add_compile_definitions(
     ${VSF_TARGET_DEFINITIONS}
     __VSF__
+    VSF_COMPATIBILITY=DISABLED
 
     HAVE_CONFIG_H
     SIGWINCH=28
