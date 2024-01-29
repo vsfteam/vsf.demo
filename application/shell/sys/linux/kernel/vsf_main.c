@@ -810,7 +810,7 @@ static void __app_mdns_httpd_srv_txt(struct mdns_service *service, void *txt_usr
 #   endif
 #endif
 
-void app_mdns_add_httpd_service(const char *name, uint_fast16_t port)
+void app_mdns_add_httpd_service(const char *name, unsigned short port)
 {
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
     vsf_protect_t orig = vsf_protect_sched();
