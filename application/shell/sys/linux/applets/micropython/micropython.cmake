@@ -3,7 +3,7 @@
 cmake_policy(SET CMP0079 NEW)
 
 file(GLOB MPY_CORE_FILES raw/py/*.c)
-file(GLOB_RECURSE MPY_SOURCES
+file(GLOB MPY_SOURCES
     raw/ports/unix/alloc.c
     raw/ports/unix/coverage.c
     raw/ports/unix/gccollect.c

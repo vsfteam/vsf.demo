@@ -2,7 +2,7 @@
 
 cmake_policy(SET CMP0079 NEW)
 
-file(GLOB_RECURSE BUSYBOX_SOURCES
+file(GLOB BUSYBOX_SOURCES
     raw/archival/libarchive/open_transformer.c
     raw/archival/libarchive/init_handle.c
     raw/archival/libarchive/filter_accept_all.c

@@ -2,7 +2,7 @@
 
 cmake_policy(SET CMP0079 NEW)
 
-file(GLOB_RECURSE OPENOCD_SOURCES
+file(GLOB OPENOCD_SOURCES
     port/_glob.c
     port/_initjimsh.c
     port/_jsonencode.c
@@ -316,6 +316,7 @@ file(GLOB_RECURSE OPENOCD_SOURCES
     raw/src/xsvf/xsvf.c
 
     raw/src/hello.c
+    raw/src/main.c
     raw/src/openocd.c
 )
 vsf_add_compile_definitions(
