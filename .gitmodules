@@ -10,3 +10,6 @@
 [submodule "application/shell/sys/linux/applets/iperf/raw"]
 	path = application/shell/sys/linux/applets/iperf/raw
 	url = ../../esnet/iperf.git
+[submodule "application/shell/sys/linux/applets/openocd/raw"]
+	path = application/shell/sys/linux/applets/openocd/raw
+	url = ../../openocd-org/openocd
