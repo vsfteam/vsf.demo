@@ -3,15 +3,15 @@
 cmake_policy(SET CMP0079 NEW)
 
 file(GLOB OPENOCD_SOURCES
-    port/_glob.c
-    port/_initjimsh.c
-    port/_jsonencode.c
-    port/_load-static-exts.c
-    port/_nshelper.c
-    port/_oo.c
-    port/_stdlib.c
-    port/_tclcompat.c
-    port/_tree.c
+    port/jimtcl/_glob.c
+    port/jimtcl/_initjimsh.c
+    port/jimtcl/_jsonencode.c
+    port/jimtcl/_load-static-exts.c
+    port/jimtcl/_nshelper.c
+    port/jimtcl/_oo.c
+    port/jimtcl/_stdlib.c
+    port/jimtcl/_tclcompat.c
+    port/jimtcl/_tree.c
 
     raw/jimtcl/jsmn/jsmn.c
     raw/jimtcl/jim.c
@@ -25,7 +25,7 @@ file(GLOB OPENOCD_SOURCES
     raw/jimtcl/jim-history.c
     raw/jimtcl/jim-interactive.c
     raw/jimtcl/jim-interp.c
-    raw/jimtcl/jimcompat.c
+    raw/jimtcl/jimiocompat.c
     raw/jimtcl/jim-json.c
     raw/jimtcl/jim-load.c
     raw/jimtcl/jim-namespace.c
@@ -41,99 +41,99 @@ file(GLOB OPENOCD_SOURCES
     raw/jimtcl/linenoise.c
     raw/jimtcl/utf8.c
 
-    raw/src/flash/nand/arm_io.c
-    raw/src/flash/nand/at91sam9.c
+#    raw/src/flash/nand/arm_io.c
+#    raw/src/flash/nand/at91sam9.c
     raw/src/flash/nand/core.c
-    raw/src/flash/nand/davinci.c
+#    raw/src/flash/nand/davinci.c
     raw/src/flash/nand/driver.c
     raw/src/flash/nand/ecc.c
     raw/src/flash/nand/ecc_kw.c
     raw/src/flash/nand/fileio.c
-    raw/src/flash/nand/lpc32xx.c
-    raw/src/flash/nand/lpc3180.c
-    raw/src/flash/nand/mx3.c
-    raw/src/flash/nand/msc.c
-    raw/src/flash/nand/nonce.c
-    raw/src/flash/nand/nuc910.c
-    raw/src/flash/nand/orion.c
-    raw/src/flash/nand/s3c24xx.c
-    raw/src/flash/nand/s3c2410.c
-    raw/src/flash/nand/s3c2412.c
-    raw/src/flash/nand/s3c2440.c
-    raw/src/flash/nand/s3c2443.c
-    raw/src/flash/nand/s3c6400.c
+#    raw/src/flash/nand/lpc32xx.c
+#    raw/src/flash/nand/lpc3180.c
+#    raw/src/flash/nand/mx3.c
+#    raw/src/flash/nand/msc.c
+#    raw/src/flash/nand/nonce.c
+#    raw/src/flash/nand/nuc910.c
+#    raw/src/flash/nand/orion.c
+#    raw/src/flash/nand/s3c24xx.c
+#    raw/src/flash/nand/s3c2410.c
+#    raw/src/flash/nand/s3c2412.c
+#    raw/src/flash/nand/s3c2440.c
+#    raw/src/flash/nand/s3c2443.c
+#    raw/src/flash/nand/s3c6400.c
     raw/src/flash/nand/tcl.c
 
-    raw/src/flash/nor/aduc702x.c
-    raw/src/flash/nor/aducm360.c
-    raw/src/flash/nor/ambiqmicro.c
-    raw/src/flash/nor/at91sam3.c
-    raw/src/flash/nor/at91sam4.c
-    raw/src/flash/nor/at91sam4l.c
-    raw/src/flash/nor/at91sam7.c
-    raw/src/flash/nor/at91samd.c
-    raw/src/flash/nor/ath79.c
-    raw/src/flash/nor/atsame5.c
-    raw/src/flash/nor/atsamv.c
-    raw/src/flash/nor/avrf.c
-    raw/src/flash/nor/bluenrg-x.c
-    raw/src/flash/nor/cc26xx.c
-    raw/src/flash/nor/cc3220sf.c
+#    raw/src/flash/nor/aduc702x.c
+#    raw/src/flash/nor/aducm360.c
+#    raw/src/flash/nor/ambiqmicro.c
+#    raw/src/flash/nor/at91sam3.c
+#    raw/src/flash/nor/at91sam4.c
+#    raw/src/flash/nor/at91sam4l.c
+#    raw/src/flash/nor/at91sam7.c
+#    raw/src/flash/nor/at91samd.c
+#    raw/src/flash/nor/ath79.c
+#    raw/src/flash/nor/atsame5.c
+#    raw/src/flash/nor/atsamv.c
+#    raw/src/flash/nor/avrf.c
+#    raw/src/flash/nor/bluenrg-x.c
+#    raw/src/flash/nor/cc26xx.c
+#    raw/src/flash/nor/cc3220sf.c
     raw/src/flash/nor/cfi.c
     raw/src/flash/nor/core.c
     raw/src/flash/nor/drivers.c
-    raw/src/flash/nor/dsp5680xx_flash.c
-    raw/src/flash/nor/efm32.c
-    raw/src/flash/nor/em357.c
-    raw/src/flash/nor/esirisc_flash.c
-    raw/src/flash/nor/faux.c
-    raw/src/flash/nor/fespi.c
-    raw/src/flash/nor/fm3.c
-    raw/src/flash/nor/fm4.c
-    raw/src/flash/nor/jtagspi.c
-    raw/src/flash/nor/kinetis.c
-    raw/src/flash/nor/lpc288x.c
-    raw/src/flash/nor/lpc2000.c
-    raw/src/flash/nor/lpc2900.c
-    raw/src/flash/nor/lpcspifi.c
-    raw/src/flash/nor/mdr.c
-    raw/src/flash/nor/mrvlqspi.c
-    raw/src/flash/nor/msp432.c
-    raw/src/flash/nor/niietcm4.c
-    raw/src/flash/nor/non_cfg.c
-    raw/src/flash/nor/npcx.c
-    raw/src/flash/nor/nrf5.c
-    raw/src/flash/nor/numicro.c
-    raw/src/flash/nor/ocl.c
-    raw/src/flash/nor/pic32mx.c
-    raw/src/flash/nor/psoc4.c
-    raw/src/flash/nor/psoc5lp.c
-    raw/src/flash/nor/psoc6.c
-    raw/src/flash/nor/renesas_rpchf.c
-    raw/src/flash/nor/rp2040.c
-    raw/src/flash/nor/sfdp.c
-    raw/src/flash/nor/sh_qspi.c
-    raw/src/flash/nor/sim3x.c
-    raw/src/flash/nor/spi.c
-    raw/src/flash/nor/stellaris.c
-    raw/src/flash/nor/stm32f1x.c
-    raw/src/flash/nor/stm32f2x.c
-    raw/src/flash/nor/stm32h7x.c
-    raw/src/flash/nor/stm32l4x.c
-    raw/src/flash/nor/stm32lx.c
-    raw/src/flash/nor/stmqspi.c
-    raw/src/flash/nor/stmsmi.c
-    raw/src/flash/nor/str7x.c
-    raw/src/flash/nor/str9x.c
-    raw/src/flash/nor/str9xpec.c
-    raw/src/flash/nor/swm050.c
+#    raw/src/flash/nor/dsp5680xx_flash.c
+#    raw/src/flash/nor/efm32.c
+#    raw/src/flash/nor/em357.c
+#    raw/src/flash/nor/esirisc_flash.c
+#    raw/src/flash/nor/faux.c
+#    raw/src/flash/nor/fespi.c
+#    raw/src/flash/nor/fm3.c
+#    raw/src/flash/nor/fm4.c
+#    raw/src/flash/nor/jtagspi.c
+#    raw/src/flash/nor/kinetis.c
+#    raw/src/flash/nor/lpc288x.c
+#    raw/src/flash/nor/lpc2000.c
+#    raw/src/flash/nor/lpc2900.c
+#    raw/src/flash/nor/lpcspifi.c
+#    raw/src/flash/nor/mdr.c
+#    raw/src/flash/nor/mrvlqspi.c
+#    raw/src/flash/nor/msp432.c
+#    raw/src/flash/nor/niietcm4.c
+    raw/src/flash/nor/non_cfi.c
+#    raw/src/flash/nor/npcx.c
+#    raw/src/flash/nor/nrf5.c
+#    raw/src/flash/nor/numicro.c
+#    raw/src/flash/nor/ocl.c
+#    raw/src/flash/nor/pic32mx.c
+#    raw/src/flash/nor/psoc4.c
+#    raw/src/flash/nor/psoc5lp.c
+#    raw/src/flash/nor/psoc6.c
+#    raw/src/flash/nor/renesas_rpchf.c
+#    raw/src/flash/nor/rp2040.c
+#    raw/src/flash/nor/sfdp.c
+#    raw/src/flash/nor/sh_qspi.c
+#    raw/src/flash/nor/sim3x.c
+#    raw/src/flash/nor/spi.c
+#    raw/src/flash/nor/stellaris.c
+#    raw/src/flash/nor/stm32f1x.c
+#    raw/src/flash/nor/stm32f2x.c
+#    raw/src/flash/nor/stm32h7x.c
+#    raw/src/flash/nor/stm32l4x.c
+#    raw/src/flash/nor/stm32lx.c
+#    raw/src/flash/nor/stmqspi.c
+#    raw/src/flash/nor/stmsmi.c
+#    raw/src/flash/nor/str7x.c
+#    raw/src/flash/nor/str9x.c
+#    raw/src/flash/nor/str9xpec.c
+#    raw/src/flash/nor/swm050.c
     raw/src/flash/nor/tcl.c
-    raw/src/flash/nor/tms470.c
-    raw/src/flash/nor/virtual.c
-    raw/src/flash/nor/w600.c
-    raw/src/flash/nor/xcf.c
-    raw/src/flash/nor/xmc1xxx.c
-    raw/src/flash/nor/xmc4xxx.c
+#    raw/src/flash/nor/tms470.c
+#    raw/src/flash/nor/virtual.c
+#    raw/src/flash/nor/w600.c
+#    raw/src/flash/nor/xcf.c
+#    raw/src/flash/nor/xmc1xxx.c
+#    raw/src/flash/nor/xmc4xxx.c
 
     raw/src/flash/common.c
 
@@ -212,8 +212,8 @@ file(GLOB OPENOCD_SOURCES
     raw/src/target/riscv/riscv_semihosting.c
     raw/src/target/riscv/riscv-011.c
     raw/src/target/riscv/riscv-013.c
-    raw/src/target/a64_disassembler.c
-    raw/src/target/aarch64.c
+#    raw/src/target/a64_disassembler.c
+#    raw/src/target/aarch64.c
     raw/src/target/adi_v5_dapdirect.c
     raw/src/target/adi_v5_jtag.c
     raw/src/target/adi_v5_swd.c
@@ -254,62 +254,62 @@ file(GLOB OPENOCD_SOURCES
     raw/src/target/armv8_cache.c
     raw/src/target/armv8_dpm.c
     raw/src/target/armv8_opcodes.c
-    raw/src/target/avr32_ap7k.c
-    raw/src/target/avr32_jtag.c
-    raw/src/target/avr32_mem.c
-    raw/src/target/avr32_regs.c
-    raw/src/target/avrt.c
+#    raw/src/target/avr32_ap7k.c
+#    raw/src/target/avr32_jtag.c
+#    raw/src/target/avr32_mem.c
+#    raw/src/target/avr32_regs.c
+#    raw/src/target/avrt.c
     raw/src/target/breakpoints.c
     raw/src/target/cortex_a.c
     raw/src/target/cortex_m.c
-    raw/src/target/dsp563xx.c
-    raw/src/target/dsp563xx_once.c
-    raw/src/target/dsp5680xx.c
+#    raw/src/target/dsp563xx.c
+#    raw/src/target/dsp563xx_once.c
+#    raw/src/target/dsp5680xx.c
     raw/src/target/embeddedice.c
-    raw/src/target/esirisc.c
-    raw/src/target/esirisc_jtag.c
-    raw/src/target/esirisc_trace.c
+#    raw/src/target/esirisc.c
+#    raw/src/target/esirisc_jtag.c
+#    raw/src/target/esirisc_trace.c
     raw/src/target/etb.c
     raw/src/target/etm.c
     raw/src/target/etm_dummy.c
-    raw/src/target/fa526.c
-    raw/src/target/feroceon.c
-    raw/src/target/hla_target.c
+#    raw/src/target/fa526.c
+#    raw/src/target/feroceon.c
+#    raw/src/target/hla_target.c
     raw/src/target/image.c
-    raw/src/target/lakemont.c
-    raw/src/target/ls1_sap.c
+#    raw/src/target/lakemont.c
+#    raw/src/target/ls1_sap.c
     raw/src/target/mem_ap.c
-    raw/src/target/mips_ejtag.c
-    raw/src/target/mips_m4k.c
-    raw/src/target/mips_mips64.c
-    raw/src/target/mips32.c
-    raw/src/target/mips32_dmaacc.c
-    raw/src/target/mips32_pracc.c
-    raw/src/target/mips64.c
-    raw/src/target/mips64_pracc.c
-    raw/src/target/nds32.c
-    raw/src/target/nds32_aice.c
-    raw/src/target/nds32_cmd.c
-    raw/src/target/nds32_disassembler.c
-    raw/src/target/nds32_reg.c
-    raw/src/target/nds32_tlb.c
-    raw/src/target/nds32_v2.c
-    raw/src/target/nds32_v3.c
-    raw/src/target/nds32_v3_common.c
-    raw/src/target/nds32_v3m.c
-    raw/src/target/quark_d20xx.c
-    raw/src/target/quart_x10xx.c
+#    raw/src/target/mips_ejtag.c
+#    raw/src/target/mips_m4k.c
+#    raw/src/target/mips_mips64.c
+#    raw/src/target/mips32.c
+#    raw/src/target/mips32_dmaacc.c
+#    raw/src/target/mips32_pracc.c
+#    raw/src/target/mips64.c
+#    raw/src/target/mips64_pracc.c
+#    raw/src/target/nds32.c
+#    raw/src/target/nds32_aice.c
+#    raw/src/target/nds32_cmd.c
+#    raw/src/target/nds32_disassembler.c
+#    raw/src/target/nds32_reg.c
+#    raw/src/target/nds32_tlb.c
+#    raw/src/target/nds32_v2.c
+#    raw/src/target/nds32_v3.c
+#    raw/src/target/nds32_v3_common.c
+#    raw/src/target/nds32_v3m.c
+#    raw/src/target/quark_d20xx.c
+#    raw/src/target/quark_x10xx.c
     raw/src/target/register.c
     raw/src/target/rtt.c
     raw/src/target/semihosting_common.c
     raw/src/target/smp.c
-    raw/src/target/stm8.c
+#    raw/src/target/stm8.c
     raw/src/target/target.c
     raw/src/target/target_request.c
-    raw/src/target/testee.c
+#    raw/src/target/testee.c
     raw/src/target/trace.c
-    raw/src/target/x86_32_common.c
-    raw/src/target/xscale.c
+#    raw/src/target/x86_32_common.c
+#    raw/src/target/xscale.c
 
     raw/src/transport/transport.c
 

@@ -1,0 +1,277 @@
+ src/flash/nand/driver.c   |  28 +++++-----
+ src/flash/nor/drivers.c   | 138 +++++++++++++++++++++++-----------------------
+ src/target/mips32_pracc.c |   4 +-
+ src/target/target.c       |  44 +++++++--------
+ 4 files changed, 107 insertions(+), 107 deletions(-)
+
+diff --git a/src/flash/nand/driver.c b/src/flash/nand/driver.c
+index b525f3d0a..f2984cc48 100644
+--- a/src/flash/nand/driver.c
++++ b/src/flash/nand/driver.c
+@@ -44,20 +44,20 @@ extern struct nand_flash_controller nuc910_nand_controller;
+ /* extern struct nand_flash_controller boundary_scan_nand_controller; */
+ 
+ static struct nand_flash_controller *nand_flash_controllers[] = {
+-	&nonce_nand_controller,
+-	&davinci_nand_controller,
+-	&lpc3180_nand_controller,
+-	&lpc32xx_nand_controller,
+-	&orion_nand_controller,
+-	&s3c2410_nand_controller,
+-	&s3c2412_nand_controller,
+-	&s3c2440_nand_controller,
+-	&s3c2443_nand_controller,
+-	&s3c6400_nand_controller,
+-	&mxc_nand_flash_controller,
+-	&imx31_nand_flash_controller,
+-	&at91sam9_nand_controller,
+-	&nuc910_nand_controller,
++//	&nonce_nand_controller,
++//	&davinci_nand_controller,
++//	&lpc3180_nand_controller,
++//	&lpc32xx_nand_controller,
++//	&orion_nand_controller,
++//	&s3c2410_nand_controller,
++//	&s3c2412_nand_controller,
++//	&s3c2440_nand_controller,
++//	&s3c2443_nand_controller,
++//	&s3c6400_nand_controller,
++//	&mxc_nand_flash_controller,
++//	&imx31_nand_flash_controller,
++//	&at91sam9_nand_controller,
++//	&nuc910_nand_controller,
+ /*	&boundary_scan_nand_controller, */
+ 	NULL
+ };
+diff --git a/src/flash/nor/drivers.c b/src/flash/nor/drivers.c
+index 3e35c0954..aef5c2af1 100644
+--- a/src/flash/nor/drivers.c
++++ b/src/flash/nor/drivers.c
+@@ -95,75 +95,75 @@ extern const struct flash_driver xmc4xxx_flash;
+  * @todo Make this dynamically extendable with loadable modules.
+  */
+ static const struct flash_driver * const flash_drivers[] = {
+-	&aduc702x_flash,
+-	&aducm360_flash,
+-	&ambiqmicro_flash,
+-	&at91sam3_flash,
+-	&at91sam4_flash,
+-	&at91sam4l_flash,
+-	&at91sam7_flash,
+-	&at91samd_flash,
+-	&ath79_flash,
+-	&atsame5_flash,
+-	&atsamv_flash,
+-	&avr_flash,
+-	&bluenrgx_flash,
+-	&cc3220sf_flash,
+-	&cc26xx_flash,
+-	&cfi_flash,
+-	&dsp5680xx_flash,
+-	&efm32_flash,
+-	&em357_flash,
+-	&esirisc_flash,
+-	&faux_flash,
+-	&fm3_flash,
+-	&fm4_flash,
+-	&fespi_flash,
+-	&jtagspi_flash,
+-	&kinetis_flash,
+-	&kinetis_ke_flash,
+-	&lpc2000_flash,
+-	&lpc288x_flash,
+-	&lpc2900_flash,
+-	&lpcspifi_flash,
+-	&max32xxx_flash,
+-	&mdr_flash,
+-	&mrvlqspi_flash,
+-	&msp432_flash,
+-	&niietcm4_flash,
+-	&npcx_flash,
+-	&nrf5_flash,
+-	&nrf51_flash,
+-	&numicro_flash,
+-	&ocl_flash,
+-	&pic32mx_flash,
+-	&psoc4_flash,
+-	&psoc5lp_flash,
+-	&psoc5lp_eeprom_flash,
+-	&psoc5lp_nvl_flash,
+-	&psoc6_flash,
+-	&renesas_rpchf_flash,
+-	&rp2040_flash,
+-	&sh_qspi_flash,
+-	&sim3x_flash,
+-	&stellaris_flash,
+-	&stm32f1x_flash,
+-	&stm32f2x_flash,
+-	&stm32lx_flash,
+-	&stm32l4x_flash,
+-	&stm32h7x_flash,
+-	&stmsmi_flash,
+-	&stmqspi_flash,
+-	&str7x_flash,
+-	&str9x_flash,
+-	&str9xpec_flash,
+-	&swm050_flash,
+-	&tms470_flash,
+-	&virtual_flash,
+-	&xcf_flash,
+-	&xmc1xxx_flash,
+-	&xmc4xxx_flash,
+-	&w600_flash,
++//	&aduc702x_flash,
++//	&aducm360_flash,
++//	&ambiqmicro_flash,
++//	&at91sam3_flash,
++//	&at91sam4_flash,
++//	&at91sam4l_flash,
++//	&at91sam7_flash,
++//	&at91samd_flash,
++//	&ath79_flash,
++//	&atsame5_flash,
++//	&atsamv_flash,
++//	&avr_flash,
++//	&bluenrgx_flash,
++//	&cc3220sf_flash,
++//	&cc26xx_flash,
++//	&cfi_flash,
++//	&dsp5680xx_flash,
++//	&efm32_flash,
++//	&em357_flash,
++//	&esirisc_flash,
++//	&faux_flash,
++//	&fm3_flash,
++//	&fm4_flash,
++//	&fespi_flash,
++//	&jtagspi_flash,
++//	&kinetis_flash,
++//	&kinetis_ke_flash,
++//	&lpc2000_flash,
++//	&lpc288x_flash,
++//	&lpc2900_flash,
++//	&lpcspifi_flash,
++//	&max32xxx_flash,
++//	&mdr_flash,
++//	&mrvlqspi_flash,
++//	&msp432_flash,
++//	&niietcm4_flash,
++//	&npcx_flash,
++//	&nrf5_flash,
++//	&nrf51_flash,
++//	&numicro_flash,
++//	&ocl_flash,
++//	&pic32mx_flash,
++//	&psoc4_flash,
++//	&psoc5lp_flash,
++//	&psoc5lp_eeprom_flash,
++//	&psoc5lp_nvl_flash,
++//	&psoc6_flash,
++//	&renesas_rpchf_flash,
++//	&rp2040_flash,
++//	&sh_qspi_flash,
++//	&sim3x_flash,
++//	&stellaris_flash,
++//	&stm32f1x_flash,
++//	&stm32f2x_flash,
++//	&stm32lx_flash,
++//	&stm32l4x_flash,
++//	&stm32h7x_flash,
++//	&stmsmi_flash,
++//	&stmqspi_flash,
++//	&str7x_flash,
++//	&str9x_flash,
++//	&str9xpec_flash,
++//	&swm050_flash,
++//	&tms470_flash,
++//	&virtual_flash,
++//	&xcf_flash,
++//	&xmc1xxx_flash,
++//	&xmc4xxx_flash,
++//	&w600_flash,
+ 	NULL,
+ };
+ 
+diff --git a/src/target/mips32_pracc.c b/src/target/mips32_pracc.c
+index 9f8762e34..a94ce271d 100644
+--- a/src/target/mips32_pracc.c
++++ b/src/target/mips32_pracc.c
+@@ -304,7 +304,7 @@ int mips32_pracc_exec(struct mips_ejtag *ejtag_info, struct pracc_queue_info *ct
+ 	}
+ }
+ 
+-inline void pracc_queue_init(struct pracc_queue_info *ctx)
++void pracc_queue_init(struct pracc_queue_info *ctx)
+ {
+ 	ctx->retval = ERROR_OK;
+ 	ctx->code_count = 0;
+@@ -346,7 +346,7 @@ void pracc_add_li32(struct pracc_queue_info *ctx, uint32_t reg_num, uint32_t dat
+ 	}
+ }
+ 
+-inline void pracc_queue_free(struct pracc_queue_info *ctx)
++void pracc_queue_free(struct pracc_queue_info *ctx)
+ {
+ 	free(ctx->pracc_list);
+ }
+diff --git a/src/target/target.c b/src/target/target.c
+index 76327b1c7..57afd167d 100644
+--- a/src/target/target.c
++++ b/src/target/target.c
+@@ -122,35 +122,35 @@ static struct target_type *target_types[] = {
+ 	&arm966e_target,
+ 	&arm946e_target,
+ 	&arm926ejs_target,
+-	&fa526_target,
+-	&feroceon_target,
+-	&dragonite_target,
+-	&xscale_target,
++//	&fa526_target,
++//	&feroceon_target,
++//	&dragonite_target,
++//	&xscale_target,
+ 	&cortexm_target,
+ 	&cortexa_target,
+ 	&cortexr4_target,
+ 	&arm11_target,
+-	&ls1_sap_target,
+-	&mips_m4k_target,
+-	&avr_target,
+-	&dsp563xx_target,
+-	&dsp5680xx_target,
+-	&testee_target,
+-	&avr32_ap7k_target,
+-	&hla_target,
+-	&nds32_v2_target,
+-	&nds32_v3_target,
+-	&nds32_v3m_target,
++//	&ls1_sap_target,
++//	&mips_m4k_target,
++//	&avr_target,
++//	&dsp563xx_target,
++//	&dsp5680xx_target,
++//	&testee_target,
++//	&avr32_ap7k_target,
++//	&hla_target,
++//	&nds32_v2_target,
++//	&nds32_v3_target,
++//	&nds32_v3m_target,
+ 	&or1k_target,
+-	&quark_x10xx_target,
+-	&quark_d20xx_target,
+-	&stm8_target,
++//	&quark_x10xx_target,
++//	&quark_d20xx_target,
++//	&stm8_target,
+ 	&riscv_target,
+-	&mem_ap_target,
+-	&esirisc_target,
++//	&mem_ap_target,
++//	&esirisc_target,
+ 	&arcv2_target,
+-	&aarch64_target,
+-	&mips_mips64_target,
++//	&aarch64_target,
++//	&mips_mips64_target,
+ 	NULL,
+ };
