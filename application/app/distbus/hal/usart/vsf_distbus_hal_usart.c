@@ -84,7 +84,7 @@ static void __vsf_distbus_hal_usart_isrhandler(void *target, vsf_usart_t *generi
 static bool __vsf_distbus_hal_usart_service_msghandler(vsf_distbus_t *distbus,
                         vsf_distbus_service_t *service, vsf_distbus_msg_t *msg)
 {
-    vsf_distbus_hal_usart_t *usart = container_of(service, vsf_distbus_hal_usart_t, service);
+    vsf_distbus_hal_usart_t *usart = vsf_container_of(service, vsf_distbus_hal_usart_t, service);
     uint32_t datalen = msg->header.datalen;
     bool retain_msg = false;
 

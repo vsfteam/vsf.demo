@@ -55,7 +55,7 @@
 #if __APP_USE_DISTBUS
 typedef struct __user_distbus_msg_t {
     implement(vsf_distbus_msg_t)
-    uint8_t buffer[VSF_HAL_DISTBUS_CFG_MTU + offset_of(vsf_distbus_msg_t, header)];
+    uint8_t buffer[VSF_HAL_DISTBUS_CFG_MTU + vsf_offset_of(vsf_distbus_msg_t, header)];
 } __user_distbus_msg_t;
 
 dcl_vsf_pool(__user_distbus_msg_pool)
@@ -319,7 +319,7 @@ void vsf_hal_distbus_on_new(vsf_hal_distbus_t *hal_distbus, vsf_hal_distbus_type
         break;
     }
 
-    __user_distbus_t *user_distbus = container_of(hal_distbus, __user_distbus_t, hal);
+    __user_distbus_t *user_distbus = vsf_container_of(hal_distbus, __user_distbus_t, hal);
     if (user_distbus->eda_pending != NULL) {
         vsf_eda_t *eda_pending = user_distbus->eda_pending;
         user_distbus->eda_pending = NULL;

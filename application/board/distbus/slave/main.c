@@ -46,7 +46,7 @@
 
 typedef struct __user_distbus_msg_t {
     implement(vsf_distbus_msg_t)
-    uint8_t buffer[VSF_HAL_DISTBUS_CFG_MTU + offset_of(vsf_distbus_msg_t, header)];
+    uint8_t buffer[VSF_HAL_DISTBUS_CFG_MTU + vsf_offset_of(vsf_distbus_msg_t, header)];
 } __user_distbus_msg_t;
 
 dcl_vsf_pool(__user_distbus_msg_pool)
@@ -187,14 +187,14 @@ static void __user_distbus_free_msg(void *msg)
 
 static void __user_distbus_on_connected(vsf_distbus_t *distbus)
 {
-    __user_distbus_t *user_distbus = container_of(distbus, __user_distbus_t, distbus);
+    __user_distbus_t *user_distbus = vsf_container_of(distbus, __user_distbus_t, distbus);
     vsf_distbus_hal_start(&user_distbus->hal);
     vsf_callback_timer_add_ms(&user_distbus->timer, 1000);
 }
 
 static void __user_distbus_connection_check_on_timer(vsf_callback_timer_t *timer)
 {
-    __user_distbus_t *user_distbus = container_of(timer, __user_distbus_t, timer);
+    __user_distbus_t *user_distbus = vsf_container_of(timer, __user_distbus_t, timer);
     if (!user_distbus->hal.remote_connected) {
         __user_distbus_on_connected(&user_distbus->distbus);
     } else {

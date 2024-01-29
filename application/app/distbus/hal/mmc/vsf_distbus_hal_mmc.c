@@ -56,7 +56,7 @@ static const vsf_distbus_service_info_t __vsf_distbus_hal_mmc_service_info = {
 static bool __vsf_distbus_hal_mmc_service_msghandler(vsf_distbus_t *distbus,
                         vsf_distbus_service_t *service, vsf_distbus_msg_t *msg)
 {
-    vsf_distbus_hal_mmc_t *mmc = container_of(service, vsf_distbus_hal_mmc_t, service);
+    vsf_distbus_hal_mmc_t *mmc = vsf_container_of(service, vsf_distbus_hal_mmc_t, service);
     uint32_t datalen = msg->header.datalen;
     bool retain_msg = false;
 
