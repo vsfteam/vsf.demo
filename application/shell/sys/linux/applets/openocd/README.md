@@ -7,6 +7,7 @@
   - jimtcl
 
 ## patch
+apply jimtcl.patch to raw/jimtcl.
 
 ## Compiler and Utilities
 - arm-none-eabi-gcc: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
