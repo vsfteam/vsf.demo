@@ -9196,6 +9196,9 @@
                 <file>
                     <name>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\type.h</name>
                 </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\vsf_compiler.c</name>
+                </file>
             </group>
             <group>
                 <name>language_extension</name>
