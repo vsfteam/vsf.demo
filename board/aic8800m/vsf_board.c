@@ -303,7 +303,7 @@ static int __wifi_connect_main(int argc, char *argv[])
             printf("fail to parse IP/GW/MASK\n");
             goto __print_help_and_fail;
         }
-        wlan_fixed_dhcp(addr_ip.s_addr, addr_gw.s_addr, addr_mask.s_addr);
+//        wlan_fixed_dhcp(addr_ip.s_addr, addr_gw.s_addr, addr_mask.s_addr);
     }
 
     // wlan_start_sta MUST be called with higher priority than internal wpa(AIC8800_OSAL_CFG_PRIORITY_BASE).
