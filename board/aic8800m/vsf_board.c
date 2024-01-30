@@ -22,6 +22,13 @@
 
 #if VSF_USE_LINUX == ENABLED
 #   include <unistd.h>
+#   include <arpa/inet.h>
+// conflicts with lwip/stats.h
+#   undef opterr
+#   define LWIP_TIMEVAL_PRIVATE 0
+// avoid conflict
+#   undef LWIP_SOCKET
+#   define LWIP_SOCKET 0
 #endif
 
 #if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
@@ -171,24 +178,19 @@ void app_wifi_sta_on_connected(void)
 
 static int __wifi_ap_main(int argc, char *argv[])
 {
-    if (argc < 3) {
-        printf("format: %s SSID PASSWD [CHANNEL]\n", argv[0]);
+    if ((argc < 4) || (argc > 5)) {
+        printf("format: %s BAND CHANNEL SSID [PASSWD]\n", argv[0]);
         return -1;
     }
 
-    char *ssid = argv[1], *pass = argv[2];
-    uint8_t channel = 0;
-    if (argc > 3) {
-        channel = strtoul(argv[3], NULL, 10);
-        VSF_ASSERT(channel <= 14);
+    uint8_t band = atoi(argv[1]);
+    // if no password, pass will be NULL
+    char *ssid = argv[3], *pass = argv[4];
+    uint8_t channel = strtoul(argv[2], NULL, 10);
 
-        if (14 == channel) {
-            printf("warning: wifi 2.4G channel 14 is illegal in some countries.\n");
-        }
-    }
     set_ap_channel_num(channel);
     set_mac_address(NULL);
-    int ret = wlan_start_ap(0, (uint8_t *)ssid, (uint8_t *)pass);
+    int ret = wlan_start_ap(band, (uint8_t *)ssid, (uint8_t *)pass);
     if (!ret) {
         printf("wifi ap started.\n");
     } else {
@@ -242,20 +244,45 @@ struct netif * app_wifi_get_netif(void)
 
 static int __wifi_connect_main(int argc, char *argv[])
 {
-    char __ssid[33], __pass[33];
-    char *ssid, *pass;
+    char __ssid[33], __pass[33], __ip[32], __gw[32], __mask[32];
+    char *ssid, *pass, *ip = NULL, *gw = NULL, *mask = NULL;
+
     if (1 == argc) {
         if (    app_config_read("wifi_ssid", __ssid, sizeof(__ssid))
             ||  app_config_read("wifi_pass", __pass, sizeof(__pass))) {
             printf("ssid/pass not found in app_config\n", argv[0]);
-            printf("format: %s [SSID [PASSWD]]\n", argv[0]);
+        __print_help_and_fail:
+            printf("format: %s [SSID[\\PASSWD]] [IP GW MASK]\n", argv[0]);
             return -1;
         }
         ssid = __ssid;
         pass = __pass;
+
+        if (!app_config_read("wifi_ip", __ip, sizeof(__ip))) {
+            ip = __ip;
+            if (    app_config_read("wifi_gw", __gw, sizeof(__gw))
+                ||  app_config_read("wifi_netmask", __mask, sizeof(__mask))) {
+                printf("gw/netmask not found in app_config\n");
+                goto __print_help_and_fail;
+            }
+            gw = __gw;
+            mask = __mask;
+        }
     } else {
         ssid = argv[1];
-        pass = argc >= 3 ? argv[2] : "";
+        pass = strchr(argv[1], '\\');
+        if (pass != NULL) {
+            *pass++ = '\0';
+        }
+
+        if ((argc > 2) && (argc != 5)) {
+            printf("invalid command line arguments\n");
+            goto __print_help_and_fail;
+        }
+
+        ip = argv[2];
+        gw = argv[3];
+        mask = argv[4];
     }
 
     if (wlan_get_connect_status()) {
@@ -268,6 +295,17 @@ static int __wifi_connect_main(int argc, char *argv[])
     }
 
     set_mac_address(NULL);
+    if (ip != NULL) {
+        struct in_addr addr_ip, addr_gw, addr_mask;
+        if (    (inet_pton(AF_INET, ip, &addr_ip.s_addr) <= 0)
+            ||  (inet_pton(AF_INET, gw, &addr_gw.s_addr) <= 0)
+            ||  (inet_pton(AF_INET, mask, &addr_mask.s_addr) <= 0)) {
+            printf("fail to parse IP/GW/MASK\n");
+            goto __print_help_and_fail;
+        }
+        wlan_fixed_dhcp(addr_ip.s_addr, addr_gw.s_addr, addr_mask.s_addr);
+    }
+
     // wlan_start_sta MUST be called with higher priority than internal wpa(AIC8800_OSAL_CFG_PRIORITY_BASE).
     vsf_prio_t prio = vsf_thread_set_priority(AIC8800_OSAL_CFG_PRIORITY_BASE + 1);
         wlan_start_sta((uint8_t *)ssid, (uint8_t *)pass, 0);
@@ -286,9 +324,13 @@ static int __wifi_connect_main(int argc, char *argv[])
 #endif
 
         app_wifi_sta_on_connected();
-
         app_config_write("wifi_ssid", ssid);
         app_config_write("wifi_pass", pass);
+        if (ip != NULL) {
+            app_config_write("wifi_ip", ip);
+            app_config_write("wifi_gw", gw);
+            app_config_write("wifi_netmask", mask);
+        }
         return 0;
     } else {
         printf("fail to connect %s.\n", argv[1]);
