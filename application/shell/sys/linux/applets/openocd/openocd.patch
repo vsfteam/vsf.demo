@@ -1,8 +1,10 @@
  src/flash/nand/driver.c   |  28 +++++-----
  src/flash/nor/drivers.c   | 138 +++++++++++++++++++++++-----------------------
+ src/rtos/rtos.c           |  24 ++++----
+ src/server/server.c       |   8 +--
  src/target/mips32_pracc.c |   4 +-
- src/target/target.c       |  44 +++++++--------
- 4 files changed, 107 insertions(+), 107 deletions(-)
+ src/target/target.c       |  48 ++++++++--------
+ 6 files changed, 125 insertions(+), 125 deletions(-)
 
 diff --git a/src/flash/nand/driver.c b/src/flash/nand/driver.c
 index b525f3d0a..f2984cc48 100644
@@ -192,6 +194,67 @@ index 3e35c0954..aef5c2af1 100644
  	NULL,
  };
  
+diff --git a/src/rtos/rtos.c b/src/rtos/rtos.c
+index f401c3d30..26621090f 100644
+--- a/src/rtos/rtos.c
++++ b/src/rtos/rtos.c
+@@ -42,18 +42,18 @@ extern struct rtos_type riot_rtos;
+ extern struct rtos_type zephyr_rtos;
+ 
+ static struct rtos_type *rtos_types[] = {
+-	&threadx_rtos,
+-	&freertos_rtos,
+-	&ecos_rtos,
+-	&linux_rtos,
+-	&chibios_rtos,
+-	&chromium_ec_rtos,
+-	&embkernel_rtos,
+-	&mqx_rtos,
+-	&ucos_iii_rtos,
+-	&nuttx_rtos,
+-	&riot_rtos,
+-	&zephyr_rtos,
++//	&threadx_rtos,
++//	&freertos_rtos,
++//	&ecos_rtos,
++//	&linux_rtos,
++//	&chibios_rtos,
++//	&chromium_ec_rtos,
++//	&embkernel_rtos,
++//	&mqx_rtos,
++//	&ucos_iii_rtos,
++//	&nuttx_rtos,
++//	&riot_rtos,
++//	&zephyr_rtos,
+ 	/* keep this as last, as it always matches with rtos auto */
+ 	&hwthread_rtos,
+ 	NULL
+diff --git a/src/server/server.c b/src/server/server.c
+index c7cafb789..84ebb3898 100644
+--- a/src/server/server.c
++++ b/src/server/server.c
+@@ -721,7 +721,7 @@ void server_free(void)
+ {
+ 	tcl_service_free();
+ 	telnet_service_free();
+-	jsp_service_free();
++//	jsp_service_free();
+ 
+ 	free(bindto_name);
+ }
+@@ -838,9 +838,9 @@ int server_register_commands(struct command_context *cmd_ctx)
+ 	if (retval != ERROR_OK)
+ 		return retval;
+ 
+-	retval = jsp_register_commands(cmd_ctx);
+-	if (retval != ERROR_OK)
+-		return retval;
++//	retval = jsp_register_commands(cmd_ctx);
++//	if (retval != ERROR_OK)
++//		return retval;
+ 
+ 	return register_commands(cmd_ctx, NULL, server_command_handlers);
+ }
 diff --git a/src/target/mips32_pracc.c b/src/target/mips32_pracc.c
 index 9f8762e34..a94ce271d 100644
 --- a/src/target/mips32_pracc.c
@@ -215,7 +278,7 @@ index 9f8762e34..a94ce271d 100644
  	free(ctx->pracc_list);
  }
 diff --git a/src/target/target.c b/src/target/target.c
-index 76327b1c7..57afd167d 100644
+index 76327b1c7..8939db235 100644
 --- a/src/target/target.c
 +++ b/src/target/target.c
 @@ -122,35 +122,35 @@ static struct target_type *target_types[] = {
@@ -245,6 +308,10 @@ index 76327b1c7..57afd167d 100644
 -	&nds32_v2_target,
 -	&nds32_v3_target,
 -	&nds32_v3m_target,
+-	&or1k_target,
+-	&quark_x10xx_target,
+-	&quark_d20xx_target,
+-	&stm8_target,
 +//	&ls1_sap_target,
 +//	&mips_m4k_target,
 +//	&avr_target,
@@ -256,21 +323,19 @@ index 76327b1c7..57afd167d 100644
 +//	&nds32_v2_target,
 +//	&nds32_v3_target,
 +//	&nds32_v3m_target,
- 	&or1k_target,
--	&quark_x10xx_target,
--	&quark_d20xx_target,
--	&stm8_target,
++//	&or1k_target,
 +//	&quark_x10xx_target,
 +//	&quark_d20xx_target,
 +//	&stm8_target,
  	&riscv_target,
 -	&mem_ap_target,
 -	&esirisc_target,
-+//	&mem_ap_target,
-+//	&esirisc_target,
- 	&arcv2_target,
+-	&arcv2_target,
 -	&aarch64_target,
 -	&mips_mips64_target,
++//	&mem_ap_target,
++//	&esirisc_target,
++//	&arcv2_target,
 +//	&aarch64_target,
 +//	&mips_mips64_target,
  	NULL,

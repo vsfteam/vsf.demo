@@ -166,27 +166,27 @@ file(GLOB OPENOCD_SOURCES
     raw/src/pld/virtex2.c
     raw/src/pld/xilinx_bit.c
 
-    raw/src/rtos/chibios.c
-    raw/src/rtos/chromium-ec.c
-    raw/src/rtos/eCos.c
-    raw/src/rtos/embKernel.c
-    raw/src/rtos/FreeRTOS.c
+#    raw/src/rtos/chibios.c
+#    raw/src/rtos/chromium-ec.c
+#    raw/src/rtos/eCos.c
+#    raw/src/rtos/embKernel.c
+#    raw/src/rtos/FreeRTOS.c
     raw/src/rtos/hwthread.c
-    raw/src/rtos/linux.c
-    raw/src/rtos/mqx.c
-    raw/src/rtos/nuttx.c
-    raw/src/rtos/riot.c
+#    raw/src/rtos/linux.c
+#    raw/src/rtos/mqx.c
+#    raw/src/rtos/nuttx.c
+#    raw/src/rtos/riot.c
     raw/src/rtos/rtos.c
-    raw/src/rtos/rtos_chibios_stackings.c
-    raw/src/rtos/rtos_ecos_stackings.c
-    raw/src/rtos/rtos_embkernel_stackings.c
-    raw/src/rtos/rtos_mqx_stackings.c
-    raw/src/rtos/rtos_riot_stackings.c
+#    raw/src/rtos/rtos_chibios_stackings.c
+#    raw/src/rtos/rtos_ecos_stackings.c
+#    raw/src/rtos/rtos_embkernel_stackings.c
+#    raw/src/rtos/rtos_mqx_stackings.c
+#    raw/src/rtos/rtos_riot_stackings.c
     raw/src/rtos/rtos_standard_stackings.c
-    raw/src/rtos/rtos_ucos_iii_stackings.c
-    raw/src/rtos/ThreadX.c
-    raw/src/rtos/uCOS-III.c
-    raw/src/rtos/zephyr.c
+#    raw/src/rtos/rtos_ucos_iii_stackings.c
+#    raw/src/rtos/ThreadX.c
+#    raw/src/rtos/uCOS-III.c
+#    raw/src/rtos/zephyr.c
 
     raw/src/rtt/rtt.c
     raw/src/rtt/tcl.c
@@ -200,12 +200,12 @@ file(GLOB OPENOCD_SOURCES
 
     raw/src/svf/svf.c
 
-    raw/src/target/openrisc/jsp_server.c
-    raw/src/target/openrisc/or1k.c
-    raw/src/target/openrisc/or1k_du_adv.c
-    raw/src/target/openrisc/or1k_tap_mohor.c
-    raw/src/target/openrisc/or1k_tap_vjtag.c
-    raw/src/target/openrisc/or1k_tap_xilinx_bscan.c
+#    raw/src/target/openrisc/jsp_server.c
+#    raw/src/target/openrisc/or1k.c
+#    raw/src/target/openrisc/or1k_du_adv.c
+#    raw/src/target/openrisc/or1k_tap_mohor.c
+#    raw/src/target/openrisc/or1k_tap_vjtag.c
+#    raw/src/target/openrisc/or1k_tap_xilinx_bscan.c
     raw/src/target/riscv/batch.c
     raw/src/target/riscv/program.c
     raw/src/target/riscv/riscv.c
@@ -218,10 +218,10 @@ file(GLOB OPENOCD_SOURCES
     raw/src/target/adi_v5_jtag.c
     raw/src/target/adi_v5_swd.c
     raw/src/target/algorithm.c
-    raw/src/target/arc.c
-    raw/src/target/arc_cmd.c
-    raw/src/target/arc_jtag.c
-    raw/src/target/arc_mem.c
+#    raw/src/target/arc.c
+#    raw/src/target/arc_cmd.c
+#    raw/src/target/arc_jtag.c
+#    raw/src/target/arc_mem.c
     raw/src/target/arm_adi_v5.c
     raw/src/target/arm_cti.c
     raw/src/target/arm_dap.c
