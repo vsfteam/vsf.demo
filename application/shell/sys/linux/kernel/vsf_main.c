@@ -410,7 +410,7 @@ int app_config_write(const char *cfgname, char *cfgvalue)
     }
 
     value = start + strlen(token);
-    if ((value == strstr(value, cfgvalue)) && (value[strlen(cfgvalue)] == '\n')) {
+    if ((cfgvalue != NULL) && (value == strstr(value, cfgvalue)) && (value[strlen(cfgvalue)] == '\n')) {
         result = 0;
         goto done;
     }
@@ -426,7 +426,9 @@ int app_config_write(const char *cfgname, char *cfgvalue)
     fwrite(data, 1, strlen(data), f);
 
 write_cfg:
-    fprintf(f, "%s%s:%s\n", NULL == data ? "\n" : "", cfgname, cfgvalue);
+    if (cfgvalue != NULL) {
+        fprintf(f, "%s%s:%s\n", NULL == data ? "\n" : "", cfgname, cfgvalue);
+    }
     result = 0;
 
 done:
@@ -459,7 +461,13 @@ static int __appcfg_main(int argc, char *argv[])
             printf("appcfg: %s=%s\n", argv[1], buffer);
         }
     } else if (3 == argc) {
-        printf("appcfg: %s=%s ... ", argv[1], argv[2]);
+        if (!strcmp(argv[1], "-d")) {
+            printf("appcfg: remove %s ... ", argv[2]);
+            argv[1] = argv[2];
+            argv[2] = NULL;
+        } else {
+            printf("appcfg: %s=%s ... ", argv[1], argv[2]);
+        }
         ret = app_config_write(argv[1], argv[2]);
         if (ret != 0) {
             printf("failed\n");
