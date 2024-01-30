@@ -9,6 +9,8 @@ file(GLOB CURL_SOURCES
     raw/lib/vtls/*.c
     raw/lib/*.c
     raw/src/*.c
+
+    port/curl_port_vsf.c
 )
 vsf_add_compile_definitions(
     ${VSF_TARGET_DEFINITIONS}

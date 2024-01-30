@@ -27,7 +27,8 @@ int main(int argc, char **argv)
 error: macro "test" requires 3 arguments, but only 2 given
 ```
 
-## patch
+## Patch
+Apply ram_usage.patch to raw.
 
 ## Compiler and Utilities
 - arm-none-eabi-gcc: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
