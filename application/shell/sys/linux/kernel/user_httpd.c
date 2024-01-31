@@ -2,6 +2,8 @@
 
 #if VSF_USE_TCPIP == ENABLED
 
+#include <pthread.h>
+
 static const char __user_httpd_root[] = VSF_STR(
 <html>
   <head>
@@ -150,20 +152,22 @@ static int __user_httpd_terminal_poll(vsf_linux_httpd_request_t *req,
     }
 }
 
-int app_httpd_terminal_start(void)
+// webterminal [PORT]
+int webterminal_main(int argc, char **argv)
 {
     static bool __httpd_webterminal_started = false;
     if (!__httpd_webterminal_started) {
         __httpd_webterminal_started = true;
 
-        static vsf_linux_httpd_t __user_httpd_webterminal = {
-            .port               = 80,
+        int port = argc == 2 ? atoi(argv[1]) : 80;
+
+        vsf_linux_httpd_t __user_httpd_webterminal = {
+            .port               = port,
             .backlog            = 4,
 
             .num_of_urihandler  = dimof(__user_httpd_urihandler),
             .urihandler         = (vsf_linux_httpd_urihandler_t *)__user_httpd_urihandler,
         };
-        vsf_linux_httpd_start(&__user_httpd_webterminal);
 
         char __name[32], *name;
         if (!app_config_read("webterminal_name", __name, sizeof(__name))) {
@@ -171,7 +175,9 @@ int app_httpd_terminal_start(void)
         } else {
             name = "webterminal";
         }
-        app_mdns_add_httpd_service(name, 80);
+        app_mdns_add_httpd_service(name, port);
+
+        vsf_linux_httpd_thread(&__user_httpd_webterminal);
         return 0;
     }
 

@@ -781,8 +781,8 @@ int hwtest_main(int argc, char **argv)
     return 0;
 }
 
-WEAK(app_httpd_terminal_start)
-int app_httpd_terminal_start(void)
+WEAK(webterminal_main)
+int webterminal_main(int argc, char **argv)
 {
     return 0;
 }
@@ -911,6 +911,13 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_audio_timer("/dev/snd/timer");
 #   endif
 #endif
+#if VSF_HAL_USE_MMC == ENABLED
+    __mmc_mal.mmc           = vsf_board.mmc;
+    __mmc_mal.hw_priority   = vsf_arch_prio_0;
+    __mmc_mal.voltage       = vsf_board.mmc_voltage;
+    __mmc_mal.bus_width     = vsf_board.mmc_bus_width;
+    __mmc_mal.drv           = &vk_mmc_mal_drv;
+#endif
 
     // 2. fs
 #if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
@@ -968,10 +975,6 @@ int vsf_linux_create_fhs(void)
     busybox_install();
 #endif
 
-#if VSF_USE_TCPIP == ENABLED
-    app_httpd_terminal_start();
-#endif
-
     // 3. install executables and built-in libraries
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&__vsf_app_vplt.info);
 #if VSF_USE_MBEDTLS == ENABLED
@@ -979,13 +982,8 @@ int vsf_linux_create_fhs(void)
 #endif
     vsf_board_init_linux();
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/reset", __reset_main);
-
-#if VSF_HAL_USE_MMC == ENABLED
-    __mmc_mal.mmc           = vsf_board.mmc;
-    __mmc_mal.hw_priority   = vsf_arch_prio_0;
-    __mmc_mal.voltage       = vsf_board.mmc_voltage;
-    __mmc_mal.bus_width     = vsf_board.mmc_bus_width;
-    __mmc_mal.drv           = &vk_mmc_mal_drv;
+#if VSF_USE_TCPIP == ENABLED
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/webterminal", webterminal_main);
 #endif
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
