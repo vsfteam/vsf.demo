@@ -163,7 +163,7 @@ int webterminal_main(int argc, char **argv)
 
         vsf_linux_httpd_t __user_httpd_webterminal = {
             .port               = port,
-            .backlog            = 4,
+            .backlog            = 8,
 
             .num_of_urihandler  = dimof(__user_httpd_urihandler),
             .urihandler         = (vsf_linux_httpd_urihandler_t *)__user_httpd_urihandler,
