@@ -178,6 +178,7 @@ int webterminal_main(int argc, char **argv)
         app_mdns_add_httpd_service(name, port);
 
         vsf_linux_httpd_thread(&__user_httpd_webterminal);
+        __httpd_webterminal_started = false;
         return 0;
     }
 
