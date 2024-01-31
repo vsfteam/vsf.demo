@@ -339,7 +339,7 @@ static char * __app_config_read(FILE *f)
     return NULL;
 }
 
-int app_config_read(const char *cfgname, char *cfgvalue, size_t valuelen)
+int app_config_read(const char *cfgname, char *cfgvalue, int valuelen)
 {
     int result = -1;
     FILE *f = fopen(APP_CONFIG_FILE, "r");
@@ -479,6 +479,16 @@ static int __appcfg_main(int argc, char *argv[])
         ret = -1;
     }
     return ret;
+}
+#else
+int app_config_read(const char *cfgname, char *cfgvalue, int valuelen)
+{
+    return -1;
+}
+
+int app_config_write(const char *cfgname, char *cfgvalue)
+{
+    return -1;
 }
 #endif
 
@@ -856,11 +866,15 @@ static int __reset_main(int argc, char **argv)
 typedef struct vsf_app_vplt_t {
     vsf_vplt_info_t info;
     VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_mdns_add_httpd_service);
+    VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_config_read);
+    VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_config_write);
 } vsf_app_vplt_t;
 
 static __VSF_VPLT_DECORATOR__ vsf_app_vplt_t __vsf_app_vplt = {
     VSF_APPLET_VPLT_INFO(vsf_app_vplt_t, 0, 0, true),
     VSF_APPLET_VPLT_ENTRY_FUNC(app_mdns_add_httpd_service),
+    VSF_APPLET_VPLT_ENTRY_FUNC(app_config_read),
+    VSF_APPLET_VPLT_ENTRY_FUNC(app_config_write),
 };
 
 int vsf_linux_create_fhs(void)

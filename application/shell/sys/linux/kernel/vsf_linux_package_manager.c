@@ -17,8 +17,6 @@
 #define __VPM_BUF_SIZE                      512
 #define __VPM_HOST_PATH_SIZE                512
 
-extern int app_config_read(const char *cfgname, char *cfgvalue, size_t valuelen);
-extern int app_config_write(const char *cfgname, char *cfgvalue);
 extern vk_cached_mal_t romfs_mal;
 
 struct __vpm_t {

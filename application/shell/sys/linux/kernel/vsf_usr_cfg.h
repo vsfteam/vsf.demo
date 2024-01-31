@@ -152,6 +152,8 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 // application APIs
 
 extern void app_mdns_add_httpd_service(const char *name, unsigned short port);
+extern int app_config_read(const char *cfgname, char *cfgvalue, int valuelen);
+extern int app_config_write(const char *cfgname, char *cfgvalue);
 
 /*============================ INCLUDES ======================================*/
 

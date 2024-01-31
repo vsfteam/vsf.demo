@@ -165,7 +165,13 @@ int app_httpd_terminal_start(void)
         };
         vsf_linux_httpd_start(&__user_httpd_webterminal);
 
-        app_mdns_add_httpd_service("webterminal", 80);
+        char __name[32], *name;
+        if (!app_config_read("webterminal_name", __name, sizeof(__name))) {
+            name = __name;
+        } else {
+            name = "webterminal";
+        }
+        app_mdns_add_httpd_service(name, 80);
         return 0;
     }
 
