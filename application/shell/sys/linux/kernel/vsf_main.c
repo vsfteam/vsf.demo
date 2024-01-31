@@ -789,7 +789,7 @@ int webterminal_main(int argc, char **argv)
 
 typedef struct app_mdns_service_record_t {
     vsf_dlist_node_t node;
-    const char *name;
+    char *name;
     uint16_t port;
 } app_mdns_service_record_t;
 static vsf_dlist_t __app_mdns_service_record_list = { 0 };
@@ -811,7 +811,8 @@ void app_wifi_sta_on_connected(void)
             vsf_dlist_queue_dequeue(app_mdns_service_record_t, node, list, record);
             app_mdns_add_httpd_service(record->name, record->port);
             vsf_dlist_remove(app_mdns_service_record_t, node, list, record);
-            free(record);
+            vsf_heap_free(record->name);
+            vsf_heap_free(record);
         } while (record != NULL);
     }
 }
@@ -842,10 +843,10 @@ void app_mdns_add_httpd_service(const char *name, unsigned short port)
                     DNSSD_PROTO_TCP, port, 3600, __app_mdns_httpd_srv_txt, NULL);
         UNLOCK_TCPIP_CORE();
     } else {
-        app_mdns_service_record_t *record = malloc(sizeof(*record));
+        app_mdns_service_record_t *record = vsf_heap_malloc(sizeof(*record));
         if (record != NULL) {
             vsf_dlist_init_node(app_mdns_service_record_t, node, record);
-            record->name = name;
+            record->name = vsf_heap_strdup(name);
             record->port = port;
             vsf_dlist_queue_enqueue(app_mdns_service_record_t, node,
                     &__app_mdns_service_record_list, record);
