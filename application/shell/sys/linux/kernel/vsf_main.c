@@ -811,8 +811,10 @@ void app_wifi_sta_on_connected(void)
             vsf_dlist_queue_dequeue(app_mdns_service_record_t, node, list, record);
             app_mdns_add_httpd_service(record->name, record->port);
             vsf_dlist_remove(app_mdns_service_record_t, node, list, record);
-            vsf_heap_free(record->name);
-            vsf_heap_free(record);
+            if (record != NULL) {
+                vsf_heap_free(record->name);
+                vsf_heap_free(record);
+            }
         } while (record != NULL);
     }
 }
