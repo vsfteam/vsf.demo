@@ -140,6 +140,7 @@ file(GLOB BUSYBOX_SOURCES
 
     raw/networking/ftpd.c
     raw/networking/httpd.c
+    raw/networking/nc.c
     raw/networking/ntpd.c
     raw/networking/parse_pasv_epsv.c
     raw/networking/ping.c

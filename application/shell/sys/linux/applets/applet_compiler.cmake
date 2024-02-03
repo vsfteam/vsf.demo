@@ -25,7 +25,7 @@ if(APPLET_COMPILER_GCC)
 elseif(APPLET_COMPILER_LLVM)
     if(NOT DEFINED LLVM_TOOLCHAIN_PATH)
         message(WARNING "LLVM_TOOLCHAIN_PATH not defined, use default: -DLLVM_TOOLCHAIN_PATH=\"E:/Software/armllvm16\"")
-        set(LLVM_TOOLCHAIN_PATH "E:/Software/armllvm16")
+        set(LLVM_TOOLCHAIN_PATH "E:/Software/armllvm17")
     endif()
     if(NOT DEFINED LLVM_TOOLCHAIN_EXE_SUFIX)
         message(WARNING "LLVM_TOOLCHAIN_EXE_SUFIX not defined, use default: -DLLVM_TOOLCHAIN_EXE_SUFIX=\".exe\"")
@@ -36,16 +36,28 @@ elseif(APPLET_COMPILER_LLVM)
         set(LLVM_TOOLCHAIN_SYSROOT "${LLVM_TOOLCHAIN_PATH}/lib/clang-runtimes/arm-none-eabi/armv7m_soft_nofp")
     endif()
 
-    set(CMAKE_C_FLAGS
-#        "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fPIC -mno-pic-data-is-text-relative"      # GOT-base position independency
-        "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fropi -frwpi"                              # embedded position independency
-        CACHE INTERNAL "C compiler common flags"
-    )
-    set(CMAKE_CXX_FLAGS
-#        "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fPIC -mno-pic-data-is-text-relative"
-        "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fropi -frwpi"
-        CACHE INTERNAL "C++ compiler common flags"
-    )
+    if(APPLET_COMPILER_LLVM_EMBPI)
+        set(CMAKE_C_FLAGS
+            "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fropi -frwpi"                              # embedded position independency
+            CACHE INTERNAL "C compiler common flags"
+        )
+        set(CMAKE_CXX_FLAGS
+            "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fropi -frwpi"
+            CACHE INTERNAL "C++ compiler common flags"
+        )
+    elseif(APPLET_COMPILER_LLVM_GOTPI)
+        set(CMAKE_C_FLAGS
+            "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fPIC -mno-pic-data-is-text-relative"      # GOT-base position independency
+            CACHE INTERNAL "C compiler common flags"
+        )
+        set(CMAKE_CXX_FLAGS
+            "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fPIC -mno-pic-data-is-text-relative"
+            CACHE INTERNAL "C++ compiler common flags"
+        )
+    else()
+        message(FATAL "Either APPLET_COMPILER_LLVM_EMBPI or APPLET_COMPILER_LLVM_GOTPI should be set to 1")
+    endif()
+
     include($ENV{VSF_PATH}/script/cmake/compilers/armllvm.cmake)
 else()
     message(FATAL "compiler is not set.")
