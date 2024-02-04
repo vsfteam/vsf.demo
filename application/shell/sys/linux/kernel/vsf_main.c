@@ -89,7 +89,7 @@
 #   include "component/3rd-party/mbedtls/extension/vplt/mbedtls_vplt.h"
 #endif
 #if     defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE)    \
-    &&  defined(APP_MSCBOOT_CFG_ROOT_ADDR) && (VSF_FS_USE_LITTLEFS == ENABLED)
+    && (APP_MSCBOOT_CFG_ROOT_SIZE > 0) &&  defined(APP_MSCBOOT_CFG_ROOT_ADDR) && (VSF_FS_USE_LITTLEFS == ENABLED)
 #   include "component/3rd-party/littlefs/port/lfs_port.h"
 #endif
 
@@ -179,7 +179,7 @@ vk_hw_flash_mal_t flash_mal = {
     .drv                    = &vk_hw_flash_mal_drv,
     .flash                  = &APP_MSCBOOT_CFG_FLASH,
 };
-#   if defined(APP_MSCBOOT_CFG_ROOT_SIZE) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
+#   if defined(APP_MSCBOOT_CFG_ROOT_SIZE) && (APP_MSCBOOT_CFG_ROOT_SIZE > 0) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
 vk_mim_mal_t root_mal = {
     .drv                    = &vk_mim_mal_drv,
     .host_mal               = &flash_mal.use_as__vk_mal_t,
@@ -320,7 +320,7 @@ void vsf_linux_install_package_manager(vk_romfs_info_t *fsinfo, bool can_uninsta
 {
 }
 
-#if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
+#if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && (APP_MSCBOOT_CFG_ROOT_SIZE > 0) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
 static char * __app_config_read(FILE *f)
 {
     fseek(f, 0, SEEK_END);
@@ -923,7 +923,7 @@ int vsf_linux_create_fhs(void)
 #endif
 
     // 2. fs
-#if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
+#if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && (APP_MSCBOOT_CFG_ROOT_SIZE > 0) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
     vk_mal_init(&root_mal.use_as__vk_mal_t);
 
     static vk_lfs_info_t __root_fs;
