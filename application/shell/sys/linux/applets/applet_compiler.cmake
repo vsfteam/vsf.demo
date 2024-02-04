@@ -37,8 +37,9 @@ elseif(APPLET_COMPILER_LLVM)
     endif()
 
     if(APPLET_COMPILER_LLVM_EMBPI)
+        # embedded position independency
         set(CMAKE_C_FLAGS
-            "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fropi -frwpi"                              # embedded position independency
+            "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fropi -frwpi"
             CACHE INTERNAL "C compiler common flags"
         )
         set(CMAKE_CXX_FLAGS
@@ -46,8 +47,9 @@ elseif(APPLET_COMPILER_LLVM)
             CACHE INTERNAL "C++ compiler common flags"
         )
     elseif(APPLET_COMPILER_LLVM_GOTPI)
+        # GOT-base position independency
         set(CMAKE_C_FLAGS
-            "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fPIC -mno-pic-data-is-text-relative"      # GOT-base position independency
+            "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fPIC -mno-pic-data-is-text-relative"
             CACHE INTERNAL "C compiler common flags"
         )
         set(CMAKE_CXX_FLAGS

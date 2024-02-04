@@ -194,7 +194,7 @@ static int __vpm_install_local_package(char *path)
         goto do_exit_free_buffer;
     }
 
-    package = strdup(image->name);
+    package = strdup((const char *)image->name);
     if (NULL == package) {
         printf("fail to allocate name for package %s\n", image->name);
         goto do_exit_free_buffer;
