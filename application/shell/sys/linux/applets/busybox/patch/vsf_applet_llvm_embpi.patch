@@ -1,0 +1,16 @@
+ libbb/appletlib.c  |  2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/libbb/appletlib.c b/libbb/appletlib.c
+index d5335d353..384507f86 100644
+--- a/libbb/appletlib.c
++++ b/libbb/appletlib.c
+@@ -966,7 +966,7 @@ void FAST_FUNC run_applet_no_and_exit(int applet_no, const char *name, char **ar
+ 		check_suid(applet_no);
+ 
+ 	argc = string_array_len(argv);
+-	xfunc_error_retval = applet_main[applet_no](argc, argv);
++	xfunc_error_retval = ((int (*)(int, char **))vsf_applet_remap(NULL, applet_main[applet_no]))(argc, argv);
+ 
+ 	/* Note: applet_main() may also not return (die on a xfunc or such) */
+ 	xfunc_die()

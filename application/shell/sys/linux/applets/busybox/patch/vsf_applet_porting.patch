@@ -1,8 +1,8 @@
  editors/awk.c      |  2 +-
  include/libbb.h    | 22 +++++++++++++++++++++-
- include/platform.h | 10 +++++++---
+ include/platform.h | 14 ++++++++++----
  init/init.c        |  2 ++
- 4 files changed, 31 insertions(+), 5 deletions(-)
+ 4 files changed, 34 insertions(+), 6 deletions(-)
 
 diff --git a/editors/awk.c b/editors/awk.c
 index 728ee8685..64d1d0f87 100644
@@ -66,7 +66,7 @@ index cca33a177..c4a389e66 100644
  
  
 diff --git a/include/platform.h b/include/platform.h
-index ea0512f36..38839ac68 100644
+index ea0512f36..e78b89bf4 100644
 --- a/include/platform.h
 +++ b/include/platform.h
 @@ -24,7 +24,7 @@
@@ -78,7 +78,7 @@ index ea0512f36..38839ac68 100644
  # ifndef __attribute__
  #  define __attribute__(x)
  # endif
-@@ -65,7 +65,9 @@
+@@ -65,12 +65,16 @@
   * to the new pointer) after the function returns a non-NULL value."
   */
  #define RETURNS_MALLOC __attribute__ ((malloc))
@@ -89,7 +89,15 @@ index ea0512f36..38839ac68 100644
  #define ALIGNED(m) __attribute__ ((__aligned__(m)))
  
  /* __NO_INLINE__: some gcc's do not honor inlining! :( */
-@@ -81,7 +83,9 @@
+ #if __GNUC_PREREQ(3,0) && !defined(__NO_INLINE__)
+-# define ALWAYS_INLINE __attribute__ ((always_inline)) inline
++# ifndef ALWAYS_INLINE
++#  define ALWAYS_INLINE __attribute__ ((always_inline)) inline
++# endif
+ /* I've seen a toolchain where I needed __noinline__ instead of noinline */
+ # define NOINLINE      __attribute__((__noinline__))
+ # if !ENABLE_WERROR
+@@ -81,7 +85,9 @@
  #  define UNUSED_PARAM_RESULT
  # endif
  #else
