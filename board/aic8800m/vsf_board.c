@@ -113,7 +113,7 @@ vsf_board_t vsf_board = {
 /*============================ IMPLEMENTATION ================================*/
 
 WEAK(app_config_read)
-int app_config_read(const char *cfgname, char *cfgvalue, size_t valuelen)
+int app_config_read(const char *cfgname, char *cfgvalue, int valuelen)
 {
     return -1;
 }
