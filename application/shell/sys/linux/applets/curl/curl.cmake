@@ -15,6 +15,7 @@ file(GLOB CURL_SOURCES
 vsf_add_compile_definitions(
     ${VSF_TARGET_DEFINITIONS}
     __VSF__
+    VSF_USE_MBEDTLS=ENABLED
 
     HAVE_CONFIG_H
 )
