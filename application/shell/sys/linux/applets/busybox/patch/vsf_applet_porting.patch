@@ -2,7 +2,8 @@
  include/libbb.h    | 22 +++++++++++++++++++++-
  include/platform.h | 14 ++++++++++----
  init/init.c        |  2 ++
- 4 files changed, 34 insertions(+), 6 deletions(-)
+ libbb/appletlib.c  |  4 ++++
+ 5 files changed, 38 insertions(+), 6 deletions(-)
 
 diff --git a/editors/awk.c b/editors/awk.c
 index 728ee8685..64d1d0f87 100644
@@ -124,3 +125,19 @@ index 1e1ce833d..ce717f41a 100644
  		/* Reboot on Ctrl-Alt-Del */
  		new_init_action(CTRLALTDEL, "reboot", "");
  		/* Umount all filesystems on halt/reboot */
+diff --git a/libbb/appletlib.c b/libbb/appletlib.c
+index d5335d353..af1fbc759 100644
+--- a/libbb/appletlib.c
++++ b/libbb/appletlib.c
+@@ -966,7 +966,11 @@ void FAST_FUNC run_applet_no_and_exit(int applet_no, const char *name, char **ar
+ 		check_suid(applet_no);
+ 
+ 	argc = string_array_len(argv);
++#ifdef __VSF_APPLET_EMBPI__
++	xfunc_error_retval = ((int (*)(int, char **))vsf_applet_remap(NULL, applet_main[applet_no]))(argc, argv);
++#else
+ 	xfunc_error_retval = applet_main[applet_no](argc, argv);
++#endif
+ 
+ 	/* Note: applet_main() may also not return (die on a xfunc or such) */
+ 	xfunc_die();

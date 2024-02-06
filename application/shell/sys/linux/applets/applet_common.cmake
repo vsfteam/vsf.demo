@@ -14,16 +14,21 @@ set(VSF_APPLET 1)
 include($ENV{VSF_PATH}/script/cmake/vsf.cmake)
 
 # tweak for dedicated compiler/options
-if(APPLET_COMPILER_LLVM AND APPLET_COMPILER_LLVM_EMBPI)
-#   if just define __VSF_APPLET_LIB__, external APIs will be static function,
-#     and this will increase text size. Another workaround for this is use vsf_linux_applet_lib.c
-
-#    vsf_add_compile_definitions(
-#        __VSF_APPLET_LIB__
-#    )
-    vsf_add_sources(
-        $ENV{VSF_PATH}/source/shell/sys/linux/lib/vsf_linux_applet_lib.c
-    )
+if(APPLET_COMPILER_LLVM)
+    if(APPLET_COMPILER_LLVM_EMBPI)
+        vsf_add_sources(
+            $ENV{VSF_PATH}/source/shell/sys/linux/lib/vsf_linux_applet_lib.c
+        )
+        vsf_add_compile_definitions(
+            __VSF_APPLET_EMBPI__
+        )
+    elseif(APPLET_COMPILER_LLVM_GOTPI)
+        vsf_add_compile_definitions(
+            __VSF_APPLET_GOTPI__
+        )
+    else()
+        message(FATAL "Please select embpi or gotpi by setting APPLET_COMPILER_LLVM_EMBPI/APPLET_COMPILER_LLVM_GOTPI to 1")
+    endif()
 endif()
 
 # linker configurations
