@@ -26,6 +26,10 @@ if(APPLET_COMPILER_GCC)
         set(GCC_PREFIX      arm-none-eabi)
         set(GCC_SPEC        nano)
     elseif(${APPLET_TARGET} IN_LIST thead_riscv_target)
+        if(APPLET_COMPILER_GOTPI)
+            message(FATAL_ERROR "-shared not support, please use APPLET_COMPILER_EMBPI")
+        endif()
+        set(APPLET_COMPILER_EMBPI 1)
         set(GCC_PREFIX      riscv64-unknown-elf)
     else()
         message(FATAL_ERROR "Target not supported")
@@ -36,11 +40,11 @@ if(APPLET_COMPILER_GCC)
     endif()
     if(APPLET_COMPILER_GOTPI)
         set(CMAKE_C_FLAGS
-            "-shared -nodefaultlibs ${CMAKE_C_FLAGS}"
+            "-shared -nodefaultlibs -nolibc -nostdlib ${CMAKE_C_FLAGS}"
             CACHE INTERNAL "C compiler common flags"
         )
         set(CMAKE_CXX_FLAGS
-            "-shared -nodefaultlibs ${CMAKE_CXX_FLAGS}"
+            "-shared -nodefaultlibs -nolibc -nostdlib++ ${CMAKE_CXX_FLAGS}"
             CACHE INTERNAL "C++ compiler common flags"
         )
     elseif(APPLET_COMPILER_EMBPI)
@@ -50,11 +54,11 @@ if(APPLET_COMPILER_GCC)
     endif()
 
     set(CMAKE_C_FLAGS
-        "-Os -fms-extensions -nostartfiles -e _start -fPIC -z max-page-size=4 -nostartfiles -nolibc -nostdlib ${CMAKE_C_FLAGS}"
+        "-Os -fms-extensions -nostartfiles -e _start -fPIC -z max-page-size=4 ${CMAKE_C_FLAGS}"
         CACHE INTERNAL "C compiler common flags"
     )
     set(CMAKE_CXX_FLAGS
-        "-Os -fms-extensions -nostartfiles -e _start -fPIC -z max-page-size=4 -nostartfiles -nolibc -nostdlib++ ${CMAKE_CXX_FLAGS}"
+        "-Os -fms-extensions -nostartfiles -e _start -fPIC -z max-page-size=4 ${CMAKE_CXX_FLAGS}"
         CACHE INTERNAL "C++ compiler common flags"
     )
 
