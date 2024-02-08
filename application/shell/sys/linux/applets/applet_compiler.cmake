@@ -10,18 +10,55 @@ message(STATUS "VSF_PATH: $ENV{VSF_PATH}")
 
 # compiler configurations
 
+set(arm_cortex_target CortexM0 CortexM3 CortexM4 CortexM7)
+set(thead_riscv_target E902 E907)
+
 if(APPLET_COMPILER_GCC)
-    # arm-none-eabi-gcc will not pass compiler checker of cmake, so include before project
-    # refer to arm-none-eabi-gcc BUG: https://answers.launchpad.net/gcc-arm-embedded/+question/675869
-    set(CMAKE_C_FLAGS 
-        "-Os -fms-extensions -nostartfiles -e _start -msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative -fPIC -shared -z max-page-size=4 -nostartfiles -nodefaultlibs -nolibc -nostdlib"
+    if(${APPLET_TARGET} IN_LIST arm_cortex_target)
+        set(CMAKE_C_FLAGS
+            "-msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative ${CMAKE_C_FLAGS}"
+            CACHE INTERNAL "C compiler common flags"
+        )
+        set(CMAKE_CXX_FLAGS
+            "-msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative ${CMAKE_CXX_FLAGS}"
+            CACHE INTERNAL "C++ compiler common flags"
+        )
+        set(GCC_PREFIX      arm-none-eabi)
+        set(GCC_SPEC        nano)
+    elseif(${APPLET_TARGET} IN_LIST thead_riscv_target)
+        set(GCC_PREFIX      riscv64-unknown-elf)
+    else()
+        message(FATAL_ERROR "Target not supported")
+    endif()
+
+    if(NOT APPLET_COMPILER_EMBPI AND NOT APPLET_COMPILER_GOTPI)
+        set(APPLET_COMPILER_GOTPI 1)
+    endif()
+    if(APPLET_COMPILER_GOTPI)
+        set(CMAKE_C_FLAGS
+            "-shared -nodefaultlibs ${CMAKE_C_FLAGS}"
+            CACHE INTERNAL "C compiler common flags"
+        )
+        set(CMAKE_CXX_FLAGS
+            "-shared -nodefaultlibs ${CMAKE_CXX_FLAGS}"
+            CACHE INTERNAL "C++ compiler common flags"
+        )
+    elseif(APPLET_COMPILER_EMBPI)
+        # for embedded position independency, vsf_linux_applet_lib will be included,
+        #   so it's OK to use libs in compiler, bacause the API in these library are weak version,
+        #   and will be over-written by the same strong APIs in VSF is required.
+    endif()
+
+    set(CMAKE_C_FLAGS
+        "-Os -fms-extensions -nostartfiles -e _start -fPIC -z max-page-size=4 -nostartfiles -nolibc -nostdlib ${CMAKE_C_FLAGS}"
         CACHE INTERNAL "C compiler common flags"
     )
-    set(CMAKE_CXX_FLAGS 
-        "-Os -fms-extensions -nostartfiles -e _start -msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative -fPIC -shared -z max-page-size=4 -nostartfiles -nodefaultlibs -nolibc -nostdlib++"
+    set(CMAKE_CXX_FLAGS
+        "-Os -fms-extensions -nostartfiles -e _start -fPIC -z max-page-size=4 -nostartfiles -nolibc -nostdlib++ ${CMAKE_CXX_FLAGS}"
         CACHE INTERNAL "C++ compiler common flags"
     )
-    include($ENV{VSF_PATH}/script/cmake/compilers/gnuarmemb.cmake)
+
+    include($ENV{VSF_PATH}/script/cmake/compilers/gcc_common.cmake)
 elseif(APPLET_COMPILER_LLVM)
     if(NOT DEFINED LLVM_TOOLCHAIN_PATH)
         message(WARNING "LLVM_TOOLCHAIN_PATH not defined, use default: -DLLVM_TOOLCHAIN_PATH=\"E:/Software/armllvm16\"")
@@ -57,11 +94,11 @@ elseif(APPLET_COMPILER_LLVM)
             CACHE INTERNAL "C++ compiler common flags"
         )
     else()
-        message(FATAL "Either APPLET_COMPILER_LLVM_EMBPI or APPLET_COMPILER_LLVM_GOTPI should be set to 1")
+        message(FATAL_ERROR "Either APPLET_COMPILER_LLVM_EMBPI or APPLET_COMPILER_LLVM_GOTPI should be set to 1")
     endif()
 
     include($ENV{VSF_PATH}/script/cmake/compilers/armllvm.cmake)
 else()
-    message(FATAL "compiler is not set.")
+    message(FATAL_ERROR "compiler is not set.")
 endif()
 

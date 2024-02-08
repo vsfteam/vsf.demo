@@ -14,6 +14,7 @@
 #if     defined(__CPU_ARM__)
 // no program_start from CMSIS Core
 #   define __PROGRAM_START                              _start
+#elif   defined(__CPU_RV__) || defined(__CPU_RISCV__)
 #elif   defined(__CPU_X64__)
 #   define __VSF64__
 
