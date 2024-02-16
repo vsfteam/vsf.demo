@@ -789,10 +789,11 @@ int webterminal_main(int argc, char **argv)
 
 #if VSF_USE_LWIP == ENABLED
 #   include "lwip/tcpip.h"
-#   if LWIP_MDNS_RESPONDER
-#       include "lwip/apps/mdns.h"
 
 static bool __app_wifi_connected = false;
+
+#   if LWIP_MDNS_RESPONDER
+#       include "lwip/apps/mdns.h"
 
 typedef struct app_mdns_service_record_t {
     vsf_dlist_node_t node;
@@ -860,9 +861,11 @@ void app_wifi_sta_on_connected(void)
         __app_wifi_connected = true;
     }
 
+#   if LWIP_MDNS_RESPONDER
     __vsf_dlist_foreach_unsafe(app_mdns_service_record_t, node, &__app_mdns_service_record_list) {
         __app_mdns_add_service_from_record(_);
     }
+#   endif
     UNLOCK_TCPIP_CORE();
 #endif
 }
@@ -982,8 +985,8 @@ __cleanup_record_and_fail:
     __app_mdns_cleanup_service(record);
     vsf_heap_free(record);
     UNLOCK_TCPIP_CORE();
-    return NULL;
 #endif
+    return NULL;
 }
 
 static int __reset_main(int argc, char **argv)
