@@ -319,7 +319,7 @@ static int __wifi_connect_main(int argc, char *argv[])
         net_if_t *netif = fhost_to_net_if(0);
         LOCK_TCPIP_CORE();
             mdns_resp_init();
-            mdns_resp_add_netif(netif, "vsf", 60 * 10);
+            mdns_resp_add_netif(netif, "vsf");
         UNLOCK_TCPIP_CORE();
 #endif
 

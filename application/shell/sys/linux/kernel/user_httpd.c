@@ -175,7 +175,10 @@ int webterminal_main(int argc, char **argv)
         } else {
             name = "webterminal";
         }
-        app_mdns_add_httpd_service(name, port);
+        const char *txt[] = {
+            "path=/",
+        };
+        app_mdns_update_service(NULL, name, "_http", port, true, txt, dimof(txt));
 
         daemon(1, 1);
         vsf_linux_httpd_thread(&__user_httpd_webterminal);
