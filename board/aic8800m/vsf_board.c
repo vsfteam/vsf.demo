@@ -93,8 +93,10 @@ static const vk_dwcotg_dcd_param_t __dwcotg_dcd_param = {
 };
 #endif
 
-#if VSF_USE_USB_HOST == ENABLED || VSF_USE_USB_DEVICE == ENABLED
 vsf_board_t vsf_board = {
+#if VSF_HAL_USE_I2C == ENABLED
+    .i2c                        = (vsf_i2c_t *)&vsf_hw_i2c0,
+#endif
 #if VSF_USE_USB_HOST == ENABLED
     .usbh_dev                   = {
         .drv                    = &vk_dwcotg_hcd_drv,
@@ -107,7 +109,6 @@ vsf_board_t vsf_board = {
     },
 #endif
 };
-#endif
 
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ IMPLEMENTATION ================================*/

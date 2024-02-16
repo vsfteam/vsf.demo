@@ -28,8 +28,10 @@
 /*============================ MACROS ========================================*/
 /*============================ TYPES =========================================*/
 
-#if VSF_USE_USB_HOST == ENABLED || VSF_USE_USB_DEVICE == ENABLED
 typedef struct vsf_board_t {
+#if VSF_HAL_USE_I2C == ENABLED
+    vsf_i2c_t *i2c;
+#endif
 #if VSF_USE_USB_HOST == ENABLED
     vk_usbh_t usbh_dev;
 #endif
@@ -37,7 +39,6 @@ typedef struct vsf_board_t {
     vk_dwcotg_dcd_t dwcotg_dcd;
 #endif
 } vsf_board_t;
-#endif
 
 /*============================ GLOBAL VARIABLES ==============================*/
 

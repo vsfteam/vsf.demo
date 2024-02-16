@@ -1135,6 +1135,9 @@
     <group>
         <name>application</name>
         <file>
+            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\hwtest_main.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\user_httpd.c</name>
         </file>
         <file>
