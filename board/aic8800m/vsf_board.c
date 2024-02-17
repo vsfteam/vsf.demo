@@ -182,7 +182,7 @@ void app_wifi_ap_on_started(char *ssid, char *pass)
 {
     // cmdline: qrcode "Scan to connect AP" "WIFI:S:ssid;P:pass;T:WPA/WPA2;H:vsf;"
     const char *format = "qrcode \"Scan to connect AP\" \"WIFI:S:%s;P:%s;T:WPA/WPA2;H:vsf;\"";
-    char cmdline[strlen(format) + 2 * 64];
+    char cmdline[strlen(format) + 2 * 32];  // format_size + max_size of ssid(32) and pass(32)
     sprintf(cmdline, format, ssid, pass);
     system(cmdline);
 }
