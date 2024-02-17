@@ -20,26 +20,16 @@ static const char __user_httpd_root[] = VSF_STR(
       term.open(document.getElementById('terminal'));
 
       const socket = new WebSocket("ws://" + window.location.host + "/webterminal");
+      let reg_match_rn = new RegExp('\r\n', 'g');
+      let reg_match_n = new RegExp('\n', 'g');
 
-      let end_with_r = false;
       term.onData((data) => {
-        end_with_r = data.endsWith('\r');
         socket.send(data);
-        term.write(data);
       });
       socket.onmessage = (event) => {
         let str = event.data;
-
-        if (end_with_r) {
-            end_with_r = false;
-            if (str.charAt(0) == '\n') {
-                term.write('\n');
-                str = str.substring(1);
-            }
-        }
-
-        str = str.replace('\r\n', '\n');
-        str = str.replace('\n', '\r\n');
+        str = str.replace(reg_match_rn, '\n');
+        str = str.replace(reg_match_n, '\r\n');
         term.write(str);
       }
     </script>
