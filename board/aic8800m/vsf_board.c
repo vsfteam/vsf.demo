@@ -177,6 +177,16 @@ void app_wifi_sta_on_connected(void)
 {
 }
 
+WEAK(app_wifi_ap_on_started)
+void app_wifi_ap_on_started(char *ssid, char *pass)
+{
+    // cmdline: qrcode "Scan to connect AP" "WIFI:S:ssid;P:pass;T:WPA/WPA2;H:vsf;"
+    const char *format = "qrcode \"Scan to connect AP\" \"WIFI:S:%s;P:%s;T:WPA/WPA2;H:vsf;\"";
+    char cmdline[strlen(format) + 2 * 64];
+    sprintf(cmdline, format, ssid, pass);
+    system(cmdline);
+}
+
 static int __wifi_ap_main(int argc, char *argv[])
 {
     if ((argc < 4) || (argc > 5)) {
@@ -194,6 +204,7 @@ static int __wifi_ap_main(int argc, char *argv[])
     int ret = wlan_start_ap(band, (uint8_t *)ssid, (uint8_t *)pass);
     if (!ret) {
         printf("wifi ap started.\n");
+        app_wifi_ap_on_started(ssid, pass);
     } else {
         printf("fail to start wifi ap.\n");
     }
