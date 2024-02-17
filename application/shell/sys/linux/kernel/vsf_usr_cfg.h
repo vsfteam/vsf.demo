@@ -152,10 +152,10 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 // application APIs
 
 extern void app_mdns_rename(const char *hostname);
-extern int app_mdns_update_txt(void *service, const char **txt, uint8_t txt_num);
+extern int app_mdns_update_txt(void *service, const char **txt, unsigned char txt_num);
 extern void * app_mdns_update_service(void *record_orig, const char *name,
         const char *service, unsigned short port, int is_tcp,
-        const char **txt, uint8_t txt_num);
+        const char **txt, unsigned char txt_num);
 extern void app_mdns_remove_service(void *service);
 
 extern int app_config_read(const char *cfgname, char *cfgvalue, int valuelen);

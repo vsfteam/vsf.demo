@@ -1144,6 +1144,9 @@
             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\user_mdns.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\user_qrcode.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\vsf_linux_package_manager.c</name>
         </file>
         <file>
@@ -3944,6 +3947,21 @@
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\nuconsole\raw\NuConsole_Config.h</name>
                         </file>
+                    </group>
+                </group>
+                <group>
+                    <name>qrcode</name>
+                    <group>
+                        <name>raw</name>
+                        <group>
+                            <name>src</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\qrcode\raw\src\qrcode.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\qrcode\raw\src\qrcode.h</name>
+                            </file>
+                        </group>
                     </group>
                 </group>
                 <group>

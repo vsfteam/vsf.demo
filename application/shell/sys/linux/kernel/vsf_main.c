@@ -874,6 +874,9 @@ int vsf_linux_create_fhs(void)
         vsf_board.display_dev->ui_on_ready = __vk_disp_on_inited;
         vk_disp_init(vsf_board.display_dev);
         vsf_thread_wfe(VSF_EVT_USER);
+
+        extern int display_qrcode_main(int argc, char **argv);
+        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/qrcode", display_qrcode_main);
     }
 #endif
 #if VSF_USE_INPUT == ENABLED && VSF_INPUT_CFG_REGISTRATION_MECHANISM == ENABLED

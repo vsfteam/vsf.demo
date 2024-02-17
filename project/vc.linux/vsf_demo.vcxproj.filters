@@ -811,6 +811,15 @@
     <Filter Include="vsf\shell\sys\linux\app\httpd\urihandler\websocket">
       <UniqueIdentifier>{d7346f8c-e376-4eda-b672-3c1f144d4e8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\component\3rd-party\qrcode">
+      <UniqueIdentifier>{ebca9fbf-2158-4441-823a-033bda8ea155}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\qrcode\raw">
+      <UniqueIdentifier>{4d31bc5e-d9d8-429b-ba92-5c560e2efee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\qrcode\raw\src">
+      <UniqueIdentifier>{ffa443be-b60a-4d69-8fc8-d4564de2bb5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2121,6 +2130,9 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\pty.h">
       <Filter>vsf\shell\sys\linux\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\qrcode\raw\src\qrcode.h">
+      <Filter>vsf\component\3rd-party\qrcode\raw\src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3190,6 +3202,15 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\utilities\compiler\vsf_compiler.c">
       <Filter>vsf\utilities\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_qrcode.c">
+      <Filter>application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\qrcode\raw\src\qrcode.c">
+      <Filter>vsf\component\3rd-party\qrcode\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_mdns.c">
+      <Filter>application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

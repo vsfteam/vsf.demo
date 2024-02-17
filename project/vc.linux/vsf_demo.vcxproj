@@ -48,6 +48,7 @@
     <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_slot_management.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\psa_crypto_storage.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\ssl_tls13_keys.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\qrcode\raw\src\qrcode.h" />
     <ClInclude Include="..\..\vsf\source\component\av\audio\decoder\wav\vsf_wav.h" />
     <ClInclude Include="..\..\vsf\source\component\av\audio\driver\winsound\vsf_winsound.h" />
     <ClInclude Include="..\..\vsf\source\component\av\audio\vsf_audio.h" />
@@ -461,6 +462,8 @@
     <ClCompile Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\hwtest_main.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_httpd.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_mdns.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_qrcode.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\vsf_linux_package_manager.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\vsf_main.c" />
     <ClCompile Include="..\..\board\win\vsf_board.c" />
@@ -561,6 +564,7 @@
     <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\x509_crt.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\x509_csr.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\raw\library\xtea.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\qrcode\raw\src\qrcode.c" />
     <ClCompile Include="..\..\vsf\source\component\av\audio\decoder\wav\vsf_wav.c" />
     <ClCompile Include="..\..\vsf\source\component\av\audio\driver\winsound\vsf_winsound.c" />
     <ClCompile Include="..\..\vsf\source\component\av\audio\vsf_audio.c" />

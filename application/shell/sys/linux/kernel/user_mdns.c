@@ -1,4 +1,4 @@
-#include "vsf_cfg.h"
+#include "vsf.h"
 
 #if VSF_USE_LWIP == ENABLED
 #   include "lwip/tcpip.h"
@@ -112,7 +112,7 @@ void app_mdns_remove_service(void *service)
 #endif
 }
 
-int app_mdns_update_txt(void *service, const char **txt, uint8_t txt_num)
+int app_mdns_update_txt(void *service, const char **txt, unsigned char txt_num)
 {
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
     app_mdns_service_record_t *record = service;
@@ -146,7 +146,7 @@ int app_mdns_update_txt(void *service, const char **txt, uint8_t txt_num)
 }
 
 void * app_mdns_update_service(void *record_orig, const char *name, const char *service, unsigned short port,
-        int is_tcp, const char **txt, uint8_t txt_num)
+        int is_tcp, const char **txt, unsigned char txt_num)
 {
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
     app_mdns_service_record_t *record;
