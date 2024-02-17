@@ -11,7 +11,8 @@ static const char __user_httpd_root[] = VSF_STR(
     <script src="http://xtermjs.org/js/xterm.js"></script>
   </head>
   <body>
-    <div style="width: 736px; height: 408px;">
+    <h1 style="text-align: center;">WebTerminal</h1>
+    <div style="width: 736px; height: 408px; margin: auto;">
       <div id="terminal"></div>
     </div>
     <script>
@@ -20,12 +21,26 @@ static const char __user_httpd_root[] = VSF_STR(
 
       const socket = new WebSocket("ws://" + window.location.host + "/webterminal");
 
+      let end_with_r = false;
       term.onData((data) => {
+        end_with_r = data.endsWith('\r');
         socket.send(data);
         term.write(data);
       });
       socket.onmessage = (event) => {
-        term.write(event.data);
+        let str = event.data;
+
+        if (end_with_r) {
+            end_with_r = false;
+            if (str.charAt(0) == '\n') {
+                term.write('\n');
+                str = str.substring(1);
+            }
+        }
+
+        str = str.replace('\r\n', '\n');
+        str = str.replace('\n', '\r\n');
+        term.write(str);
       }
     </script>
   </body>
