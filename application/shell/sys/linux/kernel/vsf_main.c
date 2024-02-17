@@ -869,6 +869,12 @@ static void __vk_disp_on_inited(vk_disp_t *disp)
 }
 #endif
 
+static bool __install_embedded_busybox = true;
+bool app_shell_is_orig_busybox(void)
+{
+    return !__install_embedded_busybox;
+}
+
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
@@ -934,17 +940,17 @@ int vsf_linux_create_fhs(void)
 #endif
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
-    bool install_embedded_busybox = __usr_linux_boot;
+    __install_embedded_busybox = __usr_linux_boot;
     if (!__usr_linux_boot) {
         mkdir("/usr", 0);
         if (mount(NULL, "usr", &vk_romfs_op, 0, (const void *)&__romfs_info) != 0) {
             printf("Fail to mount /usr from romfs, install embedded busybox instead.\n");
-            install_embedded_busybox = true;
+            __install_embedded_busybox = true;
         } else {
             __romfs_installed = true;
             if (access("/usr/bin/busybox", X_OK) != 0) {
                 printf("Can not find valid busybox in /usr/bin/, install embedded busybox instead.\n");
-                install_embedded_busybox = true;
+                __install_embedded_busybox = true;
             }
         }
     }
@@ -954,7 +960,7 @@ int vsf_linux_create_fhs(void)
     } else {
         vsf_linux_install_package_manager(&__romfs_info, false, true);
     }
-    if (install_embedded_busybox) {
+    if (__install_embedded_busybox) {
         busybox_install();
     } else {
         setenv("PATH", VSF_LINUX_CFG_PATH, true);

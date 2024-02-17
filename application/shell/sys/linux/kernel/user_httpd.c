@@ -4,6 +4,8 @@
 
 #include <pthread.h>
 
+extern bool app_shell_is_orig_busybox(void);
+
 static const char __user_httpd_root[] = VSF_STR(
 <html>
   <head>
@@ -40,6 +42,8 @@ static const char __user_httpd_root[] = VSF_STR(
 #define __VSF_LINUX_FS_CLASS_INHERIT__
 #include <unistd.h>
 #include <pty.h>
+// for O_NOCTTY
+#include <fcntl.h>
 
 #include "shell/sys/linux/app/httpd/vsf_linux_httpd.h"
 
@@ -98,6 +102,10 @@ static int __user_httpd_terminal_on_open(vsf_linux_httpd_request_t *req)
             printf("fail to forkpty\n");
             return -1;
         case 0:
+            if (!app_shell_is_orig_busybox()) {
+                vsf_linux_fd_t *sfd = vsf_linux_fd_get(STDIN_FILENO);
+                sfd->priv->flags &= ~O_NOCTTY;
+            }
             execl("/bin/sh", "sh", NULL);
             break;
         default:
