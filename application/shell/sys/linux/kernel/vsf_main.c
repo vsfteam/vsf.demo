@@ -318,6 +318,12 @@ void vsf_board_init_linux(void)
 {
 }
 
+static int __vsf_board_init_linux_main(int argc, char **argv)
+{
+    vsf_board_init_linux();
+    return 0;
+}
+
 WEAK(vsf_linux_install_package_manager)
 void vsf_linux_install_package_manager(vk_romfs_info_t *fsinfo, bool can_uninstall, bool can_install)
 {
@@ -965,7 +971,7 @@ int vsf_linux_create_fhs(void)
 #if VSF_USE_MBEDTLS == ENABLED
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&vsf_mbedtls_vplt.info);
 #endif
-    vsf_board_init_linux();
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/board_init", __vsf_board_init_linux_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/reset", __reset_main);
 #if VSF_USE_TCPIP == ENABLED
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/webterminal", webterminal_main);

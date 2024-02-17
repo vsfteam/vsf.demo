@@ -128,6 +128,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #       define VSF_LINUX_USE_APPLET                     ENABLED
 #   endif
 #   define VSF_LINUX_USE_SCRIPT                         ENABLED
+#   define VSF_LINUX_CFG_INIT_SCRIPTS                   "board_init"
 #   define VSF_LINUX_CFG_INIT_SCRIPT_FILE               "/usr/etc/startup.sh"
 #   define VSF_LINUX_CFG_PATH                           "/bin:/usr/bin"
 
