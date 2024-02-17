@@ -802,6 +802,15 @@ static int __reset_main(int argc, char **argv)
     return 0;
 }
 
+void app_wifi_ap_on_started(char *ssid, char *pass)
+{
+    // cmdline: qrcode "Scan to connect AP" "WIFI:S:ssid;P:pass;T:WPA/WPA2;H:vsf;"
+    const char *format = "qrcode \"S:%s P:%s\" \"WIFI:S:%s;P:%s;T:WPA/WPA2;H:vsf;\"";
+    char cmdline[strlen(format) + 4 * 32];  // format_size + max_size of ssid(32) and pass(32)
+    sprintf(cmdline, format, ssid, pass, ssid, pass);
+    system(cmdline);
+}
+
 // application vpls
 // add application func/var declare in vsf_usr_cfg.h
 typedef struct vsf_app_vplt_t {

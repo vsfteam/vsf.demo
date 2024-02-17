@@ -180,11 +180,6 @@ void app_wifi_sta_on_connected(void)
 WEAK(app_wifi_ap_on_started)
 void app_wifi_ap_on_started(char *ssid, char *pass)
 {
-    // cmdline: qrcode "Scan to connect AP" "WIFI:S:ssid;P:pass;T:WPA/WPA2;H:vsf;"
-    const char *format = "qrcode \"Scan to connect AP\" \"WIFI:S:%s;P:%s;T:WPA/WPA2;H:vsf;\"";
-    char cmdline[strlen(format) + 2 * 32];  // format_size + max_size of ssid(32) and pass(32)
-    sprintf(cmdline, format, ssid, pass);
-    system(cmdline);
 }
 
 static int __wifi_ap_main(int argc, char *argv[])
@@ -360,7 +355,7 @@ int fhost_application_init(void)
 
     char config[16];
     if (app_config_read("wifi_ssid", config, sizeof(config))) {
-        char *argv[] = { "wifi_ap", "0", "0", "vsf_configuration", "12345678", NULL };
+        char *argv[] = { "wifi_ap", "0", "0", "vsf_wifi_cfg", "12345678", NULL };
         __wifi_ap_main(dimof(argv) - 1, argv);
     } else if (!app_config_read("wifi_autostart", config, sizeof(config)) && !strcmp(config, "on")) {
         char *argv[] = { "wifi_connect", NULL };
