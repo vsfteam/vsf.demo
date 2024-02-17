@@ -201,3 +201,27 @@ __cleanup_record_and_fail:
 #endif
     return NULL;
 }
+
+void app_mdns_stop(void)
+{
+#if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
+    net_if_t *netif = fhost_to_net_if(0);
+    LOCK_TCPIP_CORE();
+        mdns_resp_remove_netif(netif);
+    UNLOCK_TCPIP_CORE();
+#endif
+}
+
+void app_mdns_start(uint8_t *mac)
+{
+#if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
+    // vsf.XXXXXXXXXXXX
+    char hostname[3 + 1 + 12 + 1];
+    sprintf(hostname, "vsf.%02X%02X%02X%02X%02X%02X",
+            mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    LOCK_TCPIP_CORE();
+        mdns_resp_init();
+        mdns_resp_add_netif(netif, hostname, 60 * 10);
+    UNLOCK_TCPIP_CORE();
+#endif
+}

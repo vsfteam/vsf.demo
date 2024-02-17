@@ -47,10 +47,6 @@
 #include "wlan_if.h"
 #endif
 
-#if VSF_USE_LWIP == ENABLED
-#   include "lwip/apps/mdns.h"
-#endif
-
 /*============================ MACROS ========================================*/
 
 #if __VSF_OS_SWI_NUM > 0
@@ -293,12 +289,8 @@ static int __wifi_connect_main(int argc, char *argv[])
     }
 
     if (wlan_get_connect_status()) {
-#if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
-        net_if_t *netif = fhost_to_net_if(0);
-        LOCK_TCPIP_CORE();
-            mdns_resp_remove_netif(netif);
-        UNLOCK_TCPIP_CORE();
-#endif
+        extern void app_mdns_stop(void);
+        app_mdns_stop();
     }
 
     set_mac_address(NULL);
@@ -321,14 +313,8 @@ static int __wifi_connect_main(int argc, char *argv[])
     if (wlan_get_connect_status()) {
         printf("wifi connected.\n");
 
-#if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
-        // start mdns, not ready
-        net_if_t *netif = fhost_to_net_if(0);
-        LOCK_TCPIP_CORE();
-            mdns_resp_init();
-            mdns_resp_add_netif(netif, "vsf");
-        UNLOCK_TCPIP_CORE();
-#endif
+        extern void app_mdns_start(uint8_t *mac);
+        app_mdns_start(get_mac_address());
 
         app_wifi_sta_on_connected();
         app_config_write("wifi_ssid", ssid);
