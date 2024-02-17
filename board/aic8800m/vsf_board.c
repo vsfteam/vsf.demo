@@ -359,8 +359,11 @@ int fhost_application_init(void)
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/wifi_connect", __wifi_connect_main);
 
     char config[16];
-    if (!app_config_read("wifi_autostart", config, sizeof(config)) && !strcmp(config, "on")) {
-        char *argv[2] = { "wifi_connect", NULL };
+    if (app_config_read("wifi_ssid", config, sizeof(config))) {
+        char *argv[] = { "wifi_ap", "0", "0", "vsf_configuration", "12345678", NULL };
+        __wifi_ap_main(dimof(argv) - 1, argv);
+    } else if (!app_config_read("wifi_autostart", config, sizeof(config)) && !strcmp(config, "on")) {
+        char *argv[] = { "wifi_connect", NULL };
         __wifi_connect_main(dimof(argv) - 1, argv);
     }
 #   endif
