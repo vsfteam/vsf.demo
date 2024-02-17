@@ -75,6 +75,8 @@
 
 /*============================ INCLUDES ======================================*/
 
+// for disp->ui_on_ready
+#define __VSF_DISP_CLASS_INHERIT__
 // for vsf_linux_fs_bind_xxx
 #define __VSF_LINUX_FS_CLASS_INHERIT__
 
@@ -815,6 +817,42 @@ static __VSF_VPLT_DECORATOR__ vsf_app_vplt_t __vsf_app_vplt = {
     VSF_APPLET_VPLT_ENTRY_FUNC(app_config_write),
 };
 
+#if VSF_USE_UI == ENABLED
+static void __vk_disp_on_inited(vk_disp_t *disp)
+{
+    static int __cur_line = 0;
+    static uint8_t *__line_buf = NULL;
+
+    switch(__cur_line) {
+    case 0:
+        __line_buf = vsf_heap_malloc(vsf_disp_get_pitch(disp));
+        if (NULL == __line_buf) {
+            vsf_trace_error("fail to allocate line buffer for screen\n");
+            break;
+        }
+        memset(__line_buf, 0x00, vsf_disp_get_pitch(disp));
+        // fall through
+    default:
+        if (__cur_line < vsf_disp_get_height(disp)) {
+            vk_disp_refresh(disp, &(vk_disp_area_t){
+                .size.x = vsf_disp_get_width(disp),
+                .size.y = 1,
+                .pos.x = 0,
+                .pos.y = __cur_line,
+            }, __line_buf);
+            __cur_line++;
+        } else {
+            vsf_heap_free(__line_buf);
+            __line_buf = NULL;
+            vsf_eda_post_evt((vsf_eda_t *)disp->ui_data, VSF_EVT_USER);
+            disp->ui_data = NULL;
+            disp->ui_on_ready = NULL;
+        }
+        break;
+    }
+}
+#endif
+
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
@@ -831,6 +869,11 @@ int vsf_linux_create_fhs(void)
 #if VSF_USE_UI == ENABLED
     if (vsf_board.display_dev != NULL) {
         vsf_linux_fs_bind_disp("/dev/fb0", vsf_board.display_dev);
+
+        vsf_board.display_dev->ui_data = vsf_eda_get_cur();
+        vsf_board.display_dev->ui_on_ready = __vk_disp_on_inited;
+        vk_disp_init(vsf_board.display_dev);
+        vsf_thread_wfe(VSF_EVT_USER);
     }
 #endif
 #if VSF_USE_INPUT == ENABLED && VSF_INPUT_CFG_REGISTRATION_MECHANISM == ENABLED

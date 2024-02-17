@@ -76,7 +76,7 @@ int hwtest_main(int argc, char **argv)
 {
 #if VSF_USE_UI == ENABLED
     vsf_board.display_dev->ui_on_ready = __vk_disp_on_ready;
-    vk_disp_init(vsf_board.display_dev);
+    __vk_disp_on_ready(vsf_board.display_dev);
 #endif
 
 #if VSF_HAL_USE_I2C == ENABLED
