@@ -26,6 +26,7 @@
  *     source/component/3rd-party/btstack/raw if VSF_USE_BTSTACK is enabled
  *     source/component/3rd-party/mbedtls/raw
  *     source/component/3rd-party/PLOOC/raw
+ *     source/component/3rd-party/qrcode/raw
  *   optional:
  *    for root directory in embedded hardware, littlefs is used
  *     source/component/3rd-party/littlefs/raw
