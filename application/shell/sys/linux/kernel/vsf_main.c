@@ -936,6 +936,7 @@ int vsf_linux_create_fhs(void)
     if (mount(NULL, "root", &vk_lfs_op, 0, (const void *)&__root_fs) != 0) {
         printf("Fail to mount /root.\n");
     }
+    putenv("HOME=/root");
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/appcfg", __appcfg_main);
 #endif
 
