@@ -22,6 +22,15 @@ static const char __user_httpd_root[] = VSF_STR(
   <body>
     <h1 style="text-align: center;">WebTerminal</h1>
     <div style="width: 736px; height: 408px; margin: auto;">
+      <p>
+        <br>If wifi_ssid is not configured, vsf_board will start in wifi AP mode.
+        Use wifi_scan to scan wifi APs in wifi AP mode, wifi_scan is not available
+        in wifi STA mode. Use appcfg to configure options for wifi STA mode like below.
+        <br><br>appcfg wifi_ssid SSID
+        <br>appcfg wifi_pass PASSWORD
+        <br>appcfg wifi_autostart on/off
+        <br><br>
+      </p>
       <div id="terminal"></div>
     </div>
     <script>
