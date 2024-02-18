@@ -4,8 +4,48 @@
 
 #include <pthread.h>
 
+#ifndef WEBTERMINAL_CFG_EMBED_XTERMJS
+#   define WEBTERMINAL_CFG_EMBED_XTERMJS                ENABLED
+#endif
+
 extern bool app_shell_is_orig_busybox(void);
 
+#if WEBTERMINAL_CFG_EMBED_XTERMJS == ENABLED
+#include "./__xterm.inc"
+
+static const char __user_httpd_root[] = VSF_STR(
+<html>
+  <head>
+    <link rel="stylesheet" href="/css/xterm.css" />
+    <script src="/js/xterm.js"></script>
+  </head>
+  <body>
+    <h1 style="text-align: center;">WebTerminal</h1>
+    <div style="width: 736px; height: 408px; margin: auto;">
+      <div id="terminal"></div>
+    </div>
+    <script>
+      const term = new Terminal();
+      term.open(document.getElementById('terminal'));
+
+      const socket = new WebSocket("ws://" + window.location.host + "/webterminal");
+      let reg_match_rn = new RegExp('\r\n', 'g');
+      let reg_match_n = new RegExp('\n', 'g');
+
+      term.onData((data) => {
+        socket.send(data);
+      });
+      socket.onmessage = (event) => {
+        let str = event.data;
+        str = str.replace(reg_match_rn, '\n');
+        str = str.replace(reg_match_n, '\r\n');
+        term.write(str);
+      }
+    </script>
+  </body>
+</html>
+);
+#else
 static const char __user_httpd_root[] = VSF_STR(
 <html>
   <head>
@@ -38,6 +78,7 @@ static const char __user_httpd_root[] = VSF_STR(
   </body>
 </html>
 );
+#endif
 
 #define __VSF_LINUX_FS_CLASS_INHERIT__
 #include <unistd.h>
@@ -65,6 +106,28 @@ static const vsf_linux_httpd_urihandler_t __user_httpd_urihandler[] = {
             .size           = sizeof(__user_httpd_root) - 1,
         },
     },
+#if WEBTERMINAL_CFG_EMBED_XTERMJS == ENABLED
+    {
+        .match              = VSF_LINUX_HTTPD_URI_MATCH_URI,
+        .uri                = "/css/xterm.css",
+        .type               = VSF_LINUX_HTTPD_URI_OP,
+        .op                 = &vsf_linux_httpd_urihandler_buffer_op,
+        .buffer             = {
+            .ptr            = (uint8_t *)__user_httpd_xterm_css,
+            .size           = sizeof(__user_httpd_xterm_css),
+        },
+    },
+    {
+        .match              = VSF_LINUX_HTTPD_URI_MATCH_URI,
+        .uri                = "/js/xterm.js",
+        .type               = VSF_LINUX_HTTPD_URI_OP,
+        .op                 = &vsf_linux_httpd_urihandler_buffer_op,
+        .buffer             = {
+            .ptr            = (uint8_t *)__user_httpd_xterm_js,
+            .size           = sizeof(__user_httpd_xterm_js),
+        },
+    },
+#endif
     {
         .match              = VSF_LINUX_HTTPD_URI_MATCH_URI,
         .uri                = "/webterminal",
