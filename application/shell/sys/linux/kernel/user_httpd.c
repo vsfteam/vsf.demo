@@ -24,8 +24,8 @@ static const char __user_httpd_root[] = VSF_STR(
     <div style="width: 736px; height: 408px; margin: auto;">
       <p>
         <br>If wifi_ssid is not configured, vsf_board will start in wifi AP mode.
-        Use wifi_scan to scan wifi APs. Use "reset" to reset vsf_baord. Use "appcfg"
-        to configure options for wifi STA mode like below.
+        Use "wifi_scan" to scan wifi APs. Use "reset" to reset vsf_baord. Use
+        "appcfg" to configure options for wifi STA mode like below.
         <br><br>appcfg wifi_ssid SSID
         <br>appcfg wifi_pass PASSWORD
         <br>appcfg wifi_autostart on/off
