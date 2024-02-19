@@ -21,6 +21,8 @@ typedef struct app_mdns_service_record_t {
 } app_mdns_service_record_t;
 static vsf_dlist_t __app_mdns_service_record_list = { 0 };
 
+extern struct netif * app_wifi_get_netif(void);
+
 static void __app_mdns_srv_txt(struct mdns_service *service, void *txt_usrdata)
 {
     app_mdns_service_record_t *record = txt_usrdata;
@@ -31,7 +33,6 @@ static void __app_mdns_srv_txt(struct mdns_service *service, void *txt_usrdata)
 
 static void __app_mdns_add_service_from_record(app_mdns_service_record_t *record)
 {
-    extern struct netif * app_wifi_get_netif(void);
     struct netif *netif = app_wifi_get_netif();
     record->slot = mdns_resp_add_service(netif, record->name, record->service,
         record->is_tcp ? DNSSD_PROTO_TCP : DNSSD_PROTO_UDP, record->port,
@@ -87,7 +88,6 @@ void app_mdns_rename(const char *hostname)
 {
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
     LOCK_TCPIP_CORE();
-        extern struct netif * app_wifi_get_netif(void);
         struct netif *netif = app_wifi_get_netif();
         // update lwip_mdns to the latest version if mdns_resp_rename_netif not exists
         mdns_resp_rename_netif(netif, hostname);
@@ -100,7 +100,6 @@ void app_mdns_remove_service(void *service)
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
     app_mdns_service_record_t *record = service;
     LOCK_TCPIP_CORE();
-        extern struct netif * app_wifi_get_netif(void);
         struct netif *netif = app_wifi_get_netif();
         // update lwip_mdns to the latest version if mdns_resp_del_service not exists
         mdns_resp_del_service(netif, record->slot);
@@ -205,7 +204,7 @@ __cleanup_record_and_fail:
 void app_mdns_stop(void)
 {
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
-    net_if_t *netif = fhost_to_net_if(0);
+    struct netif *netif = app_wifi_get_netif();
     LOCK_TCPIP_CORE();
         mdns_resp_remove_netif(netif);
     UNLOCK_TCPIP_CORE();
@@ -215,6 +214,7 @@ void app_mdns_stop(void)
 void app_mdns_start(uint8_t *mac)
 {
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
+    struct netif *netif = app_wifi_get_netif();
     // vsf.XXXXXXXXXXXX
     char hostname[3 + 1 + 12 + 1];
     sprintf(hostname, "vsf.%02X%02X%02X%02X%02X%02X",
