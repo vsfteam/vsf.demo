@@ -27,10 +27,19 @@ list(APPEND VSF_TARGET_INCLUDE_DIRECTORIES
 )
 include($ENV{VSF_PATH}/script/cmake/vsf.cmake)
 
+# executable is added in vsf.cmake, so pico_add_extra_outputs can be used here
+pico_add_extra_outputs(vsf_demo)
+
 # application configurations
 target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC
     __VSF__
     __VSF_CPP__
+)
+
+# linker script
+target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
+    LINKER:-T${CMAKE_CURRENT_SOURCE_DIR}/memmap_default.ld
+    LINKER:-Map=output.map
 )
 
 # add user application source code/include directories
