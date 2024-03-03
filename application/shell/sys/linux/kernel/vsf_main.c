@@ -836,7 +836,12 @@ static __VSF_VPLT_DECORATOR__ vsf_app_vplt_t __vsf_app_vplt = {
 #if VSF_USE_UI == ENABLED
 static void __vk_disp_on_inited(vk_disp_t *disp)
 {
-    static int __cur_line = 0;
+    vsf_eda_post_evt((vsf_eda_t *)disp->ui_data, VSF_EVT_USER);
+}
+
+static int __cur_line = 0;
+static void __vk_disp_clear_screen_on_refresh(vk_disp_t *disp)
+{
     static uint8_t *__line_buf = NULL;
 
     switch(__cur_line) {
@@ -866,6 +871,16 @@ static void __vk_disp_on_inited(vk_disp_t *disp)
         }
         break;
     }
+}
+
+int __clear_screen_main(int argc, char **argv)
+{
+    __cur_line = 0;
+    vsf_board.display_dev->ui_data = vsf_eda_get_cur();
+    vsf_board.display_dev->ui_on_ready = __vk_disp_clear_screen_on_refresh;
+    __vk_disp_clear_screen_on_refresh(vsf_board.display_dev);
+    vsf_thread_wfe(VSF_EVT_USER);
+    return 0;
 }
 #endif
 
@@ -897,8 +912,11 @@ int vsf_linux_create_fhs(void)
         vk_disp_init(vsf_board.display_dev);
         vsf_thread_wfe(VSF_EVT_USER);
 
+        __clear_screen_main(0, NULL);
+
         extern int display_qrcode_main(int argc, char **argv);
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/qrcode", display_qrcode_main);
+        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/clear_screen", __clear_screen_main);
     }
 #endif
 #if VSF_USE_INPUT == ENABLED && VSF_INPUT_CFG_REGISTRATION_MECHANISM == ENABLED
