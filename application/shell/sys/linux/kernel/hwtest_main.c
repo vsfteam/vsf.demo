@@ -12,7 +12,8 @@ static void __vk_disp_on_ready(vk_disp_t *disp)
     static const uint16_t __disp_colors_rgb565[] = { 0x1F << 11, 0x3F << 6, 0x1F };
     static const uint32_t __disp_colors_argb8888[] = { 0xFFFF0000, 0xFF00FF00, 0xFF0000FF };
 
-    uint32_t pixels = disp->param.height * disp->param.width;
+    uint32_t block_height = 32, block_width = 32;
+    uint32_t pixels = block_height * block_width;
 
     if (NULL == __disp_buffer) {
         __disp_buffer = vsf_heap_malloc(pixels * vsf_disp_get_pixel_bytesize(disp));
@@ -39,7 +40,16 @@ static void __vk_disp_on_ready(vk_disp_t *disp)
         vsf_trace_error("color %d not supported" VSF_TRACE_CFG_LINEEND, disp->param.color);
         break;
     }
-    vk_disp_refresh(disp, NULL, __disp_buffer);
+    vk_disp_refresh(disp, &(vk_disp_area_t){
+        .pos = {
+            .x = rand() % (disp->param.width - block_width),
+            .y = rand() % (disp->param.height - block_height),
+        },
+        .size = {
+            .x = block_width,
+            .y = block_height,
+        },
+    }, __disp_buffer);
 }
 #endif
 
