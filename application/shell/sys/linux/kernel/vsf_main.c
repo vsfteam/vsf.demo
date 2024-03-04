@@ -839,32 +839,41 @@ static void __vk_disp_on_inited(vk_disp_t *disp)
     vsf_eda_post_evt((vsf_eda_t *)disp->ui_data, VSF_EVT_USER);
 }
 
-static int __cur_line = 0;
-static void __vk_disp_clear_screen_on_refresh(vk_disp_t *disp)
+static int __disp_cur_line = 0;
+static uint32_t __disp_color = 0;
+static void __vk_disp_fill_screen_on_refresh(vk_disp_t *disp)
 {
-    static uint8_t *__line_buf = NULL;
+    static uint8_t *__lbuf = NULL;
 
-    switch(__cur_line) {
+    uint8_t pixel_size = vsf_disp_get_pixel_bytesize(disp);
+    uint16_t width = vsf_disp_get_width(disp);
+    uint16_t height = vsf_disp_get_height(disp);
+
+    switch(__disp_cur_line) {
     case 0:
-        __line_buf = vsf_heap_malloc(vsf_disp_get_pitch(disp));
-        if (NULL == __line_buf) {
+        __lbuf = vsf_heap_malloc(pixel_size * width);
+        if (NULL == __lbuf) {
             vsf_trace_error("fail to allocate line buffer for screen\n");
             break;
         }
-        memset(__line_buf, 0x00, vsf_disp_get_pitch(disp));
+        switch (pixel_size) {
+        case 1: for (int i = 0; i < width; i++) {((uint8_t *)__lbuf)[i] = __disp_color;}    break;
+        case 2: for (int i = 0; i < width; i++) {((uint16_t *)__lbuf)[i] = __disp_color;}   break;
+        case 4: for (int i = 0; i < width; i++) {((uint32_t *)__lbuf)[i] = __disp_color;}   break;
+        }
         // fall through
     default:
-        if (__cur_line < vsf_disp_get_height(disp)) {
+        if (__disp_cur_line < height) {
             vk_disp_refresh(disp, &(vk_disp_area_t){
-                .size.x = vsf_disp_get_width(disp),
+                .size.x = width,
                 .size.y = 1,
                 .pos.x = 0,
-                .pos.y = __cur_line,
-            }, __line_buf);
-            __cur_line++;
+                .pos.y = __disp_cur_line,
+            }, __lbuf);
+            __disp_cur_line++;
         } else {
-            vsf_heap_free(__line_buf);
-            __line_buf = NULL;
+            vsf_heap_free(__lbuf);
+            __lbuf = NULL;
             vsf_eda_post_evt((vsf_eda_t *)disp->ui_data, VSF_EVT_USER);
             disp->ui_data = NULL;
             disp->ui_on_ready = NULL;
@@ -873,12 +882,18 @@ static void __vk_disp_clear_screen_on_refresh(vk_disp_t *disp)
     }
 }
 
-int __clear_screen_main(int argc, char **argv)
+int __fill_screen_main(int argc, char **argv)
 {
-    __cur_line = 0;
+    if (argc > 2) {
+        printf("%s [COLOR]", argv[0]);
+        return -1;
+    }
+
+    __disp_color = (2 == argc) ? strtoul(argv[1], NULL, 0) : 0;
+    __disp_cur_line = 0;
     vsf_board.display_dev->ui_data = vsf_eda_get_cur();
-    vsf_board.display_dev->ui_on_ready = __vk_disp_clear_screen_on_refresh;
-    __vk_disp_clear_screen_on_refresh(vsf_board.display_dev);
+    vsf_board.display_dev->ui_on_ready = __vk_disp_fill_screen_on_refresh;
+    __vk_disp_fill_screen_on_refresh(vsf_board.display_dev);
     vsf_thread_wfe(VSF_EVT_USER);
     return 0;
 }
@@ -912,11 +927,11 @@ int vsf_linux_create_fhs(void)
         vk_disp_init(vsf_board.display_dev);
         vsf_thread_wfe(VSF_EVT_USER);
 
-        __clear_screen_main(0, NULL);
+        system("fill_screen");
 
         extern int display_qrcode_main(int argc, char **argv);
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/qrcode", display_qrcode_main);
-        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/clear_screen", __clear_screen_main);
+        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fill_screen", __fill_screen_main);
     }
 #endif
 #if VSF_USE_INPUT == ENABLED && VSF_INPUT_CFG_REGISTRATION_MECHANISM == ENABLED

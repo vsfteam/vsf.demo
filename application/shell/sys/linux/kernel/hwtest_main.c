@@ -9,7 +9,7 @@ static void __vk_disp_on_ready(vk_disp_t *disp)
     static uint8_t *__disp_buffer = NULL;
     static uint8_t __disp_color_idx = 0;
 
-    static const uint16_t __disp_colors_rgb565[] = { 0x1F << 11, 0x3F << 6, 0x1F };
+    static const uint16_t __disp_colors_rgb565[] = { 0x1F << 11, 0x3F << 5, 0x1F };
     static const uint32_t __disp_colors_argb8888[] = { 0xFFFF0000, 0xFF00FF00, 0xFF0000FF };
 
     uint32_t block_height = 32, block_width = 32;

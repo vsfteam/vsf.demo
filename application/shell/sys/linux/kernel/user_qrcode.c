@@ -12,6 +12,9 @@
 #   define TITLE_PIXEL_HEIGHT               64
 #   define TITLE_QRCODE_MARGIN              16
 
+#   define DISP_COLOR_BLACK                 0x00000000
+#   define DISP_COLOR_WHITE                 0xFFFFFFFF
+
 vsf_linux_font_vplt_t * vsf_app_load_linux_font(void)
 {
     vsf_linux_font_vplt_t *font_vplt = vsf_vplt_link(NULL, "linux_font");
@@ -41,7 +44,7 @@ void vsf_app_disp_render_char(struct font_desc *font, uint8_t *disp_buff, uint8_
 
         disp_buff_tmp = disp_buff;
         for (uint8_t j = 0; j < font->width; j++, line_data <<= 1) {
-            pixel = (line_data & line_msb) ? 0xFFFFFFFF : 0;
+            pixel = (line_data & line_msb) ? DISP_COLOR_BLACK : DISP_COLOR_WHITE;
             switch (pixel_bytesize) {
             case 1: *(uint8_t *) disp_buff_tmp = pixel; break;
             case 2: *(uint16_t *)disp_buff_tmp = pixel; break;
@@ -83,10 +86,13 @@ int display_qrcode_main(int argc, char **argv)
     // reserve 64 lines for title
     uint16_t disp_height = vsf_disp_get_height(vsf_board.display_dev) - TITLE_PIXEL_HEIGHT;
     uint8_t disp_pixel_size = vsf_disp_get_pixel_bytesize(vsf_board.display_dev);
+    system("fill_screen 0xFFFFFFFF");
 #endif
 
     if (argc > 2) {
 #if VSF_USE_UI == ENABLED
+        char *title = argv[1];
+        argv++;
         do {
             vsf_linux_font_vplt_t *font_vplt = vsf_app_load_linux_font();
             if (NULL == font_vplt) {
@@ -100,7 +106,7 @@ int display_qrcode_main(int argc, char **argv)
                 break;
             }
 
-            uint16_t title_width = strlen(argv[1]) * font->width;
+            uint16_t title_width = strlen(title) * font->width;
             uint16_t title_height = font->height;
             uint8_t *disp_buff = malloc(title_width * title_height * disp_pixel_size);
             if (NULL == disp_buff) {
@@ -108,8 +114,7 @@ int display_qrcode_main(int argc, char **argv)
                 break;
             }
 
-            vsf_app_disp_render_string(font, disp_buff, disp_pixel_size, title_width * disp_pixel_size, argv[1]);
-            argv++;
+            vsf_app_disp_render_string(font, disp_buff, disp_pixel_size, title_width * disp_pixel_size, title);
 
             vsf_board.display_dev->ui_data = vsf_eda_get_cur();
             vsf_board.display_dev->ui_on_ready = __vsf_app_qrcode_disp_on_ready;
@@ -156,9 +161,9 @@ int display_qrcode_main(int argc, char **argv)
     for (uint8_t y = 0; y < qrcode.size; y++) {
         for (uint8_t x = 0; x < qrcode.size; x++) {
             if (qrcode_getModule(&qrcode, x, y)) {
-                memset(disp_block_buff, 0xFF, block_pixel_size);
+                memset(disp_block_buff, DISP_COLOR_BLACK, block_pixel_size);
             } else {
-                memset(disp_block_buff, 0x00, block_pixel_size);
+                memset(disp_block_buff, DISP_COLOR_WHITE, block_pixel_size);
             }
 
             vsf_board.display_dev->ui_data = vsf_eda_get_cur();
