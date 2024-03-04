@@ -927,8 +927,6 @@ int vsf_linux_create_fhs(void)
         vk_disp_init(vsf_board.display_dev);
         vsf_thread_wfe(VSF_EVT_USER);
 
-        system("fill_screen");
-
         extern int display_qrcode_main(int argc, char **argv);
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/qrcode", display_qrcode_main);
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fill_screen", __fill_screen_main);
