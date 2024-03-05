@@ -85,6 +85,10 @@
 #include <fcntl.h>
 #include <sys/mount.h>
 #include <sys/sendfile.h>
+#if VSF_USE_UI == ENABLED
+#   include <sys/ioctl.h>
+#   include <linux/fb.h>
+#endif
 
 #include <vsf_board.h>
 
@@ -839,63 +843,55 @@ static void __vk_disp_on_inited(vk_disp_t *disp)
     vsf_eda_post_evt((vsf_eda_t *)disp->ui_data, VSF_EVT_USER);
 }
 
-static int __disp_cur_line = 0;
-static uint32_t __disp_color = 0;
-static void __vk_disp_fill_screen_on_refresh(vk_disp_t *disp)
-{
-    static uint8_t *__lbuf = NULL;
-
-    uint8_t pixel_size = vsf_disp_get_pixel_bytesize(disp);
-    uint16_t width = vsf_disp_get_width(disp);
-    uint16_t height = vsf_disp_get_height(disp);
-
-    switch(__disp_cur_line) {
-    case 0:
-        __lbuf = vsf_heap_malloc(pixel_size * width);
-        if (NULL == __lbuf) {
-            vsf_trace_error("fail to allocate line buffer for screen\n");
-            break;
-        }
-        switch (pixel_size) {
-        case 1: for (int i = 0; i < width; i++) {((uint8_t *)__lbuf)[i] = __disp_color;}    break;
-        case 2: for (int i = 0; i < width; i++) {((uint16_t *)__lbuf)[i] = __disp_color;}   break;
-        case 4: for (int i = 0; i < width; i++) {((uint32_t *)__lbuf)[i] = __disp_color;}   break;
-        }
-        // fall through
-    default:
-        if (__disp_cur_line < height) {
-            vk_disp_refresh(disp, &(vk_disp_area_t){
-                .size.x = width,
-                .size.y = 1,
-                .pos.x = 0,
-                .pos.y = __disp_cur_line,
-            }, __lbuf);
-            __disp_cur_line++;
-        } else {
-            vsf_heap_free(__lbuf);
-            __lbuf = NULL;
-            vsf_eda_post_evt((vsf_eda_t *)disp->ui_data, VSF_EVT_USER);
-            disp->ui_data = NULL;
-            disp->ui_on_ready = NULL;
-        }
-        break;
-    }
-}
-
-int __fill_screen_main(int argc, char **argv)
+static int __fill_screen_main(int argc, char **argv)
 {
     if (argc > 2) {
         printf("%s [COLOR]", argv[0]);
         return -1;
     }
 
-    __disp_color = (2 == argc) ? strtoul(argv[1], NULL, 0) : 0;
-    __disp_cur_line = 0;
-    vsf_board.display_dev->ui_data = vsf_eda_get_cur();
-    vsf_board.display_dev->ui_on_ready = __vk_disp_fill_screen_on_refresh;
-    __vk_disp_fill_screen_on_refresh(vsf_board.display_dev);
-    vsf_thread_wfe(VSF_EVT_USER);
+    int fd = open("/dev/fb0", O_RDWR);
+    if (fd < 0) {
+        fprintf(stderr, "fail to open /dev/fb0\n");
+        return -1;
+    }
+
+    struct fb_var_screeninfo fb_var;
+    ioctl(fd, FBIOGET_VSCREENINFO, &fb_var);
+
+    uint8_t pixel_size = (fb_var.bits_per_pixel + 7) >> 3;
+    uint16_t width = fb_var.xres;
+    uint16_t height = fb_var.yres;
+    uint32_t disp_color = (2 == argc) ? strtoul(argv[1], NULL, 0) : 0;
+    uint32_t pitch = pixel_size * width;
+    vk_disp_area_t area = {
+        .size.x = width,
+        .size.y = 1,
+        .pos.x = 0,
+    };
+    uint8_t *linebuf = vsf_heap_malloc(pitch);
+    if (NULL == linebuf) {
+        fprintf(stderr, "fail to allocate line buffer for screen\n");
+        goto fail_close_fd;
+    }
+    switch (pixel_size) {
+    case 1: for (int i = 0; i < width; i++) {((uint8_t *)linebuf)[i] = disp_color;}    break;
+    case 2: for (int i = 0; i < width; i++) {((uint16_t *)linebuf)[i] = disp_color;}   break;
+    case 4: for (int i = 0; i < width; i++) {((uint32_t *)linebuf)[i] = disp_color;}   break;
+    }
+
+    for (uint16_t i = 0; i < height; i++) {
+        area.pos.y = i;
+        ioctl(fd, FBIOSET_AREA, &area);
+        write(fd, linebuf, pitch);
+    }
+
+    vsf_heap_free(linebuf);
     return 0;
+
+fail_close_fd:
+    close(fd);
+    return -1;
 }
 #endif
 
