@@ -317,7 +317,7 @@ end_describe_usbd(__app_usbd, VSF_USB_DC0)
 
 // linux
 
-WEAK(vsf_board_init_linux)
+VSF_CAL_WEAK(vsf_board_init_linux)
 void vsf_board_init_linux(void)
 {
 }
@@ -328,7 +328,7 @@ static int __vsf_board_init_linux_main(int argc, char **argv)
     return 0;
 }
 
-WEAK(vsf_linux_install_package_manager)
+VSF_CAL_WEAK(vsf_linux_install_package_manager)
 void vsf_linux_install_package_manager(vk_romfs_info_t *fsinfo, bool can_uninstall, bool can_install)
 {
 }
@@ -788,13 +788,13 @@ void vpm_on_installed(void)
 }
 #endif
 
-WEAK(hwtest_main)
+VSF_CAL_WEAK(hwtest_main)
 int hwtest_main(int argc, char **argv)
 {
     return 0;
 }
 
-WEAK(webterminal_main)
+VSF_CAL_WEAK(webterminal_main)
 int webterminal_main(int argc, char **argv)
 {
     return 0;

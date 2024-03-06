@@ -47,7 +47,7 @@ static void __vpm_parse_host_path(char *buf, int bufsize, char **host, char **pa
 }
 #endif
 
-WEAK(vpm_on_installed)
+VSF_CAL_WEAK(vpm_on_installed)
 void vpm_on_installed(void)
 {
 }

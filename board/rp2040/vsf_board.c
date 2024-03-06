@@ -64,13 +64,13 @@ vsf_board_t vsf_board = {
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ IMPLEMENTATION ================================*/
 
-WEAK(app_config_read)
+VSF_CAL_WEAK(app_config_read)
 int app_config_read(const char *cfgname, char *cfgvalue, int valuelen)
 {
     return -1;
 }
 
-WEAK(app_config_write)
+VSF_CAL_WEAK(app_config_write)
 int app_config_write(const char *cfgname, char *cfgvalue)
 {
     return -1;

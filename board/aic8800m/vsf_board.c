@@ -109,13 +109,13 @@ vsf_board_t vsf_board = {
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ IMPLEMENTATION ================================*/
 
-WEAK(app_config_read)
+VSF_CAL_WEAK(app_config_read)
 int app_config_read(const char *cfgname, char *cfgvalue, int valuelen)
 {
     return -1;
 }
 
-WEAK(app_config_write)
+VSF_CAL_WEAK(app_config_write)
 int app_config_write(const char *cfgname, char *cfgvalue)
 {
     return -1;
@@ -168,12 +168,12 @@ void __vsf_usbh_free(void *buffer)
 #if PLF_WIFI_STACK && VSF_USE_LWIP == ENABLED
 #   if VSF_USE_LINUX == ENABLED
 
-WEAK(app_wifi_sta_on_connected)
+VSF_CAL_WEAK(app_wifi_sta_on_connected)
 void app_wifi_sta_on_connected(void)
 {
 }
 
-WEAK(app_wifi_ap_on_started)
+VSF_CAL_WEAK(app_wifi_ap_on_started)
 void app_wifi_ap_on_started(char *ssid, char *pass)
 {
 }
