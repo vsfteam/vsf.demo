@@ -150,7 +150,7 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
     }
 }
 
-// Because debug stream for AIC8800M is not used,
+// Because debug stream for RP2040 is not used,
 //  VSF_HAL_USE_DEBUG_STREAM is not defined in header files.
 // But debug_stream_tx_blocked.inc will need VSF_HAL_USE_DEBUG_STREAM,
 //  so define VSF_HAL_USE_DEBUG_STREAM here.
