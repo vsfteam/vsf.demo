@@ -77,7 +77,7 @@ elseif(APPLET_COMPILER_LLVM)
         set(LLVM_TOOLCHAIN_SYSROOT "${LLVM_TOOLCHAIN_PATH}/lib/clang-runtimes/arm-none-eabi/armv7m_soft_nofp")
     endif()
 
-    if(APPLET_COMPILER_LLVM_EMBPI)
+    if(APPLET_COMPILER_EMBPI)
         # embedded position independency
         set(CMAKE_C_FLAGS
             "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fropi -frwpi"
@@ -87,7 +87,7 @@ elseif(APPLET_COMPILER_LLVM)
             "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fropi -frwpi"
             CACHE INTERNAL "C++ compiler common flags"
         )
-    elseif(APPLET_COMPILER_LLVM_GOTPI)
+    elseif(APPLET_COMPILER_GOTPI)
         # GOT-base position independency
         set(CMAKE_C_FLAGS
             "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fPIC -mno-pic-data-is-text-relative"
@@ -98,7 +98,7 @@ elseif(APPLET_COMPILER_LLVM)
             CACHE INTERNAL "C++ compiler common flags"
         )
     else()
-        message(FATAL_ERROR "Either APPLET_COMPILER_LLVM_EMBPI or APPLET_COMPILER_LLVM_GOTPI should be set to 1")
+        message(FATAL_ERROR "Either APPLET_COMPILER_EMBPI or APPLET_COMPILER_GOTPI should be set to 1")
     endif()
 
     include($ENV{VSF_PATH}/script/cmake/compilers/armllvm.cmake)
