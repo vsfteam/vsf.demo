@@ -819,6 +819,7 @@ void app_wifi_ap_on_started(char *ssid, char *pass)
 
 // application vpls
 // add application func/var declare in vsf_usr_cfg.h
+#if VSF_USE_APPLET == ENABLED || (VSF_USE_LINUX == ENABLED && VSF_LINUX_USE_APPLET == ENABLED)
 typedef struct vsf_app_vplt_t {
     vsf_vplt_info_t info;
     VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_mdns_rename);
@@ -838,6 +839,7 @@ static __VSF_VPLT_DECORATOR__ vsf_app_vplt_t __vsf_app_vplt = {
     VSF_APPLET_VPLT_ENTRY_FUNC(app_config_read),
     VSF_APPLET_VPLT_ENTRY_FUNC(app_config_write),
 };
+#endif
 
 #if VSF_USE_UI == ENABLED
 static void __vk_disp_on_inited(vk_disp_t *disp)
