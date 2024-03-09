@@ -24,9 +24,9 @@
  * Submodule:
  *   vsf
  *     source/component/3rd-party/btstack/raw if VSF_USE_BTSTACK is enabled
- *     source/component/3rd-party/mbedtls/raw
+ *     source/component/3rd-party/mbedtls/raw if VSF_USE_MBEDTLS is enabled
  *     source/component/3rd-party/PLOOC/raw
- *     source/component/3rd-party/qrcode/raw
+ *     source/component/3rd-party/qrcode/raw if VSF_USE_UI is enabled
  *   optional:
  *    for root directory in embedded hardware, littlefs is used
  *     source/component/3rd-party/littlefs/raw
@@ -44,10 +44,10 @@
  *     vsf/source/component/3rd-party/littlefs/port
  *     vsf/source/component/3rd-party/littlefs/raw
  *    for package manager, need VSF_USE_TCPIP from vsf_board
- *     vsf/source/component/3rd-party/mbedtls/raw/include
+ *     vsf/source/component/3rd-party/mbedtls/raw/include if VSF_USE_MBEDTLS is enabled
  *
  * Pre-defined:
- *   __unix__ for net_sockets/timing/entropy_poll in mbedtls
+ *   __unix__ for net_sockets/timing/entropy_poll in mbedtls if VSF_USE_MBEDTLS is enabled
  *   LFS_CONFIG to lfs_util_vsf.h
  *
  * Sources necessary for linux:
@@ -61,9 +61,9 @@
  *     vsf/source/component/3rd-party/littlefs/raw/*
  *    for package manager, need VSF_USE_TCPIP from vsf_board
  *     ./vsf_linux_package_manager.c
- *     vsf/source/component/3rd-party/mbedtls/raw/library/*
- *     vsf/source/component/3rd-party/mbedtls/port/*
- *     vsf/source/component/3rd-party/mbedtls/extension/tls_session_client/*
+ *     vsf/source/component/3rd-party/mbedtls/raw/library/* if VSF_USE_MBEDTLS is enabled
+ *     vsf/source/component/3rd-party/mbedtls/port/* if VSF_USE_MBEDTLS is enabled
+ *     vsf/source/component/3rd-party/mbedtls/extension/tls_session_client/* if VSF_USE_MBEDTLS is enabled
  *
  * Linker:
  *   If bootloader is used, set image base to the APP address
@@ -808,11 +808,13 @@ static int __reset_main(int argc, char **argv)
 
 void app_wifi_ap_on_started(char *ssid, char *pass)
 {
+#if VSF_USE_UI == ENABLED
     // cmdline: qrcode "Scan to connect AP" "WIFI:S:ssid;P:pass;T:WPA/WPA2;H:vsf;"
     const char *format = "qrcode \"S:%s P:%s\" \"WIFI:S:%s;P:%s;T:WPA/WPA2;H:vsf;\"";
     char cmdline[strlen(format) + 4 * 32];  // format_size + max_size of ssid(32) and pass(32)
     sprintf(cmdline, format, ssid, pass, ssid, pass);
     system(cmdline);
+#endif
 }
 
 // application vpls
@@ -843,6 +845,7 @@ static void __vk_disp_on_inited(vk_disp_t *disp)
     vsf_eda_post_evt((vsf_eda_t *)disp->ui_data, VSF_EVT_USER);
 }
 
+#   if VSF_LINUX_USE_DEVFS == ENABLED
 static int __fill_screen_main(int argc, char **argv)
 {
     if (argc > 2) {
@@ -893,6 +896,7 @@ fail_close_fd:
     close(fd);
     return -1;
 }
+#   endif
 #endif
 
 static bool __install_embedded_busybox = true;
@@ -916,7 +920,9 @@ int vsf_linux_create_fhs(void)
     vsf_linux_create_pty(1);
 #if VSF_USE_UI == ENABLED
     if (vsf_board.display_dev != NULL) {
+#   if VSF_LINUX_USE_DEVFS == ENABLED
         vsf_linux_fs_bind_disp("/dev/fb0", vsf_board.display_dev);
+#   endif
 
         vsf_board.display_dev->ui_data = vsf_eda_get_cur();
         vsf_board.display_dev->ui_on_ready = __vk_disp_on_inited;
@@ -925,10 +931,12 @@ int vsf_linux_create_fhs(void)
 
         extern int display_qrcode_main(int argc, char **argv);
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/qrcode", display_qrcode_main);
+#   if VSF_LINUX_USE_DEVFS == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fill_screen", __fill_screen_main);
+#   endif
     }
 #endif
-#if VSF_USE_INPUT == ENABLED && VSF_INPUT_CFG_REGISTRATION_MECHANISM == ENABLED
+#if VSF_USE_INPUT == ENABLED && VSF_INPUT_CFG_REGISTRATION_MECHANISM == ENABLED && VSF_LINUX_USE_DEVFS == ENABLED
     static vk_input_notifier_t notifier = {
         .mask =     (1 << VSF_INPUT_TYPE_GAMEPAD)
                 |   (1 << VSF_INPUT_TYPE_KEYBOARD)
@@ -939,7 +947,7 @@ int vsf_linux_create_fhs(void)
 #endif
 #if VSF_USE_AUDIO == ENABLED
     vk_audio_init(vsf_board.audio_dev);
-#   if VSF_LINUX_USE_DEVFS == ENABLED && VSF_LINUX_DEVFS_USE_ALSA == ENABLED
+#   if VSF_LINUX_USE_DEVFS == ENABLED && VSF_LINUX_DEVFS_USE_ALSA == ENABLED && VSF_LINUX_USE_DEVFS == ENABLED
     vsf_linux_fs_bind_audio("/dev/snd", 0, vsf_board.audio_dev);
     vsf_linux_fs_bind_audio_timer("/dev/snd/timer");
 #   endif
@@ -1010,9 +1018,11 @@ int vsf_linux_create_fhs(void)
 #endif
 
     // 3. install executables and built-in libraries
+#if VSF_USE_APPLET == ENABLED || (VSF_USE_LINUX == ENABLED && VSF_LINUX_USE_APPLET == ENABLED)
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&__vsf_app_vplt.info);
-#if VSF_USE_MBEDTLS == ENABLED
+#   if VSF_USE_MBEDTLS == ENABLED
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&vsf_mbedtls_vplt.info);
+#   endif
 #endif
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/board_init", __vsf_board_init_linux_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/reset", __reset_main);
