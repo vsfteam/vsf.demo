@@ -52,11 +52,13 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #define VSF_USE_LITTLEFS                                ENABLED
 #define VSF_USE_TRACE                                   ENABLED
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
+#ifndef VSF_USE_LOADER
 // currently, dynamic loader is not support for wasm in vsf
-#ifdef __CPU_WEBASSEMBLY__
-#   define VSF_USE_LOADER                               DISABLED
-#else
-#   define VSF_USE_LOADER                               ENABLED
+#   ifdef __CPU_WEBASSEMBLY__
+#       define VSF_USE_LOADER                           DISABLED
+#   else
+#       define VSF_USE_LOADER                           ENABLED
+#   endif
 #endif
 #   define VSF_LOADER_USE_ELF                           ENABLED
 #define VSF_USE_SCSI                                    ENABLED
@@ -99,7 +101,9 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #endif
 
 #define VSF_USE_LINUX                                   ENABLED
-#   define VSF_LINUX_CFG_STACKSIZE                      8192
+#   ifndef VSF_LINUX_CFG_STACKSIZE
+#       define VSF_LINUX_CFG_STACKSIZE                  8192
+#   endif
 #   define VSF_USE_POSIX                                ENABLED
 #   define VSF_LINUX_USE_SIMPLE_LIBC                    ENABLED
 #   define VSF_LINUX_USE_BUSYBOX                        ENABLED
