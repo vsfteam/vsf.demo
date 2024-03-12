@@ -142,6 +142,27 @@ static vk_mal_scsi_t __app_mal_scsi = {
 };
 
 describe_usbd(__app_usbd_msc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED)
+    usbd_func(__app_usbd_msc,
+        usbd_mscbot_func(__app_usbd_msc,
+                        // function index
+                        0,
+                        // function string
+                        u"VSF-MSC0",
+                        // function string index(start from 0)
+                        0,
+                        // interface
+                        0,
+                        // bulk in ep, bulk out ep
+                        1, 1,
+                        // bulk ep size
+                        __APP_CFG_MSC_BULK_SIZE,
+                        // stream
+                        &__app_usbd_msc_stream.use_as__vsf_stream_t,
+                        // scsi_dev(s)
+                        &__app_mal_scsi.use_as__vk_scsi_t
+        )
+    )
+
     usbd_common_desc_iad(__app_usbd_msc,
                         // str_product, str_vendor, str_serial
                         u"VSF-USBD-Simplest", u"SimonQian", u"1.0.0",
@@ -152,37 +173,16 @@ describe_usbd(__app_usbd_msc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_S
                         // total function interface number
                         USB_MSCBOT_IFS_NUM,
                         // attribute, max_power
-                        USB_CONFIG_ATT_WAKEUP, 100
+                        USB_CONFIG_ATT_WAKEUP, 100,
+        usbd_mscbot_desc_iad(__app_usbd_msc, 0)
     )
-        usbd_mscbot_desc_iad(__app_usbd_msc,
-                        // interface
-                        0,
-                        // function string index(start from 0)
-                        0,
-                        // bulk in ep, bulk out ep
-                        1, 1,
-                        // bulk ep size
-                        __APP_CFG_MSC_BULK_SIZE
-        )
-    usbd_func_desc(__app_usbd_msc)
-        usbd_func_str_desc(__app_usbd_msc, 0, u"VSF-MSC0")
-    usbd_std_desc_table(__app_usbd_msc)
+
+    usbd_std_desc_table(__app_usbd_msc,
         usbd_func_str_desc_table(__app_usbd_msc, 0)
-    usbd_func(__app_usbd_msc)
-        usbd_mscbot_func(__app_usbd_msc,
-                        // function index
-                        0,
-                        // bulk in ep, bulk out ep
-                        1, 1,
-                        // max lun(logic unit number)
-                        0,
-                        // scsi_dev
-                        &__app_mal_scsi.use_as__vk_scsi_t,
-                        // stream
-                        &__app_usbd_msc_stream.use_as__vsf_stream_t
-        )
-    usbd_ifs(__app_usbd_msc)
+    )
+    usbd_ifs(__app_usbd_msc,
         usbd_mscbot_ifs(__app_usbd_msc, 0)
+    )
 end_describe_usbd(__app_usbd_msc, VSF_USB_DC0)
 
 static void __usr_flash_isrhandler( void *target_ptr,
