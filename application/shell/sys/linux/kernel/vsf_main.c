@@ -269,38 +269,20 @@ static vk_mal_scsi_t __app_mscbot_tf_mal_scsi = {
 #   endif
 
 describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED)
-    usbd_common_desc_iad(__app_usbd,
-                        // str_product, str_vendor, str_serial
-                        u"VSFLinux.Boot", u"VSF", u"1.0.0",
-                        // ep0_size
-                        64,
-                        // total function descriptor size
-                        USB_DESC_MSCBOT_IAD_LEN,
-                        // total function interface number
-                        USB_MSCBOT_IFS_NUM,
-                        // attribute, max_power
-                        USB_CONFIG_ATT_WAKEUP, 100
-    )
-        usbd_mscbot_desc_iad(__app_usbd,
-                        // interface
+    usbd_func(__app_usbd,
+        usbd_mscbot_func(__app_usbd,
+                        // function index
                         0,
+                        // function string
+                        u"VSF-MSC0",
                         // function string index(start from 0)
+                        0,
+                        // interface
                         0,
                         // bulk in ep, bulk out ep
                         1, 1,
                         // bulk ep size
-                        __APP_CFG_MSC_BULK_SIZE
-        )
-    usbd_func_desc(__app_usbd)
-        usbd_func_str_desc(__app_usbd, 0, u"Romfs.MSC")
-    usbd_std_desc_table(__app_usbd)
-        usbd_func_str_desc_table(__app_usbd, 0)
-    usbd_func(__app_usbd)
-        usbd_mscbot_func(__app_usbd,
-                        // function index
-                        0,
-                        // bulk in ep, bulk out ep
-                        1, 1,
+                        __APP_CFG_MSC_BULK_SIZE,
                         // stream
                         &__app_usbd_msc_stream.use_as__vsf_stream_t,
                         // scsi_dev(s)
@@ -309,8 +291,28 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         ,&__app_mscbot_tf_mal_scsi.use_as__vk_scsi_t
 #   endif
         )
-    usbd_ifs(__app_usbd)
+    )
+
+    usbd_common_desc_iad(__app_usbd,
+                        // str_product, str_vendor, str_serial
+                        u"VSF-USBD-Simplest", u"SimonQian", u"1.0.0",
+                        // ep0_size
+                        64,
+                        // total function descriptor size
+                        USB_DESC_MSCBOT_IAD_LEN,
+                        // total function interface number
+                        USB_MSCBOT_IFS_NUM,
+                        // attribute, max_power
+                        USB_CONFIG_ATT_WAKEUP, 100,
+        usbd_mscbot_desc_iad(__app_usbd, 0)
+    )
+
+    usbd_std_desc_table(__app_usbd,
+        usbd_func_str_desc_table(__app_usbd, 0)
+    )
+    usbd_ifs(__app_usbd,
         usbd_mscbot_ifs(__app_usbd, 0)
+    )
 end_describe_usbd(__app_usbd, VSF_USB_DC0)
 
 #endif
