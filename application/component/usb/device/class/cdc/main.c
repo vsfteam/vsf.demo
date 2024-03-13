@@ -101,6 +101,9 @@ end_describe_usbd(__user_usbd_cdc, VSF_USB_DC0)
 int VSF_USER_ENTRY(void)
 {
     vsf_board_init();
+#if VSF_USE_TRACE == ENABLED
+    vsf_start_trace();
+#endif
 
     VSF_STREAM_INIT(&__user_usbd_cdc_stream0);
     vk_usbd_init(&__user_usbd_cdc);
