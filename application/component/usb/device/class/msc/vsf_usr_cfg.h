@@ -23,6 +23,9 @@
 
 /*============================ MACROS ========================================*/
 
+#if 0
+// for code size optimization only
+
 // defined disabled hal before including vsf_board_cfg.h
 #define VSF_HAL_USE_I2C                                 DISABLED
 #define VSF_HAL_USE_MMC                                 DISABLED
@@ -32,6 +35,7 @@
 
 // disable assert to save code size
 #define VSF_ASSERT(...)
+#endif
 
 /*============================ INCLUDES ======================================*/
 

@@ -72,24 +72,52 @@
 #   error VSF_USBD_CFG_AUTOSETUP is needed for this demo
 #endif
 
+#if     defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_READ_BLOCK_SIZE)\
+    &&  defined(APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) && defined(APP_MSCBOOT_CFG_WRITE_BLOCK_SIZE)\
+    &&  (VSF_HAL_USE_FLASH == ENABLED)
+#   define APP_CFG_USE_FLASH                        ENABLED
+#else
+#   define APP_CFG_USE_FLASH                        DISABLED
+#endif
+
+#if APP_CFG_USE_FLASH != ENABLED
+#   warning flash parameters not defined, disable mscboot fw and romfs
+#   undef APP_MSCBOOT_CFG_FW_SIZE
+#   undef APP_MSCBOOT_CFG_FW_ADDR
+#   undef APP_MSCBOOT_CFG_ROMFS_SIZE
+#   undef APP_MSCBOOT_CFG_ROMFS_ADDR
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ PROTOTYPES ====================================*/
 
+#if defined(APP_MSCBOOT_CFG_FW_SIZE) && defined(APP_MSCBOOT_CFG_FW_ADDR)
 dcl_vsf_peda_methods(static, __usr_mscboot_on_firmware_read)
 dcl_vsf_peda_methods(static, __usr_mscboot_on_firmware_write)
+#endif
 
+#if defined(APP_MSCBOOT_CFG_ROMFS_SIZE) && defined(APP_MSCBOOT_CFG_ROMFS_ADDR)
 dcl_vsf_peda_methods(static, __usr_mscboot_on_romfs_read)
 dcl_vsf_peda_methods(static, __usr_mscboot_on_romfs_write)
+#endif
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 
-static vk_fakefat32_file_t __usr_fakefat32_root[3] = {
+static vk_fakefat32_file_t __usr_fakefat32_root[1
+#if defined(APP_MSCBOOT_CFG_FW_SIZE) && defined(APP_MSCBOOT_CFG_FW_ADDR)
+        + 1
+#endif
+#if defined(APP_MSCBOOT_CFG_ROMFS_SIZE) && defined(APP_MSCBOOT_CFG_ROMFS_ADDR)
+        + 1
+#endif
+    ] = {
     {
         .name               = "mscboot",
         .attr               = (vk_file_attr_t)VSF_FAT_FILE_ATTR_VOLUMID,
     },
+#if defined(APP_MSCBOOT_CFG_FW_SIZE) && defined(APP_MSCBOOT_CFG_FW_ADDR)
     {
         .name               = "firmware.bin",
         .size               = APP_MSCBOOT_CFG_FW_SIZE,
@@ -97,13 +125,16 @@ static vk_fakefat32_file_t __usr_fakefat32_root[3] = {
         .callback.fn_read   = (vsf_peda_evthandler_t)vsf_peda_func(__usr_mscboot_on_firmware_read),
         .callback.fn_write  = (vsf_peda_evthandler_t)vsf_peda_func(__usr_mscboot_on_firmware_write),
     },
+#endif
+#if defined(APP_MSCBOOT_CFG_ROMFS_SIZE) && defined(APP_MSCBOOT_CFG_ROMFS_ADDR)
     {
         .name               = "usr.romfs",
         .size               = APP_MSCBOOT_CFG_ROMFS_SIZE,
         .attr               = VSF_FILE_ATTR_READ | VSF_FILE_ATTR_WRITE,
         .callback.fn_read   = (vsf_peda_evthandler_t)vsf_peda_func(__usr_mscboot_on_romfs_read),
         .callback.fn_write  = (vsf_peda_evthandler_t)vsf_peda_func(__usr_mscboot_on_romfs_write),
-    }
+    },
+#endif
 };
 
 static vk_fakefat32_mal_t __app_fakefat32_mal = {
@@ -120,8 +151,13 @@ static vk_fakefat32_mal_t __app_fakefat32_mal = {
     },
 };
 
+#if     (defined(APP_MSCBOOT_CFG_FW_SIZE) && defined(APP_MSCBOOT_CFG_FW_ADDR))  \
+    ||  (defined(APP_MSCBOOT_CFG_ROMFS_SIZE) && defined(APP_MSCBOOT_CFG_ROMFS_ADDR))
 static bool __usr_flash_is_inited = false;
+#endif
+#if APP_CFG_USE_FLASH == ENABLED
 static vsf_eda_t *__usr_mscboot_eda = NULL;
+#endif
 
 /*============================ IMPLEMENTATION ================================*/
 
@@ -185,6 +221,7 @@ describe_usbd(__app_usbd_msc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_S
     )
 end_describe_usbd(__app_usbd_msc, VSF_USB_DC0)
 
+#if APP_CFG_USE_FLASH == ENABLED
 static void __usr_flash_isrhandler( void *target_ptr,
                                     vsf_flash_t *flash_ptr,
                                     vsf_flash_irq_mask_t mask)
@@ -245,7 +282,9 @@ static uint32_t __usr_flash_write(uint64_t offset, uint32_t size, uint8_t *buff)
     vsf_flash_write(&APP_MSCBOOT_CFG_FLASH, offset, buff, cur_size);
     return cur_size;
 }
+#endif
 
+#if defined(APP_MSCBOOT_CFG_FW_SIZE) && defined(APP_MSCBOOT_CFG_FW_ADDR)
 vsf_component_peda_ifs_entry(__usr_mscboot_on_firmware_read, vk_memfs_callback_read)
 {
     vsf_peda_begin();
@@ -327,7 +366,9 @@ vsf_component_peda_ifs_entry(__usr_mscboot_on_firmware_write, vk_memfs_callback_
 
     vsf_peda_end();
 }
+#endif
 
+#if defined(APP_MSCBOOT_CFG_ROMFS_SIZE) && defined(APP_MSCBOOT_CFG_ROMFS_ADDR)
 vsf_component_peda_ifs_entry(__usr_mscboot_on_romfs_read, vk_memfs_callback_read)
 {
     vsf_peda_begin();
@@ -409,6 +450,16 @@ vsf_component_peda_ifs_entry(__usr_mscboot_on_romfs_write, vk_memfs_callback_wri
 
     vsf_peda_end();
 }
+#endif
+
+VSF_CAL_WEAK(app_mscboot_init)
+void app_mscboot_init(void) {}
+VSF_CAL_WEAK(app_mscboot_check)
+bool app_mscboot_check(void) { return true; }
+VSF_CAL_WEAK(app_mscboot_fini)
+void app_mscboot_fini(void) {}
+VSF_CAL_WEAK(app_mscboot_boot)
+void app_mscboot_boot(void) {}
 
 int VSF_USER_ENTRY(void)
 {
