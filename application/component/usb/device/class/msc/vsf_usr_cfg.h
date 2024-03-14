@@ -33,8 +33,17 @@
 #define VSF_HAL_USE_RNG                                 DISABLED
 #define VSF_HAL_USE_SPI                                 DISABLED
 
+#define VSF_KERNEL_CFG_SUPPORT_THREAD                   DISABLED
+#define VSF_KERNEL_CFG_CPU_USAGE                        DISABLED
+#define VSF_KERNEL_CFG_SUPPORT_CALLBACK_TIMER           DISABLED
+#define VSF_KERNEL_CFG_EDA_SUBCALL_HAS_RETURN_VALUE     DISABLED
+
 // disable assert to save code size
 #define VSF_ASSERT(...)
+
+#define VSF_USE_TRACE                                   DISABLED
+#else
+#define VSF_USE_TRACE                                   ENABLED
 #endif
 
 /*============================ INCLUDES ======================================*/
@@ -43,14 +52,8 @@
 
 /*============================ MACROS ========================================*/
 
-#define VSF_KERNEL_CFG_SUPPORT_THREAD                   DISABLED
-#define VSF_KERNEL_CFG_CPU_USAGE                        DISABLED
-#define VSF_KERNEL_CFG_SUPPORT_CALLBACK_TIMER           DISABLED
-#define VSF_KERNEL_CFG_EDA_SUBCALL_HAS_RETURN_VALUE     DISABLED
-
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
 // disable trace to save code size
-#define VSF_USE_TRACE                                   DISABLED
 #define VSF_USE_SCSI                                    ENABLED
 #   define VSF_SCSI_USE_VIRTUAL_SCSI                    ENABLED
 #   define VSF_SCSI_USE_MAL_SCSI                        ENABLED
