@@ -54,6 +54,7 @@
 #define VSF_USE_TRACE                                   DISABLED
 #else
 #define VSF_USE_TRACE                                   ENABLED
+#define VSF_USE_HEAP                                    ENABLED
 #endif
 
 /*============================ INCLUDES ======================================*/
