@@ -33,10 +33,20 @@
 #define VSF_HAL_USE_RNG                                 DISABLED
 #define VSF_HAL_USE_SPI                                 DISABLED
 
+#define VSF_KERNEL_CFG_EDA_SUPPORT_TIMER                DISABLED
+#define VSF_KERNEL_CFG_SUPPORT_SYNC                     DISABLED
 #define VSF_KERNEL_CFG_SUPPORT_THREAD                   DISABLED
 #define VSF_KERNEL_CFG_CPU_USAGE                        DISABLED
 #define VSF_KERNEL_CFG_SUPPORT_CALLBACK_TIMER           DISABLED
 #define VSF_KERNEL_CFG_EDA_SUBCALL_HAS_RETURN_VALUE     DISABLED
+
+#define VSF_USE_HEAP                                    DISABLED
+#define VSF_OS_CFG_EDA_FRAME_POOL_SIZE                  8
+#define VSF_OS_CFG_EDA_FRAME_POOL_EXTRA_SIZE            64
+
+#define VSF_MAL_USE_CACHED_MAL                          DISABLED
+#define VSF_FS_CFG_MALLOC(...)                          ((vk_file_t *)NULL)
+#define VSF_FS_CFG_FREE(...)
 
 // disable assert to save code size
 #define VSF_ASSERT(...)
