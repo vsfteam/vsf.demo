@@ -73,7 +73,7 @@
 #endif
 
 #if     defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_READ_BLOCK_SIZE)\
-    &&  defined(APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE) && defined(APP_MSCBOOT_CFG_WRITE_BLOCK_SIZE)\
+    &&  defined(APP_MSCBOOT_CFG_WRITE_BLOCK_SIZE)                               \
     &&  (VSF_HAL_USE_FLASH == ENABLED)
 #   define APP_CFG_USE_FLASH                        ENABLED
 #else
@@ -239,6 +239,10 @@ static void __usr_flash_init(void)
     };
     vsf_flash_init(&APP_MSCBOOT_CFG_FLASH, &cfg);
     vsf_flash_enable(&APP_MSCBOOT_CFG_FLASH);
+    vsf_flash_irq_enable(&APP_MSCBOOT_CFG_FLASH,
+            VSF_FLASH_IRQ_ERASE_MASK
+        |   VSF_FLASH_IRQ_WRITE_MASK
+        |   VSF_FLASH_IRQ_READ_MASK);
 }
 
 static uint32_t __usr_flash_read(uint64_t offset, uint32_t size, uint8_t *buff)
@@ -260,6 +264,7 @@ static uint32_t __usr_flash_write(uint64_t offset, uint32_t size, uint8_t *buff)
 {
     uint32_t cur_size;
 
+#ifdef APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE
     if (size & 1) {
         // erase done
         size &= ~1;
@@ -272,6 +277,7 @@ static uint32_t __usr_flash_write(uint64_t offset, uint32_t size, uint8_t *buff)
             return 1;
         }
     }
+#endif
 
 #if APP_MSCBOT_CFG_WRITE_ALIGN != 0
     VSF_ASSERT(!(offset & (APP_MSCBOT_CFG_WRITE_ALIGN - 1)));
