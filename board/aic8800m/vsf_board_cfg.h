@@ -41,6 +41,9 @@
 
 #define VSF_BOARD_ARCH_STR                              "CortexM4"
 
+// enable below for AIC8800MBWP
+#define VSF_BOARD_CFG_HEAP_IN_PSRAM                     DISABLED
+
 /*----------------------------------------------------------------------------*
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/
@@ -107,9 +110,14 @@
 #   define VSF_USE_HEAP                                 ENABLED
 #endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
-#   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   4
-#   define VSF_HEAP_ADDR                                0x00100000
-#   define VSF_HEAP_SIZE                                0x60000
+#   if VSF_BOARD_CFG_HEAP_IN_PSRAM == ENABLED
+#       define VSF_HEAP_CFG_MCB_ALIGN_BIT               8
+#       define VSF_HEAP_SIZE                            0x8000
+#   else
+#       define VSF_HEAP_CFG_MCB_ALIGN_BIT               4
+#       define VSF_HEAP_ADDR                            0x00100000
+#       define VSF_HEAP_SIZE                            0x60000
+#   endif
 
 #define VSF_USBH_USE_HCD_DWCOTG                         ENABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
@@ -150,7 +158,7 @@
 #define __APP_FLASH_SIZE                                (2048 * 1024)
 //#define __APP_BOOTLOADER_SIZE                           (32 * 1024)
 #define __APP_BOOTLOADER_SIZE                           (0 * 1024)
-#define __APP_ROMFS_SIZE                                (1024 * 1024)
+#define __APP_ROMFS_SIZE                                (768 * 1024)
 #define __APP_ROOT_SIZE                                 (64 * 1024)
 #define __APP_WIFI_CFG_SIZE                             (4 * 1024)
 #define __APP_APP_SIZE                                  (__APP_FLASH_SIZE - __APP_BOOTLOADER_SIZE - __APP_ROMFS_SIZE - __APP_ROOT_SIZE - __APP_WIFI_CFG_SIZE)

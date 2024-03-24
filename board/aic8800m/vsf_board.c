@@ -35,6 +35,10 @@
 #   include "rtos_al.h"
 #endif
 #include "reg_sysctrl.h"
+#if VSF_BOARD_CFG_HEAP_IN_PSRAM == ENABLED
+#   include "psram_api.h"
+#endif
+#include "dbg.h"
 
 #if PLF_WIFI_STACK && VSF_USE_LWIP == ENABLED
 #include "net_al.h"
@@ -374,6 +378,18 @@ void vsf_board_init(void)
     // do not change order below
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
+
+#if VSF_BOARD_CFG_HEAP_IN_PSRAM == ENABLED
+    psram_init(0);
+    uint32_t ram_size = psram_size_get();
+    if (ram_size > 0) {
+        dbg("    psram: %dM bytes\r\n", ram_size / (1024 * 1024));
+    }
+    vsf_heap_add_memory((vsf_mem_t){
+        .buffer     = (void *)0x06000000,
+        .size       = 4 * 1024 * 1024,
+    });
+#endif
 
 #if VSF_USE_USB_HOST == ENABLED
     __usbh_heap_init();
