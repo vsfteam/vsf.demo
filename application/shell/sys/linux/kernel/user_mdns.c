@@ -217,11 +217,11 @@ void app_mdns_start(uint8_t *mac)
     struct netif *netif = app_wifi_get_netif();
     // vsf.XXXXXXXXXXXX
     char hostname[3 + 1 + 12 + 1];
-    sprintf(hostname, "vsf.%02X%02X%02X%02X%02X%02X",
+    sprintf(hostname, "vsf_%02X%02X%02X%02X%02X%02X",
             mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     LOCK_TCPIP_CORE();
         mdns_resp_init();
-        mdns_resp_add_netif(netif, hostname, 60 * 10);
+        mdns_resp_add_netif(netif, hostname);
     UNLOCK_TCPIP_CORE();
 #endif
 }
