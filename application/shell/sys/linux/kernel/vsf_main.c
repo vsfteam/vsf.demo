@@ -915,10 +915,14 @@ int vsf_linux_create_fhs(void)
     vsf_linux_vfs_init();
 
     // 1. hardware driver
+    vsf_linux_fs_bind_gpio_hw("/sys/class/gpio");
 #if VSF_HAL_USE_FLASH == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
     vsf_hw_flash_init(flash_mal.flash, NULL);
     vsf_flash_enable(flash_mal.flash);
     vk_mal_init(&flash_mal.use_as__vk_mal_t);
+#endif
+#if VSF_HAL_USE_I2C == ENABLED
+    vsf_linux_fs_bind_i2c("/dev/i2c-0", vsf_board.i2c);
 #endif
 
     vsf_linux_create_pty(1);
