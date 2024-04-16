@@ -184,7 +184,7 @@ static bool __usr_linux_boot = false;
 #if VSF_HAL_USE_FLASH == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
 vk_hw_flash_mal_t flash_mal = {
     .drv                    = &vk_hw_flash_mal_drv,
-    .flash                  = &APP_MSCBOOT_CFG_FLASH,
+    .flash                  = (vsf_flash_t *)&APP_MSCBOOT_CFG_FLASH,
 };
 #   if defined(APP_MSCBOOT_CFG_ROOT_SIZE) && (APP_MSCBOOT_CFG_ROOT_SIZE > 0) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
 vk_mim_mal_t root_mal = {
