@@ -915,7 +915,9 @@ int vsf_linux_create_fhs(void)
     vsf_linux_vfs_init();
 
     // 1. hardware driver
+#if VSF_HAL_USE_GPIO == ENABLED && VSF_HW_GPIO_COUNT > 0
     vsf_linux_fs_bind_gpio_hw("/sys/class/gpio");
+#endif
 #if VSF_HAL_USE_FLASH == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
     vsf_hw_flash_init(flash_mal.flash, NULL);
     vsf_flash_enable(flash_mal.flash);
