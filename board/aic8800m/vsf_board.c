@@ -387,7 +387,7 @@ void vsf_board_init(void)
     }
     vsf_heap_add_memory((vsf_mem_t){
         .buffer     = (void *)0x06000000,
-        .size       = 4 * 1024 * 1024,
+        .size       = ram_size,
     });
 #endif
 
