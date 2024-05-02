@@ -46,6 +46,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #else
 #   define VSF_OS_CFG_EDA_FRAME_POOL_EXTRA_SIZE         (16 * 4)
 #endif
+#define VSF_OS_CFG_MAIN_MODE                            VSF_OS_CFG_MAIN_MODE_IDLE
 
 // components
 
