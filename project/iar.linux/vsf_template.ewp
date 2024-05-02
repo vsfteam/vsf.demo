@@ -224,6 +224,7 @@
                     <state>__AIC__</state>
                     <state>__AIC8800__</state>
                     <state>__unix__</state>
+                    <state>WEBTERMINAL_CFG_EMBED_XTERMJS=DISABLED</state>
                     <state>LFS_CONFIG=lfs_util_vsf.h</state>
                     <state>CFG_AIC8800</state>
                     <state>CFG_HW_PLATFORM=2</state>
