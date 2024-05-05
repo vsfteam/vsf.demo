@@ -29,7 +29,6 @@
 
 #define VSF_OS_CFG_MAIN_MODE                            VSF_OS_CFG_MAIN_MODE_THREAD
 
-#define VSF_USE_FIFO                                    ENABLED
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
 #define VSF_USE_TRACE                                   ENABLED
 

@@ -9,9 +9,6 @@
 #   error Please enable VSF_KERNEL_USE_SIMPLE_SHELL in thread mode
 #endif
 
-#ifndef SGL_INPUT_QUEUE_LEN
-#   define SGL_INPUT_QUEUE_LEN                      128
-#endif
 #ifndef SGL_CONFIG_FRAME_BUFFER_XRES
 #   error Please define SGL_CONFIG_FRAME_BUFFER_XRES
 #endif
@@ -38,18 +35,11 @@ static sgl_device_stdout_t __sgl_stdout_dev = {
 #   if VSF_INPUT_CFG_REGISTRATION_MECHANISM != ENABLED
 #       error Please enable VSF_INPUT_CFG_REGISTRATION_MECHANISM
 #   endif
-#   if VSF_USE_FIFO != ENABLED
-#       error Please enable VSF_USE_FIFO
-#   endif
 
 typedef struct __vsf_input_record_t {
     vk_input_type_t type;
-    vk_input_evt_t evt;
+    vk_input_evt_t *evt;
 } __vsf_input_record_t;
-
-dcl_vsf_fifo(__vsf_input_record_t)
-def_vsf_fifo(__vsf_input_queue, __vsf_input_record_t, SGL_INPUT_QUEUE_LEN)
-static VSF_CAL_NO_INIT vsf_fifo(__vsf_input_queue) __vsf_input_queue;
 
 extern sgl_event_pos_t sgl_input_get(void *data);
 static sgl_device_input_t __sgl_input = {
@@ -127,50 +117,42 @@ void __vsf_input_on_evt(vk_input_notifier_t *notifier, vk_input_type_t type, vk_
 {
     __vsf_input_record_t record = {
         .type       = type,
-        .evt        = *evt,
+        .evt        = evt,
     };
-    bool ret = vsf_fifo_push((vsf_fifo_t *)&__vsf_input_queue, (uintptr_t)&record, sizeof(__vsf_input_record_t));
-    VSF_UNUSED_PARAM(ret);
-    // if assert here, please increase SGL_INPUT_QUEUE_LEN
-    VSF_ASSERT(ret);
+    sgl_device_input_handle(&record);
 }
 
 sgl_event_pos_t sgl_input_get(void *data)
 {
-    __vsf_input_record_t record;
+    __vsf_input_record_t *record = data;
     sgl_event_pos_t sdl_evt = {
         .type       = SGL_EVENT_NULL,
     };
 
-    while (vsf_fifo_pop((vsf_fifo_t *)&__vsf_input_queue, (uintptr_t)&record, sizeof(__vsf_input_record_t))) {
-        switch (record.type) {
-        case VSF_INPUT_TYPE_MOUSE:
-            if (vsf_input_mouse_evt_button_get(&record.evt) == VSF_INPUT_MOUSE_BUTTON_LEFT) {
-                sdl_evt.type = vsf_input_mouse_evt_button_is_down(&record.evt) ? SGL_EVENT_PRESSED : SGL_EVENT_RELEASED;
-                sdl_evt.x = vsf_input_mouse_evt_get_x(&record.evt);
-                sdl_evt.y = vsf_input_mouse_evt_get_y(&record.evt);
-            }
-            break;
-        case VSF_INPUT_TYPE_TOUCHSCREEN:
-            if (vsf_input_touchscreen_get_id(&record.evt) == 0) {
-                sdl_evt.type = vsf_input_touchscreen_is_down(&record.evt) ? SGL_EVENT_PRESSED : SGL_EVENT_RELEASED;
-                sdl_evt.x = vsf_input_touchscreen_get_x(&record.evt);
-                sdl_evt.y = vsf_input_touchscreen_get_y(&record.evt);
-            }
-            break;
-        case VSF_INPUT_TYPE_KEYBOARD:
-            // TODO: process keyboard event if sgl supports keyboard
-            break;
+    switch (record->type) {
+    case VSF_INPUT_TYPE_MOUSE:
+        if (vsf_input_mouse_evt_button_get(record->evt) == VSF_INPUT_MOUSE_BUTTON_LEFT) {
+            sdl_evt.type = vsf_input_mouse_evt_button_is_down(record->evt) ? SGL_EVENT_PRESSED : SGL_EVENT_RELEASED;
+            sdl_evt.x = vsf_input_mouse_evt_get_x(record->evt);
+            sdl_evt.y = vsf_input_mouse_evt_get_y(record->evt);
         }
-        if (sdl_evt.type != SGL_EVENT_NULL) {
-            break;
+        break;
+    case VSF_INPUT_TYPE_TOUCHSCREEN:
+        if (vsf_input_touchscreen_get_id(record->evt) == 0) {
+            sdl_evt.type = vsf_input_touchscreen_is_down(record->evt) ? SGL_EVENT_PRESSED : SGL_EVENT_RELEASED;
+            sdl_evt.x = vsf_input_touchscreen_get_x(record->evt);
+            sdl_evt.y = vsf_input_touchscreen_get_y(record->evt);
         }
+        break;
+    case VSF_INPUT_TYPE_KEYBOARD:
+        // TODO: process keyboard event if sgl supports keyboard
+        break;
     }
     return sdl_evt;
 }
 #endif
 
-vsf_err_t sgl_bind_vsf(vk_disp_t *disp)
+vsf_err_t sgl_platform_bind_vsf(vk_disp_t *disp)
 {
     VSF_ASSERT(disp != NULL);
     // if assert below, change SGL_CONFIG_PANEL_PIXEL_DEPTH to fit the pixel bitsize of the vsf_board.display_dev
@@ -210,7 +192,6 @@ vsf_err_t sgl_bind_vsf(vk_disp_t *disp)
     __sgl_panel.yres = disp->param.height;
 
 #if VSF_USE_INPUT == ENABLED
-    vsf_fifo_init((vsf_fifo_t *)&__vsf_input_queue, SGL_INPUT_QUEUE_LEN);
     vk_input_notifier_register(&__vsf_input_notifier);
     if (sgl_device_register(&__sgl_panel, &__sgl_input) != 0) {
         vsf_trace_error("fail to register sgl_panel" VSF_TRACE_CFG_LINEEND);
