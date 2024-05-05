@@ -10,13 +10,19 @@
 #endif
 
 #ifndef SGL_INPUT_QUEUE_LEN
-#   define SGL_INPUT_QUEUE_LEN                      8
+#   define SGL_INPUT_QUEUE_LEN                      128
+#endif
+#ifndef SGL_CONFIG_FRAME_BUFFER_XRES
+#   error Please define SGL_CONFIG_FRAME_BUFFER_XRES
 #endif
 
 static bool __sgl_disp_ready = false;
 extern void sgl_disp_area(int16_t x1, int16_t y1, int16_t x2, int16_t y2, const sgl_color_t *src);
 static void __sgl_disp_on_ready(vk_disp_t *disp);
+static sgl_color_t __sgl_framebuffer[SGL_CONFIG_FRAME_BUFFER_XRES * 20];
 static sgl_device_panel_t __sgl_panel = {
+    .framebuffer    = __sgl_framebuffer,
+    .buffer_size    = sizeof(__sgl_framebuffer),
     .flush_area     = sgl_disp_area,
 };
 static vk_disp_t *__sgl_disp = NULL;
@@ -73,6 +79,9 @@ void sgl_disp_area(int16_t x1, int16_t y1, int16_t x2, int16_t y2, const sgl_col
 {
     vk_disp_t *disp = __sgl_disp;
     VSF_ASSERT(disp != NULL);
+    VSF_ASSERT( (src != NULL) && (x2 >= x1) && (y2 >= y1)
+            &&  (x1 < disp->param.width) && (x2 < disp->param.width)
+            &&  (y1 < disp->param.height) && (y2 < disp->param.height));
 
 #if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
     vsf_eda_t *eda = vsf_eda_get_cur();
@@ -91,8 +100,8 @@ void sgl_disp_area(int16_t x1, int16_t y1, int16_t x2, int16_t y2, const sgl_col
     vk_disp_refresh(disp, &(vk_disp_area_t){
         .pos.x      = x1,
         .pos.y      = y1,
-        .size.x     = x2 - x1,
-        .size.y     = y2 - y1,
+        .size.x     = x2 - x1 + 1,
+        .size.y     = y2 - y1 + 1,
     }, (void *)src);
 
 #if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
@@ -161,12 +170,14 @@ sgl_event_pos_t sgl_input_get(void *data)
 }
 #endif
 
-
-
-void vsf_disp_bind_sgl(vk_disp_t *disp)
+vsf_err_t sgl_bind_vsf(vk_disp_t *disp)
 {
     VSF_ASSERT(disp != NULL);
+    // if assert below, change SGL_CONFIG_PANEL_PIXEL_DEPTH to fit the pixel bitsize of the vsf_board.display_dev
     VSF_ASSERT(vsf_disp_get_pixel_bitsize(disp) == SGL_CONFIG_PANEL_PIXEL_DEPTH);
+    // if assert below, change SGL_CONFIG_FRAME_BUFFER_XRES to fit the width of the vsf_board.display_dev
+    VSF_ASSERT(vsf_disp_get_width(disp) == SGL_CONFIG_FRAME_BUFFER_XRES);
+    // if assert below, sgl_bind_vsf is called more than once, which should not happen
     VSF_ASSERT(NULL == __sgl_disp);
 
 #if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
@@ -201,12 +212,19 @@ void vsf_disp_bind_sgl(vk_disp_t *disp)
 #if VSF_USE_INPUT == ENABLED
     vsf_fifo_init((vsf_fifo_t *)&__vsf_input_queue, SGL_INPUT_QUEUE_LEN);
     vk_input_notifier_register(&__vsf_input_notifier);
-    sgl_device_register(&__sgl_panel, &__sgl_input);
+    if (sgl_device_register(&__sgl_panel, &__sgl_input) != 0) {
+        vsf_trace_error("fail to register sgl_panel" VSF_TRACE_CFG_LINEEND);
+        return VSF_ERR_FAIL;
+    }
 #else
-    sgl_device_register(&__sgl_panel, NULL);
+    if (sgl_device_register(&__sgl_panel, NULL) != 0) {
+        vsf_trace_error("fail to register sgl_panel" VSF_TRACE_CFG_LINEEND);
+        return VSF_ERR_FAIL;
+    }
 #endif
 
 #if VSF_USE_TRACE == ENABLED
     sgl_device_stdout_register(&__sgl_stdout_dev);
 #endif
+    return VSF_ERR_NONE;
 }

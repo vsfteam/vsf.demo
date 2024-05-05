@@ -12,7 +12,8 @@
 #define SGL_CONFIG_FONT_PIXEL_BIT       4
 
 //显示屏面板的像素深度，默认为32bit
-#define SGL_CONFIG_PANEL_PIXEL_DEPTH    32
+#define SGL_CONFIG_PANEL_PIXEL_DEPTH    16
+#define SGL_CONFIG_FRAME_BUFFER_XRES    480
 
 //RGB颜色交换
 #define SGL_CONFIG_COLOR16_SWAP         0

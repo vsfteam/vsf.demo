@@ -15,6 +15,40 @@
  *                                                                           *
  ****************************************************************************/
 
+/*
+ * sgl demo
+ * based on raw VSF(without VSF.linux)
+ *
+ * Dependency:
+ *
+ * Submodule:
+ *   vsf
+ *     source/component/3rd-party/PLOOC/raw
+ *   application/component/ui/sgl/raw
+ *
+ * Board:
+ *   vsf_board.display_dev
+ *
+ * Include Directories necessary for sgl:
+ *   application/component/ui/sgl/application
+ *   application/component/ui/sgl/application/test
+ *   application/component/ui/sgl/platform/vsf
+ *   application/component/ui/sgl/raw/source
+ *
+ * Pre-defined:
+ *
+ * Sources necessary for sgl:
+ *   application/component/ui/sgl/application/main.c
+ *   application/component/ui/sgl/application/test/sgl_application_test.c
+ *   application/component/ui/sgl/platform/vsf/sgl_platform_vsf.c
+ *   application/component/ui/sgl/raw/source/*.c
+ *
+ * Linker:
+ *
+ * Compiler:
+ *
+ */
+
 /*============================ INCLUDES ======================================*/
 
 #define __VSF_DISP_CLASS_INHERIT__
@@ -22,6 +56,7 @@
 #include <vsf_board.h>
 
 #include <sgl.h>
+#include <sgl_platform.h>
 
 /*============================ MACROS ========================================*/
 
@@ -34,19 +69,29 @@
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-
-extern void vsf_disp_bind_sgl(vk_disp_t *disp);
-extern void sgl_application_init(void);
-
 /*============================ IMPLEMENTATION ================================*/
+
+VSF_CAL_WEAK(demo_setup)
+void demo_setup(void *data)
+{
+    SGL_LOG_INFO("empty demo, please implement strong version of demo_setup");
+}
 
 int VSF_USER_ENTRY(void)
 {
     vsf_board_init();
     vsf_start_trace();
 
-    vsf_disp_bind_sgl(vsf_board.display_dev);
-    sgl_application_init();
+    if (sgl_bind_vsf(vsf_board.display_dev) != VSF_ERR_NONE) {
+        vsf_trace_error("fail to bind vsf to sgl" VSF_TRACE_CFG_LINEEND);
+        return -1;
+    }
+
+    sgl_init();
+    sgl_obj_t *main_page = sgl_page_create();
+    sgl_page_set_active(main_page);
+
+    demo_setup(main_page);
 
     while (1) {
         sgl_tick_inc(5);
