@@ -47,6 +47,7 @@ int VSF_USER_ENTRY(void)
 
     vsf_disp_bind_sgl(vsf_board.display_dev);
     sgl_application_init();
+
     while (1) {
         sgl_tick_inc(5);
         sgl_task_handler();
