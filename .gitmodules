@@ -13,3 +13,6 @@
 [submodule "application/shell/sys/linux/applets/openocd/raw"]
 	path = application/shell/sys/linux/applets/openocd/raw
 	url = ../../openocd-org/openocd
+[submodule "application/component/ui/sgl/raw"]
+	path = application/component/ui/sgl/raw
+	url = https://gitee.com/li-shan-asked/sgl
