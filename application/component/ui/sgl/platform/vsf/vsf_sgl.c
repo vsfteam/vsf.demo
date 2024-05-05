@@ -9,7 +9,9 @@
 #   error Please enable VSF_KERNEL_USE_SIMPLE_SHELL in thread mode
 #endif
 
-#define SGL_INPUT_QUEUE_LEN                     8
+#ifndef SGL_INPUT_QUEUE_LEN
+#   define SGL_INPUT_QUEUE_LEN                      8
+#endif
 
 static bool __sgl_disp_ready = false;
 extern void sgl_disp_area(int16_t x1, int16_t y1, int16_t x2, int16_t y2, const sgl_color_t *src);
@@ -147,7 +149,10 @@ void __vsf_input_on_evt(vk_input_notifier_t *notifier, vk_input_type_t type, vk_
         .type       = type,
         .evt        = *evt,
     };
-    vsf_fifo_push((vsf_fifo_t *)&__vsf_input_queue, (uintptr_t)&record, sizeof(__vsf_input_record_t));
+    bool ret = vsf_fifo_push((vsf_fifo_t *)&__vsf_input_queue, (uintptr_t)&record, sizeof(__vsf_input_record_t));
+    VSF_UNUSED_PARAM(ret);
+    // if assert here, please increase SGL_INPUT_QUEUE_LEN
+    VSF_ASSERT(ret);
 }
 
 sgl_event_pos_t sgl_input_get(void *data)
