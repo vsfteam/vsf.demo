@@ -21,6 +21,13 @@ static sgl_device_panel_t __sgl_panel = {
 };
 static vk_disp_t *__sgl_disp = NULL;
 
+#if VSF_USE_TRACE == ENABLED
+static int __sgl_stdout_put(char *str);
+static sgl_device_stdout_t __sgl_stdout_dev = {
+    .put = __sgl_stdout_put,
+};
+#endif
+
 #if VSF_USE_INPUT == ENABLED
 #   if VSF_INPUT_CFG_REGISTRATION_MECHANISM != ENABLED
 #       error Please enable VSF_INPUT_CFG_REGISTRATION_MECHANISM
@@ -48,50 +55,6 @@ vk_input_notifier_t __vsf_input_notifier = {
     .mask           = (1 << VSF_INPUT_TYPE_KEYBOARD) | (1 << VSF_INPUT_TYPE_MOUSE) | (1 << VSF_INPUT_TYPE_TOUCHSCREEN),
 };
 #endif
-
-void vsf_disp_bind_sgl(vk_disp_t *disp)
-{
-    VSF_ASSERT(disp != NULL);
-    VSF_ASSERT(vsf_disp_get_pixel_bitsize(disp) == SGL_CONFIG_PANEL_PIXEL_DEPTH);
-    VSF_ASSERT(NULL == __sgl_disp);
-
-#if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
-    vsf_eda_t *eda = vsf_eda_get_cur();
-    bool is_thread = NULL == eda ? false : vsf_eda_is_stack_owner(eda);
-
-    if (is_thread) {
-        disp->ui_data = eda;
-    } else
-#endif
-    {
-        __sgl_disp_ready = false;
-        disp->ui_data = NULL;
-    }
-
-    disp->ui_on_ready = __sgl_disp_on_ready;
-    vk_disp_init(disp);
-
-#if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
-    if (is_thread) {
-        vsf_thread_wfe(VSF_EVT_USER);
-    } else
-#endif
-    {
-        while (!__sgl_disp_ready);
-    }
-    __sgl_disp = disp;
-
-    __sgl_panel.xres = disp->param.width;
-    __sgl_panel.yres = disp->param.height;
-
-#if VSF_USE_INPUT == ENABLED
-    vsf_fifo_init((vsf_fifo_t *)&__vsf_input_queue, SGL_INPUT_QUEUE_LEN);
-    vk_input_notifier_register(&__vsf_input_notifier);
-    sgl_device_register(&__sgl_panel, &__sgl_input);
-#else
-    sgl_device_register(&__sgl_panel, NULL);
-#endif
-}
 
 static void __sgl_disp_on_ready(vk_disp_t *disp)
 {
@@ -142,6 +105,14 @@ void sgl_disp_area(int16_t x1, int16_t y1, int16_t x2, int16_t y2, const sgl_col
     }
 }
 
+#if VSF_USE_TRACE == ENABLED
+static int __sgl_stdout_put(char *str)
+{
+    vsf_trace_debug("%s\n", str);
+    return strlen(str) + 1;
+}
+#endif
+
 #if VSF_USE_INPUT == ENABLED
 void __vsf_input_on_evt(vk_input_notifier_t *notifier, vk_input_type_t type, vk_input_evt_t *evt)
 {
@@ -189,3 +160,53 @@ sgl_event_pos_t sgl_input_get(void *data)
     return sdl_evt;
 }
 #endif
+
+
+
+void vsf_disp_bind_sgl(vk_disp_t *disp)
+{
+    VSF_ASSERT(disp != NULL);
+    VSF_ASSERT(vsf_disp_get_pixel_bitsize(disp) == SGL_CONFIG_PANEL_PIXEL_DEPTH);
+    VSF_ASSERT(NULL == __sgl_disp);
+
+#if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
+    vsf_eda_t *eda = vsf_eda_get_cur();
+    bool is_thread = NULL == eda ? false : vsf_eda_is_stack_owner(eda);
+
+    if (is_thread) {
+        disp->ui_data = eda;
+    } else
+#endif
+    {
+        __sgl_disp_ready = false;
+        disp->ui_data = NULL;
+    }
+
+    disp->ui_on_ready = __sgl_disp_on_ready;
+    vk_disp_init(disp);
+
+#if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
+    if (is_thread) {
+        vsf_thread_wfe(VSF_EVT_USER);
+    } else
+#endif
+    {
+        while (!__sgl_disp_ready);
+    }
+    __sgl_disp = disp;
+
+    __sgl_panel.xres = disp->param.width;
+    __sgl_panel.yres = disp->param.height;
+
+#if VSF_USE_INPUT == ENABLED
+    vsf_fifo_init((vsf_fifo_t *)&__vsf_input_queue, SGL_INPUT_QUEUE_LEN);
+    vk_input_notifier_register(&__vsf_input_notifier);
+    sgl_device_register(&__sgl_panel, &__sgl_input);
+#else
+    sgl_device_register(&__sgl_panel, NULL);
+#endif
+
+#if VSF_USE_TRACE == ENABLED
+    sgl_device_stdout_register(&__sgl_stdout_dev);
+#endif
+}
