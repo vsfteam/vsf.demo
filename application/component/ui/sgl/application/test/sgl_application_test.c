@@ -1,23 +1,28 @@
 #include <sgl.h>
 
+
+sgl_style_t btn_style = {.body_color = SGL_BLUE, .text_color = SGL_RED, .radius = 16};
+
 static void btn_event(sgl_obj_t *obj, void *data)
 {
     if(sgl_ev_stat(obj) == SGL_EVENT_PRESSED) {
-        SGL_LOG_INFO("buttton pressed\n");
+        SGL_LOG_INFO("buttton pressed");
     }
     else if(sgl_ev_stat(obj) == SGL_EVENT_RELEASED) {
-        SGL_LOG_INFO("buttton released\n");
+        SGL_LOG_INFO("buttton released");
     };
 }
 
-void demo_setup(void *data)
+void demo_setup(void)
 {
-    sgl_obj_t *main_page = (sgl_obj_t*)data;
+    sgl_obj_t *main_page = sgl_page_create();
+
+    sgl_page_set_active(main_page);
+
     SGL_LOG_INFO("button demo");
     //定义一个样式，主体颜色为SGL_BLUE，文本颜色为SGL_RED，圆角半径为16
-    sgl_style_t btn_style = {.body_color = SGL_BLUE, .text_color = SGL_RED, .radius = 16};
     //创建一个按钮对象
-    sgl_obj_t* btn = sgl_button_create(main_page);
+    sgl_obj_t *btn = sgl_button_create(main_page);
     //设置按钮的尺寸为宽98和高32
     sgl_obj_set_size(btn, 98, 32);
     //设置按钮的位置为x坐标100, y坐标50

@@ -72,7 +72,7 @@
 /*============================ IMPLEMENTATION ================================*/
 
 VSF_CAL_WEAK(demo_setup)
-void demo_setup(void *data)
+void demo_setup(void)
 {
     SGL_LOG_INFO("empty demo, please implement strong version of demo_setup");
 }
@@ -88,10 +88,7 @@ int VSF_USER_ENTRY(void)
     }
 
     sgl_init();
-    sgl_obj_t *main_page = sgl_page_create();
-    sgl_page_set_active(main_page);
-
-    demo_setup(main_page);
+    demo_setup();
 
     while (1) {
         sgl_tick_inc(5);
