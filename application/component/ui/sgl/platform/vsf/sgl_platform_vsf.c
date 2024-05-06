@@ -131,10 +131,18 @@ sgl_event_pos_t sgl_input_get(void *data)
 
     switch (record->type) {
     case VSF_INPUT_TYPE_MOUSE:
-        if (vsf_input_mouse_evt_button_get(record->evt) == VSF_INPUT_MOUSE_BUTTON_LEFT) {
-            sdl_evt.type = vsf_input_mouse_evt_button_is_down(record->evt) ? SGL_EVENT_PRESSED : SGL_EVENT_RELEASED;
-            sdl_evt.x = vsf_input_mouse_evt_get_x(record->evt);
-            sdl_evt.y = vsf_input_mouse_evt_get_y(record->evt);
+        switch (vsf_input_mouse_evt_get(record->evt)) {
+        case VSF_INPUT_MOUSE_EVT_BUTTON:
+            if (vsf_input_mouse_evt_button_get(record->evt) == VSF_INPUT_MOUSE_BUTTON_LEFT) {
+                sdl_evt.type = vsf_input_mouse_evt_button_is_down(record->evt) ? SGL_EVENT_PRESSED : SGL_EVENT_RELEASED;
+                sdl_evt.x = vsf_input_mouse_evt_get_x(record->evt);
+                sdl_evt.y = vsf_input_mouse_evt_get_y(record->evt);
+            }
+            break;
+        case VSF_INPUT_MOUSE_EVT_MOVE:
+            break;
+        case VSF_INPUT_MOUSE_EVT_WHEEL:
+            break;
         }
         break;
     case VSF_INPUT_TYPE_TOUCHSCREEN:
