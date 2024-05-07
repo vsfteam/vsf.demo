@@ -28,6 +28,8 @@
  *     source/component/3rd-party/PLOOC/raw
  *     source/component/3rd-party/qrcode/raw if VSF_USE_UI is enabled
  *   optional:
+ *    if VSF_USE_UI is enabled, sgl is used
+ *     application/component/ui/sgl/raw if VSF_USE_UI is enabled
  *    for root directory in embedded hardware, littlefs is used
  *     source/component/3rd-party/littlefs/raw
  *    for AIC8800M(not for AIC8800M40B/AIC8800M80)
@@ -40,6 +42,9 @@
  *   vsf/source/shell/sys/linux/include/simple_libc if VSF_LINUX_USE_SIMPLE_LIBC is enabled
  *   vsf/source/shell/sys/linux/include/libusb if VSF_USBH_USE_LIBUSB is enabled
  *   optional:
+ *    if VSF_USE_UI is enabled, sgl is used
+ *     application/component/ui/sgl/platform/vsf
+ *     application/component/ui/sgl/raw/source
  *    for root directory in embedded hardware, littlefs is used
  *     vsf/source/component/3rd-party/littlefs/port
  *     vsf/source/component/3rd-party/littlefs/raw
@@ -54,8 +59,11 @@
  *   vsf/source/shell/sys/linux/lib/3rd-party/fnmatch
  *   vsf/source/shell/sys/linux/lib/3rd-party/glob
  *   vsf/source/shell/sys/linux/lib/3rd-party/regex excluding engine.c
- *   ./hwtest_main.c
+ *   ./*.c
  *   optional:
+ *    if VSF_USE_UI is enabled, sgl is used
+ *     application/component/ui/sgl/platform/vsf/*
+ *     application/component/ui/sgl/raw/*
  *    for root directory in embedded hardware, littlefs is used
  *     vsf/source/component/3rd-party/littlefs/port/*
  *     vsf/source/component/3rd-party/littlefs/raw/*
@@ -940,7 +948,9 @@ int vsf_linux_create_fhs(void)
         vsf_thread_wfe(VSF_EVT_USER);
 
         extern int display_qrcode_main(int argc, char **argv);
+        extern int ui_main(int argc, char **argv);
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/qrcode", display_qrcode_main);
+        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/ui", ui_main);
 #   if VSF_LINUX_USE_DEVFS == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fill_screen", __fill_screen_main);
 #   endif
