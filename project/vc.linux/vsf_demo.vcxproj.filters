@@ -820,6 +820,36 @@
     <Filter Include="vsf\component\3rd-party\qrcode\raw\src">
       <UniqueIdentifier>{ffa443be-b60a-4d69-8fc8-d4564de2bb5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="application\sgl">
+      <UniqueIdentifier>{33e8f0f3-2391-4698-a7e6-0003871bd283}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sgl\platform">
+      <UniqueIdentifier>{6f6eb5ea-24b9-4a32-9a69-b81376c18ce2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sgl\platform\vsf">
+      <UniqueIdentifier>{d7824b4c-d161-4462-8dae-e19f007a1765}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sgl\platform\raw">
+      <UniqueIdentifier>{63a28fc6-b63d-438e-b8dc-6845dd4143f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sgl\platform\raw\source">
+      <UniqueIdentifier>{22234301-0493-42ca-8723-4572042f0c39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sgl\platform\raw\source\core">
+      <UniqueIdentifier>{5c19da48-883f-47a5-a9ca-8fc2ed09ea63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sgl\platform\raw\source\draw">
+      <UniqueIdentifier>{11139c4b-c606-4be5-a17d-22dbdc49ecd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sgl\platform\raw\source\fonts">
+      <UniqueIdentifier>{ef990f23-08ee-4e71-8329-950c0cf37b4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sgl\platform\raw\source\libs">
+      <UniqueIdentifier>{a51bcb48-34af-4e98-acc3-012a3d5dc77c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sgl\platform\raw\source\widget">
+      <UniqueIdentifier>{4bf48935-8a9a-460a-a89f-3a7f38e4da42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2133,6 +2163,123 @@
     <ClInclude Include="..\..\vsf\source\component\3rd-party\qrcode\raw\src\qrcode.h">
       <Filter>vsf\component\3rd-party\qrcode\raw\src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\platform\vsf\sgl_platform.h">
+      <Filter>application\sgl\platform\vsf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_anim.h">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_core.h">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_device.h">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_event.h">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_list.h">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_log.h">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_obj.h">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_page.h">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_task.h">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw.h">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_arc.h">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_circle.h">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_font.h">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_icon.h">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_line.h">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_misc.h">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_pie.h">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_rect.h">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_font.h">
+      <Filter>application\sgl\platform\raw\source\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_math.h">
+      <Filter>application\sgl\platform\raw\source\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_mem.h">
+      <Filter>application\sgl\platform\raw\source\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_string.h">
+      <Filter>application\sgl\platform\raw\source\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_types.h">
+      <Filter>application\sgl\platform\raw\source\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_arcbar.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_box.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_button.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_checkbox.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_combox.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_keypad.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_label.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_listview.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_number.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_object.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_pgsbar.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_radiobtn.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_switch.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_textedit.h">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\sgl.h">
+      <Filter>application\sgl\platform\raw\source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3210,6 +3357,135 @@
       <Filter>vsf\component\3rd-party\qrcode\raw\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_mdns.c">
+      <Filter>application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\platform\vsf\sgl_platform_vsf.c">
+      <Filter>application\sgl\platform\vsf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_anim.c">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_device.c">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_event.c">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_log.c">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_obj.c">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_page.c">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_task.c">
+      <Filter>application\sgl\platform\raw\source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw.c">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_arc.c">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_circle.c">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_font.c">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_icon.c">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_line.c">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_misc.c">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_pie.c">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_rect.c">
+      <Filter>application\sgl\platform\raw\source\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_consolas12.c">
+      <Filter>application\sgl\platform\raw\source\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_consolas15.c">
+      <Filter>application\sgl\platform\raw\source\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_song10.c">
+      <Filter>application\sgl\platform\raw\source\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_song12.c">
+      <Filter>application\sgl\platform\raw\source\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_song23.c">
+      <Filter>application\sgl\platform\raw\source\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_awesome23.c">
+      <Filter>application\sgl\platform\raw\source\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_cascadia_mono17.c">
+      <Filter>application\sgl\platform\raw\source\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_math.c">
+      <Filter>application\sgl\platform\raw\source\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_mem.c">
+      <Filter>application\sgl\platform\raw\source\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_sprintf.c">
+      <Filter>application\sgl\platform\raw\source\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_string.c">
+      <Filter>application\sgl\platform\raw\source\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_arcbar.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_box.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_button.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_checkbox.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_combox.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_keypad.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_label.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_listview.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_number.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_object.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_pgsbar.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_radiobtn.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_switch.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_textedit.c">
+      <Filter>application\sgl\platform\raw\source\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_ui.c">
       <Filter>application</Filter>
     </ClCompile>
   </ItemGroup>

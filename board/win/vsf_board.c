@@ -99,10 +99,10 @@ vsf_board_t vsf_board = {
     .display_dev                = &vsf_board.disp_wingdi.use_as__vk_disp_t,
     .disp_wingdi                = {
         .param                  = {
-            .height             = APP_DISP_WINGDI_HEIGHT,
-            .width              = APP_DISP_WINGDI_WIDTH,
+            .height             = VSF_BOARD_DISP_HEIGHT,
+            .width              = VSF_BOARD_DISP_WIDTH,
             .drv                = &vk_disp_drv_wingdi,
-            .color              = APP_DISP_WINGDI_COLOR,
+            .color              = VSF_BOARD_DISP_COLOR,
         },
     },
 #endif
