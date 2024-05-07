@@ -82,7 +82,7 @@ int VSF_USER_ENTRY(void)
     vsf_board_init();
     vsf_start_trace();
 
-    if (sgl_platform_bind_vsf(vsf_board.display_dev) != VSF_ERR_NONE) {
+    if (sgl_platform_bind_vsf(vsf_board.display_dev, false) != VSF_ERR_NONE) {
         vsf_trace_error("fail to bind vsf to sgl" VSF_TRACE_CFG_LINEEND);
         return -1;
     }

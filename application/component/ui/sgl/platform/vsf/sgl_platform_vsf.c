@@ -160,7 +160,7 @@ sgl_event_pos_t sgl_input_get(void *data)
 }
 #endif
 
-vsf_err_t sgl_platform_bind_vsf(vk_disp_t *disp)
+vsf_err_t sgl_platform_bind_vsf(vk_disp_t *disp, bool is_disp_inited)
 {
     VSF_ASSERT(disp != NULL);
     // if assert below, change SGL_CONFIG_PANEL_PIXEL_DEPTH to fit the pixel bitsize of the vsf_board.display_dev
@@ -170,29 +170,31 @@ vsf_err_t sgl_platform_bind_vsf(vk_disp_t *disp)
     // if assert below, sgl_bind_vsf is called more than once, which should not happen
     VSF_ASSERT(NULL == __sgl_disp);
 
+    if (!is_disp_inited) {
 #if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
-    vsf_eda_t *eda = vsf_eda_get_cur();
-    bool is_thread = NULL == eda ? false : vsf_eda_is_stack_owner(eda);
+        vsf_eda_t *eda = vsf_eda_get_cur();
+        bool is_thread = NULL == eda ? false : vsf_eda_is_stack_owner(eda);
 
-    if (is_thread) {
-        disp->ui_data = eda;
-    } else
+        if (is_thread) {
+            disp->ui_data = eda;
+        } else
 #endif
-    {
-        __sgl_disp_ready = false;
-        disp->ui_data = NULL;
-    }
+        {
+            __sgl_disp_ready = false;
+            disp->ui_data = NULL;
+        }
 
-    disp->ui_on_ready = __sgl_disp_on_ready;
-    vk_disp_init(disp);
+        disp->ui_on_ready = __sgl_disp_on_ready;
+        vk_disp_init(disp);
 
 #if VSF_KERNEL_CFG_SUPPORT_THREAD == ENABLED
-    if (is_thread) {
-        vsf_thread_wfe(VSF_EVT_USER);
-    } else
+        if (is_thread) {
+            vsf_thread_wfe(VSF_EVT_USER);
+        } else
 #endif
-    {
-        while (!__sgl_disp_ready);
+        {
+            while (!__sgl_disp_ready);
+        }
     }
     __sgl_disp = disp;
 
