@@ -260,6 +260,7 @@ static void __gamepad_io_on_polling_timer(vsf_callback_timer_t *timer)
 
 void gamepad_io_start(gamepad_io_ctx_t *ctx, gamepad_io_cfg_t *cfg)
 {
+    VSF_ASSERT((ctx != NULL) && (cfg != NULL) && (cfg->polling_ms > 0));
     ctx->is_to_poll = false;
     ctx->is_busy = false;
     ctx->polling_ms = cfg->polling_ms;

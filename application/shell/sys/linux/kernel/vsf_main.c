@@ -1106,6 +1106,7 @@ int VSF_USER_ENTRY(int argc, char *argv[])
     static gamepad_io_ctx_t __gamepad_io_ctx;
     gamepad_io_start(&__gamepad_io_ctx, &(gamepad_io_cfg_t){
         .on_changed     = __gamaped_io_on_changed,
+        .polling_ms     = 8,
     });
 #endif
 

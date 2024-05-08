@@ -101,6 +101,7 @@ static int __vpm_install_package(char *package)
         goto do_exit;
     }
 
+    uint32_t checksum = 0, totalsize = 0;
     printf("installing %s:", package);
     remain = http->content_length;
     if (!remain) {
@@ -110,6 +111,10 @@ static int __vpm_install_package(char *package)
         rsize = vsf_min(__VPM_BUF_SIZE, remain);
         rsize = vsf_http_client_read(http, buf, rsize);
         if (rsize > 0) {
+            totalsize += rsize;
+            for (int i = 0; i < rsize; i++) {
+                checksum += buf[i];
+            }
             if (0 == header.size) {
                 header = *(vk_romfs_header_t *)buf;
                 memset(buf, 0xFF, sizeof(header));
@@ -131,10 +136,10 @@ static int __vpm_install_package(char *package)
             vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header), (uint8_t *)&header);
         }
 
-        printf("success\n");
+        printf("\nsuccess with checksum %08X for %d bytes\n", checksum, totalsize);
         result = 0;
     } else {
-        printf("connection closed before all data received, remaining %d\n", remain);
+        printf("\nconnection closed before all data received, remaining %d\n", remain);
         result = -1;
     }
 
@@ -175,6 +180,7 @@ static int __vpm_install_local_package(char *path)
         goto do_exit_close_file;
     }
 
+    uint32_t checksum = 0, totalsize = 0;
     buffer = malloc(4096);
     if (NULL == buffer) {
         printf("failed to allocate buffer\n");
@@ -187,6 +193,10 @@ static int __vpm_install_local_package(char *path)
         goto do_exit_free_buffer;
     }
     remain -= cursize;
+    totalsize += cursize;
+    for (int i = 0; i < cursize; i++) {
+        checksum += buffer[i];
+    }
 
     image = (vk_romfs_header_t *)buffer;
     if (!vsf_romfs_is_image_valid(image)) {
@@ -234,6 +244,10 @@ static int __vpm_install_local_package(char *path)
             goto do_exit_mal_fini;
         }
         remain -= cursize;
+        totalsize += cursize;
+        for (int i = 0; i < cursize; i++) {
+            checksum += buffer[i];
+        }
 
         vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, cursize, buffer);
         flash_addr += cursize;
@@ -249,7 +263,7 @@ static int __vpm_install_local_package(char *path)
         vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header), (uint8_t *)&header);
     }
 
-    printf("success\n");
+    printf("\nsuccess with checksum %08X for %d bytes\n", checksum, totalsize);
     result = 0;
 
 do_exit_mal_fini:
