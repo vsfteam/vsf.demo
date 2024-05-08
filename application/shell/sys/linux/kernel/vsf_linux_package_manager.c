@@ -130,7 +130,7 @@ Uninstall and install %s again if fail to run\n", package);
             break;
         }
     }
-    if (!http->content_length || !remain) {
+    if (totalsize >= be32_to_cpu(header.size)) {
         if (header.size != 0) {
             vk_romfs_header_t header_zero = { 0 };
             flash_addr = (flash_addr + __vpm.fsinfo->alignment - 1) & ~(__vpm.fsinfo->alignment - 1);
