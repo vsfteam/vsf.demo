@@ -101,12 +101,15 @@ static int __vpm_install_package(char *package)
         goto do_exit;
     }
 
-    uint32_t checksum = 0, totalsize = 0;
-    printf("installing %s:", package);
     remain = http->content_length;
     if (!remain) {
         remain = INT_MAX;
+        printf("Warning: Content-Length not found in Http response header, so it may fail even if success. \
+Uninstall and install %s again if fail to run\n", package);
     }
+
+    uint32_t checksum = 0, totalsize = 0;
+    printf("installing %s:", package);
     while (remain > 0) {
         rsize = vsf_min(__VPM_BUF_SIZE, remain);
         rsize = vsf_http_client_read(http, buf, rsize);
