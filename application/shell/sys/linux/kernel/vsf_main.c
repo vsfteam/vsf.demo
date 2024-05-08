@@ -99,6 +99,9 @@
 #endif
 
 #include <vsf_board.h>
+#if VSF_BOARD_USE_EXT_GAMEPAD == ENABLED
+#include <ext/gamepad/vsf_board_gamepad.h>
+#endif
 
 #if VSF_USE_MBEDTLS == ENABLED
 #   include "component/3rd-party/mbedtls/extension/vplt/mbedtls_vplt.h"
@@ -1091,6 +1094,9 @@ int VSF_USER_ENTRY(int argc, char *argv[])
 {
     vsf_board_init();
     vsf_start_trace();
+#if VSF_BOARD_USE_EXT_GAMEPAD == ENABLED
+    vsf_board_ext_gamepad_init();
+#endif
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
     if (APP_BOOT1_KEY_IS_DOWN) {
