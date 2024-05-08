@@ -31,6 +31,9 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
     : vsf_trace_assert(NULL, __FILE__, __LINE__, __FUNCTION__))
 
 #include "vsf_board_cfg.h"
+#if VSF_BOARD_USE_EXT_GAMEPAD == ENABLED
+#   include "ext/gamepad/vsf_board_ext_gamepad_cfg.h"
+#endif
 
 // for compiler related configuration, eg: __VSF64__, __IS_COMPILER_XXXX__, etc
 #define __VSF_HEADER_ONLY_SHOW_COMPILER_INFO__

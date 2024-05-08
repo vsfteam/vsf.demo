@@ -23,57 +23,23 @@
 
 /*============================ INCLUDES ======================================*/
 
-#include <vsf_board_cfg.h>
+#include "./vsf_board_ext_gamepad_cfg.h"
 
-/*============================ MACROS ========================================*/
+#include <vsf.h>
 
-#if VSF_HAL_USE_I2C != ENABLED || VSF_HAL_USE_ADC != ENABLED
-#   error VSF_HAL_USE_I2C and VSF_HAL_USE_ADC MUST be enabled for ADS7830
+#if     defined(__GAMEPAD_IO_CLASS_IMPLEMENT)
+#   define __VSF_CLASS_IMPLEMENT__
+#elif   defined(__GAMEPAD_IO_CLASS_INHERIT__)
+#   define __VSF_CLASS_INHERIT__
 #endif
 
-/*----------------------------------------------------------------------------*
- * Hal Driver Configurations                                                  *
- *----------------------------------------------------------------------------*/
+#include "utilities/ooc_class.h"
 
-#define VSF_HAL_USE_74HC165_GPIO                        ENABLED
-#define VSF_HAL_USE_74HC595_GPIO                        ENABLED
-#define VSF_HAL_USE_TIMER_GPIO_PWM                      ENABLED
-#define VSF_HAL_USE_ADS7830_ADC                         ENABLED
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_HOME              0
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LS                1
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LD                2
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LR                3
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LB                4
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_ML                5
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LU                6
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LL                7
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_SPECIAL           8
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RS                9
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RD                10
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RR                11
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RB                12
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_MR                13
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RU                14
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RL                15
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_IN_INVERSE           ENABLED
-
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_OUT_RUMBLE_TL        0
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_OUT_RUMBLE_TR        1
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_OUT_RUMBLE_ML        2
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_OUT_RUMBLE_MR        3
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_OUT_LED0_PIN         4
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_OUT_LED1_PIN         5
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_OUT_LED2_PIN         6
-#define VSF_BOARD_EXT_GAMEPAD_GPIO_OUT_LED3_PIN         7
-
-#define VSF_BOARD_EXT_GAMEPAD_ADC_CHANNEL_LX            0
-#define VSF_BOARD_EXT_GAMEPAD_ADC_CHANNEL_LY            1
-#define VSF_BOARD_EXT_GAMEPAD_ADC_CHANNEL_RX            2
-#define VSF_BOARD_EXT_GAMEPAD_ADC_CHANNEL_RY            3
-#define VSF_BOARD_EXT_GAMEPAD_ADC_CHANNEL_LT            4
-#define VSF_BOARD_EXT_GAMEPAD_ADC_CHANNEL_RT            5
-
+/*============================ MACROS ========================================*/
 /*============================ TYPES =========================================*/
 
 typedef struct vsf_board_ext_gamepad_t {
@@ -84,10 +50,71 @@ typedef struct vsf_board_ext_gamepad_t {
     vsf_adc_t *adc;
 } vsf_board_ext_gamepad_t;
 
+typedef struct gamepad_io_value_t {
+    struct {
+        uint16_t l_up       : 1;
+        uint16_t l_down     : 1;
+        uint16_t l_left     : 1;
+        uint16_t l_right    : 1;
+        uint16_t r_up       : 1;
+        uint16_t r_down     : 1;
+        uint16_t r_left     : 1;
+        uint16_t r_right    : 1;
+        uint16_t l_bumper   : 1;
+        uint16_t r_bumper   : 1;
+        uint16_t l_stick    : 1;
+        uint16_t r_stick    : 1;
+        uint16_t l_menu     : 1;
+        uint16_t m_menu     : 1;
+        uint16_t r_menu     : 1;
+        uint16_t special    : 1;
+        union {
+            struct {
+                uint16_t l_stick_x;
+                uint16_t l_stick_y;
+                uint16_t r_stick_x;
+                uint16_t r_stick_y;
+                uint16_t l_trigger;
+                uint16_t r_trigger;
+            };
+            uint16_t adc_buffer[6];
+        };
+    } value;
+    vsf_systimer_tick_t sample_tick;
+} gamepad_io_value_t;
+
+vsf_declare_class(gamepad_io_ctx_t)
+typedef struct gamepad_io_cfg_t {
+    uint8_t polling_ms;
+    void (*on_changed)(gamepad_io_ctx_t *ctx);
+} gamepad_io_cfg_t;
+
+vsf_class(gamepad_io_ctx_t) {
+    public_member(
+        gamepad_io_value_t cur;
+        gamepad_io_value_t prev;
+        void (*on_changed)(gamepad_io_ctx_t *ctx);
+    )
+    private_member(
+        vsf_callback_timer_t polling_timer;
+        uint8_t polling_ms;
+        bool is_busy;
+        bool is_to_poll;
+    )
+};
+
 /*============================ GLOBAL VARIABLES ==============================*/
+
+extern vsf_board_ext_gamepad_t vsf_board_ext_gamepad;
+
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
 extern void vsf_board_ext_gamepad_init(void);
+extern void gamepad_io_start(gamepad_io_ctx_t *ctx, gamepad_io_cfg_t *cfg);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif      // __VSF_BOARD_EXT_GAMEPAD_H__

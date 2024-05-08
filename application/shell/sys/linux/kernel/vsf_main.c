@@ -100,7 +100,7 @@
 
 #include <vsf_board.h>
 #if VSF_BOARD_USE_EXT_GAMEPAD == ENABLED
-#include <ext/gamepad/vsf_board_gamepad.h>
+#include <ext/gamepad/vsf_board_ext_gamepad.h>
 #endif
 
 #if VSF_USE_MBEDTLS == ENABLED
@@ -1085,6 +1085,13 @@ int vsf_linux_create_fhs(void)
     return 0;
 }
 
+#if VSF_BOARD_USE_EXT_GAMEPAD == ENABLED
+void __gamaped_io_on_changed(gamepad_io_ctx_t *ctx)
+{
+
+}
+#endif
+
 #ifdef __CPU_WEBASSEMBLY__
 int VSF_USER_ENTRY(void)
 #else
@@ -1096,6 +1103,10 @@ int VSF_USER_ENTRY(int argc, char *argv[])
     vsf_start_trace();
 #if VSF_BOARD_USE_EXT_GAMEPAD == ENABLED
     vsf_board_ext_gamepad_init();
+    static gamepad_io_ctx_t __gamepad_io_ctx;
+    gamepad_io_start(&__gamepad_io_ctx, &(gamepad_io_cfg_t){
+        .on_changed     = __gamaped_io_on_changed,
+    });
 #endif
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED

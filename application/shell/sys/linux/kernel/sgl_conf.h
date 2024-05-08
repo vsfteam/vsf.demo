@@ -1,4 +1,4 @@
-#include <vsf_board_cfg.h>
+#include <vsf_usr_cfg.h>
 
 //debug mode
 #define SGL_CONFIG_DEBUG                1
