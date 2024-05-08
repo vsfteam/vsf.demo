@@ -114,6 +114,7 @@ Uninstall and install %s again if fail to run\n", package);
         rsize = vsf_min(__VPM_BUF_SIZE, remain);
         rsize = vsf_http_client_read(http, buf, rsize);
         if (rsize > 0) {
+            remain -= rsize;
             totalsize += rsize;
             for (int i = 0; i < rsize; i++) {
                 checksum += buf[i];
