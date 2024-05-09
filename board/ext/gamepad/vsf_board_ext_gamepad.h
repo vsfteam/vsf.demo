@@ -50,64 +50,6 @@ typedef struct vsf_board_ext_gamepad_t {
     vsf_adc_t *adc;
 } vsf_board_ext_gamepad_t;
 
-typedef struct gamepad_io_value_t {
-    struct {
-        union {
-            struct {
-                uint16_t l_up       : 1;
-                uint16_t l_down     : 1;
-                uint16_t l_left     : 1;
-                uint16_t l_right    : 1;
-                uint16_t r_up       : 1;
-                uint16_t r_down     : 1;
-                uint16_t r_left     : 1;
-                uint16_t r_right    : 1;
-                uint16_t l_bumper   : 1;
-                uint16_t r_bumper   : 1;
-                uint16_t l_stick    : 1;
-                uint16_t r_stick    : 1;
-                uint16_t l_menu     : 1;
-                uint16_t m_menu     : 1;
-                uint16_t r_menu     : 1;
-                uint16_t special    : 1;
-            };
-            uint16_t button_value;
-        };
-        union {
-            struct {
-                uint16_t l_stick_x;
-                uint16_t l_stick_y;
-                uint16_t r_stick_x;
-                uint16_t r_stick_y;
-                uint16_t l_trigger;
-                uint16_t r_trigger;
-            };
-            uint16_t adc_buffer[6];
-        };
-    } value;
-    vsf_systimer_tick_t sample_tick;
-} gamepad_io_value_t;
-
-vsf_declare_class(gamepad_io_ctx_t)
-typedef struct gamepad_io_cfg_t {
-    uint8_t polling_ms;
-    void (*on_changed)(gamepad_io_ctx_t *ctx);
-} gamepad_io_cfg_t;
-
-vsf_class(gamepad_io_ctx_t) {
-    public_member(
-        gamepad_io_value_t cur;
-        gamepad_io_value_t prev;
-        void (*on_changed)(gamepad_io_ctx_t *ctx);
-    )
-    private_member(
-        vsf_callback_timer_t polling_timer;
-        uint8_t polling_ms;
-        bool is_busy;
-        bool is_to_poll;
-    )
-};
-
 /*============================ GLOBAL VARIABLES ==============================*/
 
 extern vsf_board_ext_gamepad_t vsf_board_ext_gamepad;
@@ -116,7 +58,7 @@ extern vsf_board_ext_gamepad_t vsf_board_ext_gamepad;
 /*============================ PROTOTYPES ====================================*/
 
 extern void vsf_board_ext_gamepad_init(void);
-extern void gamepad_io_start(gamepad_io_ctx_t *ctx, gamepad_io_cfg_t *cfg);
+extern void gamepad_io_start(uint8_t polling_ms);
 
 #ifdef __cplusplus
 }
