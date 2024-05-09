@@ -174,42 +174,41 @@ static void __gamepad_io_adc_irqhandler(void *target_ptr, vsf_adc_t *adc_ptr, vs
     gamepad_io_ctx_t *ctx = target_ptr;
 
     vsf_gpio_pin_mask_t button_value = vsf_gpio_read(vsf_board_ext_gamepad.gpio_input);
-    ctx->prev = ctx->cur;
     ctx->cur.sample_tick = vsf_systimer_get();
-#if VSF_BOARD_GPIO_IN_INVERSE == ENABLED
-    ctx->cur.value.l_up     = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LU);
-    ctx->cur.value.l_down   = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LD);
-    ctx->cur.value.l_left   = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LL);
-    ctx->cur.value.l_right  = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LR);
-    ctx->cur.value.r_up     = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RU);
-    ctx->cur.value.r_down   = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RD);
-    ctx->cur.value.r_left   = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RL);
-    ctx->cur.value.r_right  = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RR);
-    ctx->cur.value.l_bumper = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LB);
-    ctx->cur.value.r_bumper = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RB);
-    ctx->cur.value.l_stick  = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LS);
-    ctx->cur.value.r_stick  = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RS);
-    ctx->cur.value.l_menu   = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_ML);
-    ctx->cur.value.m_menu   = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_HOME);
-    ctx->cur.value.r_menu   = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_MR);
-    ctx->cur.value.special  = !(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_SPECIAL);
+#if VSF_BOARD_EXT_GAMEPAD_GPIO_IN_INVERSE == ENABLED
+    ctx->cur.value.l_up     = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LU));
+    ctx->cur.value.l_down   = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LD));
+    ctx->cur.value.l_left   = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LL));
+    ctx->cur.value.l_right  = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LR));
+    ctx->cur.value.r_up     = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RU));
+    ctx->cur.value.r_down   = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RD));
+    ctx->cur.value.r_left   = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RL));
+    ctx->cur.value.r_right  = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RR));
+    ctx->cur.value.l_bumper = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LB));
+    ctx->cur.value.r_bumper = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RB));
+    ctx->cur.value.l_stick  = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LS));
+    ctx->cur.value.r_stick  = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RS));
+    ctx->cur.value.l_menu   = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_ML));
+    ctx->cur.value.m_menu   = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_HOME));
+    ctx->cur.value.r_menu   = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_MR));
+    ctx->cur.value.special  = !(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_SPECIAL));
 #else
-    ctx->cur.value.l_up     = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LU);
-    ctx->cur.value.l_down   = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LD);
-    ctx->cur.value.l_left   = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LL);
-    ctx->cur.value.l_right  = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LR);
-    ctx->cur.value.r_up     = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RU);
-    ctx->cur.value.r_down   = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RD);
-    ctx->cur.value.r_left   = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RL);
-    ctx->cur.value.r_right  = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RR);
-    ctx->cur.value.l_bumper = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LB);
-    ctx->cur.value.r_bumper = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RB);
-    ctx->cur.value.l_stick  = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LS);
-    ctx->cur.value.r_stick  = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RS);
-    ctx->cur.value.l_menu   = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_ML);
-    ctx->cur.value.m_menu   = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_HOME);
-    ctx->cur.value.r_menu   = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_MR);
-    ctx->cur.value.special  = !!(button_value & VSF_BOARD_EXT_GAMEPAD_GPIO_IN_SPECIAL);
+    ctx->cur.value.l_up     = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LU));
+    ctx->cur.value.l_down   = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LD));
+    ctx->cur.value.l_left   = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LL));
+    ctx->cur.value.l_right  = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LR));
+    ctx->cur.value.r_up     = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RU));
+    ctx->cur.value.r_down   = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RD));
+    ctx->cur.value.r_left   = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RL));
+    ctx->cur.value.r_right  = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RR));
+    ctx->cur.value.l_bumper = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LB));
+    ctx->cur.value.r_bumper = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RB));
+    ctx->cur.value.l_stick  = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_LS));
+    ctx->cur.value.r_stick  = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_RS));
+    ctx->cur.value.l_menu   = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_ML));
+    ctx->cur.value.m_menu   = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_HOME));
+    ctx->cur.value.r_menu   = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_MR));
+    ctx->cur.value.special  = !!(button_value & (1 << VSF_BOARD_EXT_GAMEPAD_GPIO_IN_SPECIAL));
 #endif
 
     // convert adc results if adc result is 8-bit
@@ -226,6 +225,7 @@ static void __gamepad_io_adc_irqhandler(void *target_ptr, vsf_adc_t *adc_ptr, vs
         &&  (ctx->on_changed != NULL)) {
         ctx->on_changed(ctx);
     }
+    ctx->prev = ctx->cur;
 
     bool is_to_poll;
     vsf_protect_t orig = vsf_protect_int();
@@ -264,6 +264,7 @@ void gamepad_io_start(gamepad_io_ctx_t *ctx, gamepad_io_cfg_t *cfg)
     ctx->is_to_poll = false;
     ctx->is_busy = false;
     ctx->polling_ms = cfg->polling_ms;
+    ctx->on_changed = cfg->on_changed;
     memset(&ctx->prev, 0, sizeof(ctx->prev));
     memset(&ctx->cur, 0, sizeof(ctx->cur));
 

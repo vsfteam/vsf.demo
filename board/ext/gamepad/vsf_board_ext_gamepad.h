@@ -52,22 +52,27 @@ typedef struct vsf_board_ext_gamepad_t {
 
 typedef struct gamepad_io_value_t {
     struct {
-        uint16_t l_up       : 1;
-        uint16_t l_down     : 1;
-        uint16_t l_left     : 1;
-        uint16_t l_right    : 1;
-        uint16_t r_up       : 1;
-        uint16_t r_down     : 1;
-        uint16_t r_left     : 1;
-        uint16_t r_right    : 1;
-        uint16_t l_bumper   : 1;
-        uint16_t r_bumper   : 1;
-        uint16_t l_stick    : 1;
-        uint16_t r_stick    : 1;
-        uint16_t l_menu     : 1;
-        uint16_t m_menu     : 1;
-        uint16_t r_menu     : 1;
-        uint16_t special    : 1;
+        union {
+            struct {
+                uint16_t l_up       : 1;
+                uint16_t l_down     : 1;
+                uint16_t l_left     : 1;
+                uint16_t l_right    : 1;
+                uint16_t r_up       : 1;
+                uint16_t r_down     : 1;
+                uint16_t r_left     : 1;
+                uint16_t r_right    : 1;
+                uint16_t l_bumper   : 1;
+                uint16_t r_bumper   : 1;
+                uint16_t l_stick    : 1;
+                uint16_t r_stick    : 1;
+                uint16_t l_menu     : 1;
+                uint16_t m_menu     : 1;
+                uint16_t r_menu     : 1;
+                uint16_t special    : 1;
+            };
+            uint16_t button_value;
+        };
         union {
             struct {
                 uint16_t l_stick_x;
