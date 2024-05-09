@@ -17,9 +17,10 @@
 
 /*============================ INCLUDES ======================================*/
 
-#define __GAMEPAD_IO_CLASS_IMPLEMENT
 #include "vsf_board.h"
 #include "./vsf_board_ext_gamepad.h"
+
+#if VSF_BOARD_USE_EXT_GAMEPAD == ENABLED
 
 /*============================ MACROS ========================================*/
 
@@ -383,3 +384,5 @@ void gamepad_io_start(uint8_t polling_ms)
     vsf_input_on_new_dev(VSF_INPUT_TYPE_GAMEPAD, ctx);
 #endif
 }
+
+#endif      // VSF_BOARD_USE_EXT_GAMEPAD

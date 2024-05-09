@@ -27,14 +27,6 @@
 
 #include <vsf.h>
 
-#if     defined(__GAMEPAD_IO_CLASS_IMPLEMENT)
-#   define __VSF_CLASS_IMPLEMENT__
-#elif   defined(__GAMEPAD_IO_CLASS_INHERIT__)
-#   define __VSF_CLASS_INHERIT__
-#endif
-
-#include "utilities/ooc_class.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
