@@ -56,29 +56,37 @@ static void __vk_disp_on_ready(vk_disp_t *disp)
 #if VSF_HAL_USE_I2C == ENABLED
 static void __i2c_isrhandler(void *target_ptr, vsf_i2c_t *i2c_ptr, vsf_i2c_irq_mask_t irq_mask)
 {
-    static uint8_t slave_addr, data_buffer[1] = { 0 };
+    static uint8_t __slave_addr, __data_buffer[1] = { 0 };
+    static vsf_i2c_irq_mask_t __irq_mask = 0;
 
     if (0 == irq_mask) {
-        slave_addr = 3;
+        __slave_addr = 3;
+        __irq_mask = VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE;
     } else {
-        if (irq_mask & (VSF_I2C_IRQ_MASK_MASTER_ADDRESS_NACK | VSF_I2C_IRQ_MASK_MASTER_ERROR)) {
-            vsf_trace_info("__ ");
-        } else if (irq_mask & (VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE | VSF_I2C_IRQ_MASK_MASTER_NACK_DETECT)) {
-            vsf_trace_info("%02x ", slave_addr);
-        }
-        if (++slave_addr > 0x77) {
-            vsf_trace_info(VSF_TRACE_CFG_LINEEND);
-            vsf_eda_post_evt((vsf_eda_t *)target_ptr, VSF_EVT_USER);
-            return;
-        }
-        if (!(slave_addr & 0x0F)) {
-            vsf_trace_info(VSF_TRACE_CFG_LINEEND "%02x: ", slave_addr & 0xF0);
+        __irq_mask |= irq_mask;
+        if (__irq_mask & VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE) {
+            if (__irq_mask & (VSF_I2C_IRQ_MASK_MASTER_ADDRESS_NACK | VSF_I2C_IRQ_MASK_MASTER_ERROR)) {
+                vsf_trace_info("__ ");
+            } else if (__irq_mask & (VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE | VSF_I2C_IRQ_MASK_MASTER_NACK_DETECT)) {
+                vsf_trace_info("%02x ", __slave_addr);
+            }
+            if (++__slave_addr > 0x77) {
+                vsf_trace_info(VSF_TRACE_CFG_LINEEND);
+                vsf_eda_post_evt((vsf_eda_t *)target_ptr, VSF_EVT_USER);
+                return;
+            }
+            if (!(__slave_addr & 0x0F)) {
+                vsf_trace_info(VSF_TRACE_CFG_LINEEND "%02x: ", __slave_addr & 0xF0);
+            }
         }
     }
 
-    vsf_i2c_master_request(vsf_board.i2c, slave_addr,
-        VSF_I2C_CMD_START | VSF_I2C_CMD_WRITE | VSF_I2C_CMD_STOP | VSF_I2C_CMD_7_BITS,
-        sizeof(data_buffer), data_buffer);
+    if (__irq_mask & VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE) {
+        __irq_mask = 0;
+        vsf_i2c_master_request(vsf_board.i2c, __slave_addr,
+            VSF_I2C_CMD_START | VSF_I2C_CMD_WRITE | VSF_I2C_CMD_STOP | VSF_I2C_CMD_7_BITS,
+            sizeof(__data_buffer), __data_buffer);
+    }
 }
 #endif
 
