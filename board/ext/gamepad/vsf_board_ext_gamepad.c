@@ -376,13 +376,13 @@ void gamepad_io_start(uint8_t polling_ms)
     };
     vsf_adc_channel_config(vsf_board_ext_gamepad.adc, adc_channels, dimof(adc_channels));
 
-    vsf_callback_timer_init(&ctx->polling_timer);
-    ctx->polling_timer.on_timer = __gamepad_io_on_polling_timer;
-    __gamepad_io_on_polling_timer(&ctx->polling_timer);
-
 #if VSF_YSE_INPUT == ENABLED
     vsf_input_on_new_dev(VSF_INPUT_TYPE_GAMEPAD, ctx);
 #endif
+
+    vsf_callback_timer_init(&ctx->polling_timer);
+    ctx->polling_timer.on_timer = __gamepad_io_on_polling_timer;
+    __gamepad_io_on_polling_timer(&ctx->polling_timer);
 }
 
 #endif      // VSF_BOARD_USE_EXT_GAMEPAD
