@@ -25,7 +25,7 @@ static sgl_device_panel_t __sgl_panel = {
 static vk_disp_t *__sgl_disp = NULL;
 
 #if VSF_USE_TRACE == ENABLED
-static int __sgl_stdout_put(char *str);
+static int __sgl_stdout_put(const char *str);
 static sgl_device_stdout_t __sgl_stdout_dev = {
     .put = __sgl_stdout_put,
 };
@@ -105,7 +105,7 @@ void sgl_disp_area(int16_t x1, int16_t y1, int16_t x2, int16_t y2, const sgl_col
 }
 
 #if VSF_USE_TRACE == ENABLED
-static int __sgl_stdout_put(char *str)
+static int __sgl_stdout_put(const char *str)
 {
     vsf_trace_debug("%s\n", str);
     return strlen(str) + 1;

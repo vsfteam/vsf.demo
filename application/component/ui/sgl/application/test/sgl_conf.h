@@ -1,3 +1,5 @@
+#include <vsf_board_cfg.h>
+
 //debug mode
 #define SGL_CONFIG_DEBUG                1
 #define SGL_CONFIG_LOG_LEVEL            1
@@ -13,7 +15,7 @@
 
 //显示屏面板的像素深度，默认为32bit
 #define SGL_CONFIG_PANEL_PIXEL_DEPTH    16
-#define SGL_CONFIG_FRAME_BUFFER_XRES    480
+#define SGL_CONFIG_FRAME_BUFFER_XRES    VSF_BOARD_DISP_WIDTH
 
 //RGB颜色交换
 #define SGL_CONFIG_COLOR16_SWAP         0
