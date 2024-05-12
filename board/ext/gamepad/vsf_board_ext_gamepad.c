@@ -122,10 +122,6 @@ describe_timer_gpio_single_pwm(__pwm_led0, &vsf_hw_timer0, __pwm_led0_gpio_contr
 describe_ads7830_adc(__adc_joystick, NULL, 0x48)
 #endif
 
-#if VSF_HAL_USE_I2C == ENABLED
-describe_multiplexer_i2c(__i2c_multiplexer, NULL, __i2c_adc)
-#endif
-
 vsf_board_ext_gamepad_t vsf_board_ext_gamepad = {
 #if VSF_HAL_USE_74HC165_GPIO == ENABLED
     .gpio_input                 = (vsf_gpio_t *)&__gpio_74hc165,
@@ -137,11 +133,6 @@ vsf_board_ext_gamepad_t vsf_board_ext_gamepad = {
 #   endif
 #endif
 
-#if VSF_HAL_USE_I2C == ENABLED
-#   if VSF_HAL_USE_ADS7830_ADC == ENABLED
-    .i2c_adc                    = (vsf_i2c_t *)&__i2c_adc,
-#   endif
-#endif
 #if VSF_HAL_USE_ADC == ENABLED && VSF_HAL_USE_ADS7830_ADC == ENABLED
     .adc                        = (vsf_adc_t *)&__adc_joystick,
 #endif
@@ -235,9 +226,8 @@ void vsf_board_ext_gamepad_init(void)
 #endif
 
 #if VSF_HAL_USE_I2C == ENABLED
-    __i2c_multiplexer.i2c_ptr = vsf_board.i2c;
 #   if VSF_HAL_USE_ADS7830_ADC == ENABLED
-    __adc_joystick.i2c = vsf_board_ext_gamepad.i2c_adc;
+    __adc_joystick.i2c = vsf_board.i2c_adc;
 #   endif
 #endif
 }
