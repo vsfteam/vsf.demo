@@ -2184,6 +2184,9 @@
     <ClInclude Include="..\..\application\component\ui\sgl\platform\vsf\sgl_platform.h">
       <Filter>application\platform\vsf</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_appstart.h">
+      <Filter>application\sgl\source\widget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3067,6 +3070,9 @@
     </ClCompile>
     <ClCompile Include="..\..\application\component\ui\sgl\platform\vsf\sgl_platform_vsf.c">
       <Filter>application\platform\vsf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_appstart.c">
+      <Filter>application\sgl\source\widget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -53,6 +53,7 @@
     <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_mem.h" />
     <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_string.h" />
     <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_types.h" />
+    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_appstart.h" />
     <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_arcbar.h" />
     <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_box.h" />
     <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_button.h" />
@@ -512,6 +513,7 @@
     <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_mem.c" />
     <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_sprintf.c" />
     <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_string.c" />
+    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_appstart.c" />
     <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_arcbar.c" />
     <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_box.c" />
     <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_button.c" />
