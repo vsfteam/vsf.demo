@@ -19,3 +19,6 @@
 [submodule "application/shell/sys/linux/applets/chiaki/raw"]
 	path = application/shell/sys/linux/applets/chiaki/raw
 	url = https://git.sr.ht/~thestr4ng3r/chiaki
+[submodule "application/shell/sys/linux/applets/chiaki/3rd-party/opus/raw"]
+	path = application/shell/sys/linux/applets/chiaki/3rd-party/opus/raw
+	url = https://github.com/xiph/opus
