@@ -16,3 +16,6 @@
 [submodule "application/component/ui/sgl/raw"]
 	path = application/component/ui/sgl/raw
 	url = https://gitee.com/li-shan-asked/sgl
+[submodule "application/shell/sys/linux/applets/chiaki/raw"]
+	path = application/shell/sys/linux/applets/chiaki/raw
+	url = https://git.sr.ht/~thestr4ng3r/chiaki
