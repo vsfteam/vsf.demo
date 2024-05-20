@@ -90,12 +90,19 @@ static int __vpm_install_package(char *package)
 
     uint64_t flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
     int result = 0, rsize, remain;
+    uint32_t checksum = 0, totalsize = 0;
     strcpy((char *)buf, path);
     strcat((char *)buf, VSF_BOARD_ARCH_STR "/romfs/");
     strcat((char *)buf, package);
     strcat((char *)buf, ".img");
-    if (    (vsf_http_client_request(http, host, REPO_HOST_PORT, "GET", (char *)buf, NULL, 0) < 0)
-        ||  (http->resp_status != 200)) {
+
+    result = vsf_http_client_request(http, &(vsf_http_client_req_t){
+        .host       = host,
+        .port       = REPO_HOST_PORT,
+        .verb       = "GET",
+        .path       = (char *)buf,
+    });
+    if ((result < 0) || (http->resp_status != 200)) {
         printf("failed to start http\n");
         result = -1;
         goto do_exit;
@@ -108,7 +115,6 @@ static int __vpm_install_package(char *package)
 Uninstall and install %s again if fail to run\n", package);
     }
 
-    uint32_t checksum = 0, totalsize = 0;
     printf("installing %s:", package);
     while (remain > 0) {
         rsize = vsf_min(__VPM_BUF_SIZE, remain);
@@ -170,6 +176,7 @@ static int __vpm_install_local_package(char *path)
     uint64_t flash_addr;
     char *package, *version;
     vk_romfs_header_t header;
+    uint32_t checksum = 0, totalsize = 0;
 
     f = fopen(path, "rb");
     if (NULL == f) {
@@ -184,7 +191,6 @@ static int __vpm_install_local_package(char *path)
         goto do_exit_close_file;
     }
 
-    uint32_t checksum = 0, totalsize = 0;
     buffer = malloc(4096);
     if (NULL == buffer) {
         printf("failed to allocate buffer\n");
@@ -397,8 +403,14 @@ static int __vpm_list_remote_packages(void)
     strcpy((char *)buf, path);
     strcat((char *)buf, VSF_BOARD_ARCH_STR "/romfs/");
     strcat((char *)buf, "list.txt");
-    if (    (vsf_http_client_request(http, host, REPO_HOST_PORT, "GET", (char *)buf, NULL, 0) < 0)
-        ||  (http->resp_status != 200)) {
+
+    result = vsf_http_client_request(http, &(vsf_http_client_req_t){
+        .host       = host,
+        .port       = REPO_HOST_PORT,
+        .verb       = "GET",
+        .path       = (char *)buf,
+    });
+    if ((result < 0) || (http->resp_status != 200)) {
         printf("failed to start http\n");
         result = -1;
         goto do_exit;
