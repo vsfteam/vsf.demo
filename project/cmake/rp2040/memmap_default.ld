@@ -59,6 +59,7 @@ SECTIONS
     */
 
     .text : {
+        _stext = .;
         __logical_binary_start = .;
         KEEP (*(.vectors))
         KEEP (*(.binary_info_header))
@@ -84,6 +85,7 @@ SECTIONS
         *(.dtors)
 
         *(.eh_frame*)
+        _etext = .;
         . = ALIGN(4);
     } > FLASH
 
