@@ -75,6 +75,7 @@
 #   define VSF_FS_USE_FATFS                             ENABLED
 
 #define VSF_USE_USB_DEVICE                              ENABLED
+#   define VSF_USBD_CFG_AUTOSETUP                       ENABLED
 #   define VSF_USBD_USE_MSC                             ENABLED
 
 // Application configuration

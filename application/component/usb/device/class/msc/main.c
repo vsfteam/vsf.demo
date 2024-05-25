@@ -44,6 +44,10 @@
 
 /*============================ MACROS ========================================*/
 
+#if VSF_USBD_CFG_AUTOSETUP != ENABLED
+#   error VSF_USBD_CFG_AUTOSETUP is needed for this demo
+#endif
+
 #if     VSF_USBD_CFG_SPEED == USB_SPEED_HIGH
 #   define __APP_CFG_MSC_BULK_SIZE                  64
 #elif   VSF_USBD_CFG_SPEED == USB_SPEED_FULL
