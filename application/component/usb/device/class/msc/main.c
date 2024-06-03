@@ -57,7 +57,7 @@
 #endif
 
 #ifndef APP_CFG_FAKEFAT32_SECTOR_SIZE
-#   define APP_CFG_FAKEFAT32_SECTOR_SIZE            512
+#   define APP_CFG_FAKEFAT32_SECTOR_SIZE            512ULL
 #endif
 #ifndef APP_CFG_FAKEFAT32_SIZE
 //  0x1000 + reserved sector size(64)
@@ -124,7 +124,7 @@ static vk_fakefat32_file_t __usr_fakefat32_root[1
 #if defined(APP_MSCBOOT_CFG_FW_SIZE) && defined(APP_MSCBOOT_CFG_FW_ADDR)
     {
         .name               = "firmware.bin",
-        .size               = APP_MSCBOOT_CFG_FW_SIZE,
+        .size               = 1ULL * (APP_MSCBOOT_CFG_FW_SIZE),
         .attr               = VSF_FILE_ATTR_READ | VSF_FILE_ATTR_WRITE,
         .callback.fn_read   = (vsf_peda_evthandler_t)vsf_peda_func(__usr_mscboot_on_firmware_read),
         .callback.fn_write  = (vsf_peda_evthandler_t)vsf_peda_func(__usr_mscboot_on_firmware_write),
@@ -133,7 +133,7 @@ static vk_fakefat32_file_t __usr_fakefat32_root[1
 #if defined(APP_MSCBOOT_CFG_ROMFS_SIZE) && defined(APP_MSCBOOT_CFG_ROMFS_ADDR)
     {
         .name               = "usr.romfs",
-        .size               = APP_MSCBOOT_CFG_ROMFS_SIZE,
+        .size               = 1ULL * (APP_MSCBOOT_CFG_ROMFS_SIZE),
         .attr               = VSF_FILE_ATTR_READ | VSF_FILE_ATTR_WRITE,
         .callback.fn_read   = (vsf_peda_evthandler_t)vsf_peda_func(__usr_mscboot_on_romfs_read),
         .callback.fn_write  = (vsf_peda_evthandler_t)vsf_peda_func(__usr_mscboot_on_romfs_write),
