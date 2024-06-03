@@ -462,14 +462,22 @@ vsf_component_peda_ifs_entry(__usr_mscboot_on_romfs_write, vk_memfs_callback_wri
 }
 #endif
 
+#ifndef app_mscboot_init
 VSF_CAL_WEAK(app_mscboot_init)
 void app_mscboot_init(void) {}
+#endif
+#ifndef app_mscboot_check
 VSF_CAL_WEAK(app_mscboot_check)
 bool app_mscboot_check(void) { return true; }
+#endif
+#ifndef app_mscboot_fini
 VSF_CAL_WEAK(app_mscboot_fini)
 void app_mscboot_fini(void) {}
+#endif
+#ifndef app_mscboot_boot
 VSF_CAL_WEAK(app_mscboot_boot)
 void app_mscboot_boot(void) {}
+#endif
 
 int VSF_USER_ENTRY(void)
 {
