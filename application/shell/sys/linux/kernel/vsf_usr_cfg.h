@@ -80,7 +80,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_MAL_USE_MMC_MAL                          ENABLED
 #   define VSF_MAL_USE_FAKEFAT32_MAL                    ENABLED
 #   define VSF_MAL_USE_SCSI_MAL                         ENABLED
-#   define VSF_MAL_USE_HW_FLASH_MAL                     ENABLED
+#   define VSF_MAL_USE_FLASH_MAL                        ENABLED
 #define VSF_USE_FS                                      ENABLED
 #   define VSF_FS_USE_ROMFS                             ENABLED
 #   define VSF_FS_USE_MEMFS                             ENABLED
@@ -149,6 +149,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 
 #ifndef __CPU_WEBASSEMBLY__
 #   define VSF_USE_SIMPLE_SPRINTF                       ENABLED
+#   define VSF_USE_SIMPLE_SWPRINTF                      ENABLED
 #       define VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT         ENABLED
 #   define VSF_USE_SIMPLE_SSCANF                        ENABLED
 #endif

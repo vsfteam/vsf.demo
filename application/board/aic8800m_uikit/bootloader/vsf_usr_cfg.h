@@ -58,7 +58,7 @@
 
 #define VSF_USE_MAL                                     ENABLED
 #   define VSF_MAL_USE_FAKEFAT32_MAL                    ENABLED
-#   define VSF_MAL_USE_HW_FLASH_MAL                     ENABLED
+#   define VSF_MAL_USE_FLASH_MAL                        ENABLED
 #define VSF_USE_FS                                      ENABLED
 #   define VSF_FS_CFG_FILE_POOL_SIZE                    1
 #   define VSF_FS_CFG_FILE_POOL_FILE_SIZE               64

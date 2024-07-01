@@ -1,5 +1,5 @@
 #define __VSF_ROMFS_CLASS_INHERIT__
-#define __VSF_HW_FLASH_MAL_CLASS_INHERIT__
+#define __VSF_FLASH_MAL_CLASS_INHERIT__
 
 #include <unistd.h>
 #include <stdio.h>
