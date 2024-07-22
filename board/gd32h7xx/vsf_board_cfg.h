@@ -27,7 +27,6 @@
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
-#define VSF_HAL_USE_
 #define VSF_HAL_USE_I2C                                 DISABLED
 #define VSF_HAL_USE_MMC                                 DISABLED
 
