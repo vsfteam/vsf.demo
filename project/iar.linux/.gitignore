@@ -1,3 +1,5 @@
 settings
 vsf_template_aic8800
+vsf_template_gd32h7xx
+vsf_template_stm32h7xx
 vsf_template.dep
