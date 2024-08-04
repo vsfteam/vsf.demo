@@ -149,12 +149,35 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
 #include "hal/driver/common/debug_stream/debug_stream_tx_blocked.inc"
 #endif
 
+// implement strong vsf_driver_init to overwrite weak one in hal
+bool vsf_driver_init(void)
+{
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOA);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOB);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOC);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOD);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOE);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOF);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOG);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOH);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOI);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOJ);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOK);
+    return true;
+}
+
 void vsf_board_init_linux(void)
 {
 }
 
 void vsf_board_init(void)
 {
+    vsf_io_cfg_t cfgs[] = {
+        {VSF_PA9,   7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
+        {VSF_PA10,  7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
+    };
+    vsf_io_config(cfgs, dimof(cfgs));
+
 #ifdef __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);

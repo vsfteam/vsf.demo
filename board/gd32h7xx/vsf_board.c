@@ -149,6 +149,22 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
 #include "hal/driver/common/debug_stream/debug_stream_tx_blocked.inc"
 #endif
 
+// implement strong vsf_driver_init to overwrite weak one in hal
+bool vsf_driver_init(void)
+{
+    rcu_periph_clock_enable(RCU_GPIOA);
+    rcu_periph_clock_enable(RCU_GPIOB);
+    rcu_periph_clock_enable(RCU_GPIOC);
+    rcu_periph_clock_enable(RCU_GPIOD);
+    rcu_periph_clock_enable(RCU_GPIOE);
+    rcu_periph_clock_enable(RCU_GPIOF);
+    rcu_periph_clock_enable(RCU_GPIOG);
+    rcu_periph_clock_enable(RCU_GPIOH);
+    rcu_periph_clock_enable(RCU_GPIOJ);
+    rcu_periph_clock_enable(RCU_GPIOK);
+    return true;
+}
+
 void vsf_board_init_linux(void)
 {
 }
