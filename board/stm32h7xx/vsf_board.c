@@ -103,7 +103,6 @@ static void __vsf_debug_stream_isrhandler(void *target, vsf_usart_t *uart,
 
 static void __VSF_DEBUG_STREAM_TX_INIT(void)
 {
-#if 0
     vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart1;
     vsf_err_t err;
 
@@ -125,12 +124,10 @@ static void __VSF_DEBUG_STREAM_TX_INIT(void)
 
     while (fsm_rt_cpl != vsf_usart_enable(debug_usart));
     vsf_usart_irq_enable(debug_usart, VSF_USART_IRQ_MASK_RX);
-#endif
 }
 
 static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size)
 {
-#if 0
     vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart1;
     uint_fast16_t cur_size;
 
@@ -141,7 +138,6 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
             buf += cur_size;
         }
     }
-#endif
 }
 
 // Because debug stream for RP2040 is not used,
@@ -160,6 +156,7 @@ void vsf_board_init_linux(void)
 void vsf_board_init(void)
 {
 #ifdef __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
+    VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
 #endif
 }

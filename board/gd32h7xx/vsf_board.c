@@ -162,6 +162,7 @@ void vsf_board_init(void)
     vsf_io_config(cfgs, dimof(cfgs));
 
 #ifdef __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
+    VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
 #endif
 }
