@@ -77,7 +77,7 @@
 #endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   4
-#   define VSF_HEAP_SIZE                                (64 * 1024)
+#   define VSF_HEAP_SIZE                                (256 * 1024)
 
 #define VSF_USBH_USE_HCD_DWCOTG                         ENABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
@@ -100,6 +100,22 @@
  *----------------------------------------------------------------------------*/
 
 #define APP_CFG_USBH_ARCH_PRIO                          vsf_arch_prio_0
+
+
+#define APP_MSCBOOT_CFG_FLASH                           vsf_hw_flash0
+#define APP_MSCBOOT_CFG_FLASH_ADDR                      0x08000000
+#define APP_MSCBOOT_CFG_ERASE_ALIGN                     (4 * 1024)
+
+#define APP_BOOT1_KEY_IS_DOWN                           (0)
+
+#define APP_MSCBOOT_CFG_BOOTLOADER_SIZE                 0
+#define APP_MSCBOOT_CFG_BOOTLOADER_ADDR                 0
+#define APP_MSCBOOT_CFG_FW_SIZE                         (1 * 1024 * 1024)
+#define APP_MSCBOOT_CFG_FW_ADDR                         (APP_MSCBOOT_CFG_BOOTLOADER_ADDR + APP_MSCBOOT_CFG_BOOTLOADER_SIZE)
+#define APP_MSCBOOT_CFG_ROMFS_SIZE                      (2 * 1024 * 1024)
+#define APP_MSCBOOT_CFG_ROMFS_ADDR                      (APP_MSCBOOT_CFG_FW_ADDR + APP_MSCBOOT_CFG_FW_SIZE)
+#define APP_MSCBOOT_CFG_ROOT_SIZE                       (512 * 1024)
+#define APP_MSCBOOT_CFG_ROOT_ADDR                       (APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_ROMFS_SIZE)
 
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/

@@ -150,6 +150,7 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
 #endif
 
 // implement strong vsf_driver_init to overwrite weak one in hal
+#include "hal/driver/GigaDevice/GD32H7XX/common/vendor/Include/gd32h7xx_rcu.h"
 bool vsf_driver_init(void)
 {
     rcu_periph_clock_enable(RCU_GPIOA);

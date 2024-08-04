@@ -102,6 +102,17 @@
 
 #define APP_CFG_USBH_ARCH_PRIO                          vsf_arch_prio_0
 
+#define APP_MSCBOOT_CFG_FLASH                           vsf_hw_flash1
+#define APP_MSCBOOT_CFG_FLASH_ADDR                      0x08100000
+#define APP_MSCBOOT_CFG_ERASE_ALIGN                     (128 * 1024)
+
+#define APP_BOOT1_KEY_IS_DOWN                           (0)
+
+#define APP_MSCBOOT_CFG_ROMFS_SIZE                      (512 * 1024)
+#define APP_MSCBOOT_CFG_ROMFS_ADDR                      (0)
+#define APP_MSCBOOT_CFG_ROOT_SIZE                       (512 * 1024)
+#define APP_MSCBOOT_CFG_ROOT_ADDR                       (APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_ROMFS_SIZE)
+
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
