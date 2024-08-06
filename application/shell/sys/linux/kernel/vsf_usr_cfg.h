@@ -146,6 +146,9 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_LINUX_USE_SCRIPT                         ENABLED
 #   define VSF_LINUX_CFG_INIT_SCRIPT_FILE               "/root/.profile"
 #   define VSF_LINUX_CFG_PATH                           "/bin:/usr/bin"
+#   ifdef __WIN__
+#       define VSF_LINUX_CFG_WRAPPER                    ENABLED
+#   endif
 
 #ifndef __CPU_WEBASSEMBLY__
 #   define VSF_USE_SIMPLE_SPRINTF                       ENABLED
