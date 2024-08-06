@@ -103,7 +103,7 @@ static void __vsf_debug_stream_isrhandler(void *target, vsf_usart_t *uart,
 
 static void __VSF_DEBUG_STREAM_TX_INIT(void)
 {
-    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart1;
+    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart0;
     vsf_err_t err;
 
     vsf_stream_connect_tx(&VSF_DEBUG_STREAM_RX.use_as__vsf_stream_t);
@@ -128,7 +128,7 @@ static void __VSF_DEBUG_STREAM_TX_INIT(void)
 
 static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size)
 {
-    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart1;
+    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart0;
     uint_fast16_t cur_size;
 
     while (size > 0) {
@@ -173,8 +173,8 @@ void vsf_board_init_linux(void)
 void vsf_board_init(void)
 {
     vsf_io_cfg_t cfgs[] = {
-        {VSF_PA2,  7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
-        {VSF_PA3,  7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
+        {VSF_PA9,  7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
+        {VSF_PA10, 7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
     };
     vsf_io_config(cfgs, dimof(cfgs));
 
