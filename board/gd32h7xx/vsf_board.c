@@ -103,7 +103,7 @@ static void __vsf_debug_stream_isrhandler(void *target, vsf_usart_t *uart,
 
 static void __VSF_DEBUG_STREAM_TX_INIT(void)
 {
-    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart0;
+    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart1;
     vsf_err_t err;
 
     vsf_stream_connect_tx(&VSF_DEBUG_STREAM_RX.use_as__vsf_stream_t);
@@ -128,7 +128,7 @@ static void __VSF_DEBUG_STREAM_TX_INIT(void)
 
 static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size)
 {
-    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart0;
+    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart1;
     uint_fast16_t cur_size;
 
     while (size > 0) {
@@ -150,19 +150,9 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
 #endif
 
 // implement strong vsf_driver_init to overwrite weak one in hal
-#include "hal/driver/GigaDevice/GD32H7XX/common/vendor/Include/gd32h7xx_rcu.h"
 bool vsf_driver_init(void)
 {
-    rcu_periph_clock_enable(RCU_GPIOA);
-    rcu_periph_clock_enable(RCU_GPIOB);
-    rcu_periph_clock_enable(RCU_GPIOC);
-    rcu_periph_clock_enable(RCU_GPIOD);
-    rcu_periph_clock_enable(RCU_GPIOE);
-    rcu_periph_clock_enable(RCU_GPIOF);
-    rcu_periph_clock_enable(RCU_GPIOG);
-    rcu_periph_clock_enable(RCU_GPIOH);
-    rcu_periph_clock_enable(RCU_GPIOJ);
-    rcu_periph_clock_enable(RCU_GPIOK);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOA);
     return true;
 }
 
@@ -172,11 +162,11 @@ void vsf_board_init_linux(void)
 
 void vsf_board_init(void)
 {
-    vsf_io_cfg_t cfgs[] = {
-        {VSF_PA9,  7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
-        {VSF_PA10, 7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
+    static const vsf_io_cfg_t __cfgs[] = {
+        {VSF_PA2,   7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
+        {VSF_PA3,   7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
     };
-    vsf_io_config(cfgs, dimof(cfgs));
+    vsf_io_config((vsf_io_cfg_t *)__cfgs, dimof(__cfgs));
 
 #ifdef __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);

@@ -172,11 +172,11 @@ void vsf_board_init_linux(void)
 
 void vsf_board_init(void)
 {
-    vsf_io_cfg_t cfgs[] = {
+    static const vsf_io_cfg_t __cfgs[] = {
         {VSF_PA9,   7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
         {VSF_PA10,  7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
     };
-    vsf_io_config(cfgs, dimof(cfgs));
+    vsf_io_config((vsf_io_cfg_t *)__cfgs, dimof(__cfgs));
 
 #ifdef __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);
