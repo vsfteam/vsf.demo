@@ -10202,33 +10202,27 @@
                                 <group>
                                     <name>Source</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Source\gd32h7xx_rcu.c</name>
-                                    </file>
-                                    <file>
                                         <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Source\system_gd32h7xx.c</name>
                                     </file>
                                 </group>
                             </group>
                             <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\common.c</name>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\common.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\common.h</name>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\driver.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\driver.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\startup_gd32h7xx.c</name>
                             </file>
                         </group>
                         <group>
                             <name>GD32H759</name>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\GD32H759\device.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\GD32H759\driver.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\GD32H759\driver.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\GD32H759\startup_gd32h759.c</name>
                             </file>
                         </group>
                         <file>
@@ -10706,10 +10700,13 @@
                                 </group>
                             </group>
                             <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\common.c</name>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\common.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\common.h</name>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\driver.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\driver.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\startup_STM32H7.c</name>
@@ -10719,12 +10716,6 @@
                             <name>STM32H743VI</name>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\STM32H743VI\device.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\STM32H743VI\driver.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\STM32H743VI\driver.h</name>
                             </file>
                         </group>
                     </group>
