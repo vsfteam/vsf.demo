@@ -25,14 +25,14 @@
  *
  * Dependency:
  * Board:
- *   vsf_board.mmc & vsf_board.mmc_voltage & vsf_board.mmc_bus_width
+ *   vsf_board.sdio & vsf_board.sdio_voltage & vsf_board.sdio_bus_width
  *   vsf_board.audio_dev
  *   vsf_board.display_dev
- * 
+ *
  * Submodule(except PLOOC):
  *   CMSIS(source/utilities/compiler/arm/3rd-party/CMSIS)
  *   AIC8800M_SDK_vsf(source/hal/driver/AIC/AIC8800/vendor)
- * 
+ *
  * VSF_USER_ENTRY runs in thead mode(VSF_OS_CFG_MAIN_MODE is VSF_OS_CFG_MAIN_MODE_THREAD).
  */
 
@@ -489,23 +489,23 @@ int VSF_USER_ENTRY(void)
     vsf_trace_info("audio opened\n");
 
     // SDIO test
-    static vk_mmc_mal_t __mmc_mal = {
-        .drv                    = &vk_mmc_mal_drv,
+    static vk_sdmmc_mal_t __sdmmc_mal = {
+        .drv                    = &vk_sdmmc_mal_drv,
         .hw_priority            = vsf_arch_prio_0,
         .working_clock_hz       = 50UL * 1000 * 1000,
     };
-    __mmc_mal.mmc = vsf_board.mmc;
-    __mmc_mal.voltage = vsf_board.mmc_voltage;
-    __mmc_mal.bus_width = vsf_board.mmc_bus_width;
+    __sdmmc_mal.sdio = vsf_board.sdio;
+    __sdmmc_mal.voltage = vsf_board.sdio_voltage;
+    __sdmmc_mal.bus_width = vsf_board.sdio_bus_width;
 
     static uint8_t __buffer[512];
-    vsf_trace_info("mmc test\n");
-    vk_mal_init(&__mmc_mal.use_as__vk_mal_t);
+    vsf_trace_info("sdmmc test\n");
+    vk_mal_init(&__sdmmc_mal.use_as__vk_mal_t);
     if ((int)vsf_eda_get_return_value() < 0) {
         vsf_trace_error("fail to initialize tf card.\n");
         return -1;
     }
-    vk_mal_read(&__mmc_mal.use_as__vk_mal_t, 0, 512, __buffer);
+    vk_mal_read(&__sdmmc_mal.use_as__vk_mal_t, 0, 512, __buffer);
     if ((int)vsf_eda_get_return_value() < 0) {
         vsf_trace_error("fail to read the first section of tf card.\n");
         return -1;

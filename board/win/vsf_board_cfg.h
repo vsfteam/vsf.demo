@@ -57,7 +57,7 @@
 
 #define VSF_HAL_USE_FLASH                               DISABLED
 #define VSF_HAL_USE_I2C                                 DISABLED
-#define VSF_HAL_USE_MMC                                 DISABLED
+#define VSF_HAL_USE_SDIO                                DISABLED
 
 #define VSF_HAL_USE_GPIO                                ENABLED
 #define VSF_HAL_USE_USART                               ENABLED
@@ -71,7 +71,7 @@
 #   define VSF_HAL_DISTBUS_USE_I2C                      ENABLED
 #   define VSF_HAL_DISTBUS_USE_SPI                      ENABLED
 #   define VSF_HAL_DISTBUS_USE_USART                    ENABLED
-#   define VSF_HAL_DISTBUS_USE_MMC                      ENABLED
+#   define VSF_HAL_DISTBUS_USE_SDIO                     ENABLED
 #   define VSF_HAL_DISTBUS_USE_I2S                      ENABLED
 #   define VSF_HAL_DISTBUS_USE_USBD                     ENABLED
 #   define VSF_HAL_DISTBUS_USE_USBH                     ENABLED

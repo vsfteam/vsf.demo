@@ -16,12 +16,12 @@
  ****************************************************************************/
 
 /*
- * eda mmc_mal demo
- * Read first block (512 bytes) in the mmc device defined in vsf_board.
- * 
+ * eda sdmmc_mal demo
+ * Read first block (512 bytes) in the sdmmc device defined in vsf_board.
+ *
  * Dependency:
  * Board:
- *   vsf_board.mmc & vsf_board.mmc_voltage & vsf_board.mmc_bus_width
+ *   vsf_board.sdio & vsf_board.sdio_voltage & vsf_board.sdio_bus_width
  */
 
 /*============================ INCLUDES ======================================*/
@@ -40,8 +40,8 @@
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 
-static vk_mmc_mal_t __mmc_mal = {
-    .drv                    = &vk_mmc_mal_drv,
+static vk_sdmmc_mal_t __sdmmc_mal = {
+    .drv                    = &vk_sdmmc_mal_drv,
     .hw_priority            = vsf_arch_prio_0,
     .working_clock_hz       = 50UL * 1000 * 1000,
 };
@@ -60,9 +60,9 @@ static void __eda_task_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
 
     switch (evt) {
     case VSF_EVT_INIT:
-        vsf_trace_info("initialize mmc_mal\n");
+        vsf_trace_info("initialize sdmmc_mal\n");
         vsf_eda_set_user_value(STATE_MAL_INIT);
-        vk_mal_init(&__mmc_mal.use_as__vk_mal_t);
+        vk_mal_init(&__sdmmc_mal.use_as__vk_mal_t);
         break;
     case VSF_EVT_RETURN:
         if ((int)vsf_eda_get_return_value() < 0) {
@@ -72,9 +72,9 @@ static void __eda_task_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
 
         switch (vsf_eda_get_user_value()) {
         case STATE_MAL_INIT:
-            vsf_trace_info("read mmc_mal\n");
+            vsf_trace_info("read sdmmc_mal\n");
             vsf_eda_set_user_value(STATE_MAL_READ);
-            vk_mal_read(&__mmc_mal.use_as__vk_mal_t, 0, 512, __buffer);
+            vk_mal_read(&__sdmmc_mal.use_as__vk_mal_t, 0, 512, __buffer);
             break;
         case STATE_MAL_READ:
             vsf_trace_buffer(VSF_TRACE_INFO, __buffer, sizeof(__buffer));
@@ -89,9 +89,9 @@ int VSF_USER_ENTRY(void)
     vsf_board_init();
     vsf_start_trace();
 
-    __mmc_mal.mmc = vsf_board.mmc;
-    __mmc_mal.voltage = vsf_board.mmc_voltage;
-    __mmc_mal.bus_width = vsf_board.mmc_bus_width;
+    __sdmmc_mal.sdio = vsf_board.sdio;
+    __sdmmc_mal.voltage = vsf_board.sdio_voltage;
+    __sdmmc_mal.bus_width = vsf_board.sdio_bus_width;
 
     vsf_eda_start(&__eda_task, &(vsf_eda_cfg_t){
         .fn.evthandler      = __eda_task_evthandler,

@@ -6828,21 +6828,21 @@
                         </file>
                     </group>
                     <group>
-                        <name>mmc_mal</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\mmc_mal\vsf_mmc_mal.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\mmc_mal\vsf_mmc_mal.h</name>
-                        </file>
-                    </group>
-                    <group>
                         <name>scsi_mal</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\scsi_mal\vsf_scsi_mal.c</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\scsi_mal\vsf_scsi_mal.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>sdmmc_mal</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\sdmmc_mal\vsf_sdmmc_mal.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\sdmmc_mal\vsf_sdmmc_mal.h</name>
                         </file>
                     </group>
                 </group>
@@ -8347,15 +8347,6 @@
                             </file>
                         </group>
                         <group>
-                            <name>mmc</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\mmc\mmc.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\mmc\mmc.h</name>
-                            </file>
-                        </group>
-                        <group>
                             <name>port</name>
                             <group>
                                 <name>arch</name>
@@ -8407,6 +8398,15 @@
                             </group>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\port\compiler.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>sdio</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\sdio\sdio.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\sdio\sdio.h</name>
                             </file>
                         </group>
                         <group>
@@ -9646,21 +9646,6 @@
                         </file>
                     </group>
                     <group>
-                        <name>mmc</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\mmc\mmc_common.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\mmc\mmc_probe.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\mmc\mmc_probe.h</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\mmc\mmc_template.h</name>
-                        </file>
-                    </group>
-                    <group>
                         <name>pm</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\pm\pm_template.h</name>
@@ -9694,6 +9679,21 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\rtc\rtc_template.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>sdio</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_probe.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_probe.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_template.h</name>
                         </file>
                     </group>
                     <group>
@@ -9991,6 +9991,15 @@
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\io\io.h</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>sdio</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\sdio\sdio.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\sdio\sdio.h</name>
                                 </file>
                             </group>
                             <group>
@@ -10935,21 +10944,21 @@
                             </file>
                         </group>
                         <group>
-                            <name>mmc</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.h</name>
-                            </file>
-                        </group>
-                        <group>
                             <name>pwm</name>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.c</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>sdio</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\sdio\vsf_hal_distbus_sdio.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\sdio\vsf_hal_distbus_sdio.h</name>
                             </file>
                         </group>
                         <group>
@@ -11178,21 +11187,21 @@
                         </file>
                     </group>
                     <group>
-                        <name>mmc</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\mmc\vsf_remapped_mmc.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\mmc\vsf_remapped_mmc.h</name>
-                        </file>
-                    </group>
-                    <group>
                         <name>pwm</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.c</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>sdio</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\sdio\vsf_remapped_sdio.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\sdio\vsf_remapped_sdio.h</name>
                         </file>
                     </group>
                     <group>

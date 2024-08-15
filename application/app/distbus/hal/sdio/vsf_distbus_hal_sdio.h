@@ -15,17 +15,17 @@
  *                                                                           *
  ****************************************************************************/
 
-#ifndef __VSF_DISTBUS_HAL_MMC_H__
-#define __VSF_DISTBUS_HAL_MMC_H__
+#ifndef __VSF_DISTBUS_HAL_SDIO_H__
+#define __VSF_DISTBUS_HAL_SDIO_H__
 
 #include "hal/vsf_hal.h"
 #include "service/vsf_service.h"
 
-#if VSF_HAL_USE_MMC == ENABLED && VSF_USE_DISTBUS == ENABLED
+#if VSF_HAL_USE_SDIO == ENABLED && VSF_USE_DISTBUS == ENABLED
 
-#if     defined(__VSF_DISTBUS_HAL_MMC_CLASS_IMPLEMENT)
+#if     defined(__VSF_DISTBUS_HAL_SDIO_CLASS_IMPLEMENT)
 #   define __VSF_CLASS_IMPLEMENT__
-#elif   defined(__VSF_DISTBUS_HAL_MMC_CLASS_INHERIT__)
+#elif   defined(__VSF_DISTBUS_HAL_SDIO_CLASS_INHERIT__)
 #   define __VSF_CLASS_INHERIT__
 #endif
 
@@ -40,9 +40,9 @@ extern "C" {
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
-vsf_class(vsf_distbus_hal_mmc_t) {
+vsf_class(vsf_distbus_hal_sdio_t) {
     public_member(
-        vsf_mmc_t               *target;
+        vsf_sdio_t              *target;
     )
     private_member(
         vsf_distbus_service_t   service;
@@ -53,14 +53,14 @@ vsf_class(vsf_distbus_hal_mmc_t) {
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern uint32_t vsf_distbus_hal_mmc_declare(vsf_distbus_hal_mmc_t *mmc, uint8_t *ptr, uint32_t size);
-extern void vsf_distbus_hal_mmc_poll(vsf_distbus_hal_mmc_t *mmc);
+extern uint32_t vsf_distbus_hal_sdio_declare(vsf_distbus_hal_sdio_t *sdio, uint8_t *ptr, uint32_t size);
+extern void vsf_distbus_hal_sdio_poll(vsf_distbus_hal_sdio_t *sdio);
 
-extern void vsf_distbus_hal_mmc_register(vsf_distbus_t *distbus, vsf_distbus_hal_mmc_t *mmc);
+extern void vsf_distbus_hal_sdio_register(vsf_distbus_t *distbus, vsf_distbus_hal_sdio_t *sdio);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif      // VSF_HAL_USE_MMC && VSF_USE_DISTBUS
-#endif      // __VSF_DISTBUS_HAL_MMC_H__
+#endif      // VSF_HAL_USE_SDIO && VSF_USE_DISTBUS
+#endif      // __VSF_DISTBUS_HAL_SDIO_H__

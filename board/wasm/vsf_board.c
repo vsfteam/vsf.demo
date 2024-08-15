@@ -17,7 +17,7 @@
 
 /*
  * board support for linux
- * 
+ *
  * Dependency:
  *
  * If VSF_HAL_DISTBUS is enabled:
@@ -212,11 +212,11 @@ VSF_HAL_HW_IMPLEMENT_MULTI()
 VSF_HAL_HW_IMPLEMENT_MULTI()
 #   endif
 
-#   if VSF_HAL_USE_MMC == ENABLED && (VSF_HW_MMC_COUNT > 0)
+#   if VSF_HAL_USE_SDIO == ENABLED && (VSF_HW_SDIO_COUNT > 0)
 #       undef VSF_HAL_CFG_IMP_TYPE
 #       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
-#       define VSF_HAL_CFG_IMP_TYPE                 mmc
-#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          MMC
+#       define VSF_HAL_CFG_IMP_TYPE                 sdio
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          SDIO
 VSF_HAL_HW_IMPLEMENT_MULTI()
 #   endif
 

@@ -28,7 +28,7 @@
 /*============================ MACROS ========================================*/
 
 #define VSF_USE_MAL                                     ENABLED
-#   define VSF_MAL_USE_MMC_MAL                          ENABLED
+#   define VSF_MAL_USE_SDMMC_MAL                        ENABLED
 
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
 #define VSF_USE_TRACE                                   ENABLED

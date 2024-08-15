@@ -219,23 +219,23 @@ vk_cached_mal_t romfs_mal = {
 #   endif
 #endif
 
-#if VSF_HAL_USE_MMC == ENABLED
-static vk_mmc_mal_t __mmc_mal = {
+#if VSF_HAL_USE_SDIO == ENABLED
+static vk_sdmmc_mal_t __sdmmc_mal = {
     .working_clock_hz       = 50 * 1000 * 1000,
     .uhs_en                 = false,
 };
-enum __mmc_state_t {
-    MMC_STATE_FAIL = 0,
-    MMC_STATE_WAIT_DET,
-    MMC_STATE_WAIT_DET_STABLE,
-    MMC_STATE_MAL,
-    MMC_STATE_FS_OPEN,
-    MMC_STATE_FS_MOUNT,
-    MMC_STATE_DONE,
-} static __mmc_state = MMC_STATE_WAIT_DET;
-static vsf_teda_t __mmc_task;
-static vk_malfs_mounter_t *__mmc_mounter;
-static vsf_mutex_t *__mmc_fs_mutex;
+enum __sdmmc_state_t {
+    SDMMC_STATE_FAIL = 0,
+    SDMMC_STATE_WAIT_DET,
+    SDMMC_STATE_WAIT_DET_STABLE,
+    SDMMC_STATE_MAL,
+    SDMMC_STATE_FS_OPEN,
+    SDMMC_STATE_FS_MOUNT,
+    SDMMC_STATE_DONE,
+} static __sdmmc_state = SDMMC_STATE_WAIT_DET;
+static vsf_teda_t __sdmmc_task;
+static vk_malfs_mounter_t *__sdmmc_mounter;
+static vsf_mutex_t *__sdmmc_fs_mutex;
 #endif
 
 /*============================ IMPLEMENTATION ================================*/
@@ -261,7 +261,7 @@ static vk_mal_scsi_t __app_mscbot_romfs_mal_scsi = {
     .mal                = &__app_fakefat32_mal.use_as__vk_mal_t,
 };
 
-#   if VSF_HAL_USE_MMC == ENABLED
+#   if VSF_HAL_USE_SDIO == ENABLED
 static vk_virtual_scsi_param_t __app_mscbot_tf_scsi_param = {
     .block_size         = 0,
     .block_num          = 0,
@@ -275,7 +275,7 @@ static vk_mal_scsi_t __app_mscbot_tf_mal_scsi = {
     .drv                = &vk_virtual_scsi_drv,
     .param              = (void *)&__app_mscbot_tf_scsi_param,
     .virtual_scsi_drv   = &vk_mal_virtual_scsi_drv,
-    .mal                = &__mmc_mal.use_as__vk_mal_t,
+    .mal                = &__sdmmc_mal.use_as__vk_mal_t,
 };
 #   endif
 
@@ -298,7 +298,7 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         &__app_usbd_msc_stream.use_as__vsf_stream_t,
                         // scsi_dev(s)
                         &__app_mscbot_romfs_mal_scsi.use_as__vk_scsi_t
-#   if VSF_HAL_USE_MMC == ENABLED
+#   if VSF_HAL_USE_SDIO == ENABLED
                         ,&__app_mscbot_tf_mal_scsi.use_as__vk_scsi_t
 #   endif
         )
@@ -706,76 +706,76 @@ static int __usbh_main(int argc, char *argv[])
 }
 #endif
 
-#if VSF_HAL_USE_MMC == ENABLED
-static void __mmc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
+#if VSF_HAL_USE_SDIO == ENABLED
+static void __sdmmc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
 {
     switch (evt) {
     case VSF_EVT_TIMER:
     case VSF_EVT_INIT:
-        if (!VSF_BOARD_MMC_DETECTED()) {
+        if (!VSF_BOARD_SDMMC_DETECTED()) {
             // TODO: unmount fs if mounted, mal_fini if initialized
-            __mmc_state = MMC_STATE_WAIT_DET;
+            __sdmmc_state = SDMMC_STATE_WAIT_DET;
         set_timer:
             vsf_teda_set_timer_ms(100);
             break;
         }
-        if (MMC_STATE_WAIT_DET == __mmc_state) {
-            __mmc_state = MMC_STATE_WAIT_DET_STABLE;
+        if (SDMMC_STATE_WAIT_DET == __sdmmc_state) {
+            __sdmmc_state = SDMMC_STATE_WAIT_DET_STABLE;
             goto set_timer;
         }
-        __mmc_state = MMC_STATE_MAL;
+        __sdmmc_state = SDMMC_STATE_MAL;
 
-        vk_mal_init(&__mmc_mal.use_as__vk_mal_t);
+        vk_mal_init(&__sdmmc_mal.use_as__vk_mal_t);
         break;
     case VSF_EVT_RETURN:
-        if (MMC_STATE_MAL == __mmc_state) {
+        if (SDMMC_STATE_MAL == __sdmmc_state) {
             if (VSF_ERR_NONE == vsf_eda_get_return_value()) {
-                vsf_trace_debug("mmc_probe done" VSF_TRACE_CFG_LINEEND);
-                vsf_trace_debug("mmc.high_capacity : %d" VSF_TRACE_CFG_LINEEND, __mmc_mal.high_capacity);
-                vsf_trace_debug("mmc.version : %08X" VSF_TRACE_CFG_LINEEND, __mmc_mal.version);
-                vsf_trace_debug("mmc.capacity : %lld MB" VSF_TRACE_CFG_LINEEND, __mmc_mal.capacity / 2000);
+                vsf_trace_debug("sdmmc_probe done" VSF_TRACE_CFG_LINEEND);
+                vsf_trace_debug("sdmmc.high_capacity : %d" VSF_TRACE_CFG_LINEEND, __sdmmc_mal.high_capacity);
+                vsf_trace_debug("sdmmc.version : %08X" VSF_TRACE_CFG_LINEEND, __sdmmc_mal.version);
+                vsf_trace_debug("sdmmc.capacity : %lld MB" VSF_TRACE_CFG_LINEEND, __sdmmc_mal.capacity / 2000);
 
-                __mmc_state = MMC_STATE_FS_OPEN;
-                __mmc_mounter = vsf_heap_malloc(sizeof(*__mmc_mounter));
-                VSF_ASSERT(__mmc_mounter != NULL);
-                vk_file_open(NULL, "/mnt/mmc", &__mmc_mounter->dir);
+                __sdmmc_state = SDMMC_STATE_FS_OPEN;
+                __sdmmc_mounter = vsf_heap_malloc(sizeof(*__sdmmc_mounter));
+                VSF_ASSERT(__sdmmc_mounter != NULL);
+                vk_file_open(NULL, "/mnt/sdmmc", &__sdmmc_mounter->dir);
             } else {
-                vsf_trace_debug("mmc_probe failed" VSF_TRACE_CFG_LINEEND);
-            mmc_mal_close:
-                __mmc_state = MMC_STATE_FAIL;
+                vsf_trace_debug("sdmmc_probe failed" VSF_TRACE_CFG_LINEEND);
+            sdmmc_mal_close:
+                __sdmmc_state = SDMMC_STATE_FAIL;
                 goto set_timer;
             }
-        } else if (MMC_STATE_FS_OPEN == __mmc_state) {
+        } else if (SDMMC_STATE_FS_OPEN == __sdmmc_state) {
             if (VSF_ERR_NONE == vsf_eda_get_return_value()) {
-                __mmc_fs_mutex = vsf_heap_malloc(sizeof(*__mmc_fs_mutex));
-                VSF_ASSERT(__mmc_fs_mutex != NULL);
+                __sdmmc_fs_mutex = vsf_heap_malloc(sizeof(*__sdmmc_fs_mutex));
+                VSF_ASSERT(__sdmmc_fs_mutex != NULL);
 
-                __mmc_mounter->mal = &__mmc_mal.use_as__vk_mal_t;
-                __mmc_mounter->mutex = (vsf_mutex_t *)__mmc_fs_mutex;
-                __mmc_state = MMC_STATE_FS_MOUNT;
-                vk_malfs_mount(__mmc_mounter);
+                __sdmmc_mounter->mal = &__sdmmc_mal.use_as__vk_mal_t;
+                __sdmmc_mounter->mutex = (vsf_mutex_t *)__sdmmc_fs_mutex;
+                __sdmmc_state = SDMMC_STATE_FS_MOUNT;
+                vk_malfs_mount(__sdmmc_mounter);
             } else {
-                vsf_trace_debug("fail to open /mnt/mmc" VSF_TRACE_CFG_LINEEND);
-                goto mmc_mal_close;
+                vsf_trace_debug("fail to open /mnt/sdmmc" VSF_TRACE_CFG_LINEEND);
+                goto sdmmc_mal_close;
             }
-        } else if (MMC_STATE_FS_MOUNT == __mmc_state) {
-            vsf_err_t mount_err = __mmc_mounter->err;
-            uint8_t partition_mounted = __mmc_mounter->partition_mounted;
-            vsf_heap_free(__mmc_mounter);
-            __mmc_mounter = NULL;
+        } else if (SDMMC_STATE_FS_MOUNT == __sdmmc_state) {
+            vsf_err_t mount_err = __sdmmc_mounter->err;
+            uint8_t partition_mounted = __sdmmc_mounter->partition_mounted;
+            vsf_heap_free(__sdmmc_mounter);
+            __sdmmc_mounter = NULL;
 
             if (0 == partition_mounted) {
-                vsf_heap_free(__mmc_fs_mutex);
-                __mmc_fs_mutex = NULL;
+                vsf_heap_free(__sdmmc_fs_mutex);
+                __sdmmc_fs_mutex = NULL;
 
                 if (mount_err != VSF_ERR_NONE) {
-                    vsf_trace_debug("fail to mount mmc" VSF_TRACE_CFG_LINEEND);
+                    vsf_trace_debug("fail to mount sdmmc" VSF_TRACE_CFG_LINEEND);
                 } else {
                     vsf_trace_debug("no supported partition" VSF_TRACE_CFG_LINEEND);
                 }
-                goto mmc_mal_close;
+                goto sdmmc_mal_close;
             } else {
-                vsf_trace_debug("mmc mounted at /mnt/mmc" VSF_TRACE_CFG_LINEEND);
+                vsf_trace_debug("sdmmc mounted at /mnt/sdmmc" VSF_TRACE_CFG_LINEEND);
             }
         }
         break;
@@ -975,12 +975,12 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_audio_timer("/dev/snd/timer");
 #   endif
 #endif
-#if VSF_HAL_USE_MMC == ENABLED
-    __mmc_mal.mmc           = vsf_board.mmc;
-    __mmc_mal.hw_priority   = vsf_arch_prio_0;
-    __mmc_mal.voltage       = vsf_board.mmc_voltage;
-    __mmc_mal.bus_width     = vsf_board.mmc_bus_width;
-    __mmc_mal.drv           = &vk_mmc_mal_drv;
+#if VSF_HAL_USE_SDMMC == ENABLED
+    __sdmmc_mal.sdio        = vsf_board.sdio;
+    __sdmmc_mal.hw_priority = vsf_arch_prio_0;
+    __sdmmc_mal.voltage     = vsf_board.sdio_voltage;
+    __sdmmc_mal.bus_width   = vsf_board.sdio_bus_width;
+    __sdmmc_mal.drv         = &vk_sdmmc_mal_drv;
 #endif
 
     // 2. fs
@@ -1056,8 +1056,8 @@ int vsf_linux_create_fhs(void)
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
     if (__usr_linux_boot) {
 #   if VSF_USE_USB_DEVICE == ENABLED
-#       if VSF_HAL_USE_MMC == ENABLED
-        usbd_mscbot_scsi_config(__app_usbd, 0, 1, !VSF_BOARD_MMC_DETECTED());
+#       if VSF_HAL_USE_SDIO == ENABLED
+        usbd_mscbot_scsi_config(__app_usbd, 0, 1, !VSF_BOARD_SDMMC_DETECTED());
 #       endif
         usbd_mscbot_scsi_config(__app_usbd, 0, 0, false);
 
@@ -1067,12 +1067,12 @@ int vsf_linux_create_fhs(void)
     } else
 #endif
     {
-#if VSF_HAL_USE_MMC == ENABLED
-        vsf_teda_start(&__mmc_task, &(vsf_eda_cfg_t){
-            .fn.evthandler  = __mmc_evthandler,
+#if VSF_HAL_USE_SDIO == ENABLED
+        vsf_teda_start(&__sdmmc_task, &(vsf_eda_cfg_t){
+            .fn.evthandler  = __sdmmc_evthandler,
             .priority       = vsf_prio_0,
         });
-        mkdirs("/mnt/mmc", 0);
+        mkdirs("/mnt/sdmmc", 0);
 #endif
 
         // some hw are maybe not available in boot mode, add hwtest in non-boot mode

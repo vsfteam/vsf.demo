@@ -29,7 +29,7 @@
 
 #define VSF_HAL_USE_DEBUG_STREAM                        DISABLED
 #define VSF_HAL_USE_I2S                                 DISABLED
-#define VSF_HAL_USE_MMC                                 DISABLED
+#define VSF_HAL_USE_SDIO                                DISABLED
 #define VSF_HAL_USE_RNG                                 DISABLED
 #define VSF_HAL_USE_SPI                                 DISABLED
 #define VSF_HAL_USE_I2C                                 DISABLED

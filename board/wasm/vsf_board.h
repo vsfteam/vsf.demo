@@ -129,15 +129,15 @@ VSF_HAL_HW_DECLARE_MULTI()
 VSF_HAL_HW_DECLARE_MULTI()
 #   endif
 
-#   if VSF_HAL_USE_MMC == ENABLED
-#       ifndef VSF_HW_MMC_COUNT
-#           define VSF_HW_MMC_COUNT                 32
+#   if VSF_HAL_USE_SDIO == ENABLED
+#       ifndef VSF_HW_SDIO_COUNT
+#           define VSF_HW_SDIO_COUNT                32
 #       endif
 
 #       undef VSF_HAL_CFG_IMP_TYPE
 #       undef VSF_HAL_CFG_IMP_UPCASE_TYPE
-#       define VSF_HAL_CFG_IMP_TYPE                 mmc
-#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          MMC
+#       define VSF_HAL_CFG_IMP_TYPE                 sdio
+#       define VSF_HAL_CFG_IMP_UPCASE_TYPE          SDIO
 VSF_HAL_HW_DECLARE_MULTI()
 #   endif
 

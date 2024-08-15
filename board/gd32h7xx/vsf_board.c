@@ -149,10 +149,13 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
 #include "hal/driver/common/debug_stream/debug_stream_tx_blocked.inc"
 #endif
 
-// implement strong vsf_driver_init to overwrite weak one in hal
-bool vsf_driver_init(void)
+// implement strong vsf_app_driver_init to overwrite weak one in hal
+bool vsf_app_driver_init(void)
 {
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOA);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOB);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOC);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOD);
     return true;
 }
 
@@ -163,8 +166,19 @@ void vsf_board_init_linux(void)
 void vsf_board_init(void)
 {
     static const vsf_io_cfg_t __cfgs[] = {
+        // USART
         {VSF_PA2,   7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
         {VSF_PA3,   7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
+
+        // SDIO
+#if VSF_HAL_USE_SDIO == ENABLED
+        {VSF_PB13,  12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_100MHZ_220MHZ},
+        {VSF_PC9,   12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_100MHZ_220MHZ},
+        {VSF_PC10,  12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_100MHZ_220MHZ},
+        {VSF_PC11,  12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_100MHZ_220MHZ},
+        {VSF_PC12,  12,  VSF_IO_AF_PUSH_PULL | VSF_IO_FLOATING | VSF_IO_SPEED_100MHZ_220MHZ},
+        {VSF_PD2,   12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_100MHZ_220MHZ},
+#endif
     };
     vsf_io_config((vsf_io_cfg_t *)__cfgs, dimof(__cfgs));
 

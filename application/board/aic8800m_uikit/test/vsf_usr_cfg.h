@@ -36,7 +36,7 @@
 #define VSF_USE_TRACE                                   ENABLED
 
 #define VSF_USE_MAL                                     ENABLED
-#   define VSF_MAL_USE_MMC_MAL                          ENABLED
+#   define VSF_MAL_USE_SDMMC_MAL                        ENABLED
 #define VSF_USE_UI                                      ENABLED
 #define VSF_USE_AUDIO                                   ENABLED
 #   define VSF_AUDIO_USE_PLAYBACK                       ENABLED

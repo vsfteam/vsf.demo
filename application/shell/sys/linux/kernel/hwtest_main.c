@@ -119,10 +119,10 @@ int hwtest_main(int argc, char **argv)
     vsf_thread_wfe(VSF_EVT_USER);
 #endif
 
-#if VSF_HAL_USE_MMC == ENABLED
-    DIR *dp = opendir("/mnt/mmc");
+#if VSF_HAL_USE_SDIO == ENABLED
+    DIR *dp = opendir("/mnt/sdmmc");
     if (NULL == dp) {
-        vsf_trace_error("invalid mount entry for mmc" VSF_TRACE_CFG_LINEEND);
+        vsf_trace_error("invalid mount entry for sdmmc" VSF_TRACE_CFG_LINEEND);
     } else {
         struct dirent *dentry = readdir(dp);
         if (NULL == dentry) {

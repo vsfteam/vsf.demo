@@ -631,9 +631,6 @@
     <Filter Include="board">
       <UniqueIdentifier>{ea65139e-64d5-4af2-be2f-53c7078cfcd7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vsf\hal\driver\common\mmc">
-      <UniqueIdentifier>{1924c7d9-0f38-47cf-97b3-538c786b8627}</UniqueIdentifier>
-    </Filter>
     <Filter Include="vsf\shell\sys\linux\kernel\core">
       <UniqueIdentifier>{1cb3d64a-a252-40a3-b004-104190a57747}</UniqueIdentifier>
     </Filter>
@@ -672,9 +669,6 @@
     </Filter>
     <Filter Include="vsf\hal\driver\vsf\distbus\i2c">
       <UniqueIdentifier>{ebcd9b10-90a5-4c94-97c2-0bc916c82875}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vsf\hal\driver\vsf\distbus\mmc">
-      <UniqueIdentifier>{a6cca9f4-545f-4e15-8e8c-9defd7a3c2e7}</UniqueIdentifier>
     </Filter>
     <Filter Include="vsf\hal\driver\vsf\distbus\pwm">
       <UniqueIdentifier>{09126244-e617-4b3e-8704-39739c58e966}</UniqueIdentifier>
@@ -738,9 +732,6 @@
     </Filter>
     <Filter Include="vsf\hal\utilities\remap\pwm">
       <UniqueIdentifier>{8f0cbab2-1d25-4f6b-8f38-7c313997d199}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vsf\hal\utilities\remap\mmc">
-      <UniqueIdentifier>{1b397d19-7702-4292-b82a-7b979fc53ecd}</UniqueIdentifier>
     </Filter>
     <Filter Include="vsf\hal\utilities\remap\usart">
       <UniqueIdentifier>{b9263950-5e8f-4322-8fcb-0039452a14ac}</UniqueIdentifier>
@@ -858,6 +849,24 @@
     </Filter>
     <Filter Include="vsf\shell\sys\linux\include\linux\usb">
       <UniqueIdentifier>{a01efe3b-87e0-408b-acec-554e5ca078d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\mal\driver\cached_mal">
+      <UniqueIdentifier>{bf7c4021-cf05-469c-b86b-1ca9fa0e120c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\mal\driver\flash_mal">
+      <UniqueIdentifier>{134cffb9-40c1-4ed6-98bd-d9b3092fbe9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\mal\driver\sdmmc_mal">
+      <UniqueIdentifier>{d669b694-e035-4c01-81a4-ba49e079ba2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\common\sdio">
+      <UniqueIdentifier>{1924c7d9-0f38-47cf-97b3-538c786b8627}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\sdio">
+      <UniqueIdentifier>{a6cca9f4-545f-4e15-8e8c-9defd7a3c2e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\sdio">
+      <UniqueIdentifier>{1b397d19-7702-4292-b82a-7b979fc53ecd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1917,12 +1926,6 @@
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h">
       <Filter>board</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\driver\common\mmc\mmc_probe.h">
-      <Filter>vsf\hal\driver\common\mmc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\driver\common\mmc\mmc_template.h">
-      <Filter>vsf\hal\driver\common\mmc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\driver\common\gpio\gpio_template.h">
       <Filter>vsf\hal\driver\common\gpio</Filter>
     </ClInclude>
@@ -1998,9 +2001,6 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.h">
       <Filter>vsf\hal\driver\vsf\distbus\i2c</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.h">
-      <Filter>vsf\hal\driver\vsf\distbus\mmc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.h">
       <Filter>vsf\hal\driver\vsf\distbus\pwm</Filter>
     </ClInclude>
@@ -2066,9 +2066,6 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.h">
       <Filter>vsf\hal\utilities\remap\pwm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\mmc\vsf_remapped_mmc.h">
-      <Filter>vsf\hal\utilities\remap\mmc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\usart\vsf_remapped_usart.h">
       <Filter>vsf\hal\utilities\remap\usart</Filter>
@@ -2483,6 +2480,27 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\usb\ch9.h">
       <Filter>vsf\shell\sys\linux\include\linux\usb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\mal\driver\cached_mal\vsf_cached_mal.h">
+      <Filter>vsf\component\mal\driver\cached_mal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\mal\driver\flash_mal\vsf_flash_mal.h">
+      <Filter>vsf\component\mal\driver\flash_mal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\mal\driver\sdmmc_mal\vsf_sdmmc_mal.h">
+      <Filter>vsf\component\mal\driver\sdmmc_mal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\sdio\sdio_probe.h">
+      <Filter>vsf\hal\driver\common\sdio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\sdio\sdio_template.h">
+      <Filter>vsf\hal\driver\common\sdio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\sdio\vsf_hal_distbus_sdio.h">
+      <Filter>vsf\hal\driver\vsf\distbus\sdio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\sdio\vsf_remapped_sdio.h">
+      <Filter>vsf\hal\utilities\remap\sdio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3095,12 +3113,6 @@
     <ClCompile Include="..\..\board\win\vsf_board.c">
       <Filter>board</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vsf\source\hal\driver\common\mmc\mmc_common.c">
-      <Filter>vsf\hal\driver\common\mmc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\vsf\source\hal\driver\common\mmc\mmc_probe.c">
-      <Filter>vsf\hal\driver\common\mmc</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\vsf_linux_core.c">
       <Filter>vsf\shell\sys\linux\kernel\core</Filter>
     </ClCompile>
@@ -3136,9 +3148,6 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.c">
       <Filter>vsf\hal\driver\vsf\distbus\i2c</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.c">
-      <Filter>vsf\hal\driver\vsf\distbus\mmc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.c">
       <Filter>vsf\hal\driver\vsf\distbus\pwm</Filter>
@@ -3187,9 +3196,6 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.c">
       <Filter>vsf\hal\utilities\remap\pwm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\mmc\vsf_remapped_mmc.c">
-      <Filter>vsf\hal\utilities\remap\mmc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\usart\vsf_remapped_usart.c">
       <Filter>vsf\hal\utilities\remap\usart</Filter>
@@ -3692,6 +3698,36 @@
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_ui.c">
       <Filter>application</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\lib\glibc\vsf_linux_glibcpp.cc">
+      <Filter>vsf\shell\sys\linux\lib\glibc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\lib\glibc\vsf_linux_glibcpp_string.cpp">
+      <Filter>vsf\shell\sys\linux\lib\glibc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\utilities\language_extension\simple_swprintf.c">
+      <Filter>vsf\utilities\language_externsion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\mal\driver\cached_mal\vsf_cached_mal.c">
+      <Filter>vsf\component\mal\driver\cached_mal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\mal\driver\flash_mal\vsf_flash_mal.c">
+      <Filter>vsf\component\mal\driver\flash_mal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\mal\driver\sdmmc_mal\vsf_sdmmc_mal.c">
+      <Filter>vsf\component\mal\driver\sdmmc_mal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\common\sdio\sdio_common.c">
+      <Filter>vsf\hal\driver\common\sdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\common\sdio\sdio_probe.c">
+      <Filter>vsf\hal\driver\common\sdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\sdio\vsf_hal_distbus_sdio.c">
+      <Filter>vsf\hal\driver\vsf\distbus\sdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\sdio\vsf_remapped_sdio.c">
+      <Filter>vsf\hal\utilities\remap\sdio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">
@@ -3733,9 +3769,6 @@
     <None Include="..\..\vsf\source\hal\driver\common\adc\adc_template.inc">
       <Filter>vsf\hal\driver\common\adc</Filter>
     </None>
-    <None Include="..\..\vsf\source\hal\driver\common\mmc\mmc_template.inc">
-      <Filter>vsf\hal\driver\common\mmc</Filter>
-    </None>
     <None Include="..\..\vsf\source\hal\driver\common\gpio\gpio_template.inc">
       <Filter>vsf\hal\driver\common\gpio</Filter>
     </None>
@@ -3747,6 +3780,9 @@
     </None>
     <None Include="..\..\vsf\source\shell\sys\linux\app\httpd\urihandler\websocket\__vsf_linux_urihandler_websocket.inc">
       <Filter>vsf\shell\sys\linux\app\httpd\urihandler\websocket</Filter>
+    </None>
+    <None Include="..\..\vsf\source\hal\driver\common\sdio\sdio_template.inc">
+      <Filter>vsf\hal\driver\common\sdio</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

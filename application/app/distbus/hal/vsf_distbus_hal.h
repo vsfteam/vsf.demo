@@ -31,7 +31,7 @@
 #include "./i2c/vsf_distbus_hal_i2c.h"
 #include "./spi/vsf_distbus_hal_spi.h"
 #include "./usart/vsf_distbus_hal_usart.h"
-#include "./mmc/vsf_distbus_hal_mmc.h"
+#include "./sdio/vsf_distbus_hal_sdio.h"
 #include "./adc/vsf_distbus_hal_adc.h"
 #include "./dac/vsf_distbus_hal_dac.h"
 #include "./pwm/vsf_distbus_hal_pwm.h"

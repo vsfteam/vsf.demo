@@ -149,8 +149,8 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
 #include "hal/driver/common/debug_stream/debug_stream_tx_blocked.inc"
 #endif
 
-// implement strong vsf_driver_init to overwrite weak one in hal
-bool vsf_driver_init(void)
+// implement strong vsf_app_driver_init to overwrite weak one in hal
+bool vsf_app_driver_init(void)
 {
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOA);
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOB);
