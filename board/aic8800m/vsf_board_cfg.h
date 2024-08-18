@@ -65,8 +65,7 @@
 #ifndef VSF_HAL_USE_SPI
 #   define VSF_HAL_USE_SPI                              ENABLED
 #endif
-#undef VSF_HAL_USE_SDIO
-#define VSF_HAL_USE_SDIO                                DISABLED
+#define VSF_HAL_USE_SDIO                                ENABLED
 #ifndef VSF_HAL_USE_I2S
 #   define VSF_HAL_USE_I2S                              ENABLED
 #endif

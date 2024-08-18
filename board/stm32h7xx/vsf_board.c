@@ -60,6 +60,11 @@ vsf_board_t vsf_board = {
         .param                  = &__dwcotg_dcd_param,
     },
 #endif
+#if VSF_HAL_USE_SDIO == ENABLED
+    .sdio                       = (vsf_sdio_t *)&vsf_hw_sdio1,
+    .sdio_bus_width             = 4,
+    .sdio_voltage               = SD_OCR_VDD_32_33 | SD_OCR_VDD_33_34,
+#endif
 };
 #endif
 
@@ -173,8 +178,19 @@ void vsf_board_init_linux(void)
 void vsf_board_init(void)
 {
     static const vsf_io_cfg_t __cfgs[] = {
+        // USART
         {VSF_PA9,   7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
         {VSF_PA10,  7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
+
+        // SDIO
+#if VSF_HAL_USE_SDIO == ENABLED
+        {VSF_PC8,   12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
+        {VSF_PC9,   12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
+        {VSF_PC10,  12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
+        {VSF_PC11,  12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
+        {VSF_PC12,  12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
+        {VSF_PD2,   12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
+#endif
     };
     vsf_io_config((vsf_io_cfg_t *)__cfgs, dimof(__cfgs));
 

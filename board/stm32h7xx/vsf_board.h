@@ -29,7 +29,12 @@
 
 #define VSF_USE_BOARD           (VSF_HAL_USE_I2C == ENABLED)                    \
                             ||  (VSF_USE_USB_HOST == ENABLED)                   \
-                            ||  (VSF_USE_USB_DEVICE == ENABLED)
+                            ||  (VSF_USE_USB_DEVICE == ENABLED)                 \
+                            ||  (VSF_HAL_USE_SDIO == ENABLED)
+
+#if VSF_HAL_USE_SDIO == ENABLED
+#   define VSF_BOARD_SDMMC_DETECTED()       1
+#endif
 
 /*============================ TYPES =========================================*/
 
@@ -43,6 +48,11 @@ typedef struct vsf_board_t {
 #endif
 #if VSF_USE_USB_DEVICE == ENABLED
     vk_dwcotg_dcd_t dwcotg_dcd;
+#endif
+#if VSF_HAL_USE_SDIO == ENABLED
+    vsf_sdio_t *sdio;
+    uint8_t sdio_bus_width;
+    uint32_t sdio_voltage;
 #endif
 } vsf_board_t;
 #endif

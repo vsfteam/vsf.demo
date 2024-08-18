@@ -9771,6 +9771,9 @@
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_rtc.h</name>
                         </file>
                         <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_sdio.h</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_spi.h</name>
                         </file>
                         <file>
@@ -10676,6 +10679,15 @@
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\io\io.h</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>sdio</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\sdio\sdio.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\sdio\sdio.h</name>
                                 </file>
                             </group>
                             <group>

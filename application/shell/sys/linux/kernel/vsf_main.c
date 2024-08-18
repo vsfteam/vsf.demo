@@ -975,7 +975,7 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_audio_timer("/dev/snd/timer");
 #   endif
 #endif
-#if VSF_HAL_USE_SDMMC == ENABLED
+#if VSF_HAL_USE_SDIO == ENABLED
     __sdmmc_mal.sdio        = vsf_board.sdio;
     __sdmmc_mal.hw_priority = vsf_arch_prio_0;
     __sdmmc_mal.voltage     = vsf_board.sdio_voltage;

@@ -60,6 +60,11 @@ vsf_board_t vsf_board = {
         .param                  = &__dwcotg_dcd_param,
     },
 #endif
+#if VSF_HAL_USE_SDIO == ENABLED
+    .sdio                       = (vsf_sdio_t *)&vsf_hw_sdio0,
+    .sdio_bus_width             = 4,
+    .sdio_voltage               = SD_OCR_VDD_32_33 | SD_OCR_VDD_33_34,
+#endif
 };
 #endif
 
