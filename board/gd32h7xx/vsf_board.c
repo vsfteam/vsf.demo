@@ -21,6 +21,12 @@
 #include "./vsf_board.h"
 
 /*============================ MACROS ========================================*/
+
+// TODO: remove code below after bug in float support in simple_sprintf beging fixed
+#if VSF_USE_SIMPLE_SPRINTF == ENABLED && VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT == ENABLED
+#   error VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT is not stable now for CortexM7 targets
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ PROTOTYPES ====================================*/
