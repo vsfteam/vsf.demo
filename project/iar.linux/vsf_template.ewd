@@ -2303,7 +2303,7 @@
                 </option>
                 <option>
                     <name>CCJLinkBreakpointRadio</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCJLinkDoUpdateBreakpoints</name>
@@ -3788,7 +3788,7 @@
                 </option>
                 <option>
                     <name>CCJLinkBreakpointRadio</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCJLinkDoUpdateBreakpoints</name>
