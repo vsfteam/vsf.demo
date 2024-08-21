@@ -130,7 +130,7 @@ vsf_board_t vsf_board = {
             .color              = VSF_BOARD_RGBLCD_COLOR,
         },
         .fb                     = {
-            .buffer             = (void *)0x0C000000,
+            .buffer             = (void *)0xC0000000,
             .drv                = &__vk_disp_fb_drv_gd32h7xx,
             .param              = (void *)&__vsf_board_lcd_param,
             .size               = vsf_disp_get_pixel_format_bytesize(VSF_BOARD_RGBLCD_COLOR)
