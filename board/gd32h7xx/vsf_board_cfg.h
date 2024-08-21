@@ -94,6 +94,20 @@
 #define VSF_USE_USB_HOST                                DISABLED
 #define VSF_USE_USB_DEVICE                              DISABLED
 
+#define VSF_USE_UI                                      ENABLED
+#   define VSF_DISP_USE_FB                              ENABLED
+#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
+#   define VSF_BOARD_RGBLCD_HEIGHT                      480
+#   define VSF_BOARD_RGBLCD_WIDTH                       800
+#   define VSF_BOARD_RGBLCD_HSW                         48
+#   define VSF_BOARD_RGBLCD_HBP                         88
+#   define VSF_BOARD_RGBLCD_HFP                         40
+#   define VSF_BOARD_RGBLCD_VSW                         3
+#   define VSF_BOARD_RGBLCD_VBP                         32
+#   define VSF_BOARD_RGBLCD_VFP                         13
+#   define VSF_BOARD_RGBLCD_COLOR                       VSF_DISP_COLOR_ARGB8888
+#endif
+
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
  *----------------------------------------------------------------------------*/

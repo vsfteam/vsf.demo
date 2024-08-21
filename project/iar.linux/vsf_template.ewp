@@ -1483,6 +1483,7 @@
                 <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\..\..\board\gd32h7xx</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Include</state>
                     <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
                     <state>$PROJ_DIR$\..\..\vsf\source</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
@@ -10213,6 +10214,12 @@
                                 </group>
                                 <group>
                                     <name>Source</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Source\gd32h7xx_exmc.c</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Source\gd32h7xx_tli.c</name>
+                                    </file>
                                     <file>
                                         <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Source\system_gd32h7xx.c</name>
                                     </file>

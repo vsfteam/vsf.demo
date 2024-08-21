@@ -860,6 +860,12 @@ static void __vk_disp_on_inited(vk_disp_t *disp)
     vsf_eda_post_evt((vsf_eda_t *)disp->ui_data, VSF_EVT_USER);
 }
 
+VSF_CAL_WEAK(ui_main)
+int ui_main(int argc, char **argv)
+{
+    return 0;
+}
+
 #   if VSF_LINUX_USE_DEVFS == ENABLED
 static int __fill_screen_main(int argc, char **argv)
 {
@@ -951,7 +957,6 @@ int vsf_linux_create_fhs(void)
         vsf_thread_wfe(VSF_EVT_USER);
 
         extern int display_qrcode_main(int argc, char **argv);
-        extern int ui_main(int argc, char **argv);
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/qrcode", display_qrcode_main);
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/ui", ui_main);
 #   if VSF_LINUX_USE_DEVFS == ENABLED
