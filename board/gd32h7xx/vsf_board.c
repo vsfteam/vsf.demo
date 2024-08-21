@@ -26,7 +26,8 @@
 
 // TODO: remove code below after bug in float support in simple_sprintf beging fixed
 #if VSF_USE_SIMPLE_SPRINTF == ENABLED && VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT == ENABLED
-#   error VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT is not stable now for CortexM7 targets
+// tested on IAR, use Low level optimization will be stable
+#   warning VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT is not stable now for CortexM7 targets
 #endif
 
 #if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
@@ -422,9 +423,11 @@ static vsf_err_t __gd32h7xx_fb_init(vsf_hw_rgblcd_param_t *fb, int color_format,
 
     vsf_hw_peripheral_enable(VSF_HW_EN_TLI);
     vsf_hw_clk_disable(&VSF_HW_CLK_PLL2_VCO);
-    vsf_hw_pll_vco_config(&VSF_HW_CLK_PLL2_VCO, 25, 396000000);
-    vsf_hw_clk_config(&VSF_HW_CLK_PLL2R, NULL, 3, 0);
-    vsf_hw_clk_config(&VSF_HW_CLK_TLI, NULL, 4, 0);
+    // clock source of PLL2_VCO is ready, so can use frequency
+    vsf_hw_pll_vco_config(&VSF_HW_CLK_PLL2_VCO, 25, VSF_BOARD_RGBLCD_PLL2_VCO_FREQ);
+    // clock sources of PLL2R and TLI are not ready, can not use frequency
+    vsf_hw_clk_config(&VSF_HW_CLK_PLL2R, NULL, VSF_BOARD_RGBLCD_PLL2_VCO_FREQ / VSF_BOARD_RGBLCD_PLL2R_FREQ, 0);
+    vsf_hw_clk_config(&VSF_HW_CLK_TLI, NULL, VSF_BOARD_RGBLCD_PLL2R_FREQ / VSF_BOARD_RGBLCD_TLI_FREQ, 0);
     vsf_hw_clk_enable(&VSF_HW_CLK_PLL2R);
     vsf_hw_clk_enable(&VSF_HW_CLK_PLL2_VCO);
 

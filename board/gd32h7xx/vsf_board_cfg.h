@@ -106,6 +106,10 @@
 #   define VSF_BOARD_RGBLCD_VBP                         32
 #   define VSF_BOARD_RGBLCD_VFP                         13
 #   define VSF_BOARD_RGBLCD_COLOR                       VSF_DISP_COLOR_ARGB8888
+
+#   define VSF_BOARD_RGBLCD_PLL2_VCO_FREQ               396000000
+#   define VSF_BOARD_RGBLCD_PLL2R_FREQ                  132000000
+#   define VSF_BOARD_RGBLCD_TLI_FREQ                    33000000
 #endif
 
 /*----------------------------------------------------------------------------*
