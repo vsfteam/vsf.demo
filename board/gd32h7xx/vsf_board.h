@@ -56,6 +56,7 @@ typedef struct vsf_board_t {
     uint32_t sdio_voltage;
 #endif
 #if VSF_USE_UI == ENABLED
+    vsf_hw_fb_t hw_fb;
     vk_disp_fb_t display_fb;
     vk_disp_t *display_dev;
     vsf_gpio_t *bl_port;

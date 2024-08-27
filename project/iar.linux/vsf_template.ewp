@@ -9971,6 +9971,15 @@
                         <group>
                             <name>common</name>
                             <group>
+                                <name>fb</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\fb\fb.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\fb\fb.h</name>
+                                </file>
+                            </group>
+                            <group>
                                 <name>flash</name>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\flash\flash.c</name>
@@ -10216,9 +10225,6 @@
                                     <name>Source</name>
                                     <file>
                                         <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Source\gd32h7xx_exmc.c</name>
-                                    </file>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Source\gd32h7xx_tli.c</name>
                                     </file>
                                     <file>
                                         <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Source\system_gd32h7xx.c</name>

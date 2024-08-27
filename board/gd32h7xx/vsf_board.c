@@ -30,36 +30,9 @@
 #   warning VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT is not stable now for CortexM7 targets
 #endif
 
-#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
-#   define TLI_PIXFORMAT_ARGB8888       0x00
-#   define TLI_PIXFORMAT_RGB888         0x01
-#   define TLI_PIXFORMAT_RGB565         0x02
-#   define TLI_PIXFORMAT_ARGB1555       0x03
-#   define TLI_PIXFORMAT_ARGB4444       0x04
-#   define TLI_PIXFORMAT_L8             0x05
-#   define TLI_PIXFORMAT_AL44           0x06
-#   define TLI_PIXFORMAT_AL88           0x07
-#endif
-
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
-
-#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
-typedef struct vsf_hw_rgblcd_param_t {
-    vk_disp_coord_t width, height;      // in pixels
-    vk_disp_color_type_t pixel_format;
-    uint16_t hsw, vsw, hbp, vbp, hfp, vfp;
-} vsf_hw_rgblcd_param_t;
-#endif
-
 /*============================ PROTOTYPES ====================================*/
-
-#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
-static vsf_err_t __gd32h7xx_fb_init(vsf_hw_rgblcd_param_t *fb, int color_format, void *initial_pixel_buffer);
-static vsf_err_t __gd32h7xx_fb_fini(vsf_hw_rgblcd_param_t *fb);
-static vsf_err_t __gd32h7xx_fb_present(vsf_hw_rgblcd_param_t *fb, void *pixel_buffer);
-#endif
-
 /*============================ LOCAL VARIABLES ===============================*/
 
 #if VSF_USE_USB_HOST == ENABLED
@@ -77,27 +50,6 @@ static const vk_dwcotg_dcd_param_t __dwcotg_dcd_param = {
     .speed                      = VSF_USBD_CFG_SPEED,
         .ulpi_en                = true,
         .dma_en                 = false,
-};
-#endif
-
-#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
-static const vsf_hw_rgblcd_param_t __vsf_board_lcd_param = {
-    .width                      = VSF_BOARD_RGBLCD_WIDTH,
-    .height                     = VSF_BOARD_RGBLCD_HEIGHT,
-    .hsw                        = VSF_BOARD_RGBLCD_HSW,
-    .hbp                        = VSF_BOARD_RGBLCD_HBP,
-    .hfp                        = VSF_BOARD_RGBLCD_HFP,
-    .vsw                        = VSF_BOARD_RGBLCD_VSW,
-    .vbp                        = VSF_BOARD_RGBLCD_VBP,
-    .vfp                        = VSF_BOARD_RGBLCD_VFP,
-    .pixel_format               = VSF_DISP_COLOR_ARGB8888,
-};
-
-static const vk_disp_fb_drv_t __vk_disp_fb_drv_gd32h7xx = {
-    .init       = NULL,
-    .fb.init    = (vsf_err_t (*)(void *, int, void *))__gd32h7xx_fb_init,
-    .fb.fini    = (vsf_err_t (*)(void *))__gd32h7xx_fb_fini,
-    .fb.present = (vsf_err_t (*)(void *, void *))__gd32h7xx_fb_present,
 };
 #endif
 
@@ -123,6 +75,23 @@ vsf_board_t vsf_board = {
     .sdio_voltage               = SD_OCR_VDD_32_33 | SD_OCR_VDD_33_34,
 #endif
 #if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
+    .hw_fb                      = {
+        .type                   = VSF_HW_FB_RGB,
+        .width                  = VSF_BOARD_RGBLCD_WIDTH,
+        .height                 = VSF_BOARD_RGBLCD_HEIGHT,
+        .pixel_format           = VSF_DISP_COLOR_ARGB8888,
+        .timing.rgb             = {
+            .fps                = VSF_BOARD_RGBLCD_FPS,
+            .hsw                = VSF_BOARD_RGBLCD_HSW,
+            .hbp                = VSF_BOARD_RGBLCD_HBP,
+            .hfp                = VSF_BOARD_RGBLCD_HFP,
+            .vsw                = VSF_BOARD_RGBLCD_VSW,
+            .vbp                = VSF_BOARD_RGBLCD_VBP,
+            .vfp                = VSF_BOARD_RGBLCD_VFP,
+            .use_de             = true,
+            .use_pixel_clk      = true,
+        },
+    },
     .display_fb                 = {
         .param                  = {
             .height             = VSF_BOARD_RGBLCD_HEIGHT,
@@ -130,14 +99,19 @@ vsf_board_t vsf_board = {
             .drv                = &vk_disp_drv_fb,
             .color              = VSF_BOARD_RGBLCD_COLOR,
         },
-        .fb                     = {
-            .buffer             = (void *)0xC0000000,
-            .drv                = &__vk_disp_fb_drv_gd32h7xx,
-            .param              = (void *)&__vsf_board_lcd_param,
-            .size               = vsf_disp_get_pixel_format_bytesize(VSF_BOARD_RGBLCD_COLOR)
+        .buffer                 = (void *)0xC0000000,
+        .drv                    = &vsf_disp_hw_fb_drv,
+        .drv_param              = (void *)&vsf_board.hw_fb,
+        .fb_size                = vsf_disp_get_pixel_format_bytesize(VSF_BOARD_RGBLCD_COLOR)
                                 * VSF_BOARD_RGBLCD_WIDTH * VSF_BOARD_RGBLCD_HEIGHT,
-            .num                = 2,        // front/bancend frame buffer
-            .pixel_byte_size    = vsf_disp_get_pixel_format_bytesize(VSF_BOARD_RGBLCD_COLOR),
+        .fb_num                 = 2,        // front/bancend frame buffer
+        .layer_idx              = 0,
+        .layer_alpha            = 0xFF,
+        .layer_area             = {
+            .pos.x              = 0,
+            .pos.y              = 0,
+            .size.x             = VSF_BOARD_RGBLCD_WIDTH,
+            .size.y             = VSF_BOARD_RGBLCD_HEIGHT,
         },
     },
     .display_dev                = &vsf_board.display_fb.use_as__vk_disp_t,
@@ -379,97 +353,6 @@ static void __sdram_init(uint32_t sdram_device)
     }
 }
 
-#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
-
-static vsf_err_t __gd32h7xx_fb_init(vsf_hw_rgblcd_param_t *fb, int color_format, void *initial_pixel_buffer)
-{
-    uint8_t pixel_byte_size = vsf_disp_get_pixel_format_bytesize(fb->pixel_format);
-    tli_parameter_struct tli_init_struct = {
-        .signalpolarity_hs = TLI_HSYN_ACTLIVE_LOW,
-        .signalpolarity_vs = TLI_VSYN_ACTLIVE_LOW,
-        .signalpolarity_de = TLI_DE_ACTLIVE_LOW,
-        .signalpolarity_pixelck = TLI_PIXEL_CLOCK_TLI,
-
-        .synpsz_hpsz = fb->hsw - 1,
-        .synpsz_vpsz = fb->vsw - 1,
-        .backpsz_hbpsz = fb->hsw + fb->hbp - 1,
-        .backpsz_vbpsz = fb->vsw + fb->vbp - 1,
-        .activesz_hasz = fb->hsw + fb->hbp + fb->width - 1,
-        .activesz_vasz = fb->vsw + fb->vbp + fb->height - 1,
-        .totalsz_htsz = fb->hsw + fb->hbp + fb->width + fb->hfp - 1,
-        .totalsz_vtsz = fb->vsw + fb->vbp + fb->height + fb->vfp - 1,
-
-        .backcolor_red = 0xFF,
-        .backcolor_green = 0xFF,
-        .backcolor_blue = 0xFF,
-    };
-    tli_layer_parameter_struct tli_layer_init_struct = {
-        .layer_window_leftpos = fb->hsw + fb->hbp,
-        .layer_window_rightpos = (fb->width + fb->hsw + fb->hbp - 1),
-        .layer_window_toppos = fb->vsw + fb->vbp,
-        .layer_window_bottompos = fb->height + fb->vsw + fb->vbp - 1,
-        .layer_sa = 255,
-        .layer_acf1 = LAYER_ACF1_PASA,
-        .layer_acf2 = LAYER_ACF2_PASA,
-        .layer_default_alpha = 0,
-        .layer_default_blue = 0,
-        .layer_default_green = 0,
-        .layer_default_red = 0,
-        .layer_frame_bufaddr = (uint32_t)initial_pixel_buffer,
-        .layer_frame_buf_stride_offset = (fb->width * pixel_byte_size),
-        .layer_frame_line_length = ((fb->width * pixel_byte_size) + 3),
-        .layer_frame_total_line_number = fb->height,
-    };
-
-    vsf_hw_peripheral_enable(VSF_HW_EN_TLI);
-    vsf_hw_clk_disable(&VSF_HW_CLK_PLL2_VCO);
-    // clock source of PLL2_VCO is ready, so can use frequency
-    vsf_hw_pll_vco_config(&VSF_HW_CLK_PLL2_VCO, 25, VSF_BOARD_RGBLCD_PLL2_VCO_FREQ);
-    // clock sources of PLL2R and TLI are not ready, can not use frequency
-    vsf_hw_clk_config(&VSF_HW_CLK_PLL2R, NULL, VSF_BOARD_RGBLCD_PLL2_VCO_FREQ / VSF_BOARD_RGBLCD_PLL2R_FREQ, 0);
-    vsf_hw_clk_config(&VSF_HW_CLK_TLI, NULL, VSF_BOARD_RGBLCD_PLL2R_FREQ / VSF_BOARD_RGBLCD_TLI_FREQ, 0);
-    vsf_hw_clk_enable(&VSF_HW_CLK_PLL2R);
-    vsf_hw_clk_enable(&VSF_HW_CLK_PLL2_VCO);
-
-    tli_init(&tli_init_struct);
-
-    switch (fb->pixel_format) {
-    case VSF_DISP_COLOR_ARGB8888:
-        tli_layer_init_struct.layer_ppf = TLI_PIXFORMAT_ARGB8888;
-        break;
-    case VSF_DISP_COLOR_RGB888_24:
-        tli_layer_init_struct.layer_ppf = TLI_PIXFORMAT_RGB888;
-        break;
-    case VSF_DISP_COLOR_RGB565:
-        tli_layer_init_struct.layer_ppf = TLI_PIXFORMAT_RGB565;
-        break;
-    default:
-        VSF_ASSERT(false);
-        break;
-    }
-    tli_layer_init(LAYER0, &tli_layer_init_struct);
-
-    tli_layer_enable(LAYER0);
-    tli_reload_config(TLI_REQUEST_RELOAD_EN);
-    tli_enable();
-
-    vsf_gpio_set(vsf_board.bl_port, 1 << vsf_board.bl_pin);
-    return VSF_ERR_NONE;
-}
-
-static vsf_err_t __gd32h7xx_fb_fini(vsf_hw_rgblcd_param_t *fb)
-{
-    vsf_hw_peripheral_rst_set(VSF_HW_RST_TLI);
-    vsf_hw_peripheral_rst_clear(VSF_HW_RST_TLI);
-    return VSF_ERR_NONE;
-}
-
-static vsf_err_t __gd32h7xx_fb_present(vsf_hw_rgblcd_param_t *fb, void *pixel_buffer)
-{
-    return VSF_ERR_NONE;
-}
-#endif
-
 void vsf_board_init(void)
 {
     static const vsf_io_cfg_t __cfgs[] = {
@@ -577,4 +460,5 @@ void vsf_board_init(void)
 #endif
 
     __sdram_init(EXMC_SDRAM_DEVICE0);
+    vsf_gpio_set(vsf_board.bl_port, 1 << vsf_board.bl_pin);
 }
