@@ -1,0 +1,1 @@
+install executable(s) at /usr/bin

@@ -989,6 +989,7 @@ int vsf_linux_create_fhs(void)
 #endif
 
     // 2. fs
+    // /root
 #if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && (APP_MSCBOOT_CFG_ROOT_SIZE > 0) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
     vk_mal_init(&root_mal.use_as__vk_mal_t);
 
@@ -1001,8 +1002,17 @@ int vsf_linux_create_fhs(void)
     }
     putenv("HOME=/root");
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/appcfg", __appcfg_main);
+#elif defined(__WIN__)
+    static vk_winfs_info_t __root_fs = {
+        .root.name = "./root",
+    };
+    mkdir("/root", 0);
+    if (mount(NULL, "root", &vk_winfs_op, 0, (const void *)&__root_fs) != 0) {
+        printf("Fail to mount /root.\n");
+    }
 #endif
 
+    // /usr
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
     __install_embedded_busybox = __usr_linux_boot;
     if (!__usr_linux_boot) {
@@ -1041,6 +1051,15 @@ int vsf_linux_create_fhs(void)
             printf("fail to symlink inittab to /etc\n");
         }
     }
+#elif defined(__WIN__)
+    static vk_winfs_info_t __usr_fs = {
+        .root.name = "./usr",
+    };
+    mkdir("/usr", 0);
+    if (mount(NULL, "usr", &vk_winfs_op, 0, (const void *)&__usr_fs) != 0) {
+        printf("Fail to mount /usr.\n");
+    }
+    busybox_install();
 #else
     busybox_install();
 #endif
