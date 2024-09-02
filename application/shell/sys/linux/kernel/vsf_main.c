@@ -1106,6 +1106,11 @@ int vsf_linux_create_fhs(void)
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/usbhost", __usbh_main);
 #endif
     }
+
+#ifdef __VSF_CPP__
+    // call vsf_arch_cpp_startup only after dependency of cpp initializer is ready
+    vsf_arch_cpp_startup();
+#endif
     return 0;
 }
 

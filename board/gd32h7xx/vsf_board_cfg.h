@@ -31,7 +31,7 @@
 
 /*============================ INCLUDES ======================================*/
 
-// retrive compiler information
+// retrieve compiler information
 #define __VSF_HEADER_ONLY_SHOW_COMPILER_INFO__
 #include "utilities/compiler/compiler.h"
 

@@ -147,7 +147,10 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_LINUX_CFG_INIT_SCRIPT_FILE               "/root/.profile"
 #   define VSF_LINUX_CFG_PATH                           "/bin:/usr/bin"
 #   ifdef __WIN__
-#       define VSF_LINUX_CFG_WRAPPER                    ENABLED
+// DO NOT enable VSF_LINUX_CFG_WRAPPER if possible.
+//  Instead of enable VSF_LINUX_CFG_WRAPPER for windows if there are conflicts,
+//  we recommend to add wrapper for dedicated Windows APIs in coresponding header.
+//#       define VSF_LINUX_CFG_WRAPPER                    ENABLED
 #   endif
 
 #ifndef __CPU_WEBASSEMBLY__
