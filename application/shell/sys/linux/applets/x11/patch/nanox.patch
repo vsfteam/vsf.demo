@@ -1,0 +1,3465 @@
+ src/drivers/scr_fb.c          |   8 +
+ src/include/sys_time.h        |   3 +
+ src/include/uni_std.h         |   4 +
+ src/include/winctl.h          | 449 ----------------------
+ src/include/windef.h          | 217 -----------
+ src/include/windlg.h          | 178 ---------
+ src/include/windows.h         | 210 -----------
+ src/include/windowsx.h        |  55 ---
+ src/include/winerror.h        |  65 ----
+ src/include/winfont.h         | 166 --------
+ src/include/wingdi.h          | 480 ------------------------
+ src/include/winkbd.h          | 138 -------
+ src/include/winres.h          | 227 -----------
+ src/include/wintern.h         | 113 ------
+ src/include/wintools.h        |  31 --
+ src/include/winuser.h         | 854 ------------------------------------------
+ src/nanox/srvfunc.c           |   4 +-
+ src/nanox/srvmain.c           |   2 +-
+ src/nanox/srvutil.c           |   4 +-
+ src/nx11/SetAttributes.c      |   8 +-
+ src/nx11/X11-local/X11/Xlib.h |   4 +-
+ src/nx11/Xrm.c                |   1 +
+ src/nx11/stub.c               |   8 +-
+ 23 files changed, 31 insertions(+), 3198 deletions(-)
+
+diff --git a/src/drivers/scr_fb.c b/src/drivers/scr_fb.c
+index 898120d..c23dc93 100644
+--- a/src/drivers/scr_fb.c
++++ b/src/drivers/scr_fb.c
+@@ -32,6 +32,14 @@
+ #include "genmem.h"
+ #include "fb.h"
+ 
++#ifndef SCREEN_WIDTH
++#define SCREEN_WIDTH 1024
++#endif
++
++#ifndef SCREEN_HEIGHT
++#define SCREEN_HEIGHT 768
++#endif
++
+ #ifndef FB_TYPE_VGA_PLANES
+ #define FB_TYPE_VGA_PLANES 4
+ #endif
+diff --git a/src/include/sys_time.h b/src/include/sys_time.h
+index e5f9909..11c8c09 100644
+--- a/src/include/sys_time.h
++++ b/src/include/sys_time.h
+@@ -6,6 +6,9 @@
+  * Usage: replace #include <sys/time.h> with "sys_time.h"
+  */
+ 
++#if defined(__VSF__) && defined(__WIN__)
++#undef _MSC_VER
++#endif
+ 
+ #if _MINIX
+ #include <sys/times.h>
+diff --git a/src/include/uni_std.h b/src/include/uni_std.h
+index 8a84a0c..a7afd5a 100644
+--- a/src/include/uni_std.h
++++ b/src/include/uni_std.h
+@@ -8,6 +8,10 @@
+  * https://stackoverflow.com/a/826027/1202830
+  */
+ 
++#if defined(__VSF__) && defined(__WIN__)
++#undef _MSC_VER
++#endif
++
+ #if !defined(_MSC_VER)
+ #include <unistd.h>
+ 
+diff --git a/src/include/winctl.h b/src/include/winctl.h
+deleted file mode 100644
+index 0e64d0f..0000000
+--- a/src/include/winctl.h
++++ /dev/null
+@@ -1,449 +0,0 @@
+-/* winctl.h*/
+-/*
+- * Header file for builtin controls
+- * This currently includes static, button, edit, listbox, combobox, progressbar and scrollbar
+- */
+-
+-/* individual control registrations when size matters*/
+-/* use MwInitializeDialogs(), not individually below*/
+-int MwRegisterStaticControl(HINSTANCE hInstance);
+-int MwRegisterButtonControl(HINSTANCE hInstance);
+-int MwRegisterEditControl(HINSTANCE hInstance);
+-int MwRegisterListboxControl(HINSTANCE hInstance);
+-int MwRegisterComboboxControl(HINSTANCE hInstance);
+-int MwRegisterProgressbarControl(HINSTANCE hInstance);
+-int MwRegisterScrollbarControl(HINSTANCE hInstance);
+-int MwRegisterMEditControl(HINSTANCE hInstance);		/* not working*/
+-int MwRegisterOldEditControl(HINSTANCE hInstance);		/* obsolete*/
+-int MwRegisterOldListboxControl(HINSTANCE hInstance);	/* obsolete*/
+-
+-
+-/* Dialog Codes*/
+-#define DLGC_WANTARROWS     0x0001      /* Control wants arrow keys         */
+-#define DLGC_WANTTAB        0x0002      /* Control wants tab keys           */
+-#define DLGC_WANTALLKEYS    0x0004      /* Control wants all keys           */
+-#define DLGC_WANTMESSAGE    0x0004      /* Pass message to control          */
+-#define DLGC_HASSETSEL      0x0008      /* Understands EM_SETSEL message    */
+-#define DLGC_DEFPUSHBUTTON  0x0010      /* Default pushbutton               */
+-#define DLGC_UNDEFPUSHBUTTON 0x0020     /* Non-default pushbutton           */
+-#define DLGC_RADIOBUTTON    0x0040      /* Radio button                     */
+-#define DLGC_WANTCHARS      0x0080      /* Want WM_CHAR messages            */
+-#define DLGC_STATIC         0x0100      /* Static item: don't include       */
+-#define DLGC_BUTTON         0x2000      /* Button item: can be checked      */
+-
+-/* Button Control Styles*/
+-#define BS_PUSHBUTTON       0x00000000L
+-#define BS_DEFPUSHBUTTON    0x00000001L
+-#define BS_CHECKBOX         0x00000002L
+-#define BS_AUTOCHECKBOX     0x00000003L
+-#define BS_RADIOBUTTON      0x00000004L
+-#define BS_3STATE           0x00000005L
+-#define BS_AUTO3STATE       0x00000006L
+-#define BS_GROUPBOX         0x00000007L
+-#define BS_USERBUTTON       0x00000008L
+-#define BS_AUTORADIOBUTTON  0x00000009L
+-#define BS_OWNERDRAW        0x0000000BL
+-#define BS_LEFTTEXT         0x00000020L
+-#define BS_TEXT             0x00000000L
+-#define BS_ICON             0x00000040L
+-#define BS_BITMAP           0x00000080L
+-#define BS_LEFT             0x00000100L
+-#define BS_RIGHT            0x00000200L
+-#define BS_CENTER           0x00000300L
+-#define BS_TOP              0x00000400L
+-#define BS_BOTTOM           0x00000800L
+-#define BS_VCENTER          0x00000C00L
+-#define BS_PUSHLIKE         0x00001000L
+-#define BS_MULTILINE        0x00002000L
+-#define BS_NOTIFY           0x00004000L
+-#define BS_FLAT             0x00008000L
+-#define BS_RIGHTBUTTON      BS_LEFTTEXT
+-
+-/* User Button Notification Codes*/
+-#define BN_CLICKED          0
+-#define BN_PAINT            1
+-#define BN_HILITE           2
+-#define BN_UNHILITE         3
+-#define BN_DISABLE          4
+-#define BN_DOUBLECLICKED    5
+-#define BN_PUSHED           BN_HILITE
+-#define BN_UNPUSHED         BN_UNHILITE
+-#define BN_DBLCLK           BN_DOUBLECLICKED
+-#define BN_SETFOCUS         6
+-#define BN_KILLFOCUS        7
+-
+-/* Button Control Messages*/
+-#define BM_GETCHECK        0x00F0
+-#define BM_SETCHECK        0x00F1
+-#define BM_GETSTATE        0x00F2
+-#define BM_SETSTATE        0x00F3
+-#define BM_SETSTYLE        0x00F4
+-#define BM_CLICK           0x00F5
+-#define BM_GETIMAGE        0x00F6
+-#define BM_SETIMAGE        0x00F7
+-
+-#define BST_UNCHECKED      0x0000
+-#define BST_CHECKED        0x0001
+-#define BST_INDETERMINATE  0x0002
+-#define BST_PUSHED         0x0004
+-#define BST_FOCUS          0x0008
+-
+-/* Progress Bar messages*/
+-#define PBM_SETRANGE		0xF0A0
+-#define PBM_SETSTEP		0xF0A1
+-#define PBM_SETPOS		0xF0A2
+-#define PBM_DELTAPOS		0xF0A3
+-#define PBM_STEPIT		0xF0A4
+-
+-/* Progress Bar styles */
+-#define PBS_NOTIFY              0x0001L
+-#define PBS_VERTICAL            0x0002L
+-
+-/* Progress Bar notification code */
+-#define PBN_REACHMAX            1
+-#define PBN_REACHMIN            2
+-
+-/* Listbox messages*/
+-#define LB_ADDSTRING            0xF180
+-#define LB_INSERTSTRING         0xF181
+-#define LB_DELETESTRING         0xF182
+-#define LB_SELITEMRANGEEX       0xF183
+-#define LB_RESETCONTENT         0xF184
+-#define LB_SETSEL               0xF185
+-#define LB_SETCURSEL            0xF186
+-#define LB_GETSEL               0xF187
+-#define LB_GETCURSEL            0xF188
+-#define LB_GETTEXT              0xF189
+-#define LB_GETTEXTLEN           0xF18A
+-#define LB_GETCOUNT             0xF18B
+-#define LB_SELECTSTRING         0xF18C
+-#define LB_DIR                  0xF18D
+-#define LB_GETTOPINDEX          0xF18E
+-#define LB_FINDSTRING           0xF18F
+-#define LB_GETSELCOUNT          0xF190
+-#define LB_GETSELITEMS          0xF191
+-#define LB_SETTABSTOPS          0xF192
+-#define LB_GETHORIZONTALEXTENT  0xF193
+-#define LB_SETHORIZONTALEXTENT  0xF194
+-#define LB_SETCOLUMNWIDTH       0xF195
+-#define LB_ADDFILE              0xF196
+-#define LB_SETTOPINDEX          0xF197
+-#define LB_GETITEMRECT          0xF198
+-#define LB_GETITEMDATA          0xF199
+-#define LB_SETITEMDATA          0xF19A
+-#define LB_SELITEMRANGE         0xF19B
+-#define LB_SETANCHORINDEX       0xF19C
+-#define LB_GETANCHORINDEX       0xF19D
+-#define LB_SETCARETINDEX        0xF19E
+-#define LB_GETCARETINDEX        0xF19F
+-#define LB_SETITEMHEIGHT        0xF1A0
+-#define LB_GETITEMHEIGHT        0xF1A1
+-#define LB_FINDSTRINGEXACT      0xF1A2
+-#define LB_SETLOCALE            0xF1A5
+-#define LB_GETLOCALE            0xF1A6
+-#define LB_SETCOUNT             0xF1A7
+-#define LB_INITSTORAGE          0xF1A8
+-#define LB_ITEMFROMPOINT        0xF1A9
+-#define LB_SETTEXT              0xF1AA
+-#define LB_GETCHECKMARK         0xF1AB
+-#define LB_SETCHECKMARK         0xF1AC
+-#define LB_GETITEMADDDATA       0xF1AD
+-#define LB_SETITEMADDDATA       0xF1AE
+-#define LB_MSGMAX               0xF1B0
+-
+-/* Listbox styles */
+-#define LBS_NOTIFY              0x0001L
+-#define LBS_SORT                0x0002L
+-#define LBS_NOREDRAW            0x0004L		/* not supported*/
+-#define LBS_MULTIPLESEL         0x0008L
+-#define LBS_OWNERDRAWFIXED      0x0010L		/* nyi*/
+-#define LBS_OWNERDRAWVARIABLE   0x0020L		/* nyi*/
+-#define LBS_HASSTRINGS          0x0040L		/* not supported*/
+-#define LBS_USETABSTOPS         0x0080L		/* nyi*/
+-#define LBS_NOINTEGRALHEIGHT    0x0100L		/* not supported*/
+-#define LBS_MULTICOLUMN         0x0200L		/* nyi*/
+-#define LBS_WANTKEYBOARDINPUT   0x0400L		/* not supported*/
+-#define LBS_EXTENDEDSEL         0x0800L		/* not supported*/
+-#define LBS_STANDARD		(LBS_NOTIFY | LBS_SORT | WS_VSCROLL | WS_BORDER)
+-#define LBS_CHECKBOX            0x1000L		/* non std*/
+-#define LBS_USEICON             0x2000L		/* non std*/
+-#define LBS_AUTOCHECK           0x4000L		/* non std*/
+-#define LBS_AUTOCHECKBOX        0x5000L		/* non std*/
+-/* private Microwindows styles for combobox*/
+-#define	LBS_PRELOADED		0x4000L		/* Microwindows private*/
+-#define	LBS_COMBOLBOX		0x8000L		/* Microwindows private*/
+-
+-#if 0
+-#define LBS_DISABLENOSCROLL	0x1000L
+-#define LBS_NODATA		0x2000L
+-#define LBS_NOSEL		0x4000L
+-#endif
+-
+-/* Listbox Notification Codes */
+-#define LBN_ERRSPACE        (-2)
+-#define LBN_SELCHANGE       1
+-#define LBN_DBLCLK          2
+-#define LBN_SELCANCEL       3
+-#define LBN_SETFOCUS        4
+-#define LBN_KILLFOCUS       5
+-#define LBN_CLICKCHECKMARK  6		/* non std*/
+-
+-/* Listbox return value */
+-#define LB_OKAY             0
+-#define LB_ERR              (-1)
+-#define LB_ERRSPACE         (-2)
+-
+-/* Edit Control Notification Codes*/
+-#define EN_SETFOCUS         0x0100
+-#define EN_KILLFOCUS        0x0200
+-#define EN_CHANGE           0x0300
+-#define EN_UPDATE           0x0400
+-#define EN_ERRSPACE         0x0500
+-#define EN_MAXTEXT          0x0501
+-#define EN_HSCROLL          0x0601
+-#define EN_VSCROLL          0x0602
+-
+-/* Edit Control Styles*/
+-#define ES_LEFT             0x0000L
+-#define ES_CENTER           0x0001L
+-#define ES_RIGHT            0x0002L
+-#define ES_MULTILINE        0x0004L
+-#define ES_UPPERCASE        0x0008L
+-#define ES_LOWERCASE        0x0010L
+-#define ES_PASSWORD         0x0020L
+-#define ES_AUTOVSCROLL      0x0040L
+-#define ES_AUTOHSCROLL      0x0080L
+-#define ES_NOHIDESEL        0x0100L
+-#define ES_OEMCONVERT       0x0400L
+-#define ES_READONLY         0x0800L
+-#define ES_WANTRETURN       0x1000L
+-#define ES_NUMBER           0x2000L
+-
+-/* Edit Control Messages*/
+-#define EM_GETSEL               0xF0B0
+-#define EM_SETSEL               0xF0B1
+-#define EM_GETRECT              0xF0B2
+-#define EM_SETRECT              0xF0B3
+-#define EM_SETRECTNP            0xF0B4
+-#define EM_SCROLL               0xF0B5
+-#define EM_LINESCROLL           0xF0B6
+-#define EM_SCROLLCARET          0xF0B7
+-#define EM_GETMODIFY            0xF0B8
+-#define EM_SETMODIFY            0xF0B9
+-#define EM_GETLINECOUNT         0xF0BA
+-#define EM_LINEINDEX            0xF0BB
+-#define EM_SETHANDLE            0xF0BC
+-#define EM_GETHANDLE            0xF0BD
+-#define EM_GETTHUMB             0xF0BE
+-#define EM_LINELENGTH           0xF0C1
+-#define EM_REPLACESEL           0xF0C2
+-#define EM_GETLINE              0xF0C4
+-#define EM_LIMITTEXT            0xF0C5
+-#define EM_CANUNDO              0xF0C6
+-#define EM_UNDO                 0xF0C7
+-#define EM_FMTLINES             0xF0C8
+-#define EM_LINEFROMCHAR         0xF0C9
+-#define EM_SETTABSTOPS          0xF0CB
+-#define EM_SETPASSWORDCHAR      0xF0CC
+-#define EM_EMPTYUNDOBUFFER      0xF0CD
+-#define EM_GETFIRSTVISIBLELINE  0xF0CE
+-#define EM_SETREADONLY          0xF0CF
+-#define EM_SETWORDBREAKPROC     0xF0D0
+-#define EM_GETWORDBREAKPROC     0xF0D1
+-#define EM_GETPASSWORDCHAR      0xF0D2
+-#define EM_SETMARGINS           0xF0D3
+-#define EM_GETMARGINS           0xF0D4
+-#define EM_SETLIMITTEXT         EM_LIMITTEXT
+-#define EM_GETLIMITTEXT         0xF0D5
+-#define EM_POSFROMCHAR          0xF0D6
+-#define EM_CHARFROMPOS          0xF0D7
+-#define EM_SETIMESTATUS         0xF0D8
+-#define EM_GETIMESTATUS         0xF0D9
+-
+-/* Static Control messages*/
+-#define STM_SETICON         0xF170
+-#define STM_GETICON         0xF171
+-#define STM_SETIMAGE        0xF172
+-#define STM_GETIMAGE        0xF173
+-#define STM_MSGMAX          0xF174
+-
+-/* Static Control notification code*/
+-#define STN_CLICKED         0
+-#define STN_DBLCLK          1
+-#define STN_ENABLE          2
+-#define STN_DISABLE         3
+-
+-/* Static Control Styles */
+-#define SS_LEFT             0x00000000L
+-#define SS_CENTER           0x00000001L
+-#define SS_RIGHT            0x00000002L
+-#define SS_ICON             0x00000003L
+-#define SS_BLACKRECT        0x00000004L
+-#define SS_GRAYRECT         0x00000005L
+-#define SS_WHITERECT        0x00000006L
+-#define SS_BLACKFRAME       0x00000007L
+-#define SS_GRAYFRAME        0x00000008L
+-#define SS_WHITEFRAME       0x00000009L
+-#define SS_GROUPBOX         0x0000000AL
+-#define SS_SIMPLE           0x0000000BL
+-#define SS_LEFTNOWORDWRAP   0x0000000CL
+-#define SS_OWNERDRAW        0x0000000DL
+-#define SS_BITMAP           0x0000000EL
+-#define SS_ENHMETAFILE      0x0000000FL
+-#define SS_TYPEMASK         0x0000000FL
+-#define SS_NOPREFIX         0x00000080L
+-#define SS_ETCHEDHORZ       0x00000010L
+-#define SS_ETCHEDVERT       0x00000011L
+-#define SS_ETCHEDFRAME      0x00000012L
+-#define SS_ETCTYPEMASK      0x0000001FL
+-#define SS_NOTIFY           0x00000100L
+-#define SS_CENTERIMAGE      0x00000200L
+-#define SS_RIGHTJUST        0x00000400L
+-#define SS_REALSIZEIMAGE    0x00000800L
+-#define SS_SUNKEN           0x00001000L		/* notimp*/
+-#define SS_ENDELLIPSIS      0x00004000L		/* notimp*/
+-#define SS_PATHELLIPSIS     0x00008000L		/* notimp*/
+-#define SS_WORDELLIPSIS     0x0000C000L		/* notimp*/
+-#define SS_ELLIPSISMASK     0x0000C000L		/* notimp*/
+-
+-/* Combo Box styles*/
+-#define CBS_SIMPLE            0x0001L
+-#define CBS_DROPDOWN          0x0002L
+-#define CBS_DROPDOWNLIST      0x0003L
+-#define CBS_OWNERDRAWFIXED    0x0010L
+-#define CBS_OWNERDRAWVARIABLE 0x0020L
+-#define CBS_AUTOHSCROLL       0x0040L
+-#define CBS_OEMCONVERT        0x0080L
+-#define CBS_SORT              0x0100L
+-#define CBS_HASSTRINGS        0x0200L
+-#define CBS_NOINTEGRALHEIGHT  0x0400L
+-#define CBS_DISABLENOSCROLL   0x0800L
+-#define CBS_UPPERCASE         0x2000L
+-#define CBS_LOWERCASE         0x4000L
+-
+-/* Combo box messages */
+-#define CB_GETEDITSEL               0xF140
+-#define CB_LIMITTEXT                0xF141
+-#define CB_SETEDITSEL               0xF142
+-#define CB_ADDSTRING                0xF143
+-#define CB_DELETESTRING             0xF144
+-#define CB_DIR                      0xF145
+-#define CB_GETCOUNT                 0xF146
+-#define CB_GETCURSEL                0xF147
+-#define CB_GETLBTEXT                0xF148
+-#define CB_GETLBTEXTLEN             0xF149
+-#define CB_INSERTSTRING             0xF14A
+-#define CB_RESETCONTENT             0xF14B
+-#define CB_FINDSTRING               0xF14C
+-#define CB_SELECTSTRING             0xF14D
+-#define CB_SETCURSEL                0xF14E
+-#define CB_SHOWDROPDOWN             0xF14F
+-#define CB_GETITEMDATA              0xF150
+-#define CB_SETITEMDATA              0xF151
+-#define CB_GETDROPPEDCONTROLRECT    0xF152
+-#define CB_SETITEMHEIGHT            0xF153
+-#define CB_GETITEMHEIGHT            0xF154
+-#define CB_SETEXTENDEDUI            0xF155
+-#define CB_GETEXTENDEDUI            0xF156
+-#define CB_GETDROPPEDSTATE          0xF157
+-#define CB_FINDSTRINGEXACT          0xF158
+-#define CB_SETLOCALE                0xF159	/* notimp*/
+-#define CB_GETLOCALE                0xF15A	/* notimp*/
+-#define CB_GETTOPINDEX              0xF15b	/* notimp*/
+-#define CB_SETTOPINDEX              0xF15c	/* notimp*/
+-#define CB_GETHORIZONTALEXTENT      0xF15d	/* notimp*/
+-#define CB_SETHORIZONTALEXTENT      0xF15e	/* notimp*/
+-#define CB_GETDROPPEDWIDTH          0xF15f	/* notimp*/
+-#define CB_SETDROPPEDWIDTH          0xF160	/* notimp*/
+-#define CB_INITSTORAGE              0xF161	/* notimp*/
+-#define CB_MSGMAX                   0xF162
+-
+-/* Combo box notification codes */
+-#define CBN_ERRSPACE        (-1)
+-#define CBN_SELCHANGE       1
+-#define CBN_DBLCLK          2
+-#define CBN_SETFOCUS        3
+-#define CBN_KILLFOCUS       4
+-#define CBN_EDITCHANGE      5
+-#define CBN_EDITUPDATE      6
+-#define CBN_DROPDOWN        7
+-#define CBN_CLOSEUP         8
+-#define CBN_SELENDOK        9
+-#define CBN_SELENDCANCEL    10
+-
+-/* Combo box message return values */
+-#define CB_OKAY         0
+-#define CB_ERR          (-1)
+-#define CB_ERRSPACE     (-2)
+-
+-/* scroll bar control styles*/
+-#define SBS_HORZ                    0x0000L
+-#define SBS_VERT                    0x0001L
+-#define SBS_TYPEMASK		    0x0001L
+-#define SBS_TOPALIGN                0x0002L
+-#define SBS_LEFTALIGN               0x0002L
+-#define SBS_BOTTOMALIGN             0x0004L
+-#define SBS_RIGHTALIGN              0x0004L
+-#define SBS_SIZEBOXTOPLEFTALIGN     0x0002L
+-#define SBS_SIZEBOXBOTTOMRIGHTALIGN 0x0004L
+-#define SBS_SIZEBOX                 0x0008L
+-#define SBS_SIZEGRIP                0x0010L
+-
+-/* scroll bar constants*/
+-#define SB_HORZ             0
+-#define SB_VERT             1
+-#define SB_CTL              2
+-#define SB_BOTH             3
+-
+-/* scroll bar notify codes*/
+-#define SB_LINEUP           0
+-#define SB_LINELEFT         0
+-#define SB_LINEDOWN         1
+-#define SB_LINERIGHT        1
+-#define SB_PAGEUP           2
+-#define SB_PAGELEFT         2
+-#define SB_PAGEDOWN         3
+-#define SB_PAGERIGHT        3
+-#define SB_THUMBPOSITION    4
+-#define SB_THUMBTRACK       5
+-#define SB_TOP              6
+-#define SB_LEFT             6
+-#define SB_BOTTOM           7
+-#define SB_RIGHT            7
+-#define SB_ENDSCROLL        8
+-
+-#define SIF_RANGE           0x0001
+-#define SIF_PAGE            0x0002
+-#define SIF_POS             0x0004
+-#define SIF_DISABLENOSCROLL 0x0008
+-#define SIF_TRACKPOS        0x0010
+-#define SIF_ALL             (SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS)
+-
+-typedef struct tagSCROLLINFO {
+-    UINT    cbSize;
+-    UINT    fMask;
+-    int     nMin;
+-    int     nMax;
+-    UINT    nPage;
+-    int     nPos;
+-    int     nTrackPos;
+-} SCROLLINFO, *LPSCROLLINFO;
+-typedef SCROLLINFO CONST *LPCSCROLLINFO;
+-
+-BOOL WINAPI EnableScrollBar (HWND hWnd, int iSBar, BOOL bEnable);
+-BOOL WINAPI EnableScrollBarEx (HWND hWnd, int iSBar, BOOL bEnable);
+-BOOL WINAPI GetScrollPos (HWND hWnd, int iSBar, int* pPos);
+-BOOL WINAPI GetScrollPos (HWND hWnd, int iSBar, int* pPos);
+-BOOL WINAPI GetScrollRange (HWND hWnd, int iSBar, int* pMinPos, int* pMaxPos);
+-BOOL WINAPI SetScrollPos (HWND hWnd, int iSBar, int iNewPos);
+-BOOL WINAPI SetScrollRange (HWND hWnd, int iSBar, int iMinPos, int iMaxPos);
+-int  WINAPI SetScrollInfo(HWND, int, LPCSCROLLINFO, BOOL);
+-BOOL WINAPI GetScrollInfo(HWND, int, LPSCROLLINFO);
+-BOOL WINAPI ShowScrollBar (HWND hWnd, int iSBar, BOOL bShow);
+-BOOL WINAPI GetScrollPosEx (HWND hWnd, int iSBar, int* pPos);
+-BOOL WINAPI GetScrollRangeEx (HWND hWnd, int iSBar, int* pMinPos, int* pMaxPos);
+-BOOL WINAPI SetScrollPosEx (HWND hWnd, int iSBar, int iNewPos);
+-BOOL WINAPI SetScrollRangeEx (HWND hWnd, int iSBar, int iMinPos, int iMaxPos);
+-BOOL WINAPI SetScrollInfoEx (HWND hWnd, int iSBar, LPCSCROLLINFO lpsi, BOOL fRedraw);
+-BOOL WINAPI GetScrollInfoEx(HWND hWnd, int iSBar, LPSCROLLINFO lpsi);
+-BOOL WINAPI ShowScrollBarEx (HWND hWnd, int iSBar, BOOL bShow);
+diff --git a/src/include/windef.h b/src/include/windef.h
+deleted file mode 100644
+index 4c79a80..0000000
+--- a/src/include/windef.h
++++ /dev/null
+@@ -1,217 +0,0 @@
+-/* windef.h*/
+-/*
+- * Copyright (c) 1999-2017 Greg Haerr <greg@censoft.com>
+- *
+- * Win32 API base type definitions
+- */
+-
+-#define _WINDEF_H
+-
+-
+-#ifdef VXWORKS
+-/* Don't include the internal Tornado header file <ntcontext.h>, **
+-** as the definitions in it conflict with these definitions.     */
+-#define __INCntcontexth
+-/* Bring in the core VxWorks definitions as they could conflict **
+-** with the ones below if they are brought in later.            */
+-#include <vxWorks.h>
+-#endif
+-
+-
+-#ifndef NULL
+-#define NULL    ((void *)0)
+-#endif
+-
+-#ifndef FALSE
+-#define FALSE               0
+-#endif
+-
+-#ifndef TRUE
+-#define TRUE                1
+-#endif
+-
+-#ifndef NOMINMAX
+-#ifndef max
+-#define max(a,b)            (((a) > (b)) ? (a) : (b))
+-#endif
+-
+-#ifndef min
+-#define min(a,b)            (((a) < (b)) ? (a) : (b))
+-#endif
+-#endif  /* NOMINMAX */
+-
+-#if WIN32DLL
+-#ifdef EXPORTS
+-	#define WINAPI	__declspec(dllexport) __stdcall
+-#else
+-	#define WINAPI	__stdcall
+-#endif
+-#define STDCALL		__stdcall
+-#define CALLBACK	__stdcall
+-#else
+-#define STDCALL
+-#define CALLBACK
+-#define WINAPI
+-#endif /* !WIN32DLL*/
+-
+-#define WINAPIV
+-#define APIENTRY    	WINAPI
+-#define APIPRIVATE
+-#define PASCAL
+-
+-#define FAR
+-#define NEAR
+-#define CONST		const
+-#define CDECL
+-#define VOID		void
+-
+-#ifndef VXWORKS
+-typedef unsigned char 		UCHAR;
+-typedef unsigned short 		USHORT;
+-typedef unsigned long		ULONG;
+-#ifndef __ITRON_TYPES_h_ /* FIXME RTEMS hack*/
+-typedef int                 	INT;
+-typedef unsigned int		UINT;
+-#ifndef COMMON_H	 /* MiniGUI hack*/
+-typedef int			BOOL;
+-#endif
+-#endif
+-#endif /* !VXWORKS*/
+-
+-// LONG_PTR definition, must hold int, long and pointer
+-#if WIN64_PORT
+-// definition for 64-bit Microsoft Windows port (int=32, long=32, ptr=64)
+-typedef __int64				LONG_PTR;	// must hold long and pointer
+-typedef unsigned __int64	ULONG_PTR;	// must hold unsigned long and pointer
+-typedef unsigned __int64	UINT_PTR;	// must hold unsigned int and pointer
+-#else
+-// definition for 64bit port (int=32, long=64, ptr=64)
+-//             or 32bit port (int=32, long=32, ptr=32)
+-typedef long				LONG_PTR;	// must hold long and pointer
+-typedef unsigned long		ULONG_PTR;	// must hold unsigned long and pointer
+-typedef unsigned long		UINT_PTR;	// must hold unsigned int and pointer
+-// smaller definition for 16bit WPARAM (int=16, long=32, ptr=16)
+-//typedef unsigned int		UINT_PTR;	// holds int and pointer
+-#endif
+-
+-// Window procedure arguments WPARAM,LPARAM and return value LRESULT must also hold pointers
+-typedef UINT_PTR		WPARAM;		// holds unsigned int and pointer
+-typedef LONG_PTR		LPARAM;		// holds long and pointer
+-typedef LONG_PTR		LRESULT;	// holds long and pointer
+-
+-// Our dialog procedures return DLGBOOL (incompatible with win32 when sizeof(int) != sizeof(char *))
+-typedef LRESULT			DLGBOOL;	// mwin dialog procedures return BOOL and pointers
+-//typedef BOOL			DLGBOOL;	// compatible definition for 16/32 bit systems
+-
+-// return field offset, must hold long and pointer, used only by MwItemAddr
+-#define MwItemOffset(type, field)    ((LONG_PTR)&(((type *)0)->field))
+-
+-// return base item address from list ptr
+-#define MwItemAddr(p,type,list)	((type *)((LONG_PTR)p - MwItemOffset(type,list)))
+-
+-// standard definitions
+-typedef void *PVOID;
+-typedef char CHAR;
+-typedef short SHORT;
+-typedef long LONG;
+-typedef UCHAR *PUCHAR;
+-typedef SHORT *PSHORT;  
+-typedef USHORT *PUSHORT;
+-typedef LONG *PLONG;    
+-typedef ULONG *PULONG;    
+-typedef char *PSZ;
+-
+-typedef unsigned char       BYTE;
+-typedef unsigned short      WORD;
+-typedef uint32_t            DWORD;		// fixed size regardless of architecture
+-
+-typedef float               FLOAT;
+-typedef FLOAT               *PFLOAT;
+-typedef BOOL NEAR           *PBOOL;
+-typedef BOOL FAR            *LPBOOL;
+-typedef BYTE NEAR           *PBYTE;
+-typedef BYTE FAR            *LPBYTE;
+-typedef int NEAR            *PINT;
+-typedef int FAR             *LPINT;
+-typedef unsigned int        *PUINT;
+-typedef WORD NEAR           *PWORD;
+-typedef WORD FAR            *LPWORD;
+-typedef long FAR            *LPLONG;
+-typedef DWORD NEAR          *PDWORD;
+-typedef DWORD FAR           *LPDWORD;
+-typedef void FAR            *LPVOID;
+-typedef CONST void FAR      *LPCVOID;
+-
+-typedef unsigned short WCHAR;
+-typedef WCHAR *PWCHAR;
+-typedef WCHAR *LPWCH, *PWCH;
+-typedef CONST WCHAR *LPCWCH, *PCWCH;
+-typedef WCHAR *NWPSTR;
+-typedef WCHAR *LPWSTR, *PWSTR;
+-typedef CONST WCHAR *LPCWSTR, *PCWSTR;
+-
+-typedef CHAR *PCHAR;
+-typedef CHAR *LPCH, *PCH;
+-typedef CONST CHAR *LPCCH, *PCCH;
+-typedef CHAR *NPSTR;
+-typedef CHAR *LPSTR, *PSTR;
+-typedef CONST CHAR *LPCSTR, *PCSTR;
+-typedef char TCHAR, *PTCHAR;
+-typedef unsigned char TBYTE , *PTBYTE ;
+-typedef LPSTR LPTCH, PTCH;
+-typedef LPSTR PTSTR, LPTSTR;
+-typedef LPCSTR LPCTSTR;
+-
+-#define __TEXT(quote) quote
+-#define TEXT(quote) __TEXT(quote)
+-
+-typedef int (FAR *FARPROC)();
+-typedef int (NEAR *NEARPROC)();
+-typedef int (*PROC)();
+-
+-#define MAKEWORD(a, b)      ((WORD)(((BYTE)(a)) | ((WORD)((BYTE)(b))) << 8))
+-#define MAKELONG(a, b)      ((LONG)(((WORD)(a)) | ((DWORD)((WORD)(b))) << 16))
+-#define LOWORD(l)           ((WORD)(l))
+-#define HIWORD(l)           ((WORD)(((DWORD)(l) >> 16) & 0xFFFF))
+-#define LOBYTE(w)           ((BYTE)(w))
+-#define HIBYTE(w)           ((BYTE)(((WORD)(w) >> 8) & 0xFF))
+-
+-#define PALETTEINDEX(i)     ((COLORREF)(0x01000000 | (DWORD)(WORD)(i)))
+-
+-typedef DWORD   COLORREF;
+-typedef DWORD   *LPCOLORREF;
+-
+-typedef LONG	HRESULT;
+-
+-/* handle typedef*/
+-typedef PVOID HANDLE;
+-
+-typedef HANDLE *PHANDLE;
+-typedef HANDLE NEAR         *SPHANDLE;
+-typedef HANDLE FAR          *LPHANDLE;
+-typedef HANDLE              HGLOBAL;
+-typedef HANDLE              HLOCAL;
+-typedef HANDLE              GLOBALHANDLE;
+-typedef HANDLE              LOCALHANDLE;
+-
+-/* macro for checking if 16 bit "atom" is passed as pointer*/
+-#define PTR_IS_ATOM(ptr)		((((UINT_PTR)ptr) & ~(UINT_PTR)0xFFFFL) == 0)	/* any bits 16+ and higher zero*/
+-typedef WORD                ATOM;
+-
+-typedef struct hwnd *	HWND;
+-typedef struct hdc *	HDC;
+-typedef struct hcursor *HCURSOR;
+-typedef struct hgdiobj *HGDIOBJ;
+-typedef struct hgdiobj *HBRUSH;
+-typedef struct hgdiobj *HPEN;
+-typedef struct hgdiobj *HFONT;
+-typedef struct hgdiobj *HBITMAP;
+-typedef struct hgdiobj *HRGN;
+-typedef struct hgdiobj *HPALETTE;
+-typedef HANDLE		HICON;
+-typedef HANDLE		HINSTANCE;
+-typedef HANDLE		HMODULE;
+-typedef HANDLE		HMENU;
+-
+-/* moved to winuser.h for resource compiler*/
+-/*typedef LRESULT (CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);*/
+diff --git a/src/include/windlg.h b/src/include/windlg.h
+deleted file mode 100644
+index a0ed493..0000000
+--- a/src/include/windlg.h
++++ /dev/null
+@@ -1,178 +0,0 @@
+-/*
+- *  windlg.h
+- *
+- * Microwindows Dialog implementation
+- *
+- * Copyrigth (C) 2003 - Gabriele Brugnoni
+- *
+- * gabrielebrugnoni@dveprojects.com
+- * DVE Prog. El. - Varese, Italy
+- */
+-#ifndef __WINDLG_H__
+-#define __WINDLG_H__
+-
+-/*
+- * For GetWindowLongPtr - SetWindowLongPtr
+- */
+-#define DWL_MSGRESULT   0
+-#define DWL_DLGPROC     (sizeof(LONG_PTR))
+-#define DWL_DLGDATA	(2*sizeof(LONG_PTR))
+-#define DWL_USER        (3*sizeof(LONG_PTR))
+-#define DWL_EXTRABYTES	(4*sizeof(LONG_PTR))
+-
+-
+-
+-/*
+- * Dialog Styles
+- */
+-#define DS_ABSALIGN         0x0001L
+-#define DS_SYSMODAL         0x0002L
+-#define DS_LOCALEDIT        0x0020L
+-#define DS_SETFONT          0x0040L
+-#define DS_MODALFRAME       0x0080L
+-#define DS_NOIDLEMSG        0x0100L
+-#define DS_SETFOREGROUND    0x0200L
+-
+-#define DS_3DLOOK           0x0004L
+-#define DS_FIXEDSYS         0x0008L
+-#define DS_NOFAILCREATE     0x0010L
+-#define DS_CONTROL          0x0400L
+-#define DS_CENTER           0x0800L
+-#define DS_CENTERMOUSE      0x1000L
+-#define DS_CONTEXTHELP      0x2000L
+-
+-
+-#ifndef IsChild
+-#define IsChild(Parent, Children)	((Children)->parent == (Parent))
+-#endif
+-
+-
+-#ifndef IDOK
+-#define IDOK		1
+-#endif
+-#ifndef IDCANCEL
+-#define IDCANCEL	2
+-#endif
+-#ifndef IDC_STATIC
+-#define IDC_STATIC	-1
+-#endif
+-
+-/*
+- *  Struct for WM_DRAWITEM
+- */
+-typedef struct tagDRAWITEMSTRUCT
+-{
+-	UINT CtlType;
+-	UINT CtlID;
+-	UINT itemID;
+-	UINT itemAction;
+-	UINT itemState;
+-	HWND hwndItem;
+-	HDC hDC;
+-	RECT rcItem;
+-	ULONG_PTR itemData;
+-} DRAWITEMSTRUCT, *LPDRAWITEMSTRUCT;
+-
+-enum DRWITYPE {
+-	ODT_BUTTON,
+-	ODT_COMBOBOX,
+-	ODT_LISTBOX,
+-	ODT_LITVIEW,
+-	ODT_MENU,
+-	ODT_STATIC,
+-	ODT_TAB
+-};
+-
+-#define ODA_DRAWENTIRE		0x0001
+-#define ODA_FOCUS			0x0002
+-#define ODA_SELECT			0x0004
+-
+-#define ODS_CHECKED			0x0001
+-#define ODS_COMBOBOXEDIT	0x0002
+-#define ODS_DEFAULT			0x0004
+-#define ODS_DISABLED		0x0008
+-#define ODS_FOCUS			0x0010
+-#define ODS_GRAYED			0x0020
+-#define ODS_SELECTED		0x0040
+-
+-
+-typedef struct tagMEASUREITEMSTRUCT
+-{
+-	UINT CtlType;
+-	UINT CtlID;
+-	UINT itemID;
+-	UINT itemWidth;
+-	UINT itemHeight;
+-	ULONG_PTR itemData;
+-} MEASUREITEMSTRUCT, *LPMEASUREITEMSTRUCT;
+-
+-/*
+- * Real windows resource definitions from WINUSER.H
+- * Compatible with MW* types
+- */
+-#pragma pack(2)
+-typedef struct {
+-    DWORD style;
+-    DWORD dwExtendedStyle;
+-    WORD PACKEDDATA cdit;
+-    short PACKEDDATA x;
+-    short PACKEDDATA y;
+-    short PACKEDDATA cx;
+-    short PACKEDDATA cy;
+-} PACKEDDATA DLGTEMPLATE;
+-
+-typedef struct {
+-    DWORD style;
+-    DWORD dwExtendedStyle;
+-    short PACKEDDATA x;
+-    short PACKEDDATA y;
+-    short PACKEDDATA cx;
+-    short PACKEDDATA cy;
+-    WORD PACKEDDATA id;
+-} PACKEDDATA DLGITEMTEMPLATE;
+-#pragma pack()
+-
+-typedef CONST DLGTEMPLATE *LPCDLGTEMPLATE;
+-
+-BOOL WINAPI MapDialogRect ( HWND hWnd, LPRECT lpRc );
+-
+-HWND WINAPI CreateDialogParam ( HINSTANCE hInstance, LPCTSTR lpTemplate,
+-				HWND hWndParent, DLGPROC lpDialogFunc,
+-				LPARAM dwInitParam );
+-
+-HWND WINAPI CreateDialogIndirectParam(HINSTANCE hInstance, LPCDLGTEMPLATE lpTemplate,
+-		  HWND hWndParent, DLGPROC lpDialogFunc, LPARAM dwInitParam);
+-
+-HWND WINAPI CreateDialog ( HINSTANCE hInstance, LPCSTR lpTemplate,
+-						   HWND hWndParent, DLGPROC lpDialogFunc );
+-
+-int WINAPI DialogBox ( HINSTANCE hInstance, LPCTSTR lpTemplate,
+-		       HWND hWndParent, DLGPROC lpDialogFunc );
+-
+-int WINAPI DialogBoxParam ( HINSTANCE hInstance, LPCTSTR lpTemplate,
+-			    HWND hWndParent, DLGPROC lpDialogFunc,
+-			    LPARAM lParam );
+-
+-int WINAPI DialogBoxIndirectParam(HINSTANCE hInstance, LPCDLGTEMPLATE hDialogTemplate,
+-	HWND hWndParent, DLGPROC lpDialogFunc, LPARAM lParam);
+-
+-LONG WINAPI GetDialogBaseUnits(VOID);
+-
+-BOOL WINAPI EndDialog ( HWND hDlg, int nResult );
+-DLGBOOL CALLBACK DefDlgProc ( HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam );
+-
+-
+-LRESULT WINAPI SendDlgItemMessage ( HWND hwnd, int id, UINT Msg, WPARAM wParam, LPARAM lParam );
+-
+-BOOL WINAPI IsDialogMessage ( HWND hDlg, LPMSG lpMsg );
+-
+-UINT WINAPI GetDlgItemText ( HWND hwnd, int id, LPTSTR pStr, int nSize );
+-BOOL WINAPI SetDlgItemText ( HWND hwnd, int id, LPTSTR pStr );
+-BOOL WINAPI SetDlgItemInt ( HWND hwnd, int id, UINT val, BOOL bSigned );
+-UINT WINAPI GetDlgItemInt ( HWND hwnd, int id, BOOL *pbTransl, BOOL bSigned );
+-UINT IsDlgButtonChecked ( HWND hDlg, int id );
+-BOOL WINAPI CheckDlgButton ( HWND hDlg, int id, UINT mode );
+-BOOL WINAPI CheckRadioButton ( HWND hDlg, int idFirst, int idLast, int idCheck );
+-
+-
+-#endif /*__WINDLG_H__*/
+diff --git a/src/include/windows.h b/src/include/windows.h
+deleted file mode 100644
+index 4286362..0000000
+--- a/src/include/windows.h
++++ /dev/null
+@@ -1,210 +0,0 @@
+-#ifndef _WINDOWS_H
+-#define _WINDOWS_H
+-/* windows.h*/
+-/*
+- * Copyright (c) 1999, 2000, 2019 Greg Haerr <greg@censoft.com>
+- *
+- * Microwindows Win32 API master public header file
+- * Modifications:
+- *  Date        Author                  Description
+- *  2004/12/07  Gabriele Brugnoni       added lpfnWndProc param on wnd struct, so
+- *                                      SetWindowLong(GWL_WNDPROC) may works on multiple wnd.
+- *  2010/04/23	Ludwig Ertl				Added support for window Props
+- */
+-
+-#ifdef __cplusplus
+-extern "C" {
+-#endif
+-
+-#include "mwtypes.h"
+-#include "mwconfig.h"
+-#include "windef.h"
+-#include "wingdi.h"
+-#include "winfont.h"
+-#include "winkbd.h"
+-#include "winuser.h"	/* now includes winctl.h for resource compiler*/
+-#include "winres.h"
+-#include "windlg.h"
+-
+-/* startup routines*/
+-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+-			LPSTR lpCmdLine, int nShowCmd);
+-int WINAPI invoke_WinMain_Start(int ac, char **av);
+-void WINAPI invoke_WinMain_End(void);
+-
+-/* non-Win32 Microwindows routines allowed to be called by user programs*/
+-BOOL WINAPI MwInitializeDialogs(HINSTANCE hInstance);	/* windlg.c*/
+-BOOL WINAPI MwSetDesktopWallpaper(PMWIMAGEHDR pImage);
+-void WINAPI MwRegisterFdInput(HWND hwnd,int fd);
+-void WINAPI MwUnregisterFdInput(HWND hwnd,int fd);
+-void WINAPI MwRegisterFdOutput(HWND hwnd,int fd);
+-void WINAPI MwUnregisterFdOutput(HWND hwnd,int fd);
+-void WINAPI MwRegisterFdExcept(HWND hwnd,int fd);
+-void WINAPI MwUnregisterFdExcept(HWND hwnd,int fd);
+-void WINAPI MwSetKeyboardTranslator(LPFN_KEYBTRANSLATE pFn);
+-void WINAPI MwSetTextCoding(LONG mode);
+-#define		MwError GdError		/* calls GdError in osdep.c*/
+-
+-/* optional user hook routine called before anything*/
+-int	MwUserInit(int ac, char **av);
+-
+-/* Internal Microwindows non-win32 definitions*/
+-
+-/* GDI Objects*/
+-
+-typedef struct {			/* GDI object hdr*/
+-	int		type;		/* OBJ_xxx type*/
+-	BOOL		stockobj;	/* TRUE if stock (unallocated) object*/
+-} MWGDIOBJHDR;
+-
+-/* gdiobj*/
+-struct hgdiobj {
+-	MWGDIOBJHDR	hdr;		/* all gdi object start with this hdr*/
+-	/* additional data...*/		/* allocated per object type*/
+-};
+-
+-typedef struct {
+-	MWGDIOBJHDR	hdr;
+-	int		style;		/* pen style*/
+-	COLORREF	color;		/* pen color*/
+-} MWPENOBJ;
+-
+-typedef struct {
+-	MWGDIOBJHDR	hdr;
+-	int		style;		/* brush style*/
+-	COLORREF	color;		/* brush color*/
+-} MWBRUSHOBJ;
+-
+-typedef struct {
+-	MWGDIOBJHDR	hdr;
+-	LOGPALETTE palette;
+-} MWPALOBJ;
+-
+-typedef struct {
+-	MWGDIOBJHDR	hdr;
+-	PMWFONT		pfont;		/* allocated font*/
+-	char		name[32];	/* font name (stock objects only)*/
+-} MWFONTOBJ;
+-
+-typedef struct {
+-	MWGDIOBJHDR	hdr;
+-	int		width;		/* width*/
+-	int		height;		/* height*/
+-	int		planes;		/* # planes*/
+-	int		bpp;		/* bits per pixel*/
+-	int		data_format;/* MWIF_ image data format*/
+-	unsigned int pitch;	/* bytes per line*/
+-	int		size;		/* allocated size in bytes*/
+-	char 	bits[1];	/* beginning of bitmap*/
+-} MWBITMAPOBJ;
+-
+-typedef struct {
+-	MWGDIOBJHDR   	hdr;
+-	MWCLIPREGION  *	rgn;		/* clip region*/
+-} MWRGNOBJ;
+-
+-typedef struct  _XFORM {
+-	FLOAT eM11;
+-	FLOAT eM12;
+-	FLOAT eM21;
+-	FLOAT eM22;
+-	FLOAT eDx;
+-	FLOAT eDy;
+-} XFORM, *PXFORM, *LPXFORM;
+-
+-/* device context*/
+-struct hdc {
+-	struct _mwscreendevice *psd;	/* screen or memory device*/
+-	HWND		hwnd;		/* associated window*/
+-	DWORD		flags;		/* clipping flags*/
+-	int		bkmode;		/* background mode*/
+-	UINT		textalign;	/* text alignment flags*/
+-	MWCOLORVAL	bkcolor;	/* text background color*/
+-	MWCOLORVAL	textcolor;	/* text color*/
+-	MWBRUSHOBJ *	brush;		/* current brush*/
+-	MWPENOBJ *	pen;		/* current pen*/
+-	MWFONTOBJ *	font;		/* current font*/
+-	MWBITMAPOBJ *	bitmap;		/* current bitmap (mem dc's only)*/
+-	MWRGNOBJ *	region;		/* user specified clip region*/
+-	MWPALOBJ *	palette;
+-	int		drawmode;	/* rop2 drawing mode */
+-	POINT		pt;		/* current pen pos in client coords*/
+-#if WINEXTRA
+-	INT           GraphicsMode;      /* Graphics mode */
+-	XFORM         xformWorld2Wnd;    /* World-to-window transformation */
+-	XFORM         xformWorld2Vport;  /* World-to-viewport transformation */
+-	XFORM         xformVport2World;  /* Inverse of the above transformation */
+-#endif
+-};
+-
+-/* cursor*/
+-struct hcursor {
+-	int		usecount;	/* use counter */
+-	MWCURSOR	cursor;		/* software cursor definition*/
+-};
+-
+-/* built-in scrollbars*/
+-typedef struct {
+-	int		minPos;        /* min value of scroll range.*/
+-	int		maxPos;        /* max value of scroll range.*/
+-	int		curPos;        /* current scroll pos.*/
+-	int     trackPos;      /* current scroll box track position */
+-	int		pageStep;      /* steps per page.*/
+-	int		barStart;      /* start pixel of bar.*/
+-	int		barLen;        /* length of bar.*/
+-	int		status;        /* status of scroll bar.*/
+-	RECT		rc;	       /* screen coordinates position*/
+-} MWSCROLLBARINFO, *PMWSCROLLBARINFO;
+-
+-/* window*/
+-struct hwnd {
+-	RECT		winrect;	/* window rect in screen coords*/
+-	RECT		clirect;	/* client rect in screen coords*/
+-	RECT		restorerc;	/* restore rect from maximized*/
+-	DWORD		style;		/* window style*/
+-	DWORD		exstyle;	/* window extended style*/
+-	PWNDCLASS	pClass;		/* window class*/
+-	WNDPROC     lpfnWndProc;/* default window procedure (initialized from pClass)*/
+-	WNDPROC		lpfnWndProcBridge;	/* used externally only*/
+-	struct hwnd	*parent;	/* z-order parent window */
+-	struct hwnd	*owner;		/* owner window*/
+-	struct hwnd	*children;	/* first child window */
+-	struct hwnd	*siblings;	/* next sibling window */
+-	struct hwnd	*next;		/* next window in complete list */
+-	struct hcursor	*cursor;	/* cursor for this window */
+-	struct hdc *	owndc;		/* owndc if CS_OWNDC*/
+-	int		unmapcount;	/* count of reasons not really mapped */
+-	int		id;		/* window id */
+-	LPTSTR		szTitle;	/* window title*/
+-	int		gotPaintMsg;	/* window had WM_PAINT PostMessage*/
+-	int		paintSerial;	/* experimental serial # for alphblend*/
+-	int		paintNC;	/* experimental NC paint handling*/
+-	int		nEraseBkGnd;	/* for InvalidateXX erase bkgnd flag */
+-	HBRUSH		paintBrush;	/* brush created to paint some controls */
+-	HPEN		paintPen;	/* pen created to paint some controls */
+-	MWCLIPREGION *	update;		/* update region in screen coords*/
+-	LONG_PTR		userdata;	/* setwindowlong user data*/
+-	LONG_PTR		userdata2;	/* additional user data (will remove)*/
+-	MWLISTHEAD  	props;		/* windows property list */
+-	MWSCROLLBARINFO	hscroll;	/* NC scrollbars*/
+-	MWSCROLLBARINFO	vscroll;
+-	HINSTANCE	hInstance;	/* hInstance */
+-	unsigned int     color_key;       /* color key for a layered window */
+-	unsigned int     alpha;           /* alpha value for a layered window */
+-	unsigned int     layered_flags;   /* flags for a layered window */
+-	int		nextrabytes;	/* # window extra bytes*/
+-	char		extrabytes[1];	/* window extra bytes - must be last*/
+-};
+-
+-/* misc apis in winmain.c*/
+-VOID /*WINAPI*/ Sleep(DWORD dwMilliseconds);
+-
+-#ifdef __cplusplus
+-}
+-#endif
+-
+-#if WINEXTRA
+-#include "winextra.h"		/* extra windows stuff set by WINEXTRA=Y in config*/
+-#endif
+-
+-#endif /* _WINDOWS_H*/
+diff --git a/src/include/windowsx.h b/src/include/windowsx.h
+deleted file mode 100644
+index 57b69a0..0000000
+--- a/src/include/windowsx.h
++++ /dev/null
+@@ -1,55 +0,0 @@
+-#define HANDLE_WM_COMMAND(hwnd, wParam, lParam, fn) \
+-    ((fn)((hwnd), (int)(LOWORD(wParam)), (HWND)(lParam), (UINT)HIWORD(wParam)), 0L)
+-#define FORWARD_WM_COMMAND(hwnd, id, hwndCtl, codeNotify, fn) \
+-    (void)(fn)((hwnd), WM_COMMAND, MAKEWPARAM((UINT)(id),(UINT)(codeNotify)), (LPARAM)(HWND)(hwndCtl))
+-
+-#define HANDLE_WM_CREATE(hwnd, wParam, lParam, fn) \
+-    ((fn)((hwnd), (LPCREATESTRUCT)(lParam)) ? 0L : (LRESULT)-1L)
+-#define FORWARD_WM_CREATE(hwnd, lpCreateStruct, fn) \
+-    (BOOL)(DWORD)(fn)((hwnd), WM_CREATE, 0L, (LPARAM)(LPCREATESTRUCT)(lpCreateStruct))
+-
+-#define HANDLE_WM_DESTROY(hwnd, wParam, lParam, fn) \
+-    ((fn)(hwnd), 0L)
+-#define FORWARD_WM_DESTROY(hwnd, fn) \
+-    (void)(fn)((hwnd), WM_DESTROY, 0L, 0L)
+-
+-#define HANDLE_WM_ERASEBKGND(hwnd, wParam, lParam, fn) \
+-    (LRESULT)(DWORD)(BOOL)(fn)((hwnd), (HDC)(wParam))
+-#define FORWARD_WM_ERASEBKGND(hwnd, hdc, fn) \
+-   (BOOL)(DWORD)(fn)((hwnd), WM_ERASEBKGND, (WPARAM)(HDC)(hdc), 0L)
+-
+-#define HANDLE_WM_LBUTTONDOWN(hwnd, wParam, lParam, fn) \
+-    ((fn)((hwnd), FALSE, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), (UINT)(wParam)), 0L)
+-#define FORWARD_WM_LBUTTONDOWN(hwnd, fDoubleClick, x, y, keyFlags, fn) \
+-    (void)(fn)((hwnd), (fDoubleClick) ? WM_LBUTTONDBLCLK : WM_LBUTTONDOWN, (WPARAM)(UINT)(keyFlags), MAKELPARAM((x), (y)))
+-
+-#define HANDLE_WM_LBUTTONDBLCLK(hwnd, wParam, lParam, fn) \
+-    ((fn)((hwnd), TRUE, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), (UINT)(wParam)), 0L)
+-
+-#define HANDLE_WM_LBUTTONUP(hwnd, wParam, lParam, fn) \
+-    ((fn)((hwnd), (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), (UINT)(wParam)), 0L)
+-#define FORWARD_WM_LBUTTONUP(hwnd, x, y, keyFlags, fn) \
+-    (void)(fn)((hwnd), WM_LBUTTONUP, (WPARAM)(UINT)(keyFlags), MAKELPARAM((x), (y)))
+-
+-#define HANDLE_WM_MOUSEMOVE(hwnd, wParam, lParam, fn) \
+-    ((fn)((hwnd), (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), (UINT)(wParam)), 0L)
+-#define FORWARD_WM_MOUSEMOVE(hwnd, x, y, keyFlags, fn) \
+-    (void)(fn)((hwnd), WM_MOUSEMOVE, (WPARAM)(UINT)(keyFlags), MAKELPARAM((x), (y)))
+-
+-#define HANDLE_WM_SETFOCUS(hwnd, wParam, lParam, fn) \
+-    ((fn)((hwnd), (HWND)(wParam)), 0L)
+-#define FORWARD_WM_SETFOCUS(hwnd, hwndOldFocus, fn) \
+-    (void)(fn)((hwnd), WM_SETFOCUS, (WPARAM)(HWND)(hwndOldFocus), 0L)
+-
+-#define HANDLE_WM_KILLFOCUS(hwnd, wParam, lParam, fn) \
+-    ((fn)((hwnd), (HWND)(wParam)), 0L)
+-#define FORWARD_WM_KILLFOCUS(hwnd, hwndNewFocus, fn) \
+-    (void)(fn)((hwnd), WM_KILLFOCUS, (WPARAM)(HWND)(hwndNewFocus), 0L)
+-
+-#define HANDLE_WM_SETTEXT(hwnd, wParam, lParam, fn) \
+-    ((fn)((hwnd), (LPCTSTR)(lParam)), 0L)
+-#define FORWARD_WM_SETTEXT(hwnd, lpszText, fn) \
+-    (void)(fn)((hwnd), WM_SETTEXT, 0L, (LPARAM)(LPCTSTR)(lpszText))
+-
+-#define HANDLE_MSG(hwnd, message, fn)    \
+-    case (message): return HANDLE_##message((hwnd), (wParam), (lParam), (fn))
+diff --git a/src/include/winerror.h b/src/include/winerror.h
+deleted file mode 100644
+index 2f6775c..0000000
+--- a/src/include/winerror.h
++++ /dev/null
+@@ -1,65 +0,0 @@
+-#ifndef _WINERROR_
+-#define _WINERROR_
+-
+-extern DWORD lastWIN32Error;
+-
+-#define GetLastError() lastWIN32Error
+-#define SetLastError(dwErr) lastWIN32Error=dwErr
+-
+-//
+-// MessageId: ERROR_SUCCESS
+-//
+-// MessageText:
+-//
+-//  The operation completed successfully.
+-//
+-#define ERROR_SUCCESS                    0L
+-
+-//
+-// MessageId: ERROR_OUTOFMEMORY
+-//
+-// MessageText:
+-//
+-//  Not enough storage is available to complete this operation.
+-//
+-#define ERROR_OUTOFMEMORY                14L
+-
+-//
+-// MessageId: ERROR_INVALID_PARAMETER
+-//
+-// MessageText:
+-//
+-//  The parameter is incorrect.
+-//
+-#define ERROR_INVALID_PARAMETER          87L    // dderror
+-
+-
+-// MessageId: ERROR_IO_PENDING
+-//
+-// MessageText:
+-//
+-//  Overlapped I/O operation is in progress.
+-//
+-#define ERROR_IO_PENDING                 997L    // dderror
+-
+-//
+-// MessageId: ERROR_INSUFFICIENT_BUFFER
+-//
+-// MessageText:
+-//
+-//  The data area passed to a system call is too
+-//  small.
+-//
+-#define ERROR_INSUFFICIENT_BUFFER        122L    // dderror
+-
+-//
+-// MessageId: ERROR_IO_PENDING
+-//
+-// MessageText:
+-//
+-//  Overlapped I/O operation is in progress.
+-//
+-#define ERROR_IO_PENDING                 997L    // dderror
+-
+-
+-#endif
+diff --git a/src/include/winfont.h b/src/include/winfont.h
+deleted file mode 100644
+index a77c2c4..0000000
+--- a/src/include/winfont.h
++++ /dev/null
+@@ -1,166 +0,0 @@
+-/* winfont.h*/
+-/*
+- * Copyright (c) 2000 Greg Haerr <greg@censoft.com>
+- *
+- * Win32 font structures and API
+- */
+-
+-/* tmPitchAndFamily flags*/
+-#define TMPF_FIXED_PITCH    0x01	/* win32 bug: means variable*/
+-#define TMPF_VECTOR         0x02
+-#define TMPF_TRUETYPE       0x04
+-#define TMPF_DEVICE         0x08
+-
+-typedef struct tagTEXTMETRIC {
+-    LONG        tmHeight;
+-    LONG        tmAscent;
+-    LONG        tmDescent;
+-    LONG        tmInternalLeading;
+-    LONG        tmExternalLeading;
+-    LONG        tmAveCharWidth;
+-    LONG        tmMaxCharWidth;
+-    LONG        tmWeight;
+-    LONG        tmOverhang;
+-    LONG        tmDigitizedAspectX;
+-    LONG        tmDigitizedAspectY;
+-    BYTE        tmFirstChar;
+-    BYTE        tmLastChar;
+-    BYTE        tmDefaultChar;
+-    BYTE        tmBreakChar;
+-    BYTE        tmItalic;
+-    BYTE        tmUnderlined;
+-    BYTE        tmStruckOut;
+-    BYTE        tmPitchAndFamily;
+-    BYTE        tmCharSet;
+-} TEXTMETRIC, *PTEXTMETRIC, NEAR *NPTEXTMETRIC, FAR *LPTEXTMETRIC;
+-
+-BOOL WINAPI GetTextMetrics(HDC hdc, LPTEXTMETRIC lptm);
+-BOOL WINAPI GetCharWidth(HDC hdc,UINT iFirstChar,UINT iLastChar,LPINT lpBuffer);
+-BOOL WINAPI GetTextExtentPoint(HDC hdc,LPCTSTR lpszStr,int cchString,
+-		LPSIZE lpSize);
+-BOOL WINAPI GetTextExtentExPoint(HDC hdc,LPCTSTR lpszStr,int cchString,
+-		int nMaxExtent,LPINT lpnFit,LPINT alpDx,LPSIZE lpSize);
+-
+-/* inherit logical font descriptor from engine*/
+-
+-typedef struct {
+-	LONG	lfHeight;		/* desired height in pixels*/
+-	LONG	lfWidth;		/* desired width in pixels or 0*/
+-	LONG	lfEscapement;		/* rotation in tenths of degree*/
+-	LONG	lfOrientation;		/* not used*/
+-	LONG	lfWeight;		/* font weight*/
+-	BYTE	lfItalic;		/* =1 for italic*/
+-	BYTE	lfUnderline;		/* =1 for underline*/
+-	BYTE	lfStrikeOut;		/* not used*/
+-	BYTE	lfCharSet;		/* font character set*/
+-	BYTE	lfOutPrecision;		/* font type selection*/
+-	BYTE	lfClipPrecision;	/* not used*/
+-	BYTE	lfQuality;		/* not used*/
+-	BYTE	lfPitchAndFamily;	/* font pitch and family*/
+-	CHAR	lfFaceName[MWLF_FACESIZE];	/* font name, may be aliased*/
+-} LOGFONT, *PLOGFONT, NEAR *NPLOGFONT, FAR *LPLOGFONT;
+-
+-#define LF_FACESIZE		MWLF_FACESIZE
+-
+-/* font weights*/
+-#define FW_DONTCARE		MWLF_WEIGHT_DEFAULT
+-#define FW_THIN			MWLF_WEIGHT_THIN
+-#define FW_EXTRALIGHT		MWLF_WEIGHT_EXTRALIGHT
+-#define FW_LIGHT		MWLF_WEIGHT_LIGHT
+-#define FW_NORMAL		MWLF_WEIGHT_NORMAL
+-#define FW_MEDIUM		MWLF_WEIGHT_MEDIUM
+-#define FW_SEMIBOLD		MWLF_WEIGHT_DEMIBOLD
+-#define FW_BOLD			MWLF_WEIGHT_BOLD
+-#define FW_EXTRABOLD		MWLF_WEIGHT_EXTRABOLD
+-#define FW_HEAVY		MWLF_WEIGHT_BLACK
+-#define FW_ULTRALIGHT		FW_EXTRALIGHT
+-#define FW_REGULAR		FW_NORMAL
+-#define FW_DEMIBOLD		FW_SEMIBOLD
+-#define FW_ULTRABOLD		FW_EXTRABOLD
+-#define FW_BLACK		FW_HEAVY
+-
+-/* output precision - used for font selection*/
+-#define OUT_DEFAULT_PRECIS          MWLF_TYPE_DEFAULT
+-#define OUT_STRING_PRECIS           1
+-#define OUT_CHARACTER_PRECIS        2
+-#define OUT_STROKE_PRECIS           3
+-#define OUT_TT_PRECIS               MWLF_TYPE_SCALED
+-#define OUT_DEVICE_PRECIS           MFLF_TYPE_RASTER
+-#define OUT_RASTER_PRECIS           MFLF_TYPE_RASTER
+-#define OUT_TT_ONLY_PRECIS          MWLF_TYPE_TRUETYPE
+-#define OUT_OUTLINE_PRECIS          8
+-#define OUT_SCREEN_OUTLINE_PRECIS   9
+-
+-/* clip precision - unused*/
+-#define CLIP_DEFAULT_PRECIS     0
+-#define CLIP_CHARACTER_PRECIS   1
+-#define CLIP_STROKE_PRECIS      2
+-#define CLIP_MASK               0xf
+-#define CLIP_LH_ANGLES          (1<<4)
+-#define CLIP_TT_ALWAYS          (2<<4)
+-#define CLIP_EMBEDDED           (8<<4)
+-
+-/* output quality - unused*/
+-#define DEFAULT_QUALITY         0
+-#define DRAFT_QUALITY           1
+-#define PROOF_QUALITY           2
+-#define NONANTIALIASED_QUALITY  3
+-#define ANTIALIASED_QUALITY     4
+-
+-/* font charset*/
+-#define ANSI_CHARSET            MWLF_CHARSET_ANSI
+-#define DEFAULT_CHARSET         MWLF_CHARSET_DEFAULT
+-#define SYMBOL_CHARSET          2
+-#define OEM_CHARSET             MWLF_CHARSET_OEM
+-
+-/* font pitch - lfPitchAndFamily*/
+-#define MWLF_PITCH_DEFAULT	0	/* any pitch*/
+-#define MWLF_PITCH_FIXED	1	/* fixed pitch*/
+-#define MWLF_PITCH_VARIABLE	2	/* variable pitch*/
+-
+-/* font pitch*/
+-#define DEFAULT_PITCH           MWLF_PITCH_DEFAULT
+-#define FIXED_PITCH             MWLF_PITCH_FIXED
+-#define VARIABLE_PITCH          MWLF_PITCH_VARIABLE
+-#define MONO_FONT               8
+-
+-/* 
+- * font family - lfPitchAndFamily
+- *
+- * MWF_FAMILY_SERIF	- Times Roman, Century Schoolbook
+- * MWF_FAMILY_SANSSERIF	- Helvetica, Swiss
+- * MWF_FAMILY_MODERN	- Pica, Elite, Courier
+- */
+-#define MWLF_FAMILY_DEFAULT	(0<<4)	/* any family*/
+-#define MWLF_FAMILY_SERIF	(1<<4)	/* variable stroke width, serif*/
+-#define MWLF_FAMILY_SANSSERIF	(2<<4)	/* variable stroke width, sans-serif*/
+-#define MWLF_FAMILY_MODERN	(3<<4)	/* constant stroke width*/
+-
+-/* add definitions here for font mapper extensions*/
+-#define MWLF_FAMILY_BITSTREAM	(6<<4)	/* bitstream*/
+-#define MWLF_FAMILY_ADOBE	(7<<4)	/* adobe*/
+-
+-/* font family*/
+-#define FF_DONTCARE         	MWLF_FAMILY_DEFAULT
+-#define FF_ROMAN            	MWLF_FAMILY_SERIF
+-#define FF_SWISS            	MWLF_FAMILY_SANSSERIF
+-#define FF_MODERN           	MWLF_FAMILY_MODERN
+-#define FF_SCRIPT           	(4<<4)  /* Cursive, etc. */
+-#define FF_DECORATIVE       	(5<<4)  /* Old English, etc. */
+-
+-HFONT WINAPI CreateFont(int nHeight, int nWidth, int nEscapement,
+-		int nOrientation, int fnWeight, DWORD fdwItalic,
+-		DWORD fdwUnderline, DWORD fdwStrikeOut,DWORD fdwCharSet,
+-		DWORD fdwOutputPrecision,DWORD fdwClipPrecision,
+-		DWORD fdwQuality, DWORD fdwPitchAndFamily, LPCSTR lpszFace);
+-HFONT WINAPI CreateFontIndirect(CONST LOGFONT *lplf);
+-
+-
+-/*
+- * Font enumeration functions
+- */
+-typedef int (CALLBACK *FONTENUMPROC) ( CONST LOGFONT *lplf,
+-		CONST TEXTMETRIC *lptm, DWORD dwType, LPARAM lpData );
+-
+-int WINAPI EnumFonts ( HDC hdc, LPCTSTR lpFaceName, FONTENUMPROC lpFontFunc,  
+-		       LPARAM lParam );
+diff --git a/src/include/wingdi.h b/src/include/wingdi.h
+deleted file mode 100644
+index e043476..0000000
+--- a/src/include/wingdi.h
++++ /dev/null
+@@ -1,480 +0,0 @@
+-/* wingdi.h*/
+-/*
+- * Copyright (c) 1999,2000,2001,2005 Greg Haerr <greg@censoft.com>
+- *
+- * Win32 GDI structures and API
+- */
+-
+-#ifndef _WINGDI_H_
+-#define _WINGDI_H_
+-
+-/* portable coordinate definition*/
+-typedef MWCOORD	GDICOORD;
+-
+-/* inherit RECT and POINT from mwtypes.h*/
+-typedef MWRECT	RECT;
+-typedef MWPOINT	POINT;
+-
+-typedef RECT NEAR *PRECT, FAR *LPRECT;
+-
+-typedef POINT NEAR *PPOINT, FAR *LPPOINT;
+-
+-typedef struct  tagSIZE {
+-    GDICOORD cx;
+-    GDICOORD cy;
+-} SIZE, NEAR *PSIZE, FAR *LPSIZE;
+-
+-/* GetDCEx flags*/
+-#define DCX_WINDOW           0x00000001L
+-#define DCX_CACHE            0x00000002L
+-#define DCX_NORESETATTRS     0x00000004L
+-#define DCX_CLIPCHILDREN     0x00000008L
+-#define DCX_CLIPSIBLINGS     0x00000010L
+-#define DCX_PARENTCLIP       0x00000020L
+-#define DCX_EXCLUDERGN       0x00000040L
+-#define DCX_INTERSECTRGN     0x00000080L
+-#define DCX_EXCLUDEUPDATE    0x00000100L
+-#define DCX_INTERSECTUPDATE  0x00000200L
+-#define DCX_LOCKWINDOWUPDATE 0x00000400L
+-#define DCX_VALIDATE         0x00200000L
+-#define DCX_DEFAULTCLIP      0x80000000L	/* microwin only*/
+-
+-HDC WINAPI	GetDCEx(HWND hwnd,HRGN hrgnClip,DWORD flags);
+-HDC WINAPI	GetDC(HWND hWnd);
+-HDC WINAPI 	GetWindowDC(HWND hWnd);
+-int WINAPI 	ReleaseDC(HWND hWnd, HDC hDC);
+-BOOL WINAPI	DeleteDC(HDC hdc);
+-
+-typedef struct tagPAINTSTRUCT {
+-    HDC         hdc;
+-    BOOL        fErase;			/* indicates bkgnd needs erasing*/
+-    RECT        rcPaint;		/* nyi*/
+-    BOOL        fRestore;		/* nyi*/
+-    BOOL        fIncUpdate;		/* nyi*/
+-    BYTE        rgbReserved[32];
+-} PAINTSTRUCT, *PPAINTSTRUCT, *NPPAINTSTRUCT, FAR *LPPAINTSTRUCT;
+-
+-HDC WINAPI 	BeginPaint(HWND hWnd, LPPAINTSTRUCT lpPaint);
+-BOOL WINAPI 	EndPaint(HWND hWnd, CONST PAINTSTRUCT *lpPaint);
+-
+-typedef HANDLE HDWP;
+-
+-HDWP BeginDeferWindowPos(int nNumWindows);
+-HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWnd, HWND hWndInsertAfter,
+-		int x, int y, int cx, int cy, UINT uFlags);
+-BOOL EndDeferWindowPos(HDWP hWinPosInfo);
+-
+-
+-#define RGB(r,g,b)	    MWRGB(r,g,b)
+-#define GetRValue(rgb)      ((BYTE)(rgb))
+-#define GetGValue(rgb)      ((BYTE)(((WORD)(rgb)) >> 8))
+-#define GetBValue(rgb)      ((BYTE)((rgb)>>16))
+-
+-/* Background Modes */
+-#define TRANSPARENT	1
+-#define OPAQUE		2
+-
+-/* Text Alignment*/
+-#define TA_NOUPDATECP                0
+-#define TA_UPDATECP                  1
+-
+-#define TA_LEFT                      0
+-#define TA_RIGHT                     2
+-#define TA_CENTER                    6
+-
+-#define TA_TOP                       0
+-#define TA_BOTTOM                    8
+-#define TA_BASELINE                  24
+-#define TA_RTLREADING                256
+-#define TA_MASK       (TA_BASELINE+TA_CENTER+TA_UPDATECP+TA_RTLREADING)
+-
+-COLORREF WINAPI	SetTextColor(HDC, COLORREF);
+-COLORREF WINAPI GetTextColor(HDC hdc);
+-COLORREF WINAPI	SetBkColor(HDC, COLORREF);
+-int WINAPI 	SetBkMode(HDC, int);
+-UINT WINAPI     SetTextAlign(HDC hdc, UINT fMode);
+-UINT WINAPI		GetTextAlign(HDC hdc);
+-
+-/* Binary raster ops*/
+-#define R2_BLACK            (MWROP_CLEAR+1)		/*  0       */
+-#define R2_NOTMERGEPEN      (MWROP_NOR+1)		/* DPon     */
+-#define R2_MASKNOTPEN       (MWROP_ANDINVERTED+1)	/* DPna     */
+-#define R2_NOTCOPYPEN       (MWROP_COPYINVERTED+1)	/* Pn       */
+-#define R2_MASKPENNOT       (MWROP_ANDREVERSE+1)	/* PDna     */
+-#define R2_NOT              (MWROP_INVERT+1)		/* Dn       */
+-#define R2_XORPEN           (MWROP_XOR+1)		/* DPx      */
+-#define R2_NOTMASKPEN       (MWROP_NAND+1)		/* DPan     */
+-#define R2_MASKPEN          (MWROP_AND+1)		/* DPa      */
+-#define R2_NOTXORPEN        (MWROP_EQUIV+1)		/* DPxn     */
+-#define R2_NOP              (MWROP_NOOP+1)		/* D        */
+-#define R2_MERGENOTPEN      (MWROP_ORINVERTED+1)	/* DPno     */
+-#define R2_COPYPEN          (MWROP_COPY+1)		/* P        */
+-#define R2_MERGEPENNOT      (MWROP_ORREVERSE+1)	/* PDno     */
+-#define R2_MERGEPEN         (MWROP_OR+1)		/* DPo      */
+-#define R2_WHITE            (MWROP_SET+1)		/*  1       */
+-#define R2_LAST             16
+-
+-int WINAPI	SetROP2(HDC hdc, int fnDrawMode);
+-
+-#define GDI_ERROR	(0xFFFFFFFFL)
+-#define CLR_INVALID     0xFFFFFFFF
+-
+-COLORREF WINAPI GetPixel(HDC hdc, int x, int y);
+-COLORREF WINAPI	SetPixel(HDC hdc, int x, int y, COLORREF crColor);
+-BOOL WINAPI 	MoveToEx(HDC hdc, int x, int y, LPPOINT lpPoint);
+-BOOL WINAPI 	LineTo(HDC hdc, int x, int y);
+-BOOL WINAPI	Polyline(HDC hdc, CONST POINT *lppt, int cPoints);
+-BOOL WINAPI	PolyPolygon(HDC hdc, CONST POINT *lpPoints, LPINT lpPolyCounts,
+-			int nCount);
+-BOOL WINAPI	Rectangle(HDC hdc, int nLeft, int nTop, int nRight,int nBottom);
+-BOOL WINAPI	Ellipse(HDC hdc, int nLeftRect, int nTopRect, int nRightRect,
+-			int nBottomRect);
+-BOOL WINAPI	Arc(HDC hdc, int nLeftRect, int nTopRect, int nRightRect,
+-			int nBottomRect, int nXStartArc, int nYStartArc,
+-			int nXEndArc, int nYEndArc);
+-BOOL WINAPI	Pie(HDC hdc, int nLeftRect, int nTopRect, int nRightRect,
+-			int nBottomRect, int nXRadial1, int nYRadial1,
+-			int nXRadial2, int nYRadial2);
+-BOOL WINAPI	Polygon(HDC hdc, CONST POINT *lpPoints, int nCount);
+-int WINAPI	FillRect(HDC hDC, CONST RECT *lprc, HBRUSH hbr);
+-BOOL WINAPI	DrawFocusRect(HDC hdc, LPRECT prect);
+-
+-/* ExTextOut options*/
+-#define ETO_OPAQUE	0x0002
+-#define ETO_CLIPPED	0x0004		/* nyi*/
+-
+-BOOL WINAPI	TextOut(HDC hdc, int x, int y, LPCSTR lpszString, int cbString);
+-BOOL WINAPI	TextOutW(HDC hdc, int x, int y, LPCWSTR lpszString, int cbString);
+-BOOL WINAPI	ExtTextOut(HDC hdc, int x, int y, UINT fuOptions,
+-			CONST RECT *lprc, LPCSTR lpszString, UINT cbCount,
+-			CONST INT *lpDx);
+-BOOL WINAPI	ExtTextOutW(HDC hdc, int x, int y, UINT fuOptions,
+-			CONST RECT *lprc, LPCWSTR lpszString, UINT cbCount,
+-			CONST INT *lpDx);
+-LONG WINAPI TabbedTextOut ( HDC hdc, int x, int y, LPCTSTR lpszString, int cbString,
+-            int ntabs, LPINT lpTabStops, int nTabOrigin );
+-DWORD WINAPI GetTabbedTextExtent ( HDC hdc, int x, int y, LPCTSTR lpszString, int cbString,
+-            int ntabs, LPINT lpTabStops );
+-
+-/* DrawText options*/
+-#define DT_TOP              0x00000000
+-#define DT_LEFT             0x00000000
+-#define DT_CENTER           0x00000001
+-#define DT_RIGHT            0x00000002
+-#define DT_VCENTER          0x00000004
+-#define DT_BOTTOM           0x00000008
+-#define DT_WORDBREAK        0x00000010
+-#define DT_SINGLELINE       0x00000020
+-#define DT_EXPANDTABS       0x00000040
+-#define DT_TABSTOP          0x00000080
+-#define DT_NOCLIP           0x00000100
+-#define DT_EXTERNALLEADING  0x00000200
+-#define DT_CALCRECT         0x00000400
+-#define DT_NOPREFIX         0x00000800
+-#define DT_INTERNAL         0x00001000
+-#define DT_EDITCONTROL      0x00002000
+-#define DT_PATH_ELLIPSIS    0x00004000
+-#define DT_END_ELLIPSIS     0x00008000
+-#define DT_MODIFYSTRING     0x00010000
+-#define DT_RTLREADING       0x00020000
+-#define DT_WORD_ELLIPSIS    0x00040000
+-
+-int WINAPI	DrawTextA(HDC hdc, LPCSTR lpString, int nCount, LPRECT lpRect,
+-			UINT uFormat);
+-int WINAPI	DrawTextW(HDC hdc, LPCWSTR lpString, int nCount, LPRECT lpRect,
+-			UINT uFormat);
+-#define DrawText DrawTextA
+-
+-BOOL WINAPI	DrawDIB(HDC hdc,int x, int y,PMWIMAGEHDR pimage); /* microwin*/
+-
+-/* GetSysColor, FillRect colors*/
+-#define COLOR_SCROLLBAR         0
+-#define COLOR_BACKGROUND        1
+-#define COLOR_ACTIVECAPTION     2
+-#define COLOR_INACTIVECAPTION   3
+-#define COLOR_MENU              4
+-#define COLOR_WINDOW            5
+-#define COLOR_WINDOWFRAME       6
+-#define COLOR_MENUTEXT          7
+-#define COLOR_WINDOWTEXT        8
+-#define COLOR_CAPTIONTEXT       9
+-#define COLOR_ACTIVEBORDER      10
+-#define COLOR_INACTIVEBORDER    11
+-#define COLOR_APPWORKSPACE      12
+-#define COLOR_HIGHLIGHT         13
+-#define COLOR_HIGHLIGHTTEXT     14
+-#define COLOR_BTNFACE           15
+-#define COLOR_BTNSHADOW         16
+-#define COLOR_GRAYTEXT          17
+-#define COLOR_BTNTEXT           18
+-#define COLOR_INACTIVECAPTIONTEXT 19
+-#define COLOR_BTNHIGHLIGHT      20
+-#define COLOR_3DDKSHADOW        21
+-#define COLOR_3DLIGHT           22
+-#define COLOR_INFOTEXT          23
+-#define COLOR_INFOBK            24
+-#define COLOR_DESKTOP           COLOR_BACKGROUND
+-#define COLOR_3DFACE            COLOR_BTNFACE
+-#define COLOR_3DSHADOW          COLOR_BTNSHADOW
+-#define COLOR_3DHIGHLIGHT       COLOR_BTNHIGHLIGHT
+-#define COLOR_3DHILIGHT         COLOR_BTNHIGHLIGHT
+-#define COLOR_BTNHILIGHT        COLOR_BTNHIGHLIGHT
+-#define COLOR_ALTERNATEBUTTONFACE	25
+-#define COLOR_HOTLIGHT                  26
+-#define COLOR_GRADIENTACTIVECAPTION     27
+-#define COLOR_GRADIENTINACTIVECAPTION   28
+-
+-DWORD WINAPI	GetSysColor(int nIndex);
+-COLORREF WINAPI	SetSysColor(int nIndex, COLORREF crColor);/* Microwindows only*/
+-HBRUSH WINAPI	GetSysColorBrush(int nIndex);
+-
+-/* Stock Logical Objects */
+-#define WHITE_BRUSH         0
+-#define LTGRAY_BRUSH        1
+-#define GRAY_BRUSH          2
+-#define DKGRAY_BRUSH        3
+-#define BLACK_BRUSH         4
+-#define NULL_BRUSH          5
+-#define HOLLOW_BRUSH        NULL_BRUSH
+-#define WHITE_PEN           6
+-#define BLACK_PEN           7
+-#define NULL_PEN            8
+-#define OEM_FIXED_FONT      10
+-#define ANSI_FIXED_FONT     11
+-#define ANSI_VAR_FONT       12
+-#define SYSTEM_FONT         13
+-#define DEVICE_DEFAULT_FONT 14
+-#define DEFAULT_PALETTE     15
+-#define SYSTEM_FIXED_FONT   16
+-#define DEFAULT_GUI_FONT    17
+-#define DC_BRUSH            18
+-#define DC_PEN              19
+-#define STOCK_LAST          19
+-
+-/* Object types*/
+-#define OBJ_PEN             1
+-#define OBJ_BRUSH           2
+-#define OBJ_DC              3
+-#define OBJ_METADC          4
+-#define OBJ_PAL             5
+-#define OBJ_FONT            6
+-#define OBJ_BITMAP          7
+-#define OBJ_REGION          8
+-#define OBJ_METAFILE        9
+-#define OBJ_MEMDC           10
+-#define OBJ_EXTPEN          11
+-#define OBJ_ENHMETADC       12
+-#define OBJ_ENHMETAFILE     13
+-
+-HGDIOBJ WINAPI	GetStockObject(int nObject);
+-HGDIOBJ WINAPI	SelectObject(HDC hdc, HGDIOBJ hObject);
+-BOOL WINAPI	DeleteObject(HGDIOBJ hObject);
+-int WINAPI	SelectClipRgn(HDC hdc, HRGN hrgn);
+-int WINAPI	ExtSelectClipRgn(HDC hdc, HRGN hrgn, int fnMode);
+-int WINAPI	GetUpdateRgn(HWND hwnd, HRGN hrgn, BOOL bErase);
+-BOOL WINAPI	GetUpdateRect(HWND hwnd, LPRECT lpRect, BOOL bErase);
+-
+-/* Brush Styles */
+-#define BS_SOLID            0
+-#define BS_NULL             1
+-#define BS_HOLLOW           BS_NULL
+-
+-HBRUSH WINAPI	CreateSolidBrush(COLORREF crColor);
+-
+-/* Pen Styles */
+-#define PS_SOLID            0
+-#define PS_DASH		    	1
+-#define PS_DOT		    	2
+-#define PS_DASHDOT	    	3
+-#define PS_DASHDOTDOT	    4
+-#define PS_NULL             5
+-
+-HPEN WINAPI	CreatePen(int nPenStyle, int nWidth, COLORREF crColor);
+-void		MwSetPenStyle(HDC hdc);
+-
+-HBITMAP WINAPI	CreateCompatibleBitmap(HDC hdc, int nWidth, int nHeight);
+-
+-/* constants for the biCompression field */
+-#define BI_RGB        0L
+-#define BI_RLE8       1L
+-#define BI_RLE4       2L
+-#define BI_BITFIELDS  3L
+-
+-#pragma pack(2)
+-typedef struct tagBITMAPINFOHEADER { // bmih
+-    DWORD  PACKEDDATA biSize;
+-    LONG   PACKEDDATA biWidth;
+-    LONG   PACKEDDATA biHeight;
+-    WORD   PACKEDDATA biPlanes;
+-    WORD   PACKEDDATA biBitCount;
+-    DWORD  PACKEDDATA biCompression;
+-    DWORD  PACKEDDATA biSizeImage;
+-    LONG   PACKEDDATA biXPelsPerMeter;
+-    LONG   PACKEDDATA biYPelsPerMeter;
+-    DWORD  PACKEDDATA biClrUsed;
+-    DWORD  PACKEDDATA biClrImportant;
+-} BITMAPINFOHEADER, *PBITMAPINFOHEADER, *LPBITMAPINFOHEADER;
+-#pragma pack()
+-
+-typedef struct tagRGBQUAD { // rgbq
+-    BYTE    rgbBlue;
+-    BYTE    rgbGreen;
+-    BYTE    rgbRed;
+-    BYTE    rgbReserved;
+-} RGBQUAD;
+-
+-typedef struct tagBITMAPINFO { // bmi
+-    BITMAPINFOHEADER bmiHeader;
+-    RGBQUAD          bmiColors[1];
+-} BITMAPINFO;
+-
+-
+-/* DIB color table identifiers */
+-
+-#define DIB_RGB_COLORS      0 /* color table in RGBs */
+-#define DIB_PAL_COLORS      1 /* color table in palette indices */
+-
+-HBITMAP WINAPI CreateDIBSection(
+-  HDC hdc, CONST BITMAPINFO *pbmi, UINT iUsage,
+-  VOID **ppvBits, HANDLE hSection, DWORD dwOffset);
+-HDC WINAPI	CreateCompatibleDC(HDC hdc);
+-
+-/* BitBlit raster opcodes*/
+-#define SRCCOPY         (DWORD)MWROP_COPY	  /* source                   */
+-#define SRCPAINT        (DWORD)MWROP_OR		  /* source OR dest           */
+-#define SRCAND          (DWORD)MWROP_AND	  /* source AND dest          */
+-#define SRCINVERT       (DWORD)MWROP_XOR	  /* source XOR dest          */
+-#define SRCERASE        (DWORD)MWROP_ANDREVERSE	  /* source AND (NOT dest )   */
+-#define NOTSRCCOPY      (DWORD)MWROP_COPYINVERTED /* (NOT source)             */
+-#define NOTSRCERASE     (DWORD)MWROP_NOR	  /* (NOT src) AND (NOT dest) */
+-#define MERGEPAINT      (DWORD)MWROP_ORINVERTED   /* (NOT source) OR dest     */
+-#define DSTINVERT       (DWORD)MWROP_INVERT	  /* (NOT dest)               */
+-#define BLACKNESS       (DWORD)MWROP_CLEAR	  /* BLACK                    */
+-#define WHITENESS       (DWORD)MWROP_SET	  /* WHITE                    */
+-#if 0
+-#define MERGECOPY       (DWORD)0x00C000CA /* (source AND pattern)     */
+-#define PATCOPY         (DWORD)0x00F00021 /* pattern                  */
+-#define PATPAINT        (DWORD)0x00FB0A09 /* DPSnoo                   */
+-#define PATINVERT       (DWORD)0x005A0049 /* pattern XOR dest         */
+-#endif
+-
+-BOOL WINAPI	BitBlt(HDC hdcDest,int nXDest,int nYDest,int nWidth,int nHeight,
+-			HDC hdcSrc,int nXSrc,int nYSrc,DWORD dwRop);
+-BOOL WINAPI	StretchBlt(HDC hdcDest,int nXOriginDest,int nYOriginDest,
+-			int nWidthDest,int nHeightDest,HDC hdcSrc,
+-			int nXOriginSrc,int nYOriginSrc,int nWidthSrc,
+-			int nHeightSrc, DWORD dwRop);
+-
+-/* Palette entry flags*/
+-#define PC_RESERVED	0x01
+-#define PC_EXPLICIT	0x02
+-#define PC_NOCOLLAPSE	0x04
+-
+-/* note: must match MWPALENTRY structure*/
+-typedef struct tagPALETTEENTRY {
+-	BYTE	peRed;
+-	BYTE	peGreen;
+-	BYTE	peBlue;
+-	BYTE	peFlags;
+-} PALETTEENTRY, *PPALETTEENTRY, FAR *LPPALETTEENTRY;
+-
+-UINT WINAPI	GetSystemPaletteEntries(HDC hdc,UINT iStartIndex,UINT nEntries,
+-			LPPALETTEENTRY lppe);
+-
+-/* Raster capabilities of the device*/
+-#define RC_PALETTE    256	/* Specifies a palette-based device */
+-
+-/* GetDeviceCaps parameters*/
+-#define HORZRES       8     /* Horizontal width in pixels               */
+-#define VERTRES       10    /* Vertical height in pixels                */
+-#define BITSPIXEL     12    /* Number of bits per pixel                 */
+-#define PLANES        14    /* Number of planes                         */
+-#define RASTERCAPS    38	/* Raster capabilities of the device        */
+-#define LOGPIXELSX    88    /* Logical pixels/inch in X                 */
+-#define LOGPIXELSY    90    /* Logical pixels/inch in Y                 */
+-#define SIZEPALETTE  104    /* Number of entries in physical palette    */
+-
+-int WINAPI	GetDeviceCaps(HDC hdc, int nIndex);
+-
+-/* Region flags*/
+-#define ERRORREGION		MWREGION_ERROR
+-#define NULLREGION		MWREGION_NULL
+-#define SIMPLEREGION		MWREGION_SIMPLE
+-#define COMPLEXREGION		MWREGION_COMPLEX
+-/* kluge for VxWorks*/
+-#ifdef ERROR
+-#undef ERROR
+-#endif
+-#define ERROR			ERRORREGION
+-#define RGN_ERROR		ERRORREGION
+-
+-/* CombineRgn() Styles */
+-#define RGN_AND             1
+-#define RGN_OR              2
+-#define RGN_XOR             3
+-#define RGN_DIFF            4
+-#define RGN_COPY            5
+-#define RGN_MIN             RGN_AND
+-#define RGN_MAX             RGN_COPY
+-
+-/* GetRegionData/ExtCreateRegion */
+-#define RDH_RECTANGLES  1
+-typedef struct _RGNDATAHEADER {
+-    DWORD   dwSize;
+-    DWORD   iType;
+-    DWORD   nCount;
+-    DWORD   nRgnSize;
+-    RECT    rcBound;
+-} RGNDATAHEADER, *PRGNDATAHEADER;
+-
+-typedef struct _RGNDATA {
+-    RGNDATAHEADER   rdh;
+-    char            Buffer[1];
+-} RGNDATA, *PRGNDATA, *NPRGNDATA, *LPRGNDATA;
+-
+-/* Region entry points*/
+-INT  WINAPI OffsetRgn(HRGN hrgn, INT x, INT y );
+-INT  WINAPI GetRgnBox(HRGN hrgn, LPRECT rect );
+-HRGN WINAPI CreateRectRgn(INT left, INT top, INT right, INT bottom);
+-HRGN WINAPI CreateRectRgnIndirect(const RECT* rect );
+-VOID WINAPI SetRectRgn(HRGN hrgn, INT left, INT top, INT right, INT bottom );
+-HRGN WINAPI CreateRoundRectRgn(INT left, INT top, INT right, INT bottom,
+-		INT ellipse_width, INT ellipse_height );
+-HRGN WINAPI CreateEllipticRgn(INT left, INT top, INT right, INT bottom );
+-HRGN WINAPI CreateEllipticRgnIndirect(const RECT *rect );
+-HRGN WINAPI CreatePolygonRgn(const POINT *points, INT count, INT mode);
+-DWORD WINAPI GetRegionData(HRGN hrgn, DWORD count, LPRGNDATA rgndata);
+-BOOL WINAPI PtInRegion(HRGN hrgn, INT x, INT y );
+-BOOL WINAPI RectInRegion(HRGN hrgn, const RECT *rect );
+-BOOL WINAPI EqualRgn(HRGN hrgn1, HRGN hrgn2 );
+-INT  WINAPI CombineRgn(HRGN hDest, HRGN hSrc1, HRGN hSrc2, INT mode);
+-BOOL FillRgn(HDC hdc, HRGN hrgn, HBRUSH hbr);
+-
+-/* Rect entry points*/
+-BOOL WINAPI IntersectRect(LPRECT dest, const RECT *src1, const RECT *src2 );
+-BOOL WINAPI UnionRect(LPRECT dest, const RECT *src1, const RECT *src2 );
+-BOOL WINAPI EqualRect(const RECT* rect1, const RECT* rect2 );
+-BOOL WINAPI SubtractRect(LPRECT dest, const RECT *src1, const RECT *src2 );
+-
+-/* GDI math stuff */
+-int WINAPI MulDiv(int nMultiplicand, int nMultiplier, int nDivisor);
+-
+-typedef struct tagLOGPALETTE {
+-  WORD         palVersion;
+-  WORD         palNumEntries;
+-  PALETTEENTRY palPalEntry[1];
+-} LOGPALETTE, *PLOGPALETTE, *NPLOGPALETTE, *LPLOGPALETTE;
+-
+-/* constants for Get/SetSystemPaletteUse() */
+-#define SYSPAL_ERROR    0
+-#define SYSPAL_STATIC   1
+-#define SYSPAL_NOSTATIC 2
+-#define SYSPAL_NOSTATIC256 3
+-
+-HPALETTE WINAPI CreatePalette(const LOGPALETTE *);
+-HPALETTE WINAPI SelectPalette(HDC, HPALETTE, BOOL);
+-UINT WINAPI RealizePalette(HDC);
+-UINT  WINAPI SetSystemPaletteUse(HDC, UINT);
+-UINT WINAPI SetDIBColorTable(HDC, UINT, UINT, const RGBQUAD *);
+-
+-#endif /* _WINGDI_H_*/
+diff --git a/src/include/winkbd.h b/src/include/winkbd.h
+deleted file mode 100644
+index 3e4929a..0000000
+--- a/src/include/winkbd.h
++++ /dev/null
+@@ -1,138 +0,0 @@
+-/* winkbd.h*/
+-/*
+- * Copyright (c) 2000, 2005 Greg Haerr <greg@censoft.com>
+- *
+- * Win32 keyboard defines and API
+- */
+-
+-/* virtual key codes*/
+-#define VK_LBUTTON        0x01
+-#define VK_RBUTTON        0x02
+-#define VK_CANCEL         0x03		/* ctrl-break*/
+-#define VK_MBUTTON        0x04
+-#define VK_BACK           0x08		/* backspace*/
+-#define VK_TAB            0x09
+-#define VK_CLEAR          0x0C		/* kp5 w/numlock off*/
+-#define VK_RETURN         0x0D
+-#define VK_SHIFT          0x10		/* either shift*/
+-#define VK_CONTROL        0x11		/* either control*/
+-#define VK_MENU           0x12		/* alt*/
+-#define VK_PAUSE          0x13
+-#define VK_CAPITAL        0x14		/* caps lock*/
+-#define VK_KANA           0x15
+-#define VK_HANGEUL        VK_KANA
+-#define VK_HANGUL         0x15
+-#define VK_JUNJA          0x17
+-#define VK_FINAL          0x18
+-#define VK_HANJA          0x19
+-#define VK_KANJI          0x19
+-#define VK_ESCAPE         0x1B		/* esc*/
+-#define VK_CONVERT        0x1C
+-#define VK_NONCONVERT     0x1D
+-#define VK_ACCEPT         0x1E
+-#define VK_MODECHANGE     0x1F
+-#define VK_SPACE          0x20		/* spacebar*/
+-#define VK_PRIOR          0x21		/* page up*/
+-#define VK_NEXT           0x22		/* page dn*/
+-#define VK_END            0x23
+-#define VK_HOME           0x24
+-#define VK_LEFT           0x25
+-#define VK_UP             0x26
+-#define VK_RIGHT          0x27
+-#define VK_DOWN           0x28
+-#define VK_SELECT         0x29
+-#define VK_PRINT          0x2A
+-#define VK_EXECUTE        0x2B
+-#define VK_SNAPSHOT       0x2C
+-#define VK_INSERT         0x2D
+-#define VK_DELETE         0x2E
+-#define VK_HELP           0x2F
+-
+-/* 0x30 - 0x39 ASCII 0 - 9*/
+-/* 0x41 - 0x5a ASCII A - Z*/
+-
+-#define VK_LWIN           0x5B
+-#define VK_RWIN           0x5C
+-#define VK_APPS           0x5D
+-
+-/* numeric keypad keys*/
+-#define VK_NUMPAD0        0x60
+-#define VK_NUMPAD1        0x61
+-#define VK_NUMPAD2        0x62
+-#define VK_NUMPAD3        0x63
+-#define VK_NUMPAD4        0x64
+-#define VK_NUMPAD5        0x65
+-#define VK_NUMPAD6        0x66
+-#define VK_NUMPAD7        0x67
+-#define VK_NUMPAD8        0x68
+-#define VK_NUMPAD9        0x69
+-#define VK_MULTIPLY       0x6A		/* kp * */
+-#define VK_ADD            0x6B		/* kp + */
+-#define VK_SEPARATOR      0x6C
+-#define VK_SUBTRACT       0x6D		/* kp - */
+-#define VK_DECIMAL        0x6E		/* kp . */
+-#define VK_DIVIDE         0x6F		/* kp / */
+-
+-#define VK_F1             0x70
+-#define VK_F2             0x71
+-#define VK_F3             0x72
+-#define VK_F4             0x73
+-#define VK_F5             0x74
+-#define VK_F6             0x75
+-#define VK_F7             0x76
+-#define VK_F8             0x77
+-#define VK_F9             0x78
+-#define VK_F10            0x79
+-#define VK_F11            0x7A
+-#define VK_F12            0x7B
+-#define VK_F13            0x7C
+-#define VK_F14            0x7D
+-#define VK_F15            0x7E
+-#define VK_F16            0x7F
+-#define VK_F17            0x80
+-#define VK_F18            0x81
+-#define VK_F19            0x82
+-#define VK_F20            0x83
+-#define VK_F21            0x84
+-#define VK_F22            0x85
+-#define VK_F23            0x86
+-#define VK_F24            0x87
+-#define VK_NUMLOCK        0x90		/* num lock*/
+-#define VK_SCROLL         0x91		/* scroll lock*/
+-
+-/* param to GetAsyncKeyState and GetKeyState only*/
+-#define VK_LSHIFT         0xA0
+-#define VK_RSHIFT         0xA1
+-#define VK_LCONTROL       0xA2
+-#define VK_RCONTROL       0xA3
+-#define VK_LMENU          0xA4
+-#define VK_RMENU          0xA5
+-
+-#define VK_PROCESSKEY     0xE5
+-#define VK_ATTN           0xF6
+-#define VK_CRSEL          0xF7
+-#define VK_EXSEL          0xF8
+-#define VK_EREOF          0xF9
+-#define VK_PLAY           0xFA
+-#define VK_ZOOM           0xFB
+-#define VK_NONAME         0xFC
+-#define VK_PA1            0xFD
+-#define VK_OEM_CLEAR      0xFE
+-
+-/* WM_KEYUP/WM_KEYDOWN/WM_CHAR hiword lparam flags*/
+-#define KF_EXTENDED         0x0100
+-#define KF_DLGMODE          0x0800
+-#define KF_MENUMODE         0x1000
+-#define KF_ALTDOWN          0x2000
+-#define KF_REPEAT           0x4000
+-#define KF_UP               0x8000
+-
+-typedef BOOL (CALLBACK *LPFN_KEYBTRANSLATE)(WPARAM *pVK, LPARAM *pControlMask, BOOL *pressed);
+-
+-/*
+- *  Set, if not NULL, a function filter for keyboard translation.
+- *  The callback function will receive the virtual key and control mask,
+- *  (see WM_KEYDOWN specifications), and it may modify it. 
+- *  The callback should return nonzero if has made modifications.
+- */
+-void WINAPI MwSetKeyboardTranslator(LPFN_KEYBTRANSLATE pFn);
+diff --git a/src/include/winres.h b/src/include/winres.h
+deleted file mode 100644
+index 2282187..0000000
+--- a/src/include/winres.h
++++ /dev/null
+@@ -1,227 +0,0 @@
+-#ifndef __WINRES_H__
+-#define __WINRES_H__
+-/*
+- *  winres.h
+- *
+- * Microwindows Resource declarations
+- *
+- * Copyright (C) 2010 - Greg Haerr greg@censoft.com
+- * Copyright (C) 2003 - Gabriele Brugnoni
+- *
+- * gabrielebrugnoni@dveprojects.com
+- * DVE Prog. El. - Varese, Italy
+- */
+-#include <stdio.h>	/* for FILE...*/
+-
+-/*
+- *  Application instance data
+- */
+-typedef struct tagMWAPPINSTANCE
+-{
+-    LPCSTR szExecCommand;
+-    LPCSTR szResFilename;
+-    LPCSTR szCmdLine;
+-    int argc;
+-    char **argv;
+-    FILE *fResources;
+-} MWAPPINSTANCE, *PMWAPPINSTANCE;
+-
+-
+-//  Some system functions, used by mw core
+-void mwFreeInstance ( HINSTANCE hInst );
+-HINSTANCE mwCreateInstance ( int argc, char *argv[] );
+-
+-
+-#define MAKEINTRESOURCE(id)	(LPTSTR) MAKELONG((id), 0xFFFF)
+-
+-/*
+- *	Resource header
+- */
+-typedef struct tagMWRESOURCEHEADER
+-{
+-    DWORD DataSize;
+-    DWORD HeaderSize;
+-    // ordinal type and name are here in file.
+-    DWORD DataVersion; 
+-    WORD PACKEDDATA MemoryFlags;		
+-    WORD PACKEDDATA LanguageId;		
+-    DWORD PACKEDDATA Version; 
+-    DWORD PACKEDDATA Characteristics;
+-} MWRESOURCEHEADER, *PMWRESOURCEHEADER;
+-
+-
+-/*
+- *  Resource type
+- */
+-enum MW_RESOURCE_TYPES {
+-    W_RT_CURSOR=1,
+-    W_RT_BITMAP,
+-    W_RT_ICON,
+-    W_RT_MENU,
+-    W_RT_DIALOG,
+-    W_RT_STRING,
+-    W_RT_FONTDIR,
+-    W_RT_FONT,
+-    W_RT_ACCELERATOR,
+-    W_RT_RCDATA,
+-    W_RT_MESSAGETABLE,
+-    W_RT_GROUP_CURSOR,
+-    W_RT_GROUP_ICON,
+-    W_RT_VERSION,
+-    W_RT_DLGINCLUDE,
+-    W_RT_PLUGPLAY,
+-    W_RT_VXD,
+-    W_RT_ANICURSOR,
+-    W_RT_ANIICON,
+-    W_RT_HTML,
+-};
+-
+-#define RT_CURSOR		MAKEINTRESOURCE(W_RT_CURSOR)
+-#define RT_BITMAP		MAKEINTRESOURCE(W_RT_BITMAP)
+-#define RT_ICON			MAKEINTRESOURCE(W_RT_ICON)
+-#define RT_MENU			MAKEINTRESOURCE(W_RT_MENU)
+-#define RT_DIALOG		MAKEINTRESOURCE(W_RT_DIALOG)
+-#define RT_STRING		MAKEINTRESOURCE(W_RT_STRING)
+-#define RT_FONTDIR		MAKEINTRESOURCE(W_RT_FONTDIR)
+-#define RT_FONT			MAKEINTRESOURCE(W_RT_FONT)
+-#define RT_ACCELERATOR	MAKEINTRESOURCE(W_RT_ACCELERATOR)
+-#define RT_RCDATA		MAKEINTRESOURCE(W_RT_RCDATA)
+-#define RT_MESSAGETABLE	MAKEINTRESOURCE(W_RT_MESSAGETABLE)
+-#define RT_GROUP_CURSOR	MAKEINTRESOURCE(W_RT_GROUP_CURSOR)
+-#define RT_GROUP_ICON	MAKEINTRESOURCE(W_RT_GROUP_ICON)
+-#define RT_VERSION		MAKEINTRESOURCE(W_RT_VERSION)
+-#define RT_DLGINCLUDE	MAKEINTRESOURCE(W_RT_DLGINCLUDE)
+-#define RT_PLUGPLAY		MAKEINTRESOURCE(W_RT_PLUGPLAY)
+-#define RT_VXD			MAKEINTRESOURCE(W_RT_VXD)
+-#define RT_ANICURSOR	MAKEINTRESOURCE(W_RT_ANICURSOR)
+-#define RT_ANIICON		MAKEINTRESOURCE(W_RT_ANIICON)
+-#define RT_HTML			MAKEINTRESOURCE(W_RT_HTML)
+-
+-
+-/*
+- *  DIALOG RESOURCE HEADER
+- */
+-typedef struct tagMWDLGTEMPLATE
+-{
+-    DWORD style;
+-    DWORD dwExtendedStyle;
+-    WORD  PACKEDDATA cdit;
+-    short PACKEDDATA x;
+-    short PACKEDDATA y;
+-    short PACKEDDATA cx;
+-    short PACKEDDATA cy;
+-    /* other information that follows, var length */
+-	char extraData[1];
+-} MWDLGTEMPLATE, *PMWDLGTEMPLATE;
+-
+-#define FIXSZ_MWDLGTEMPLATE		18
+-
+-
+-// Dialog Extra data, dynamic allocated
+-typedef struct tagMWDLGTEMPLEXTRA
+-{
+-	LPTSTR szIdMenu;
+-	LPTSTR szClassName;
+-    LPTSTR szDlgName;
+-    WORD fontSize;
+-    LPTSTR szFontName;
+-	int nItems;
+-	struct tagMWDLGITEMTEMPLATE **pItems;
+-	struct tagMWDLGITEMTEMPLEXTRA *pItemsExtra;
+-} MWDLGTEMPLEXTRA, *PMWDLGTEMPLEXTRA;
+-
+-
+-
+-/*
+- *  DIALOG ITEMS
+- */
+-typedef struct tagMWDLGITEMTEMPLATE
+-{
+-    DWORD style;
+-    DWORD dwExtendedStyle;
+-    short PACKEDDATA x;
+-    short PACKEDDATA y;
+-    short PACKEDDATA cx;
+-    short PACKEDDATA cy;
+-    WORD  PACKEDDATA id;
+-    /* other information that follows, var length
+-	   will be allocated in MWDLGITEMTEMPLEXTRA */
+-	char extraData[1];
+-} MWDLGITEMTEMPLATE, *PMWDLGITEMTEMPLATE;
+-
+-#define FIXSZ_MWDLGITEMTEMPLATE		18
+-
+-// Dialog ITEMS Extra data, dynamic allocated
+-typedef struct tagMWDLGITEMTEMPLEXTRA
+-{
+-    LPTSTR szClassName;
+-    LPTSTR szCaption;
+-    LPWORD lpData;
+-} MWDLGITEMTEMPLEXTRA, *PMWDLGITEMTEMPLEXTRA;
+-
+-
+-//  if szClassName length is only 1 char, the class is one of:
+-enum MW_DLGITEMS_CLASSID
+-{
+-    DLGITEM_CLASS_BUTTON = 0x80,
+-    DLGITEM_CLASS_EDIT,				// 0x81
+-    DLGITEM_CLASS_STATIC,			// 0x82
+-    DLGITEM_CLASS_LISTBOX,			// 0x83
+-    DLGITEM_CLASS_SCROLLBAR,		// 0x84
+-    DLGITEM_CLASS_COMBOBOX,			// 0x85
+-}; 
+-
+-#define DLGITEM_CLASS_FIRSTID	DLGITEM_CLASS_BUTTON
+-
+-/*
+- * In-memory dialog template creating routines
+- */
+-BYTE *resDialogTemplate(BYTE *dest, LPCSTR caption, DWORD style, DWORD dwExtendedStyle,
+-		int x, int y, int cx, int cy, LPSTR menu, LPSTR classname, int cdit);
+-BYTE *resDialogItemTemplate(BYTE *dest, DWORD style, DWORD dwExtendedStyle, int id,
+-		int x, int y, int cx, int cy, int classname, LPCSTR data);
+-
+-/*
+- *  Identify a resource.
+- */
+-typedef struct tagMWRSRC
+-{
+-	FILE *f;
+-	long fPos;
+-	MWRESOURCEHEADER head;
+-	LPCTSTR type;
+-	LPCTSTR name;
+-	int cLock;
+-	void *pData;
+-	struct tagMWRSRC *next;
+-} MWRSRC, *HRSRC;
+-
+-
+-//  Resource access internal functions
+-FILE *mwFindResource ( HINSTANCE hInst, LPCTSTR resType, LPCTSTR resName, PMWRESOURCEHEADER pResHead );
+-
+-PMWDLGITEMTEMPLATE resNextDlgItem ( PMWDLGITEMTEMPLATE pItem );
+-PMWDLGITEMTEMPLATE resFirstDlgItem ( PMWDLGTEMPLATE pDlg );
+-void resDiscardDlgTemplExtra ( PMWDLGTEMPLEXTRA pDlgExtra );
+-void resGetDlgTemplExtra ( PMWDLGTEMPLATE pDlg, PMWDLGTEMPLEXTRA pDlgExtra );
+-void resDiscardDlgItemTemplate ( PMWDLGITEMTEMPLEXTRA pItemExtra );
+-PMWDLGITEMTEMPLATE resGetDlgItemTemplExtra ( PMWDLGITEMTEMPLATE pItem,
+-							   				 PMWDLGITEMTEMPLEXTRA pItemExtra );
+-PMWIMAGEHDR resLoadBitmap ( HINSTANCE hInst, LPCTSTR resName );
+-void resFreeBitmap ( PMWIMAGEHDR pimage );
+-
+-
+-
+-/*
+- *  Exported functions
+- */
+-HRSRC WINAPI FindResource ( HMODULE hModule, LPCTSTR resName, LPCTSTR resType );
+-DWORD SizeofResource ( HMODULE hModule, HRSRC hResInfo );
+-HGLOBAL WINAPI LoadResource ( HMODULE hModule, HRSRC hRes );
+-BOOL WINAPI FreeResource ( HGLOBAL hObj );
+-int WINAPI UnlockResource ( HGLOBAL hObj );
+-LPVOID WINAPI LockResource ( HGLOBAL hObj );
+-
+-int WINAPI LoadString ( HINSTANCE hInstance, UINT uid, LPTSTR lpBuffer, int nMaxBuff );
+-
+-#endif /*__WINRES_H__*/
+diff --git a/src/include/wintern.h b/src/include/wintern.h
+deleted file mode 100644
+index bc60195..0000000
+--- a/src/include/wintern.h
++++ /dev/null
+@@ -1,113 +0,0 @@
+-/* wintern.h*/
+-/*
+- * Copyright (c) 1999, 2005 Greg Haerr <greg@censoft.com>
+- *
+- * Microwindows internal routines header file
+- */
+-
+-#define DBLCLICKSPEED	750		/* mouse dblclik speed msecs (was 450)*/
+-
+-/* gotPaintMsg values*/
+-#define PAINT_PAINTED		0	/* WM_PAINT msg has been processed*/
+-#define PAINT_NEEDSPAINT	1	/* WM_PAINT seen, paint when can*/
+-#define PAINT_DELAYPAINT	2	/* WM_PAINT seen,paint after user move*/
+-
+-/* internal routines*/
+-
+-/* winuser.c*/
+-PWNDCLASS 	MwFindClassByName(LPCSTR lpClassName);
+-void		MwDestroyWindow(HWND hwnd,BOOL bSendMsg);
+-HWND		MwGetTopWindow(HWND hwnd);
+-void		MwCalcClientRect(HWND hwnd);
+-void		MwSendSizeMove(HWND hwnd, BOOL bSize, BOOL bMove);
+-void		MwSetCursor(HWND wp, PMWCURSOR pcursor);
+-
+-/* wingdi.c*/
+-#define MwIsClientDC(hdc)	(((hdc)->flags & DCX_WINDOW) == 0)
+-#define MwIsMemDC(hdc)		((hdc)->psd->flags == PSF_MEMORY)
+-void		MwPaintNCArea(HWND hwnd);
+-HWND		MwPrepareDC(HDC hdc);
+-void		MwSetClipWindow(HDC hdc);
+-
+-/* winsbar.c*/
+-void		MwAdjustNCScrollbars(HWND hwnd);
+-void		MwPaintNCScrollbars(HWND hwnd, HDC hdc);
+-void		MwHandleNCMessageScrollbar(HWND hwnd, UINT msg, WPARAM hitcode,
+-			LPARAM lParam);
+-
+-/* winexpos.c*/
+-void		MwRedrawScreen(void);
+-void		MwHideWindow(HWND hwnd,BOOL bChangeFocus,BOOL bSendMsg);
+-void		MwShowWindow(HWND hwnd,BOOL bSendMsg);
+-void		MwRaiseWindow(HWND hwnd);
+-void		MwLowerWindow(HWND hwnd);
+-BOOL		MwCheckOverlap(HWND topwp, HWND botwp);
+-void		MwClearWindow(HWND wp,MWCOORD x,MWCOORD y,MWCOORD width,
+-			MWCOORD height,BOOL exposeflag);
+-void		MwExposeArea(HWND wp, MWCOORD rootx,MWCOORD rooty,
+-			MWCOORD width,MWCOORD height);
+-/* winevent.c*/
+-BOOL		MwCheckMouseEvent(void);
+-BOOL		MwCheckKeyboardEvent(void);
+-void 		MwHandleMouseStatus(MWCOORD newx, MWCOORD newy, int newbuttons);
+-void		MwTranslateMouseMessage(HWND hwnd,UINT msg,int hittest,int buttons);
+-void		MwDeliverMouseEvent(int buttons, int changebuttons,
+-			MWKEYMOD modifiers);
+-void		MwDeliverKeyboardEvent(MWKEY keyvalue, MWKEYMOD modifiers,
+-			MWSCANCODE scancode, BOOL pressed);
+-void		MwDeliverExposureEvent(HWND wp, MWCOORD x, MWCOORD y,
+-			MWCOORD width,MWCOORD height);
+-void		MwUnionUpdateRegion(HWND wp, MWCOORD x, MWCOORD y,
+-			MWCOORD width,MWCOORD height, BOOL bUnion);
+-void		MwMoveCursor(MWCOORD x, MWCOORD y);
+-void		MwCheckCursor(void);
+-HWND		MwFindVisibleWindow(MWCOORD x, MWCOORD y);
+-void		MwCheckMouseWindow(void);
+-int		strzcpy(char *dst,const char *src,int dstsiz);
+-
+-/* winuser.c*/
+-extern int	mwSYSMETRICS_CYCAPTION;
+-extern int	mwSYSMETRICS_CXBORDER;
+-extern int	mwSYSMETRICS_CYBORDER;
+-extern int	mwSYSMETRICS_CXFRAME;
+-extern int	mwSYSMETRICS_CYFRAME;
+-extern int	mwSYSMETRICS_CXDOUBLECLK;
+-extern int	mwSYSMETRICS_CYDOUBLECLK;
+-extern int	mwSYSMETRICS_CYHSCROLL;
+-extern int	mwSYSMETRICS_CXHSCROLL;
+-extern int	mwSYSMETRICS_CXVSCROLL;
+-extern int	mwSYSMETRICS_CYVSCROLL;
+-
+-/* wingdi.c*/
+-extern BOOL	mwERASEMOVE;	/* default repaint algorithm*/
+-extern long	mwTextCoding;	/* current text encoding*/
+-
+-/* winmain.c*/
+-void	MwSelect(BOOL canBlock);
+-int		MwInitialize(void);
+-void	MwTerminate(void);
+-
+-extern	HWND	listwp;			/* list of all windows */
+-extern	HWND	rootwp;			/* root window pointer */
+-extern	HWND	focuswp;		/* focus window for keyboard */
+-extern	HWND	mousewp;		/* window mouse is currently in */
+-extern	HWND	capturewp;		/* capture window*/
+-extern  HWND	dragwp;			/* window user is dragging*/
+-extern	HCURSOR	curcursor;		/* currently enabled cursor */
+-extern	MWCOORD	cursorx;		/* x position of cursor */
+-extern	MWCOORD	cursory;		/* y position of cursor */
+-extern	MWSCREENINFO	sinfo;		/* screen information */
+-extern  int	mwpaintNC;		/* experimental nonclient regions*/
+-extern  BOOL	mwforceNCpaint;		/* force NC paint for alphablend*/
+-
+-#if VTSWITCH
+-/* temp framebuffer vt switch stuff at upper level
+- * this should be handled at the lower level, just like vgalib does.
+- */
+-void MwInitVt(void);
+-int  MwCurrentVt(void);
+-int  MwCheckVtChange(void);
+-void MwRedrawVt(int t);
+-void MwExitVt(void);
+-extern int mwvterm;
+-#endif /* VTSWITCH*/
+diff --git a/src/include/wintools.h b/src/include/wintools.h
+deleted file mode 100644
+index bc2775c..0000000
+--- a/src/include/wintools.h
++++ /dev/null
+@@ -1,31 +0,0 @@
+-/*
+- * wintools.h - MS Windows tools library header
+- *
+- * WINGEN	General Purpose Library
+- * WINMEM	Windows Memory Mgmt Library
+- * WINFX	Special Effects Library
+- * WINDRAW	Draw Library
+- * WINCTL	Custom Control Library
+- * WIN Class Procedures: ToolsTips, AutoMove, AutoEdit
+- * WINVID	Windows Digital Video
+- *
+- * original version 1/6/95 by g haerr
+- */
+-
+-void WINAPI	Draw3dShadow(HDC hDC,int x,int y,int w,int h,COLORREF crTop,
+-			COLORREF crBottom);
+-void WINAPI 	Draw3dBox(HDC hDC,int x,int y,int w,int h,COLORREF crTop,
+-			COLORREF crBottom);
+-void WINAPI	Draw3dInset(HDC hDC,int x,int y,int w,int h);
+-void WINAPI	Draw3dOutset(HDC hDC,int x,int y,int w,int h);
+-void WINAPI	Draw3dPushDown(HDC hDC, int x, int y, int w, int h);
+-void WINAPI	Draw3dUpDownState(HDC hDC, int x, int y, int w, int h,
+-			BOOL fDown);
+-void WINAPI	Draw3dUpFrame(HDC hDC, int l, int t, int r, int b);
+-void WINAPI	FastFillRect(HDC hdc,LPRECT lprect,COLORREF cr);
+-void WINAPI	InsetR(LPRECT lprc,int h,int v);
+-BOOL WINAPI	PtInsideWindow(HWND hwnd,UINT x,UINT y);
+-
+-/*GB*/
+-BOOL WINAPI	PtInsideWindowNC(HWND hwnd,UINT x,UINT y);
+-/*/GB*/
+diff --git a/src/include/winuser.h b/src/include/winuser.h
+deleted file mode 100644
+index 32f9677..0000000
+--- a/src/include/winuser.h
++++ /dev/null
+@@ -1,854 +0,0 @@
+-/* winuser.h*/
+-/*
+- * Copyright (c) 1999, 2000 Greg Haerr <greg@censoft.com>
+- *
+- * Win32 USER structures and API
+- */
+-#include "winctl.h"	/* required compatibility for resource compiler*/
+-
+-/* moved from windef.h for resource compiler*/
+-typedef LRESULT (CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
+-typedef DLGBOOL (CALLBACK* DLGPROC)(HWND, UINT, WPARAM, LPARAM);
+-
+-/* win api*/
+-LRESULT WINAPI 	DefWindowProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam);
+-
+-/* Class styles*/
+-#define CS_VREDRAW          0x0001
+-#define CS_HREDRAW          0x0002
+-#define CS_DBLCLKS          0x0008
+-#define CS_OWNDC            0x0020
+-#define CS_CLASSDC          0x0040
+-#define CS_PARENTDC         0x0080
+-#define CS_NOCLOSE          0x0200
+-#define CS_SAVEBITS         0x0800
+-#define CS_BYTEALIGNCLIENT  0x1000
+-#define CS_BYTEALIGNWINDOW  0x2000
+-#define CS_GLOBALCLASS      0x4000
+-
+-typedef struct tagWNDCLASSA {
+-    MWLIST	link;			/* microwin*/
+-    UINT        style;
+-    WNDPROC     lpfnWndProc;
+-    WNDPROC     lpfnWndProcBridge; /* stored only*/
+-    int         cbClsExtra;		/* nyi*/
+-    int         cbWndExtra;
+-    HINSTANCE   hInstance;		/* nyi*/
+-    HICON       hIcon;			/* nyi*/
+-    HCURSOR     hCursor;		/* nyi*/
+-    HBRUSH      hbrBackground;
+-    LPCSTR      lpszMenuName;		/* nyi*/
+-    LPCSTR      lpszClassName;
+-    CHAR        szClassName[40];	/* microwin*/
+-} WNDCLASS, *PWNDCLASS, NEAR *NPWNDCLASS, FAR *LPWNDCLASS;
+-
+-HMODULE WINAPI	GetModuleHandle(LPCSTR lpModuleName);
+-ATOM WINAPI	RegisterClass(CONST WNDCLASS *lpWndClass);
+-BOOL WINAPI UnregisterClass(LPCSTR lpClassName, HINSTANCE hInstance);
+-
+-/*
+- * Message structure
+- */
+-typedef struct tagMSG {
+-    MWLIST	link;			/* microwin*/
+-    HWND        hwnd;
+-    UINT        message;
+-    WPARAM      wParam;
+-    LPARAM      lParam;
+-    DWORD       time;
+-    POINT       pt;
+-} MSG, *PMSG, NEAR *NPMSG, FAR *LPMSG;
+-
+-#define POINTSTOPOINT(pt, pts)                          \
+-        { (pt).x = (LONG)(SHORT)LOWORD(*(LONG*)&pts);   \
+-          (pt).y = (LONG)(SHORT)HIWORD(*(LONG*)&pts); }
+-
+-#define POINTTOPOINTS(pt)      (MAKELONG((short)((pt).x), (short)((pt).y)))
+-#define MAKEWPARAM(l, h)      (WPARAM)MAKELONG(l, h)
+-#define MAKELPARAM(l, h)      (LPARAM)MAKELONG(l, h)
+-#define MAKELRESULT(l, h)     (LRESULT)MAKELONG(l, h)
+-
+-/* window messages*/
+-#define WM_NULL                         0x0000
+-#define WM_CREATE                       0x0001
+-#define WM_DESTROY                      0x0002
+-#define WM_NCDESTROY			WM_DESTROY
+-#define WM_MOVE                         0x0003
+-#define WM_SIZE                         0x0005
+-#define WM_ACTIVATE                     0x0006
+-#define WM_SETFOCUS                     0x0007
+-#define WM_KILLFOCUS                    0x0008
+-#define WM_ENABLE                       0x000A
+-#define WM_SETREDRAW					0x000B
+-#define WM_SETTEXT                      0x000C
+-#define WM_GETTEXT                      0x000D
+-#define WM_GETTEXTLENGTH                0x000E
+-#define WM_PAINT                        0x000F
+-#define WM_CLOSE                        0x0010
+-#define WM_QUIT                         0x0012
+-#define WM_ERASEBKGND                   0x0014
+-#define WM_SHOWWINDOW                   0x0018
+-#define WM_CTLCOLOR                     0x0019
+-#define WM_NEXTDLGCTL                   0x0028
+-#define WM_DRAWITEM                     0x002B
+-#define WM_MEASUREITEM                  0x002C
+-#define WM_DELETEITEM 					0x002D
+-#define WM_VKEYTOITEM					0x002E
+-#define WM_CHARTOITEM					0x002F
+-#define WM_SETFONT          		0x0030
+-#define WM_GETFONT      		0x0031
+-#define WM_COMPAREITEM					0x0039
+-#define WM_WINDOWPOSCHANGED             0x0047
+-#define WM_NOTIFY                       0x004E
+-#define WM_NCCALCSIZE                   0x0083
+-#define WM_NCHITTEST                    0x0084
+-#define WM_NCPAINT                      0x0085
+-#define WM_GETDLGCODE                   0x0087
+-#define WM_NCMOUSEMOVE                  0x00A0
+-#define WM_NCLBUTTONDOWN                0x00A1
+-#define WM_NCLBUTTONUP                  0x00A2
+-#define WM_NCLBUTTONDBLCLK              0x00A3
+-#define WM_NCRBUTTONDOWN                0x00A4
+-#define WM_NCRBUTTONUP                  0x00A5
+-#define WM_NCRBUTTONDBLCLK              0x00A6
+-#define WM_KEYFIRST                     0x0100
+-#define WM_KEYDOWN                      0x0100
+-#define WM_KEYUP                        0x0101
+-#define WM_CHAR                         0x0102
+-#define WM_DEADCHAR                     0x0103	/* notimp*/
+-#define WM_SYSKEYDOWN                   0x0104	/* nyi*/
+-#define WM_SYSKEYUP                     0x0105	/* nyi*/
+-#define WM_SYSCHAR                      0x0106
+-#define WM_SYSDEADCHAR                  0x0107	/* notimp*/
+-#define WM_KEYLAST                      0x0108
+-#define WM_INITDIALOG	                0x0110
+-#define WM_COMMAND                      0x0111
+-#define WM_SYSCOMMAND                   0x0112
+-#define WM_TIMER                        0x0113
+-#define WM_HSCROLL                      0x0114
+-#define WM_VSCROLL                      0x0115
+-
+-#define WM_ENTERIDLE                    0x0121
+-
+-#define WM_CTLCOLORMSGBOX               0x0132
+-#define WM_CTLCOLOREDIT                 0x0133
+-#define WM_CTLCOLORLISTBOX              0x0134
+-#define WM_CTLCOLORBTN                  0x0135
+-#define WM_CTLCOLORDLG                  0x0136
+-#define WM_CTLCOLORSCROLLBAR            0x0137
+-#define WM_CTLCOLORSTATIC               0x0138
+-
+-#define WM_MOUSEFIRST                   0x0200
+-#define WM_MOUSEMOVE                    0x0200
+-#define WM_LBUTTONDOWN                  0x0201
+-#define WM_LBUTTONUP                    0x0202
+-#define WM_LBUTTONDBLCLK                0x0203
+-#define WM_RBUTTONDOWN                  0x0204
+-#define WM_RBUTTONUP                    0x0205
+-#define WM_RBUTTONDBLCLK                0x0206
+-#define WM_MBUTTONDOWN                  0x0207
+-#define WM_MBUTTONUP                    0x0208
+-#define WM_MBUTTONDBLCLK                0x0209
+-#define WM_MOUSEWHEEL                   0x020A
+-#define WM_MOUSELAST                    0x020A
+-
+-#define WM_HOTKEY                       0x0312
+-#define WM_PRINT                        0x0317
+-#define WM_PRINTCLIENT                  0x0318
+-#define WM_APPCOMMAND          			0x0319
+-#define WM_THEMECHANGED        			0x031A
+-#define WM_CLIPBOARDUPDATE     			0x031D
+-
+-#define WM_CARET_CREATE    		0x03E0 /* Microwindows only*/
+-#define WM_CARET_DESTROY   		0x03E1 /* Microwindows only*/
+-#define WM_CARET_BLINK      		0x03E2 /* Microwindows only*/
+-#define WM_FDINPUT                      0x03F0 /* Microwindows only*/
+-#define WM_FDOUTPUT                     0x03F1 /* Microwindows only*/
+-#define WM_FDEXCEPT                     0x03F2 /* Microwindows only*/
+-#define WM_USER                         0x0400
+-
+-/*
+- * System Menu Command Values
+- */
+-#define SC_SIZE         0xF000
+-#define SC_MOVE         0xF010
+-#define SC_MINIMIZE     0xF020
+-#define SC_MAXIMIZE     0xF030
+-#define SC_NEXTWINDOW   0xF040
+-#define SC_PREVWINDOW   0xF050
+-#define SC_CLOSE        0xF060
+-#define SC_VSCROLL      0xF070
+-#define SC_HSCROLL      0xF080
+-#define SC_MOUSEMENU    0xF090
+-#define SC_KEYMENU      0xF100
+-#define SC_ARRANGE      0xF110
+-#define SC_RESTORE      0xF120
+-#define SC_TASKLIST     0xF130
+-#define SC_SCREENSAVE   0xF140
+-#define SC_HOTKEY       0xF150
+-
+-/* WM_ACTIVATE state values*/
+-#define WA_INACTIVE     0
+-#define WA_ACTIVE       1
+-#define WA_CLICKACTIVE  2
+-
+-/* WM_NCHITTEST codes*/
+-#define HTERROR             (-2)
+-#define HTTRANSPARENT       (-1)
+-#define HTNOWHERE           0
+-#define HTCLIENT            1
+-#define HTCAPTION           2
+-#define HTSYSMENU           3
+-#define HTGROWBOX           4
+-#define HTSIZE              HTGROWBOX
+-#define HTMENU              5
+-#define HTHSCROLL           6
+-#define HTVSCROLL           7
+-#define HTMINBUTTON         8
+-#define HTMAXBUTTON         9
+-#define HTLEFT              10
+-#define HTRIGHT             11
+-#define HTTOP               12
+-#define HTTOPLEFT           13
+-#define HTTOPRIGHT          14
+-#define HTBOTTOM            15
+-#define HTBOTTOMLEFT        16
+-#define HTBOTTOMRIGHT       17
+-#define HTBORDER            18
+-#define HTREDUCE            HTMINBUTTON
+-#define HTZOOM              HTMAXBUTTON
+-#define HTSIZEFIRST         HTLEFT
+-#define HTSIZELAST          HTBOTTOMRIGHT
+-#define HTOBJECT            19
+-#define HTCLOSE             20
+-#define HTHELP              21
+-
+-/* WM_SIZE wparam values*/
+-#define SIZE_RESTORED       0
+-#define SIZE_MINIMIZED      1
+-#define SIZE_MAXIMIZED      2
+-#define SIZE_MAXSHOW        3
+-#define SIZE_MAXHIDE        4
+-
+-LRESULT WINAPI  CallWindowProc(WNDPROC lpPrevWndFunc, HWND hwnd, UINT Msg,
+-			WPARAM wParam, LPARAM lParam);
+-LRESULT WINAPI	SendMessage(HWND hwnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+-BOOL WINAPI	PostMessage(HWND hwnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+-BOOL WINAPI	PostThreadMessage(DWORD dwThreadId, UINT Msg, WPARAM wParam,
+-			LPARAM lParam);
+-VOID WINAPI	PostQuitMessage(int nExitCode);
+-
+-/* PeekMessage options*/
+-#define PM_NOREMOVE		0x0000
+-#define PM_REMOVE		0x0001
+-#define PM_NOYIELD		0x0002
+-
+-BOOL WINAPI	PeekMessage(LPMSG lpMsg, HWND hwnd, UINT uMsgFilterMin,
+-			UINT uMsgFilterMax, UINT wRemoveMsg);
+-BOOL WINAPI 	GetMessage(LPMSG lpMsg,HWND hwnd,UINT wMsgFilterMin,
+-			UINT wMsgFilterMax);
+-BOOL WINAPI 	TranslateMessage(CONST MSG *lpMsg);
+-LONG WINAPI	DispatchMessage(CONST MSG *lpMsg);
+-
+-/* Hotkey stuff */
+-BOOL RegisterHotKey(HWND hWnd, int id, UINT fsModifiers, UINT vk);
+-BOOL UnregisterHotKey(HWND hWnd, int id);
+-BOOL MwDeliverHotkey (WPARAM VK_Code, BOOL pressed);
+-
+-SHORT WINAPI GetKeyState(int nVirtKey);
+-
+-/* note: the following struct is in reverse order from the
+- * microsoft version since WINAPI is cdecl in this implementation
+- */
+-typedef struct tagCREATESTRUCT {
+-    DWORD       dwExStyle;
+-    LPCSTR      lpszClass;
+-    LPCSTR      lpszName;
+-    LONG        style;
+-    int         x;
+-    int         y;
+-    int         cx;
+-    int         cy;
+-    HWND        hwndParent;
+-    HMENU       hMenu;
+-    HINSTANCE   hInstance;
+-    LPVOID      lpCreateParams;
+-} CREATESTRUCT, *LPCREATESTRUCT;
+-
+-typedef struct tagCOMPAREITEMSTRUCT {
+-	UINT	CtlType;
+-	UINT	CtlID;
+-	HWND	hwndItem;
+-	UINT	itemID1;
+-	ULONG_PTR	itemData1;
+-	UINT	itemID2;
+-	ULONG_PTR	itemData2;
+-	DWORD	dwLocaleId;
+-} COMPAREITEMSTRUCT,*LPCOMPAREITEMSTRUCT;
+-typedef struct tagDELETEITEMSTRUCT {
+-	UINT CtlType;
+-	UINT CtlID;
+-	UINT itemID;
+-	HWND hwndItem;
+-	ULONG_PTR itemData;
+-} DELETEITEMSTRUCT,*PDELETEITEMSTRUCT,*LPDELETEITEMSTRUCT;
+-typedef struct tagNMHDR
+-{
+-    HWND  hwndFrom;
+-    UINT  idFrom;
+-    UINT  code;         // NM_ code
+-}   NMHDR;
+-typedef NMHDR FAR * LPNMHDR;
+-
+-/* Button codes for MW_MOUSEMOVED:
+- * Please note that they differ from normal Windows codes
+- */
+-#define MK_LBUTTON	MWBUTTON_L
+-#define MK_RBUTTON	MWBUTTON_R
+-#define MK_MBUTTON 	MWBUTTON_M
+-
+-/*
+- * Window Styles
+- */
+-#define WS_OVERLAPPED       0x00000000L
+-#define WS_POPUP            0x80000000L
+-#define WS_CHILD            0x40000000L
+-#define WS_MINIMIZE         0x20000000L
+-#define WS_VISIBLE          0x10000000L
+-#define WS_DISABLED         0x08000000L
+-#define WS_CLIPSIBLINGS     0x04000000L
+-#define WS_CLIPCHILDREN     0x02000000L
+-#define WS_MAXIMIZE         0x01000000L
+-#define WS_CAPTION          0x00C00000L     /* WS_BORDER | WS_DLGFRAME  */
+-#define WS_BORDER           0x00800000L
+-#define WS_DLGFRAME         0x00400000L
+-#define WS_VSCROLL          0x00200000L
+-#define WS_HSCROLL          0x00100000L
+-#define WS_SYSMENU          0x00080000L
+-#define WS_THICKFRAME       0x00040000L
+-#define WS_GROUP            0x00020000L
+-#define WS_TABSTOP          0x00010000L
+-
+-#define WS_MINIMIZEBOX      0x00020000L
+-#define WS_MAXIMIZEBOX      0x00010000L
+-
+-#define WS_TILED            WS_OVERLAPPED
+-#define WS_ICONIC           WS_MINIMIZE
+-#define WS_SIZEBOX          WS_THICKFRAME
+-#define WS_TILEDWINDOW      WS_OVERLAPPEDWINDOW
+-
+-/*
+- * Common Window Styles
+- */
+-#define WS_OVERLAPPEDWINDOW (WS_OVERLAPPED     | \
+-                             WS_CAPTION        | \
+-                             WS_SYSMENU        | \
+-                             WS_THICKFRAME     | \
+-                             WS_MINIMIZEBOX    | \
+-                             WS_MAXIMIZEBOX)
+-
+-#define WS_POPUPWINDOW      (WS_POPUP          | \
+-                             WS_BORDER         | \
+-                             WS_SYSMENU)
+-
+-#define WS_CHILDWINDOW      (WS_CHILD)
+-
+-/*
+- * Extended Window Styles
+- */
+-#define WS_EX_DLGMODALFRAME     0x00000001L
+-#define WS_EX_NOPARENTNOTIFY    0x00000004L
+-#define WS_EX_TOPMOST           0x00000008L
+-#define WS_EX_ACCEPTFILES       0x00000010L
+-#define WS_EX_TRANSPARENT       0x00000020L
+-#define WS_EX_MDICHILD          0x00000040L
+-#define WS_EX_TOOLWINDOW        0x00000080L
+-#define WS_EX_WINDOWEDGE        0x00000100L
+-#define WS_EX_CLIENTEDGE        0x00000200L
+-#define WS_EX_CONTEXTHELP       0x00000400L
+-
+-#define WS_EX_RIGHT             0x00001000L
+-#define WS_EX_LEFT              0x00000000L
+-#define WS_EX_RTLREADING        0x00002000L
+-#define WS_EX_LTRREADING        0x00000000L
+-#define WS_EX_LEFTSCROLLBAR     0x00004000L
+-#define WS_EX_RIGHTSCROLLBAR    0x00000000L
+-
+-#define WS_EX_CONTROLPARENT     0x00010000L
+-#define WS_EX_STATICEDGE        0x00020000L
+-#define WS_EX_APPWINDOW         0x00040000L
+-#define WS_EX_LAYERED		0x00080000L
+-
+-#define WS_EX_OVERLAPPEDWINDOW  (WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE)
+-#define WS_EX_PALETTEWINDOW     (WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST)
+-
+-#define CW_USEDEFAULT       ((int)0x80000000)
+-
+-#define HWND_DESKTOP        ((HWND)0)
+-
+-#define CreateWindow(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hwndParent, hMenu, hInstance, lpParam)\
+-		CreateWindowEx(0L, lpClassName, lpWindowName, dwStyle, x, y,\
+-		nWidth, nHeight, hwndParent, hMenu, hInstance, lpParam)
+-
+-HWND WINAPI	CreateWindowEx(DWORD dwExStyle, LPCSTR lpClassName,
+-    			LPCSTR lpWindowName, DWORD dwStyle, int X, int Y,
+-			int nWidth, int nHeight, HWND hwndParent, HMENU hMenu,
+-			HINSTANCE hInstance, LPVOID lpParam);
+-BOOL WINAPI 	DestroyWindow(HWND hwnd);
+-BOOL WINAPI	IsWindow(HWND hwnd);
+-#define IsWindowVisible(hwnd)	((BOOL)((hwnd)->unmapcount == 0))
+-
+-/*
+- * ShowWindow() Commands
+- */
+-#define SW_HIDE             0
+-#define SW_SHOWNORMAL       1
+-#define SW_NORMAL           1
+-#define SW_SHOWMINIMIZED    2
+-#define SW_SHOWMAXIMIZED    3
+-#define SW_MAXIMIZE         3
+-#define SW_SHOWNOACTIVATE   4
+-#define SW_SHOW             5
+-#define SW_MINIMIZE         6
+-#define SW_SHOWMINNOACTIVE  7
+-#define SW_SHOWNA           8
+-#define SW_RESTORE          9
+-#define SW_SHOWDEFAULT      10
+-#define SW_FORCEMINIMIZE    11
+-#define SW_MAX              11
+-
+-BOOL WINAPI 	ShowWindow(HWND hwnd, int nCmdShow);
+-BOOL WINAPI	InvalidateRect(HWND hwnd, CONST RECT *lpRect, BOOL bErase);
+-BOOL WINAPI	InvalidateRgn(HWND hwnd, HRGN hrgn, BOOL bErase);
+-BOOL WINAPI	ValidateRect(HWND hwnd, CONST RECT *lprc);
+-BOOL WINAPI	ValidateRgn(HWND hwnd, HRGN hrgn);
+-BOOL WINAPI	UpdateWindow(HWND hwnd);
+-
+-/* RedrawWindow flags*/
+-#define RDW_INVALIDATE		1
+-#define RDW_INTERNALPAINT	2
+-#define RDW_ERASE		4
+-#define RDW_VALIDATE		8
+-#define RDW_NOINTERNALPAINT	16
+-#define RDW_NOERASE		32
+-#define RDW_NOCHILDREN		64
+-#define RDW_ALLCHILDREN		128
+-#define RDW_UPDATENOW		256
+-#define RDW_ERASENOW		512
+-#define RDW_FRAME		1024
+-#define RDW_NOFRAME		2048
+-
+-BOOL WINAPI	RedrawWindow(HWND hWnd, const RECT *lprcUpdate, HRGN hrgnUpdate, UINT flags);
+-
+-HWND WINAPI	GetFocus(VOID);
+-HWND WINAPI	SetFocus(HWND hwnd);
+-BOOL WINAPI	SetForegroundWindow(HWND hwnd);
+-HWND WINAPI	SetActiveWindow(HWND hwnd);
+-HWND WINAPI	GetActiveWindow(VOID);
+-BOOL WINAPI	BringWindowToTop(HWND hwnd);
+-HWND WINAPI	GetDesktopWindow(VOID);
+-HWND WINAPI	GetParent(HWND hwnd);
+-HWND WINAPI SetParent(HWND hwnd, HWND parent);
+-HWND WINAPI GetAncestor(HWND hwnd, UINT type);
+-
+-/* GetAncestor() constants*/
+-#define GA_PARENT       1
+-#define GA_ROOT         2
+-#define GA_ROOTOWNER    3
+-
+-BOOL WINAPI	EnableWindow(HWND hwnd, BOOL bEnable);
+-#define IsWindowEnabled(hwnd)	((BOOL)(((hwnd)->style&WS_DISABLED) == 0))
+-
+-BOOL WINAPI	AdjustWindowRectEx(LPRECT lpRect, DWORD dwStyle, BOOL bMenu,
+-			DWORD dwExStyle);
+-BOOL WINAPI	GetClientRect(HWND hwnd, LPRECT lpRect);
+-BOOL WINAPI	GetWindowRect(HWND hwnd, LPRECT lpRect);
+-
+-BOOL WINAPI 	ClientToScreen(HWND hwnd, LPPOINT lpPoint);
+-BOOL WINAPI 	ScreenToClient(HWND hwnd, LPPOINT lpPoint);
+-int  WINAPI	MapWindowPoints(HWND hwndFrom, HWND hwndTo, LPPOINT lpPoints,
+-			UINT cPoints);
+-
+-BOOL WINAPI	SetRect(LPRECT lprc,int xLeft,int yTop,int xRight,int yBottom);
+-BOOL WINAPI	SetRectEmpty(LPRECT lprc);
+-BOOL WINAPI	CopyRect(LPRECT lprcDst, CONST RECT *lprcSrc);
+-BOOL WINAPI	IsRectEmpty(CONST RECT *lprc);
+-BOOL WINAPI	InflateRect(LPRECT lprc, int dx, int dy);
+-BOOL WINAPI	OffsetRect(LPRECT lprc, int dx, int dy);
+-/* The bcc compiler doesn't work passing structs by value, so we have this*/
+-#if ELKS
+-#define		PtInRect(lprc,pt)	MwPTINRECT(lprc, *(long *)&(pt))
+-#else
+-#define		PtInRect(lprc,pt)	MwPTINRECT(lprc, pt)
+-#endif
+-BOOL WINAPI	MwPTINRECT(CONST RECT *lprc, POINT pt);
+-
+-/*
+- * Window field offsets for GetWindowLong()/GetWindowLongPtr()
+- */
+-#define GWL_WNDPROC         (-4)
+-#define GWL_HINSTANCE       (-6)
+-#define GWL_HWNDPARENT      (-8)
+-#define GWL_ID              (-12)
+-#define GWL_STYLE           (-16)
+-#define GWL_EXSTYLE         (-20)
+-#define GWL_USERDATA        (-21)
+-#define GWL_WNDPROCBRIDGE	(-41)
+-
+-
+-/*
+- * Class field offsets for GetClassLong()/GetClassLongPtr
+- */
+-#define GCL_MENUNAME        (-8)
+-#define GCL_HBRBACKGROUND   (-10)
+-#define GCL_HCURSOR         (-12)
+-#define GCL_HICON           (-14)
+-#define GCL_HMODULE         (-16)
+-#define GCL_CBWNDEXTRA      (-18)
+-#define GCL_CBCLSEXTRA      (-20)
+-#define GCL_WNDPROC         (-24)
+-#define GCL_STYLE           (-26)
+-#define GCW_ATOM            (-32)
+-#define GCL_HICONSM         (-34)
+-
+-LONG WINAPI	GetWindowLong(HWND hwnd, int nIndex);
+-LONG_PTR WINAPI	GetWindowLongPtr(HWND hwnd, int nIndex);			// 64bit
+-LONG WINAPI	SetWindowLong(HWND hwnd, int nIndex, LONG lNewLong);
+-LONG_PTR WINAPI	SetWindowLongPtr(HWND hwnd, int nIndex, LONG_PTR lNewLong);	// 64bit
+-WORD WINAPI	GetWindowWord(HWND hwnd, int nIndex);
+-WORD WINAPI	SetWindowWord(HWND hwnd, int nIndex, WORD wNewWord);
+-ATOM WINAPI GlobalFindAtom(LPCSTR lpString);
+-ATOM WINAPI GlobalAddAtom(LPCSTR lpString);
+-BOOL WINAPI SetProp(HWND hWnd, LPCSTR lpString, HANDLE hData);
+-HANDLE WINAPI GetProp(HWND hWnd, LPCSTR lpString);
+-HANDLE WINAPI RemoveProp(HWND hWnd, LPCSTR lpString);
+-
+-#define GetDlgCtrlID(hwnd)	((int)(hwnd)->id)
+-DWORD WINAPI	GetClassLong(HWND hwnd, int nIndex);
+-ULONG_PTR WINAPI GetClassLongPtr(HWND hwnd, int nIndex);
+-int WINAPI	GetWindowTextLength(HWND hwnd);
+-int WINAPI	GetWindowText(HWND hwnd, LPSTR lpString, int nMaxCount);
+-BOOL WINAPI	SetWindowText(HWND hwnd, LPCSTR lpString);
+-
+-BOOL WINAPI 	MoveWindow(HWND hwnd, int x, int y, int nWidth, int nHeight,
+-    			BOOL bRepaint);
+-
+-/* SetWindowPos Flags*/
+-#define SWP_NOSIZE          0x0001
+-#define SWP_NOMOVE          0x0002
+-#define SWP_NOZORDER        0x0004
+-#define SWP_NOREDRAW        0x0008
+-#define SWP_NOACTIVATE      0x0010	/* nyi*/
+-#define SWP_FRAMECHANGED    0x0020	/* nyi*/
+-#define SWP_SHOWWINDOW      0x0040
+-#define SWP_HIDEWINDOW      0x0080
+-#define SWP_NOCOPYBITS      0x0100	/* nyi*/
+-#define SWP_NOOWNERZORDER   0x0200	/* nyi*/
+-#define SWP_NOSENDCHANGING  0x0400	/* nyi*/
+-#define SWP_DRAWFRAME       SWP_FRAMECHANGED
+-#define SWP_NOREPOSITION    SWP_NOOWNERZORDER
+-#define SWP_DEFERERASE      0x2000	/* nyi*/
+-#define SWP_ASYNCWINDOWPOS  0x4000	/* nyi*/
+-
+-#define HWND_TOP        ((HWND)0)	/* nyi*/
+-#define HWND_BOTTOM     ((HWND)1)	/* nyi*/
+-#define HWND_TOPMOST    ((HWND)-1)	/* nyi*/
+-#define HWND_NOTOPMOST  ((HWND)-2)	/* nyi*/
+-
+-/* WM_WINDOWPOSCHANGED message*/
+-typedef struct tagWINDOWPOS {
+-	HWND    hwnd;
+-	HWND    hwndInsertAfter;
+-	int     x;
+-	int     y;
+-	int     cx;
+-	int     cy;
+-	UINT    flags;
+-} WINDOWPOS, *LPWINDOWPOS, *PWINDOWPOS;
+-
+-BOOL WINAPI	SetWindowPos(HWND hwnd, HWND hwndInsertAfter, int x, int y,
+-			int cx, int cy, UINT fuFlags);
+-
+-typedef struct tagWINDOWPLACEMENT {
+-    UINT  length;
+-    UINT  flags;
+-    UINT  showCmd;
+-    POINT ptMinPosition;
+-    POINT ptMaxPosition;
+-    RECT  rcNormalPosition;
+-} WINDOWPLACEMENT;
+-typedef WINDOWPLACEMENT *PWINDOWPLACEMENT, *LPWINDOWPLACEMENT;
+-BOOL SetWindowPlacement(HWND hWnd, WINDOWPLACEMENT *lpwndpl);
+-BOOL GetWindowPlacement(HWND hWnd, WINDOWPLACEMENT *lpwndpl);
+-
+-HCURSOR WINAPI LoadCursor(HINSTANCE hInstance, LPCSTR lpCursorName);	/* nyi*/
+-HCURSOR WINAPI SetCursor(HCURSOR hCursor);	/* nyi*/
+-HCURSOR WINAPI GetCursor(VOID);				/* nyi*/
+-BOOL WINAPI	GetCursorPos(LPPOINT lpPoint);
+-HWND WINAPI	GetCapture(VOID);
+-HWND WINAPI	SetCapture(HWND hwnd);
+-BOOL WINAPI	ReleaseCapture(VOID);
+-
+-#define GW_HWNDNEXT 2
+-#define GW_HWNDPREV 3
+-#define GW_CHILD 5
+-#define GW_HWNDFIRST 0
+-#define GW_HWNDLAST 1
+-#define GW_OWNER 4
+-
+-HWND GetWindow(HWND hWnd,  UINT uCmd);
+-HWND GetMenu (HWND hWnd);
+-HWND GetForegroundWindow(VOID);
+-HWND WindowFromPoint(POINT pt);
+-
+-/*
+- * WM_NCCALCSIZE parameter structure
+- */
+-typedef struct tagNCCALCSIZE_PARAMS {
+-    RECT       rgrc[3];
+-    /*PWINDOWPOS lppos;*/		/* removed for microwin*/
+-} NCCALCSIZE_PARAMS, *LPNCCALCSIZE_PARAMS;
+-
+-typedef VOID (CALLBACK* TIMERPROC)(HWND, UINT, UINT_PTR, DWORD);
+-
+-UINT WINAPI	SetTimer(HWND hwnd, UINT idTimer, UINT uTimeout, TIMERPROC lpTimerFunc);
+-BOOL WINAPI	KillTimer(HWND hwnd, UINT idTimer);
+-UINT		MwGetNextTimeoutValue(void);
+-void		MwHandleTimers(void);
+-
+-/* GetSystemMetrics indices*/
+-#define SM_CXSCREEN             0
+-#define SM_CYSCREEN             1
+-#define SM_CXVSCROLL            2
+-#define SM_CYHSCROLL            3
+-#define SM_CYCAPTION            4
+-#define SM_CXBORDER             5
+-#define SM_CYBORDER             6
+-#define SM_CXDLGFRAME           7
+-#define SM_CYDLGFRAME           8
+-#define SM_CXFIXEDFRAME		SM_CXDLGFRAME
+-#define SM_CYFIXEDFRAME		SM_CYDLGFRAME
+-#define SM_CYMENU               15
+-#define SM_CYVSCROLL            20
+-#define SM_CXHSCROLL            21
+-#define SM_CXFRAME              32
+-#define SM_CYFRAME              33
+-#define SM_CXSIZEFRAME		SM_CXFRAME
+-#define SM_CYSIZEFRAME		SM_CYFRAME
+-
+-int WINAPI	GetSystemMetrics(int nIndex);
+-
+-#define SPI_SETWORKAREA            47
+-#define SPI_GETWORKAREA            48
+-
+-BOOL WINAPI SystemParametersInfo (UINT uiAction,  UINT uiParam, PVOID pvParam, UINT fWinIni);
+-
+-HWND WINAPI	GetDlgItem(HWND hDlg, int nIDDlgItem);
+-
+-/* ************************** Caret support **********************************/
+-BOOL WINAPI CreateCaret(HWND hwnd, HBITMAP hBitmap, int nWidth, int nHeight);
+-BOOL WINAPI DestroyCaret(VOID);
+-BOOL WINAPI HideCaret (HWND hwnd);
+-BOOL WINAPI ShowCaret(HWND hwnd);
+-BOOL WINAPI SetCaretPos(int nX, int nY);
+-BOOL WINAPI GetCaretPos(LPPOINT lpPoint);
+-UINT WINAPI GetCaretBlinkTime(VOID);
+-BOOL WINAPI SetCaretBlinkTime(UINT uMSeconds);
+-
+-int WINAPI GetClassName(HWND hWnd, LPTSTR lpClassName, int nMaxCount);
+-
+-BOOL WINAPI	SetLayeredWindowAttributes(HWND hwnd, COLORREF crKey, BYTE bAlpha, DWORD dwFlags);
+-BOOL WINAPI GetLayeredWindowAttributes(HWND hwnd, COLORREF *pcrKey, BYTE *pbAlpha, DWORD *pdwFlags);
+-#define LWA_COLORKEY	0x00000001
+-#define LWA_ALPHA		0x00000002
+-
+-HWND WINAPI GetNextDlgGroupItem(HWND hDlg, HWND hCtl, BOOL bPrevious);
+-
+-/*
+- * Dialog Box Command IDs
+- */
+-#define IDOK                1
+-#define IDCANCEL            2
+-#define IDABORT             3
+-#define IDRETRY             4
+-#define IDIGNORE            5
+-#define IDYES               6
+-#define IDNO                7
+-#define IDCLOSE         	8
+-#define IDHELP          	9
+-#define IDTRYAGAIN         10
+-#define IDCONTINUE         11
+-
+-/*
+- * MessageBox() Flags
+- */
+-#define MB_OK                       0x00000000L
+-#define MB_OKCANCEL                 0x00000001L
+-#define MB_ABORTRETRYIGNORE         0x00000002L
+-#define MB_YESNOCANCEL              0x00000003L
+-#define MB_YESNO                    0x00000004L
+-#define MB_RETRYCANCEL              0x00000005L
+-#define MB_CANCELTRYCONTINUE 		0x00000006L
+-
+-#define MB_ICONHAND                 0x00000010L
+-#define MB_ICONQUESTION             0x00000020L
+-#define MB_ICONEXCLAMATION          0x00000030L
+-#define MB_ICONASTERISK             0x00000040L
+-
+-#define MB_USERICON                 0x00000080L
+-#define MB_ICONWARNING              MB_ICONEXCLAMATION
+-#define MB_ICONERROR                MB_ICONHAND
+-
+-#define MB_ICONINFORMATION          MB_ICONASTERISK
+-#define MB_ICONSTOP                 MB_ICONHAND
+-
+-#define MB_DEFBUTTON1               0x00000000L
+-#define MB_DEFBUTTON2               0x00000100L
+-#define MB_DEFBUTTON3               0x00000200L
+-#define MB_DEFBUTTON4               0x00000300L
+-
+-#define MB_APPLMODAL                0x00000000L
+-#define MB_SYSTEMMODAL              0x00001000L
+-#define MB_TASKMODAL                0x00002000L
+-#define MB_HELP                     0x00004000L // Help Button
+-
+-#define MB_NOFOCUS                  0x00008000L
+-#define MB_SETFOREGROUND            0x00010000L
+-#define MB_DEFAULT_DESKTOP_ONLY     0x00020000L
+-
+-#define MB_TOPMOST                  0x00040000L
+-#define MB_RIGHT                    0x00080000L
+-#define MB_RTLREADING               0x00100000L
+-
+-#define MB_TYPEMASK                 0x0000000FL
+-#define MB_ICONMASK                 0x000000F0L
+-#define MB_DEFMASK                  0x00000F00L
+-#define MB_MODEMASK                 0x00003000L
+-#define MB_MISCMASK                 0x0000C000L
+-
+-/* help structure not implemented, only used in MSGBOXCALLBACK below*/
+-#define HELPINFO_WINDOW    0x0001
+-#define HELPINFO_MENUITEM  0x0002
+-typedef struct tagHELPINFO {    /* Structure pointed to by lParam of WM_HELP */
+-    UINT    cbSize;             /* Size in bytes of this struct  */
+-    int     iContextType;       /* Either HELPINFO_WINDOW or HELPINFO_MENUITEM */
+-    int     iCtrlId;            /* Control Id or a Menu item Id. */
+-    HANDLE  hItemHandle;        /* hWnd of control or hMenu.     */
+-    DWORD   dwContextId;        /* Context Id associated with this item */
+-    POINT   MousePos;           /* Mouse Position in screen co-ordinates */
+-}  HELPINFO, FAR *LPHELPINFO;
+-
+-typedef void (CALLBACK *MSGBOXCALLBACK)(LPHELPINFO lpHelpInfo);
+-
+-typedef struct tagMSGBOXPARAMSA {
+-    UINT        cbSize;
+-    HWND        hwndOwner;
+-    HINSTANCE   hInstance;
+-    LPCSTR      lpszText;
+-    LPCSTR      lpszCaption;
+-    DWORD       dwStyle;
+-    LPCSTR      lpszIcon;
+-    DWORD       dwContextHelpId;
+-    MSGBOXCALLBACK      lpfnMsgBoxCallback;
+-    DWORD   dwLanguageId;
+-} MSGBOXPARAMSA, *PMSGBOXPARAMSA, *LPMSGBOXPARAMSA;
+-
+-typedef MSGBOXPARAMSA MSGBOXPARAMS;
+-
+-int WINAPI MessageBoxTimeout(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption,
+-		UINT uType, WORD wLanguageId, DWORD dwTime);
+-int WINAPI MessageBoxEx(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType, WORD wLanguageId);
+-int WINAPI MessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType);
+-int WINAPI MessageBoxIndirect( const MSGBOXPARAMS *lpMsgBoxParams);
+-
+-/*
+- *  Window enumeration functions
+- */
+-typedef BOOL (CALLBACK *WNDENUMPROC)(HWND, LPARAM);
+-
+-BOOL WINAPI EnumChildWindows(HWND hWndParent, WNDENUMPROC lpEnumFunc, LPARAM lParam);
+-
+-#ifdef MW_CALL_IDLE_HANDLER
+-void WINAPI idle_handler(void);
+-#endif
+-
+-#if later
+-/* All wide Functions jammed into A functions and unimplemented*/
+-typedef WNDCLASS	WNDCLASSW;
+-typedef WNDCLASS	WNDCLASSEXW;
+-#define DefWindowProcW		DefWindowProc
+-#define RegisterClassW		RegisterClass
+-#define SendMessageW		SendMessage
+-#define CreateWindowW		CreateWindow
+-#define CreateWindowExW		CreateWindowEx
+-#define GetWindowTextLengthW GetWindowTextLength
+-#define GetWindowTextW		GetWindowText
+-#define SetWindowTextW		SetWindowText
+-#endif /* unimplemented*/
+-
+-/* Cursor styles (unimplemented)*/
+-#define IDC_ARROW MAKEINTRESOURCE(32512)
+-#define IDC_IBEAM MAKEINTRESOURCE(32513)
+-#define IDC_WAIT MAKEINTRESOURCE(32514)
+-#define IDC_CROSS MAKEINTRESOURCE(32515)
+-#define IDC_UPARROW MAKEINTRESOURCE(32516)
+-#define IDC_SIZENWSE MAKEINTRESOURCE(32642)
+-#define IDC_SIZENESW MAKEINTRESOURCE(32643)
+-#define IDC_SIZEWE MAKEINTRESOURCE(32644)
+-#define IDC_SIZENS MAKEINTRESOURCE(32645)
+-#define IDC_SIZEALL MAKEINTRESOURCE(32646)
+-#define IDC_NO MAKEINTRESOURCE(32648)
+-#define IDC_HAND MAKEINTRESOURCE(32649)
+-#define IDC_APPSTARTING MAKEINTRESOURCE(32650)
+-#define IDC_HELP MAKEINTRESOURCE(32651)
+-#define IDC_ICON MAKEINTRESOURCE(32641)
+-#define IDC_SIZE MAKEINTRESOURCE(32640)
+-
+-/* GetOpenFileName stuff*/
+-typedef struct tagEDITMENU
+-{
+-	HMENU	hmenu;
+-	WORD	idEdit;
+-	WORD	idCut;
+-	WORD	idCopy;
+-	WORD	idPaste;
+-	WORD	idClear;
+-	WORD	idUndo;
+-} EDITMENU;
+-typedef EDITMENU FAR *LPEDITMENU;
+-
+-typedef LONG_PTR LPOFNHOOKPROC;
+-typedef struct tagOFN {
+-  DWORD         lStructSize;
+-  HWND          hwndOwner;
+-  HINSTANCE     hInstance;
+-  LPCSTR        lpstrFilter;
+-  LPSTR         lpstrCustomFilter;
+-  DWORD         nMaxCustFilter;
+-  DWORD         nFilterIndex;
+-  LPSTR         lpstrFile;
+-  DWORD         nMaxFile;
+-  LPSTR         lpstrFileTitle;
+-  DWORD         nMaxFileTitle;
+-  LPCSTR        lpstrInitialDir;
+-  LPCSTR        lpstrTitle;
+-  DWORD         Flags;
+-  WORD          nFileOffset;
+-  WORD          nFileExtension;
+-  LPCSTR        lpstrDefExt;
+-  LPARAM        lCustData;
+-  LPOFNHOOKPROC lpfnHook;
+-  LPCSTR        lpTemplateName;
+-  LPEDITMENU    lpEditInfo;
+-  LPCSTR        lpstrPrompt;
+-  void          *pvReserved;
+-  DWORD         dwSaveDialog;
+-  DWORD         FlagsEx;
+-} OPENFILENAME, *LPOPENFILENAME;
+-
+-BOOL WINAPI GetOpenFileName (LPOPENFILENAME Arg1);
+-BOOL WINAPI GetSaveFileName (LPOPENFILENAME Arg1);
+-BOOL WINAPI GetOpenFileNameIndirect (LPOPENFILENAME Arg1);
+-
+-/* misc APIs*/
+-DWORD WINAPI	GetTickCount(VOID);
+diff --git a/src/nanox/srvfunc.c b/src/nanox/srvfunc.c
+index 4db4b27..a3f82ac 100644
+--- a/src/nanox/srvfunc.c
++++ b/src/nanox/srvfunc.c
+@@ -3597,7 +3597,7 @@ GrSetScreenSaverTimeout(GR_TIMEOUT timeout)
+ 
+ 	screensaver_delay = timeout * 1000;
+ 
+-	if((timer = GdFindTimer(GsActivateScreenSaver)))
++	if((timer = GdFindTimer((void *)GsActivateScreenSaver)))
+ 		GdDestroyTimer(timer);
+ 
+ 	/* 0 timeout cancels timer*/
+@@ -3606,7 +3606,7 @@ GrSetScreenSaverTimeout(GR_TIMEOUT timeout)
+ 		return;
+ 	}
+ 
+-	GdAddTimer(screensaver_delay, GsActivateScreenSaver, GsActivateScreenSaver);
++	GdAddTimer(screensaver_delay, GsActivateScreenSaver, (void *)GsActivateScreenSaver);
+ 
+ 	SERVER_UNLOCK();
+ #endif /* MW_FEATURE_TIMERS */
+diff --git a/src/nanox/srvmain.c b/src/nanox/srvmain.c
+index 6cda8ae..7c27b62 100644
+--- a/src/nanox/srvmain.c
++++ b/src/nanox/srvmain.c
+@@ -976,7 +976,7 @@ GsInitialize(void)
+ 
+ #if HAVE_SIGNAL
+ 	/* catch terminate signal to restore tty state*/
+-	signal(SIGTERM, (void *)GsTerminate);
++	signal(SIGTERM, (sighandler_t)GsTerminate);
+ #endif
+ 
+ #if MW_FEATURE_TIMERS
+diff --git a/src/nanox/srvutil.c b/src/nanox/srvutil.c
+index 8d49668..294ba5b 100644
+--- a/src/nanox/srvutil.c
++++ b/src/nanox/srvutil.c
+@@ -50,10 +50,10 @@ GsResetScreenSaver(void)
+ 	if(screensaver_delay) {
+ 		MWTIMER *timer;
+ 
+-		if((timer = GdFindTimer(GsActivateScreenSaver)))
++		if((timer = GdFindTimer((void *)GsActivateScreenSaver)))
+ 			GdDestroyTimer(timer);
+ 
+-		GdAddTimer(screensaver_delay, GsActivateScreenSaver, GsActivateScreenSaver);
++		GdAddTimer(screensaver_delay, GsActivateScreenSaver, (void *)GsActivateScreenSaver);
+ 	}
+ #endif
+ }
+diff --git a/src/nx11/SetAttributes.c b/src/nx11/SetAttributes.c
+index 51a7869..ded38f5 100644
+--- a/src/nx11/SetAttributes.c
++++ b/src/nx11/SetAttributes.c
+@@ -12,8 +12,8 @@ DPRINTF("XChangeWindowAttributes: valuemask 0x%X\n", (int)valuemask);
+ 	if (valuemask & CWBackPixel)	// 2
+ 		XSetWindowBackground(display, w, attributes->background_pixel);
+ 
+-	if (valuemask & CWBorderPixmap)	// 4
+-		XSetWindowBorderPixmap(display, w, attributes->border_pixmap);
++//	if (valuemask & CWBorderPixmap)	// 4
++//		XSetWindowBorderPixmap(display, w, attributes->border_pixmap);
+ 	if (valuemask & CWBorderPixel)	// 8
+ 		XSetWindowBorder(display, w, attributes->border_pixel);
+ 
+@@ -26,8 +26,8 @@ DPRINTF("XChangeWindowAttributes: valuemask 0x%X\n", (int)valuemask);
+ 		XSelectInput(display, w, attributes->event_mask);
+ 	//CWDontPropagate
+ 
+-	if (valuemask & CWColormap)
+-		XSetWindowColormap(display, w, attributes->colormap);
++//	if (valuemask & CWColormap)
++//		XSetWindowColormap(display, w, attributes->colormap);
+ 	if (valuemask & CWCursor)
+ 		XDefineCursor(display, w, attributes->cursor);
+ 
+diff --git a/src/nx11/X11-local/X11/Xlib.h b/src/nx11/X11-local/X11/Xlib.h
+index a7c8e89..093fbd6 100644
+--- a/src/nx11/X11-local/X11/Xlib.h
++++ b/src/nx11/X11-local/X11/Xlib.h
+@@ -397,8 +397,8 @@ typedef struct _XImage {
+ 		int		/* bitmap_pad */,
+ 		int		/* bytes_per_line */);
+ 	int (*destroy_image)        (struct _XImage *);
+-	unsigned long (*get_pixel)  (struct _XImage *, unsigned int, unsigned int);
+-	int (*put_pixel)            (struct _XImage *, unsigned int, unsigned int, unsigned long);
++	unsigned long (*get_pixel)  (struct _XImage *, int, int);
++	int (*put_pixel)            (struct _XImage *, int, int, unsigned long);
+ 	struct _XImage *(*sub_image)(struct _XImage *, int, int, unsigned int, unsigned int);
+ 	int (*add_pixel)            (struct _XImage *, long);
+ #else
+diff --git a/src/nx11/Xrm.c b/src/nx11/Xrm.c
+index 3b5f4a0..2676546 100644
+--- a/src/nx11/Xrm.c
++++ b/src/nx11/Xrm.c
+@@ -1608,6 +1608,7 @@ char * filename;
+     /*
+      * MS-Windows and OS/2 note: Default open mode includes O_TEXT
+      */
++	extern int _XOpenFile(_Xconst char *path, int flags);
+     if ( (fd = _XOpenFile (filename, O_RDONLY)) == -1 )
+ 	return (char *)NULL;
+ 
+diff --git a/src/nx11/stub.c b/src/nx11/stub.c
+index 17080ad..af3aeda 100644
+--- a/src/nx11/stub.c
++++ b/src/nx11/stub.c
+@@ -29,9 +29,9 @@ int XkbGetIndicatorState() { DPRINTF("XkbGetIndicatorState called\n"); return 0;
+ int XFixesQueryExtension() { DPRINTF("XFixesQueryExtension called\n"); return 0; }
+ int XFixesSelectSelectionInput() { DPRINTF("XFixesSelectSelectionInput called\n"); return 0; }
+ /* following in IM.c but here until it compiles*/
+-int XOpenIM(void* d, int db, char* rn, char* rc) { DPRINTF("XOpenIM called\n"); return 0; }
+-int XCloseIM(void* d) { DPRINTF("XCloseIM called\n"); return 0; }
+-int XCreateIC(int i, int j) { DPRINTF("XCreateIC called\n"); return 0; }
++//int XOpenIM(void* d, int db, char* rn, char* rc) { DPRINTF("XOpenIM called\n"); return 0; }
++//int XCloseIM(void* d) { DPRINTF("XCloseIM called\n"); return 0; }
++//int XCreateIC(int i, int j) { DPRINTF("XCreateIC called\n"); return 0; }
+ 
+ /* required for gtk+ 1.2.7*/
+ int XAutoRepeatOn() { DPRINTF("XAutoRepeatOn called\n"); return 0; } 
+@@ -118,7 +118,7 @@ int XKillClient() { DPRINTF("XKillClient called\n"); return 0; }
+ ////int XMaxRequestSize() { DPRINTF("XMaxRequestSize called\n"); return 0; } 
+ int XmbDrawImageString() { DPRINTF("XmbDrawImageString called\n"); return 0; } 
+ int XmbDrawString() { DPRINTF("XmbDrawString called\n"); return 0; } 
+-int XmbLookupString() { DPRINTF("XmbLookupString called\n"); return 0; } 
++//int XmbLookupString() { DPRINTF("XmbLookupString called\n"); return 0; } 
+ int XmbTextExtents() { DPRINTF("XmbTextExtents called\n"); return 0; } 
+ 
+ int XParseGeometry(char* i, int* j, int* k, unsigned int* l, unsigned int* m) { DPRINTF("XParseGeometry called\n"); return 0; } 

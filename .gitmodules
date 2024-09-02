@@ -22,3 +22,9 @@
 [submodule "application/shell/sys/linux/applets/chiaki/3rd-party/opus/raw"]
 	path = application/shell/sys/linux/applets/chiaki/3rd-party/opus/raw
 	url = https://github.com/xiph/opus
+[submodule "application/shell/sys/linux/applets/x11/fltk"]
+	path = application/shell/sys/linux/applets/x11/fltk
+	url = https://github.com/fltk/fltk
+[submodule "application/shell/sys/linux/applets/x11/nanox"]
+	path = application/shell/sys/linux/applets/x11/nanox
+	url = https://github.com/ghaerr/microwindows

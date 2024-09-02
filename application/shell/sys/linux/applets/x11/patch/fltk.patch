@@ -1,0 +1,59 @@
+ FL/Fl.H                             | 4 ++++
+ src/Fl_File_Chooser2.cxx            | 3 +++
+ src/Fl_Native_File_Chooser_FLTK.cxx | 7 ++++---
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/FL/Fl.H b/FL/Fl.H
+index 30120b28f..90c5f9a4f 100644
+--- a/FL/Fl.H
++++ b/FL/Fl.H
+@@ -21,6 +21,10 @@
+ #ifndef Fl_H
+ #  define Fl_H
+ 
++#  if defined(__VSF__) && defined(__WIN__)
++#    undef _WIN32
++#  endif
++
+ // In FLTK 1.3.x WIN32 must be defined on Windows (if not using CYGWIN).
+ // Since FLTK 1.3.9 we define WIN32 if it's not defined on Windows
+ // to avoid common user errors, for instance GitHub Issue #686.
+diff --git a/src/Fl_File_Chooser2.cxx b/src/Fl_File_Chooser2.cxx
+index 06ca17eca..afdcc64b6 100644
+--- a/src/Fl_File_Chooser2.cxx
++++ b/src/Fl_File_Chooser2.cxx
+@@ -374,6 +374,9 @@
+ #  include <pwd.h>
+ #endif /* WIN32 */
+ 
++#if defined(__VSF__) && defined(__WIN__)
++#  undef select
++#endif
+ 
+ //
+ // File chooser label strings and sort function...
+diff --git a/src/Fl_Native_File_Chooser_FLTK.cxx b/src/Fl_Native_File_Chooser_FLTK.cxx
+index 617ea1d18..cdf814a8d 100644
+--- a/src/Fl_Native_File_Chooser_FLTK.cxx
++++ b/src/Fl_Native_File_Chooser_FLTK.cxx
+@@ -25,7 +25,7 @@
+ #define FLTK_CHOOSER_CREATE    Fl_File_Chooser::CREATE
+ 
+ #include "Fl_Native_File_Chooser_common.cxx"
+-#include "Fl_Native_File_Chooser_GTK.cxx"
++//#include "Fl_Native_File_Chooser_GTK.cxx"
+ 
+ #include <sys/stat.h>
+ #include <string.h>
+@@ -59,8 +59,9 @@ Fl_Native_File_Chooser::Fl_Native_File_Chooser(int val) {
+     have_looked_for_GTK_libs = -1;
+   }
+   // if we found all the GTK functions we need, we will use the GtkFileChooserDialog
+-  if (Fl_GTK_File_Chooser::did_find_GTK_libs) _gtk_file_chooser = new Fl_GTK_File_Chooser(val);
+-  else _x11_file_chooser = new Fl_FLTK_File_Chooser(val);
++//  if (Fl_GTK_File_Chooser::did_find_GTK_libs) _gtk_file_chooser = new Fl_GTK_File_Chooser(val);
++//  else
++  _x11_file_chooser = new Fl_FLTK_File_Chooser(val);
+ }
+ 
+ /**
