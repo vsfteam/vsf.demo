@@ -82,9 +82,9 @@
 
 #define VSF_USE_UI                                      ENABLED
 #   define VSF_DISP_USE_WINGDI                          ENABLED
-#   define VSF_BOARD_DISP_HEIGHT                        320
-#   define VSF_BOARD_DISP_WIDTH                         240
-#   define VSF_BOARD_DISP_COLOR                         VSF_DISP_COLOR_RGB565
+#   define VSF_BOARD_DISP_HEIGHT                        480
+#   define VSF_BOARD_DISP_WIDTH                         800
+#   define VSF_BOARD_DISP_COLOR                         VSF_DISP_COLOR_ARGB8888
 #define VSF_AUDIO_USE_WINSOUND                          ENABLED
 #define VSF_FS_USE_WINFS                                ENABLED
 #define VSF_USE_HEAP                                    ENABLED
@@ -99,6 +99,9 @@
 #define VSF_USBH_CFG_EDA_PRIORITY                       vsf_prio_0
 #define VSF_USBH_CFG_ENABLE_ROOT_HUB                    DISABLED
 #define VSF_USBH_USE_HUB                                DISABLED
+
+#define VSF_LINUX_CFG_HEAP_SIZE                         (16 * 1024 * 1024)
+#define VSF_HEAP_CFG_MCB_ALIGN_BIT                      9
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *

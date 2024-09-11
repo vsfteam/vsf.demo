@@ -1,3 +1,6 @@
+ src/demos/nanox/world.c       |   4 +-
+ src/drivers/kbd_ttyscan.c     |  53 ++-
+ src/drivers/mou_devmice.c     |  30 ++
  src/drivers/scr_fb.c          |   8 +
  src/include/sys_time.h        |   3 +
  src/include/uni_std.h         |   4 +
@@ -15,14 +18,243 @@
  src/include/wintools.h        |  31 --
  src/include/winuser.h         | 854 ------------------------------------------
  src/nanox/srvfunc.c           |   4 +-
- src/nanox/srvmain.c           |   2 +-
+ src/nanox/srvmain.c           |  37 +-
  src/nanox/srvutil.c           |   4 +-
  src/nx11/SetAttributes.c      |   8 +-
  src/nx11/X11-local/X11/Xlib.h |   4 +-
  src/nx11/Xrm.c                |   1 +
- src/nx11/stub.c               |   8 +-
- 23 files changed, 31 insertions(+), 3198 deletions(-)
+ src/nx11/font_find.c          |  15 +-
+ src/nx11/stub.c               |  10 +-
+ 27 files changed, 153 insertions(+), 3215 deletions(-)
 
+diff --git a/src/demos/nanox/world.c b/src/demos/nanox/world.c
+index 996ad71..5e4f335 100644
+--- a/src/demos/nanox/world.c
++++ b/src/demos/nanox/world.c
+@@ -15,7 +15,7 @@
+ #define MWINCLUDECOLORS
+ #include "nano-X.h"
+ 
+-#define	MAPFILE	"images/demos/nanox/world.map"
++#define	MAPFILE	"root/images/world.map"
+ 
+ #ifndef O_BINARY
+ #define O_BINARY 	0
+@@ -152,7 +152,7 @@ static void setzoom(FLOAT newzoom);
+ static void load(char *fn);
+ 
+ int
+-main(int argc, char **argv)
++world_main(int argc, char **argv)
+ {
+ 	GR_SCREEN_INFO	si;
+ 	GR_WM_PROPERTIES props;
+diff --git a/src/drivers/kbd_ttyscan.c b/src/drivers/kbd_ttyscan.c
+index 814d868..d42b62d 100644
+--- a/src/drivers/kbd_ttyscan.c
++++ b/src/drivers/kbd_ttyscan.c
+@@ -43,12 +43,12 @@ KBDDEVICE kbddev = {
+ static	int		fd;		/* file descriptor for keyboard */
+ static	struct termios	old;		/* original terminal modes */
+ static  int 		old_kbd_mode;
+-static unsigned char 	key_state[MWKEY_LAST];	/* FIXME - make sparse array */
++//static unsigned char 	key_state[MWKEY_LAST];	/* FIXME - make sparse array */
+ static MWKEYMOD 	key_modstate;
+ 
+ /* kernel unicode tables per shiftstate and scancode*/
+-#define NUM_VGAKEYMAPS	(1<<KG_CAPSSHIFT)	/* kernel key maps*/
+-static unsigned short	os_keymap[NUM_VGAKEYMAPS][NR_KEYS];
++//#define NUM_VGAKEYMAPS	(1<<KG_CAPSSHIFT)	/* kernel key maps*/
++//static unsigned short	os_keymap[NUM_VGAKEYMAPS][NR_KEYS];
+ 
+ 
+ /* Pick the right scancode conversion table */
+@@ -61,9 +61,23 @@ static unsigned short	os_keymap[NUM_VGAKEYMAPS][NR_KEYS];
+ static MWBOOL	UpdateKeyState(int pressed, MWKEY mwkey);
+ static void	UpdateLEDState(MWKEYMOD modstate);
+ static MWKEY	TranslateScancode(int scancode, MWKEYMOD modstate);
+-static void	LoadKernelKeymaps(int fd);
++//static void	LoadKernelKeymaps(int fd);
+ static MWBOOL	switch_vt(unsigned short which);
+ 
++#ifdef __VSF__
++
++static vk_input_notifier_t __keyboard_notifier;
++
++extern void inc_event(void);
++extern void dec_event(void);
++
++static void on_keyboard_input(vk_input_notifier_t *notifier, vk_input_type_t type, vk_input_evt_t *evt)
++{
++	inc_event();
++}
++
++#endif
++
+ /*
+  * Open the keyboard.
+  * This is real simple, we just use a special file handle
+@@ -114,26 +128,33 @@ TTY_Open(KBDDEVICE *pkd)
+ 	}
+ 
+ 	/* Load OS keymappings*/
+-	LoadKernelKeymaps(fd);
++//	LoadKernelKeymaps(fd);
+ 
+ 	/* Initialize keyboard state*/
+ 	key_modstate = MWKMOD_NONE;
+-	for (i=0; i<MWKEY_LAST; ++i)
+-		key_state[i] = RELEASED;
++//	for (i=0; i<MWKEY_LAST; ++i)
++//		key_state[i] = RELEASED;
+ 	
+ 	/* preset CAPSLOCK and NUMLOCK from startup LED state*/
+ 	if (ioctl(fd, KDGETLED, &ledstate) == 0) {
+ 		if (ledstate & LED_CAP) {
+ 			key_modstate |= MWKMOD_CAPS;
+-			key_state[MWKEY_CAPSLOCK] = PRESSED;
++//			key_state[MWKEY_CAPSLOCK] = PRESSED;
+ 		}
+ 		if (ledstate & LED_NUM) {
+ 			key_modstate |= MWKMOD_NUM;
+-			key_state[MWKEY_NUMLOCK] = PRESSED;
++//			key_state[MWKEY_NUMLOCK] = PRESSED;
+ 		}
+ 	}
+ 	UpdateLEDState(key_modstate);
+ 
++#ifdef __VSF__
++	if (0 == __keyboard_notifier.mask) {
++		__keyboard_notifier.mask = 1 << VSF_INPUT_TYPE_KEYBOARD;
++		__keyboard_notifier.on_evt = on_keyboard_input;
++		vk_input_notifier_register(&__keyboard_notifier);
++	}
++#endif
+ 	return fd;
+ 
+ err:
+@@ -318,6 +339,10 @@ TTY_Read(MWKEY *kbuf, MWKEYMOD *modifiers, MWSCANCODE *pscancode)
+ 		*modifiers = key_modstate;
+ 		*pscancode = scancode;
+ 
++#ifdef __VSF__
++		dec_event();
++#endif
++
+ 		/**if(pressed) {
+ 			printf("Returning: mwkey: 0x%04x, mods: 0x%x,
+ 				sc:0x%04x\n\n", *kbuf, *modifiers, *pscancode);
+@@ -377,12 +402,12 @@ UpdateKeyState(int pressed, MWKEY mwkey)
+ 		switch (mwkey) {
+ 		case MWKEY_NUMLOCK:
+ 			key_modstate ^= MWKMOD_NUM;
+-			key_state[MWKEY_NUMLOCK] ^= PRESSED;
++//			key_state[MWKEY_NUMLOCK] ^= PRESSED;
+ 			UpdateLEDState(key_modstate);
+ 			return TRUE;
+ 		case MWKEY_CAPSLOCK:
+ 			key_modstate ^= MWKMOD_CAPS;
+-			key_state[MWKEY_CAPSLOCK] ^= PRESSED;
++//			key_state[MWKEY_CAPSLOCK] ^= PRESSED;
+ 			UpdateLEDState(key_modstate);
+ 			return TRUE;
+ 		case MWKEY_LCTRL:
+@@ -423,7 +448,7 @@ UpdateKeyState(int pressed, MWKEY mwkey)
+ 		return FALSE;
+ #endif
+ 	/* Update internal keyboard state */
+-	key_state[mwkey] = (unsigned char)pressed;
++//	key_state[mwkey] = (unsigned char)pressed;
+ 	key_modstate = modstate;
+ 	return TRUE;
+ }
+@@ -447,6 +472,7 @@ static MWKEY
+ TranslateScancode(int scancode, MWKEYMOD modstate)
+ {
+ 	unsigned short	mwkey = 0;
++#if 0
+ 	int		map = 0;
+ 
+ 	/*printf("Translate: 0x%04x\n", scancode);*/
+@@ -506,6 +532,7 @@ TranslateScancode(int scancode, MWKEYMOD modstate)
+ 		mwkey = KVAL(os_keymap[map][scancode]);
+ 	
+ 	if (!mwkey)
++#endif
+ 		mwkey = keymap[scancode];
+ 
+ 	/* perform additional translations*/
+@@ -529,6 +556,7 @@ TranslateScancode(int scancode, MWKEYMOD modstate)
+ }
+ 
+ /* load Linux keyboard mappings, used as first try for scancode conversion*/
++#if 0
+ static void
+ LoadKernelKeymaps(int fd)
+ {
+@@ -557,6 +585,7 @@ LoadKernelKeymaps(int fd)
+ 	}
+ 
+ }
++#endif
+ /* Handle switching to another VC, returns when our VC is back */
+ static MWBOOL
+ switch_vt(unsigned short which)
+diff --git a/src/drivers/mou_devmice.c b/src/drivers/mou_devmice.c
+index b0ec1e5..ac922d8 100644
+--- a/src/drivers/mou_devmice.c
++++ b/src/drivers/mou_devmice.c
+@@ -60,6 +60,26 @@ MOUSEDEVICE mousedev = {
+ 
+ /////////////////////////////////////////////
+ 
++#ifdef __VSF__
++
++static vk_input_notifier_t __mouse_notifier;
++
++extern void inc_event(void);
++extern void dec_event(void);
++
++static void on_mouse_input(vk_input_notifier_t *notifier, vk_input_type_t type, vk_input_evt_t *evt)
++{
++	static bool __is_first = true;
++
++	if (__is_first) {
++		__is_first = false;
++		return;
++	}
++	inc_event();
++}
++
++#endif
++
+ /*
+  * Open up the mouse device.
+  * Returns the fd if successful, or negative if unsuccessful.
+@@ -80,6 +100,13 @@ Mice_Open(MOUSEDEVICE *pmd)
+ 	if (mouse_fd < 0)
+ 		return MOUSE_FAIL;
+ 
++#ifdef __VSF__
++	if (0 == __mouse_notifier.mask) {
++		__mouse_notifier.mask = 1 << VSF_INPUT_TYPE_MOUSE;
++		__mouse_notifier.on_evt = on_mouse_input;
++		vk_input_notifier_register(&__mouse_notifier);
++	}
++#endif
+ 	return mouse_fd;
+ }
+ 
+@@ -181,6 +208,9 @@ Mice_Read(MWCOORD *dx, MWCOORD *dy, MWCOORD *dz, int *bp)
+ 	*dz = 0;
+ 	*bp = button;
+ 
++#ifdef __VSF__
++	dec_event();
++#endif
+ 	return MOUSE_RELPOS;
+ }
+ 
 diff --git a/src/drivers/scr_fb.c b/src/drivers/scr_fb.c
 index 898120d..c23dc93 100644
 --- a/src/drivers/scr_fb.c
@@ -3355,10 +3587,79 @@ index 4db4b27..a3f82ac 100644
  	SERVER_UNLOCK();
  #endif /* MW_FEATURE_TIMERS */
 diff --git a/src/nanox/srvmain.c b/src/nanox/srvmain.c
-index 6cda8ae..7c27b62 100644
+index 6cda8ae..0c6aae1 100644
 --- a/src/nanox/srvmain.c
 +++ b/src/nanox/srvmain.c
-@@ -976,7 +976,7 @@ GsInitialize(void)
+@@ -5,11 +5,17 @@
+  *
+  * Main module of graphics server.
+  */
++#ifdef __VSF__
++#define __VSF_LINUX_FS_CLASS_INHERIT__
++#endif
+ #include <stdlib.h>
+ #include <signal.h>
+ #include <string.h>
+ #include <errno.h>
+ #include <sys/types.h>
++#ifdef __VSF__
++#include <sys/eventfd.h>
++#endif
+ #include "uni_std.h"
+ #include "sys_time.h"
+ 
+@@ -27,6 +33,11 @@ extern rfbScreenInfoPtr rfbScreen;
+ extern int vnc_thread_fd;	/*  fd to be included in select */
+ #endif
+ 
++#ifdef __VSF__
++static int event_fd = -1;
++static vsf_linux_fd_priv_t *event_priv = NULL;
++#endif
++
+ /*
+  * External definitions defined here.
+  */
+@@ -241,6 +252,21 @@ GsAcceptClientFd(int i)
+ 	}
+ }
+ 
++#ifdef __VSF__
++void inc_event(void)
++{
++	extern void eventfd_inc_isr(vsf_linux_fd_priv_t *eventfd_priv);
++	if (event_priv != NULL)
++		eventfd_inc_isr(event_priv);
++}
++
++void dec_event(void)
++{
++	eventfd_t dummy;
++	read(event_fd, &dummy, sizeof(eventfd_t));
++}
++#endif
++
+ /*
+  * Open a connection from a new client to the server.
+  * Returns -1 on failure.
+@@ -272,7 +298,16 @@ GrOpen(void)
+ #if NANOWM
+ 	wm_init();	/* init built-in window manager*/
+ #endif
++
++#ifdef __VSF__
++	event_fd = eventfd(0, 0);
++	if (event_fd >= 0) {
++		event_priv = vsf_linux_fd_get(event_fd)->priv;
++	}
++	return event_fd;
++#else
+     return 1;
++#endif
+ }
+ 
+ /*
+@@ -976,7 +1011,7 @@ GsInitialize(void)
  
  #if HAVE_SIGNAL
  	/* catch terminate signal to restore tty state*/
@@ -3437,8 +3738,48 @@ index 3b5f4a0..2676546 100644
      if ( (fd = _XOpenFile (filename, O_RDONLY)) == -1 )
  	return (char *)NULL;
  
+diff --git a/src/nx11/font_find.c b/src/nx11/font_find.c
+index 2bb5a6b..910f7fe 100644
+--- a/src/nx11/font_find.c
++++ b/src/nx11/font_find.c
+@@ -10,6 +10,7 @@
+ #include "uni_std.h"
+ #include "nxlib.h"
+ #include "X11/Xatom.h"
++#include "X11/Xlcint.h"
+ 
+ /* fontlist.c*/
+ extern char *FONT_DIR_LIST[]; 				/* pcf/truetype/type1 font dir list*/
+@@ -1076,7 +1077,12 @@ XFreeFontPath(char **list)
+ 	return 1;
+ }
+ 
+-/* Stub out XCreateFontSet*/
++void XFreeFontSet(Display *display, XFontSet font_set)
++{
++	free(font_set);
++	font_set = NULL;
++}
++
+ XFontSet
+ XCreateFontSet(Display *display, _Xconst char *base_font_name_list, 
+ 	char ***missing_charset_list_return, int *missing_charset_count_return,
+@@ -1084,7 +1090,12 @@ XCreateFontSet(Display *display, _Xconst char *base_font_name_list,
+ {
+ 	*missing_charset_list_return = NULL;
+ 	*missing_charset_count_return = 0;
+-	return NULL;
++
++	XFontSet font_set = malloc(sizeof(*font_set));
++	if (font_set != NULL) {
++		memset(font_set, 0, sizeof(*font_set));
++	}
++	return font_set;
+ }
+ 
+ /* Stub out XGetFontProperty*/
 diff --git a/src/nx11/stub.c b/src/nx11/stub.c
-index 17080ad..af3aeda 100644
+index 17080ad..beabf2e 100644
 --- a/src/nx11/stub.c
 +++ b/src/nx11/stub.c
 @@ -29,9 +29,9 @@ int XkbGetIndicatorState() { DPRINTF("XkbGetIndicatorState called\n"); return 0;
@@ -3454,6 +3795,15 @@ index 17080ad..af3aeda 100644
  
  /* required for gtk+ 1.2.7*/
  int XAutoRepeatOn() { DPRINTF("XAutoRepeatOn called\n"); return 0; } 
+@@ -99,7 +99,7 @@ int XESetWireToEvent() { DPRINTF("XESetWireToEvent called\n"); return 0; }
+ int XFetchName() { DPRINTF("XFetchName called\n"); return 0; }
+ int _XFlush() { DPRINTF("_XFlush called\n"); return 0; } 
+ int _XFlushGCCache() { DPRINTF("_XFlushGCCache called\n"); return 0; } 
+-void XFreeFontSet(int i, int j) { DPRINTF("XFreeFontSet called\n"); } 
++//void XFreeFontSet(int i, int j) { DPRINTF("XFreeFontSet called\n"); } 
+ int _XGetBitsPerPixel() { DPRINTF("_XGetBitsPerPixel called\n"); return 0; } 
+ //int XGetGCValues(void* d, int gc, unsigned long vm, void* vr) { DPRINTF("XGetGCVAlues called\n"); return 0; }
+ int XGetErrorDatabaseText(void* i, char* j, char* k, char* l, char* m, int n) { DPRINTF("XGetErrorDatabaseText called\n"); return 0; } 
 @@ -118,7 +118,7 @@ int XKillClient() { DPRINTF("XKillClient called\n"); return 0; }
  ////int XMaxRequestSize() { DPRINTF("XMaxRequestSize called\n"); return 0; } 
  int XmbDrawImageString() { DPRINTF("XmbDrawImageString called\n"); return 0; } 

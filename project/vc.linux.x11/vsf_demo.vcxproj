@@ -39,6 +39,11 @@
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Xutf8.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\Ximint.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\Xlibint.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\config.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\Desktop.H" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\Frame.H" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\FrameWindow.H" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\Rotated.H" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fb.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\genmem.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\hbf.h" />
@@ -893,6 +898,14 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Input.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Utils.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Wrap.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Desktop.CC" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Frame.CC" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\FrameWindow.CC" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Hotkeys.CC" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\main.CC" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Menu.CC" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Rotated.CC" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\world.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fb.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fblin1.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fblin16.c" />
@@ -907,12 +920,21 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\genfont.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\genmem.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\hbf.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\kbd_null.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\kbd_ttyscan.c">
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\kbd_null.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\mou_null.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\kbd_ttyscan.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\mou_devmice.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\mou_null.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\osdep.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\rasterops.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\scr_fb.c" />

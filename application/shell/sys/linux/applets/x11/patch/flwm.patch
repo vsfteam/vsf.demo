@@ -1,0 +1,87 @@
+ Menu.C | 12 ++++++++----
+ main.C | 14 +++++++++-----
+ 2 files changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/Menu.C b/Menu.C
+index 9320f45..acdee5d 100644
+--- a/Menu.C
++++ b/Menu.C
+@@ -229,10 +229,14 @@ exit_cb(Fl_Widget*, void*)
+ static void
+ logout_cb(Fl_Widget*, void*)
+ {
++#ifdef __VSF__
++  exit(0);
++#else
+   int pid=0;
+   if (( pid=fork()) == 0) {
+     execlp("exittc","exittc", NULL);
+   }
++#endif
+ }
+ 
+ ////////////////////////////////////////////////////////////////
+@@ -250,16 +254,16 @@ spawn_cb(Fl_Widget*, void*n)
+ {
+   char* name = (char*)n;
+   // strange code thieved from 9wm to avoid leaving zombies
+-  if (fork() == 0) {
+-    if (fork() == 0) {
++  if (vfork() == 0) {
++//    if (fork() == 0) {
+       close(ConnectionNumber(fl_display));
+       if (name == xtermname) execlp(name, name, "-ut", (void*)0);
+       else execl(name, name, (void*)0);
+       fprintf(stderr, "flwm: can't run %s, %s\n", name, strerror(errno));
+       XBell(fl_display, 70);
+       exit(1);
+-    }
+-    exit(0);
++//    }
++//    exit(0);
+   }
+   wait((int *) 0);
+ }
+diff --git a/main.C b/main.C
+index 6f4b9fd..6a62d46 100644
+--- a/main.C
++++ b/main.C
+@@ -38,9 +38,9 @@ static int initializing;
+ int DoNotWarp=0;	// Used to override mouse pointer warping if environmental variable NOWARP exists.
+ 
+ static int xerror_handler(Display* d, XErrorEvent* e) {
+-  if (initializing && (e->request_code == X_ChangeWindowAttributes) &&
+-      e->error_code == BadAccess)
+-    Fl::fatal("Another window manager is running.  You must exit it before running %s %s.", program_name, program_version);
++//  if (initializing && (e->request_code == X_ChangeWindowAttributes) &&
++//      e->error_code == BadAccess)
++//    Fl::fatal("Another window manager is running.  You must exit it before running %s %s.", program_name, program_version);
+ #ifndef DEBUG
+   if (e->error_code == BadWindow) return 0;
+   if (e->error_code == BadColor) return 0;
+@@ -283,7 +283,7 @@ static void initialize() {
+   // First create a window that can be watched to see if wm dies:
+   Atom a = XInternAtom(d, "_WIN_SUPPORTING_WM_CHECK", False);
+   XWindow win = XCreateSimpleWindow(d, fl_xid(Root), -200, -200, 5, 5, 0, 0, 0);
+-  CARD32 val = win;
++  uintptr_t val = win;
+   XChangeProperty(d, fl_xid(Root), a, XA_CARDINAL, 32, PropModeReplace, (uchar*)&val, 1);
+   XChangeProperty(d, win, a, XA_CARDINAL, 32, PropModeReplace, (uchar*)&val, 1);
+   // Next send a list of Gnome stuff we understand:
+@@ -398,7 +398,9 @@ static void color_setup(Fl_Color slot, const char* arg, ulong value) {
+   Fl::set_color(slot, value);
+ }
+ 
+-int main(int argc, char** argv) {
++extern "C" {
++
++int flwm_main(int argc, char** argv) {
+   program_name = fl_filename_name(argv[0]);
+   int i; if (Fl::args(argc, argv, i, arg) < argc) Fl::error(
+ "%s\n\n"
+@@ -433,3 +435,5 @@ int main(int argc, char** argv) {
+   initialize();
+   return Fl::run();
+ }
++
++}

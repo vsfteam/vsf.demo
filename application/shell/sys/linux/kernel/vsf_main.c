@@ -965,13 +965,22 @@ int vsf_linux_create_fhs(void)
     }
 #endif
 #if VSF_USE_INPUT == ENABLED && VSF_INPUT_CFG_REGISTRATION_MECHANISM == ENABLED && VSF_LINUX_USE_DEVFS == ENABLED
-    static vk_input_notifier_t notifier = {
+    static vk_input_notifier_t __input_notifier = {
         .mask =     (1 << VSF_INPUT_TYPE_GAMEPAD)
                 |   (1 << VSF_INPUT_TYPE_KEYBOARD)
                 |   (1 << VSF_INPUT_TYPE_TOUCHSCREEN)
                 |   (1 << VSF_INPUT_TYPE_MOUSE),
     };
-    vsf_linux_fs_bind_input("/dev/input/event0", &notifier);
+    vsf_linux_fs_bind_input("/dev/input/event0", &__input_notifier);
+    static vsf_linux_mouse_t __mouse = {
+        // TODO: fix this sensitivity if necessary for different mouse devices
+        .default_sensitivity = 1.0,
+    };
+    vsf_linux_fs_bind_mouse("/dev/input/mice", &__mouse);
+#   if VSF_LINUX_USE_TERMINAL_KEYBOARD == ENABLED
+    static vsf_linux_terminal_keyboard_t __terminal_keyboard;
+    vsf_linux_fs_bind_terminal_keyboard("/dev/tty", &__terminal_keyboard);
+#   endif
 #endif
 #if VSF_USE_AUDIO == ENABLED
     vk_audio_init(vsf_board.audio_dev);
