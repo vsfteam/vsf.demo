@@ -1,6 +1,7 @@
- Menu.C | 12 ++++++++----
- main.C | 14 +++++++++-----
- 2 files changed, 17 insertions(+), 9 deletions(-)
+ Menu.C   | 12 ++++++++----
+ config.h |  2 +-
+ main.C   | 14 +++++++++-----
+ 3 files changed, 18 insertions(+), 10 deletions(-)
 
 diff --git a/Menu.C b/Menu.C
 index 9320f45..acdee5d 100644
@@ -42,6 +43,19 @@ index 9320f45..acdee5d 100644
    }
    wait((int *) 0);
  }
+diff --git a/config.h b/config.h
+index 1a06567..425d928 100644
+--- a/config.h
++++ b/config.h
+@@ -81,7 +81,7 @@
+ #define WMX_MENU_ITEMS 1
+ 
+ // Menu item to run a new xterm (if no wmx items found):
+-#define XTERM_MENU_ITEM 1
++#define XTERM_MENU_ITEM 0
+ 
+ // Hotkeys (see Hotkeys.C for exactly what they do):
+ #define STANDARD_HOTKEYS 1 // alt+esc, alt+tab, alt+shift+tab
 diff --git a/main.C b/main.C
 index 6f4b9fd..6a62d46 100644
 --- a/main.C

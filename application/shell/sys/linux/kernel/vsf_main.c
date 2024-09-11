@@ -346,7 +346,6 @@ void vsf_linux_install_package_manager(vk_romfs_info_t *fsinfo, bool can_uninsta
 {
 }
 
-#if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && (APP_MSCBOOT_CFG_ROOT_SIZE > 0) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
 static char * __app_config_read(FILE *f)
 {
     fseek(f, 0, SEEK_END);
@@ -506,17 +505,6 @@ static int __appcfg_main(int argc, char *argv[])
     }
     return ret;
 }
-#else
-int app_config_read(const char *cfgname, char *cfgvalue, int valuelen)
-{
-    return -1;
-}
-
-int app_config_write(const char *cfgname, char *cfgvalue)
-{
-    return -1;
-}
-#endif
 
 #if VSF_USE_USB_HOST == ENABLED
 
@@ -1019,6 +1007,8 @@ int vsf_linux_create_fhs(void)
     if (mount(NULL, "root", &vk_winfs_op, 0, (const void *)&__root_fs) != 0) {
         printf("Fail to mount /root.\n");
     }
+    putenv("HOME=/root");
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/appcfg", __appcfg_main);
 #endif
 
     // /usr
