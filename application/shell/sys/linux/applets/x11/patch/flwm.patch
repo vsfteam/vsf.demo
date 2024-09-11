@@ -1,10 +1,10 @@
- Menu.C   | 12 ++++++++----
+ Menu.C   | 14 +++++++++-----
  config.h |  2 +-
  main.C   | 14 +++++++++-----
- 3 files changed, 18 insertions(+), 10 deletions(-)
+ 3 files changed, 19 insertions(+), 11 deletions(-)
 
 diff --git a/Menu.C b/Menu.C
-index 9320f45..acdee5d 100644
+index 9320f45..b80f6f7 100644
 --- a/Menu.C
 +++ b/Menu.C
 @@ -229,10 +229,14 @@ exit_cb(Fl_Widget*, void*)
@@ -43,6 +43,15 @@ index 9320f45..acdee5d 100644
    }
    wait((int *) 0);
  }
+@@ -385,7 +389,7 @@ load_wmx()
+   if (path[strlen(path)-1] != '/') strcat(path, "/");
+   strcat(path, ".wmx/");
+   struct stat st; if (stat(path, &st) < 0) return;
+-  if (st.st_mtime == wmx_time) return;
++//  if (st.st_mtime == wmx_time) return;
+   wmx_time = st.st_mtime;
+   num_wmx = 0;
+   wmx_pathlen = strlen(path);
 diff --git a/config.h b/config.h
 index 1a06567..425d928 100644
 --- a/config.h
