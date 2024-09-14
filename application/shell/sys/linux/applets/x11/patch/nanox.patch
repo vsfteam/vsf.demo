@@ -1,6 +1,5 @@
- src/demos/nanox/nxkbd.c       |   2 +-
- src/demos/nanox/nxterm.c      |  23 +-
- src/demos/nanox/world.c       |   4 +-
+ src/demos/nanox/nxterm.c      |  21 +-
+ src/demos/nanox/world.c       |   2 +-
  src/drivers/keymap_standard.h |   2 +-
  src/drivers/scr_fb.c          |   8 +
  src/include/lock.h            |   8 +
@@ -26,7 +25,7 @@
  src/nanox/nxproto.c           |   3 +-
  src/nanox/serv.h              |  31 +-
  src/nanox/srvfunc.c           |   4 +-
- src/nanox/srvmain.c           |   9 +-
+ src/nanox/srvmain.c           |   2 +-
  src/nanox/srvutil.c           |   4 +-
  src/nanox/wmaction.c          |   1 +
  src/nanox/wmclients.c         |   1 +
@@ -36,23 +35,10 @@
  src/nx11/Xrm.c                |   1 +
  src/nx11/font_find.c          |  15 +-
  src/nx11/stub.c               |  10 +-
- 38 files changed, 176 insertions(+), 3227 deletions(-)
+ 37 files changed, 169 insertions(+), 3221 deletions(-)
 
-diff --git a/src/demos/nanox/nxkbd.c b/src/demos/nanox/nxkbd.c
-index eab17a5..d348f5f 100644
---- a/src/demos/nanox/nxkbd.c
-+++ b/src/demos/nanox/nxkbd.c
-@@ -275,7 +275,7 @@ mouse_hit(int x, int y)
- }
-                                 
- int
--main(int argc, char* argv[])
-+nxkbd_main(int argc, char* argv[])
- {
-         GR_EVENT        event;          /* current event */
- 	GR_WM_PROPERTIES props;
 diff --git a/src/demos/nanox/nxterm.c b/src/demos/nanox/nxterm.c
-index 088b17e..8465d1c 100644
+index 088b17e..25c3a40 100644
 --- a/src/demos/nanox/nxterm.c
 +++ b/src/demos/nanox/nxterm.c
 @@ -68,7 +68,7 @@
@@ -87,15 +73,6 @@ index 088b17e..8465d1c 100644
  			break;
  
  		case GR_EVENT_TYPE_FDINPUT:
-@@ -1602,7 +1602,7 @@ static void sigquit(int sig)
- }
- #endif /* UNIX*/
- 
--int main(int argc, char **argv)
-+int nxterm_main(int argc, char **argv)
- {
-     short xp, yp, fsize;
-     short uid;
 @@ -1933,7 +1933,7 @@ int term_init(void)
  	char pty_name[12];
  
@@ -135,7 +112,7 @@ index 088b17e..8465d1c 100644
  		exit(1);
  	}
 diff --git a/src/demos/nanox/world.c b/src/demos/nanox/world.c
-index 996ad71..5e4f335 100644
+index 996ad71..4445cd5 100644
 --- a/src/demos/nanox/world.c
 +++ b/src/demos/nanox/world.c
 @@ -15,7 +15,7 @@
@@ -147,15 +124,6 @@ index 996ad71..5e4f335 100644
  
  #ifndef O_BINARY
  #define O_BINARY 	0
-@@ -152,7 +152,7 @@ static void setzoom(FLOAT newzoom);
- static void load(char *fn);
- 
- int
--main(int argc, char **argv)
-+world_main(int argc, char **argv)
- {
- 	GR_SCREEN_INFO	si;
- 	GR_WM_PROPERTIES props;
 diff --git a/src/drivers/keymap_standard.h b/src/drivers/keymap_standard.h
 index 3e3fc50..678cfe0 100644
 --- a/src/drivers/keymap_standard.h
@@ -3766,36 +3734,10 @@ index 4db4b27..a3f82ac 100644
  	SERVER_UNLOCK();
  #endif /* MW_FEATURE_TIMERS */
 diff --git a/src/nanox/srvmain.c b/src/nanox/srvmain.c
-index 6cda8ae..d77128d 100644
+index 6cda8ae..7c27b62 100644
 --- a/src/nanox/srvmain.c
 +++ b/src/nanox/srvmain.c
-@@ -5,6 +5,7 @@
-  *
-  * Main module of graphics server.
-  */
-+#define __VSF_LINUX_CLASS_INHERIT__
- #include <stdlib.h>
- #include <signal.h>
- #include <string.h>
-@@ -124,14 +125,14 @@ int main(int ac, char **av)
- 	return al_run_main(ac, av, real_main);
- }
- #else
--#define MAIN(ac,av)	main(ac,av)
-+#define MAIN(ac,av)	nanox_main(ac,av)
- #endif /* ALLEGRO*/
--
-+#include "nano-X.h"
- int
- MAIN(int argc, char **argv)			/* ALLEGRO=real_main(), main() otherwise*/
- {
- 	int t;
--
-+INIT_PER_THREAD_DATA();
- 	progname = argv[0];
- 
- 	t = 1;
-@@ -976,7 +977,7 @@ GsInitialize(void)
+@@ -976,7 +976,7 @@ GsInitialize(void)
  
  #if HAVE_SIGNAL
  	/* catch terminate signal to restore tty state*/
