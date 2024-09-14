@@ -877,8 +877,8 @@
     <Filter Include="application\x11\fltk\src\xutf8">
       <UniqueIdentifier>{47d48c5f-48ab-4102-b973-8eeab35df497}</UniqueIdentifier>
     </Filter>
-    <Filter Include="application\x11\flwm">
-      <UniqueIdentifier>{da0be935-d67e-4e77-b6f2-a3ebfd1efa5d}</UniqueIdentifier>
+    <Filter Include="application\x11\port\nanox">
+      <UniqueIdentifier>{bc4cf699-48be-4491-bc8c-6b56bb7b64b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2462,21 +2462,6 @@
     </ClInclude>
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\Xlibint.h">
       <Filter>application\x11\fltk\src\xutf8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\config.h">
-      <Filter>application\x11\flwm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\Desktop.H">
-      <Filter>application\x11\flwm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\Frame.H">
-      <Filter>application\x11\flwm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\FrameWindow.H">
-      <Filter>application\x11\flwm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\Rotated.H">
-      <Filter>application\x11\flwm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4778,32 +4763,20 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Wrap.c">
       <Filter>application\x11\fltk\src\xutf8</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Desktop.CC">
-      <Filter>application\x11\flwm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Frame.CC">
-      <Filter>application\x11\flwm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\FrameWindow.CC">
-      <Filter>application\x11\flwm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Hotkeys.CC">
-      <Filter>application\x11\flwm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\main.CC">
-      <Filter>application\x11\flwm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Menu.CC">
-      <Filter>application\x11\flwm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Rotated.CC">
-      <Filter>application\x11\flwm</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\mou_devmice.c">
       <Filter>application\x11\nanox\src\drivers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\world.c">
       <Filter>application\x11\nanox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxterm.c">
+      <Filter>application\x11\nanox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\test\forms.cxx">
+      <Filter>application\x11\fltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\kbd_ttyscan.c">
+      <Filter>application\x11\port\nanox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

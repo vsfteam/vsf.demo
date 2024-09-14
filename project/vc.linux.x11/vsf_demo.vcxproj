@@ -39,11 +39,6 @@
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Xutf8.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\Ximint.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\Xlibint.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\config.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\Desktop.H" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\Frame.H" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\FrameWindow.H" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\flwm\Rotated.H" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fb.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\genmem.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\hbf.h" />
@@ -700,10 +695,7 @@
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_grab.cxx" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Group.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_gtk.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_gtk.cxx" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Help_Dialog.cxx" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Help_Dialog_Dox.cxx" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Help_View.cxx" />
@@ -873,10 +865,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\screen_xywh.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\screen_xywh.cxx" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\vsnprintf.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\case.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\fl_wcwidth.c">
@@ -898,13 +887,8 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Input.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Utils.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Wrap.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Desktop.CC" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Frame.CC" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\FrameWindow.CC" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Hotkeys.CC" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\main.CC" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Menu.CC" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\flwm\Rotated.CC" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\test\forms.cxx" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxterm.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\world.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fb.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fblin1.c" />
@@ -925,10 +909,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\kbd_ttyscan.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\mou_devmice.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\mou_null.c">
@@ -997,19 +979,10 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\selfont.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\fonts\compiled\winFreeSansSerif11x13.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\fonts\compiled\X6x13.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\client.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\clientfb.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\client.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\clientfb.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxdraw.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxproto.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxproto.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxtransform.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxutil.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvclip.c" />
@@ -1024,11 +997,11 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvevent.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvfunc.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvmain.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvnet.c">
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvnet.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvnonet.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvnonet.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvutil.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\wmaction.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\wmclients.c" />
@@ -1109,10 +1082,7 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Screen.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Selection.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SelInput.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SetAttributes.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SetAttributes.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SetClip.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SetIFocus.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SetWMProps.c" />
@@ -1121,10 +1091,7 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\StName.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\StrKeysym.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\StrToText.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\stub.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\stub.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Sync.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Text.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Text16.c" />
@@ -1141,6 +1108,7 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\XKB.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\XMisc.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Xrm.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\kbd_ttyscan.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\hwtest_main.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_httpd.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_mdns.c" />
@@ -1606,7 +1574,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;NONETWORK=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";FL_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";FL_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\application\component\ui\sgl\platform\vsf;$(ProjectDir)..\..\application\component\ui\sgl\raw\source;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
@@ -1635,7 +1603,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;NONETWORK=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";FL_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";FL_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\application\component\ui\sgl\platform\vsf;$(ProjectDir)..\..\application\component\ui\sgl\raw\source;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
