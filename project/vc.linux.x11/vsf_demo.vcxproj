@@ -888,6 +888,11 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Utils.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Wrap.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\test\forms.cxx" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxkbd.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=nxkdb_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main=nxkdb_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxkbd_srvconn.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxterm.c">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=nxterm_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main=nxterm_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1118,6 +1123,10 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\XMisc.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Xrm.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\kbd_ttyscan.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyctrl.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keynorm.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keynum.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyshft.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\hwtest_main.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_httpd.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_mdns.c" />

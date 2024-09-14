@@ -936,6 +936,13 @@ static int __nxterm_main(int argc, char **argv)
     return nxterm_main(argc, argv);
 }
 
+extern int nxkdb_main(int argc, char **argv);
+static int __nxkdb_main(int argc, char **argv)
+{
+    INIT_PER_THREAD_DATA();
+    return nxkdb_main(argc, argv);
+}
+
 extern int world_main(int argc, char **argv);
 static int __world_main(int argc, char **argv)
 {
@@ -1123,6 +1130,7 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nanox_srv", __nanox_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/world", __world_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxterm", __nxterm_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxkdb", __nxkdb_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fltk", __fltk_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/startx", __startx_main);
 

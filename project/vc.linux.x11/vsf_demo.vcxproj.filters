@@ -880,6 +880,9 @@
     <Filter Include="application\x11\port\nanox">
       <UniqueIdentifier>{bc4cf699-48be-4491-bc8c-6b56bb7b64b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="application\x11\nanox\nxkbd">
+      <UniqueIdentifier>{eb517915-92d7-4c79-bee5-7d47b55bdc7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -4777,6 +4780,24 @@
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\kbd_ttyscan.c">
       <Filter>application\x11\port\nanox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxkbd.c">
+      <Filter>application\x11\nanox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxkbd_srvconn.c">
+      <Filter>application\x11\nanox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyctrl.c">
+      <Filter>application\x11\nanox\nxkbd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keynorm.c">
+      <Filter>application\x11\nanox\nxkbd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keynum.c">
+      <Filter>application\x11\nanox\nxkbd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyshft.c">
+      <Filter>application\x11\nanox\nxkbd</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
