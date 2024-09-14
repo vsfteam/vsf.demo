@@ -88,6 +88,10 @@
 #define __VSF_DISP_CLASS_INHERIT__
 // for vsf_linux_fs_bind_xxx
 #define __VSF_LINUX_FS_CLASS_INHERIT__
+#if VSF_LINUX_USE_X11 == ENABLED
+// for pls
+#   define __VSF_LINUX_CLASS_INHERIT__
+#endif
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -914,6 +918,44 @@ bool app_shell_is_orig_busybox(void)
     return !__install_embedded_busybox;
 }
 
+#if VSF_LINUX_USE_X11 == ENABLED
+
+#include <nano-X.h>
+
+extern int fltk_main(int argc, char *argv[]);
+static int __fltk_main (int argc, char *argv[])
+{
+    INIT_PER_THREAD_DATA();
+    return fltk_main(argc, argv);
+}
+
+extern int nxterm_main(int argc, char **argv);
+static int __nxterm_main(int argc, char **argv)
+{
+    INIT_PER_THREAD_DATA();
+    return nxterm_main(argc, argv);
+}
+
+extern int world_main(int argc, char **argv);
+static int __world_main(int argc, char **argv)
+{
+    INIT_PER_THREAD_DATA();
+    return world_main(argc, argv);
+}
+
+extern int nanox_main(int argc, char **argv);
+static int __nanox_main(int argc, char **argv)
+{
+    INIT_PER_THREAD_DATA();
+    return nanox_main(argc, argv);
+}
+
+static int __startx_main(int argc, char **argv)
+{
+    return execl("/bin/sh", "sh", "/root/.xinitrc", NULL);
+}
+#endif
+
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
@@ -1074,6 +1116,17 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/reset", __reset_main);
 #if VSF_USE_TCPIP == ENABLED
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/webterminal", webterminal_main);
+#endif
+
+#if VSF_LINUX_USE_X11 == ENABLED
+    extern int nanox_main(int argc, char** argv);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nanox_srv", __nanox_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/world", __world_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxterm", __nxterm_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fltk", __fltk_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/startx", __startx_main);
+
+    system("nanox_srv &");
 #endif
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
