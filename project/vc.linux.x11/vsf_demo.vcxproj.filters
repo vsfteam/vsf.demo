@@ -2424,6 +2424,9 @@
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\port\config.h">
       <Filter>application\x11\port</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\port\nanox_nx11_vsf.h">
+      <Filter>application\x11\port</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -4105,6 +4108,12 @@
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyshft.c">
       <Filter>application\x11\nanox\nxkbd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox_nx11_vsf.c">
+      <Filter>application\x11\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\StrKeysym.c">
+      <Filter>application\x11\port\nanox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

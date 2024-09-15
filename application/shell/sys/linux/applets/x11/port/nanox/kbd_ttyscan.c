@@ -47,17 +47,40 @@ static MWKEYMOD 	key_modstate;
 
 
 /* Pick the right scancode conversion table */
-#if KBD_ZAURUS
-#include "../../nanox/src/drivers/keymap_zaurus.h"
-#else
-#include "../../nanox/src/drivers/keymap_standard.h"
-#endif
+const MWKEY kbd_keymap[128] = {
+MWKEY_UNKNOWN, MWKEY_ESCAPE, '1', '2', '3',				/* 0*/
+'4', '5', '6', '7', '8',						/* 5*/
+'9', '0', '-', '=', MWKEY_BACKSPACE,					/* 10*/
+MWKEY_TAB, 'q', 'w', 'e', 'r',						/* 15*/
+'t', 'y', 'u', 'i', 'o',						/* 20*/
+'p', '[', ']', MWKEY_ENTER, MWKEY_LCTRL,				/* 25*/
+'a', 's', 'd', 'f', 'g',						/* 30*/
+'h', 'j', 'k', 'l', ';',						/* 35*/
+'\'', '`', MWKEY_LSHIFT, '\\', 'z',					/* 40*/
+'x', 'c', 'v', 'b', 'n',						/* 45*/
+'m', ',', '.', '/', MWKEY_RSHIFT,					/* 50*/
+MWKEY_KP_MULTIPLY, MWKEY_LALT, ' ', MWKEY_CAPSLOCK, MWKEY_F1, 		/* 55*/
+MWKEY_F2, MWKEY_F3, MWKEY_F4, MWKEY_F5, MWKEY_F6, 			/* 60*/
+MWKEY_F7, MWKEY_F8, MWKEY_F9, MWKEY_F10, MWKEY_NUMLOCK, 		/* 65*/
+MWKEY_SCROLLOCK, MWKEY_KP7, MWKEY_KP8, MWKEY_KP9, MWKEY_KP_MINUS,	/* 70*/
+MWKEY_KP4, MWKEY_KP5, MWKEY_KP6, MWKEY_KP_PLUS, MWKEY_KP1, 		/* 75*/
+MWKEY_KP2, MWKEY_KP3, MWKEY_KP0, MWKEY_KP_PERIOD, MWKEY_UNKNOWN, 	/* 80*/
+MWKEY_UNKNOWN, MWKEY_UNKNOWN, MWKEY_F11, MWKEY_F12, MWKEY_UNKNOWN,	/* 85*/
+MWKEY_UNKNOWN,MWKEY_UNKNOWN,MWKEY_UNKNOWN,MWKEY_UNKNOWN,MWKEY_UNKNOWN,	/* 90*/
+MWKEY_UNKNOWN, MWKEY_KP_ENTER, MWKEY_RCTRL, MWKEY_KP_DIVIDE,MWKEY_PRINT,/* 95*/
+MWKEY_RALT, MWKEY_BREAK, MWKEY_HOME, MWKEY_UP, MWKEY_PAGEUP,		/* 100*/
+MWKEY_LEFT, MWKEY_RIGHT, MWKEY_END, MWKEY_DOWN, MWKEY_PAGEDOWN,		/* 105*/
+MWKEY_INSERT, MWKEY_DELETE, MWKEY_UNKNOWN,MWKEY_UNKNOWN,MWKEY_UNKNOWN,	/* 110*/
+MWKEY_UNKNOWN,MWKEY_UNKNOWN,MWKEY_UNKNOWN,MWKEY_UNKNOWN,MWKEY_PAUSE,	/* 115*/
+MWKEY_UNKNOWN,MWKEY_UNKNOWN,MWKEY_UNKNOWN,MWKEY_UNKNOWN,MWKEY_UNKNOWN,	/* 120*/
+MWKEY_LMETA, MWKEY_RMETA, MWKEY_MENU					/* 125*/
+};
 
 static MWBOOL	UpdateKeyState(int pressed, MWKEY mwkey);
 #ifdef KDSETLED
 static void	UpdateLEDState(MWKEYMOD modstate);
 #endif
-static MWKEY	TranslateScancode(int scancode, MWKEYMOD modstate);
+MWKEY	TranslateScancode(int scancode, MWKEYMOD modstate);
 static MWBOOL	switch_vt(unsigned short which);
 
 /*
@@ -191,7 +214,7 @@ TTY_Read(MWKEY *kbuf, MWKEYMOD *modifiers, MWSCANCODE *pscancode)
 	if (cc > 0) {
 		pressed = (*buf & 0x80) ? RELEASED: PRESSED;
 		scancode = *buf & 0x7f;
-		mwkey = keymap[scancode];
+		mwkey = kbd_keymap[scancode];
 
 		/**if(pressed) {
 			printf("scan %02x really: %08x\n", *buf&0x7F, *buf);
@@ -449,7 +472,7 @@ static unsigned short get_oskeymap(int map, int scancode)
 }
 
 /* translate a scancode and modifier state to an MWKEY*/
-static MWKEY
+MWKEY
 TranslateScancode(int scancode, MWKEYMOD modstate)
 {
 	unsigned short	mwkey = 0, mappedkey;
@@ -476,7 +499,7 @@ TranslateScancode(int scancode, MWKEYMOD modstate)
 	}
 	if (KTYP(mappedkey) == KT_PAD) {
 		if (modstate & MWKMOD_NUM) {
-			switch (keymap[scancode]) {
+			switch (kbd_keymap[scancode]) {
 			case MWKEY_KP0:
 			case MWKEY_KP1:
 			case MWKEY_KP2:
@@ -487,7 +510,7 @@ TranslateScancode(int scancode, MWKEYMOD modstate)
 			case MWKEY_KP7:
 			case MWKEY_KP8:
 			case MWKEY_KP9:
-				mwkey = keymap[scancode] - MWKEY_KP0 + '0';
+				mwkey = kbd_keymap[scancode] - MWKEY_KP0 + '0';
 				break;
 			case MWKEY_KP_PERIOD:
 				mwkey = '.';
@@ -516,7 +539,7 @@ TranslateScancode(int scancode, MWKEYMOD modstate)
 		mwkey = KVAL(mappedkey);
 	
 	if (!mwkey)
-		mwkey = keymap[scancode];
+		mwkey = kbd_keymap[scancode];
 
 	/* perform additional translations*/
 	switch (mwkey) {

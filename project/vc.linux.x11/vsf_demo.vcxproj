@@ -33,6 +33,7 @@
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\serv.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\keysymstr.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\port\config.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\port\nanox_nx11_vsf.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\kernel\vsf_usr_cfg.h" />
     <ClInclude Include="..\..\board\win\vsf_board.h" />
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h" />
@@ -752,7 +753,10 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SetWMProto.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Shape.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\StName.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\StrKeysym.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\StrKeysym.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\StrToText.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\stub.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Sync.c" />
@@ -776,6 +780,8 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keynorm.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keynum.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyshft.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\StrKeysym.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox_nx11_vsf.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\hwtest_main.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_httpd.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_mdns.c" />
@@ -1251,7 +1257,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
@@ -1280,7 +1286,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>

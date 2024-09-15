@@ -1,10 +1,9 @@
  src/demos/nanox/nxterm.c      |  21 +-
  src/demos/nanox/world.c       |   2 +-
- src/drivers/keymap_standard.h |   2 +-
  src/drivers/scr_fb.c          |   8 +
  src/include/lock.h            |   8 +
  src/include/mwconfig.h        |   2 +
- src/include/nano-X.h          |  58 ++-
+ src/include/nano-X.h          |  59 ++-
  src/include/sys_time.h        |   3 +
  src/include/uni_std.h         |   4 +
  src/include/winctl.h          | 449 ----------------------
@@ -20,9 +19,9 @@
  src/include/wintern.h         | 113 ------
  src/include/wintools.h        |  31 --
  src/include/winuser.h         | 854 ------------------------------------------
- src/nanox/client.c            |  13 +-
+ src/nanox/client.c            |  12 +-
  src/nanox/nxdraw.c            |   1 +
- src/nanox/nxproto.c           |   3 +-
+ src/nanox/nxproto.c           |   2 +-
  src/nanox/serv.h              |  31 +-
  src/nanox/srvfunc.c           |   4 +-
  src/nanox/srvmain.c           |   2 +-
@@ -30,12 +29,28 @@
  src/nanox/wmaction.c          |   1 +
  src/nanox/wmclients.c         |   1 +
  src/nanox/wmevents.c          |   1 +
+ src/nx11/Atom.c               |   7 +
+ src/nx11/ChProperty.c         |   8 +
+ src/nx11/Colormap.c           |   9 +
+ src/nx11/Context.c            |   7 +
+ src/nx11/CrGC.c               |   2 +-
+ src/nx11/ErrorHandler.c       |   9 +
+ src/nx11/Extension.c          |  13 +
+ src/nx11/FontCursor.c         |  10 +
+ src/nx11/Image.c              |   2 +-
+ src/nx11/NextEvent.c          |  18 +
+ src/nx11/OpenDis.c            |  19 +-
+ src/nx11/Quarks.c             |  26 +-
+ src/nx11/SelInput.c           |   2 +-
+ src/nx11/Selection.c          |   6 +
  src/nx11/SetAttributes.c      |   8 +-
  src/nx11/X11-local/X11/Xlib.h |   4 +-
- src/nx11/Xrm.c                |   1 +
- src/nx11/font_find.c          |  15 +-
+ src/nx11/Xrm.c                |  26 +-
+ src/nx11/font_find.c          |  36 +-
+ src/nx11/fontlist.c           |   2 +-
+ src/nx11/nxlib.h              |   4 +
  src/nx11/stub.c               |  10 +-
- 37 files changed, 169 insertions(+), 3221 deletions(-)
+ 52 files changed, 346 insertions(+), 3231 deletions(-)
 
 diff --git a/src/demos/nanox/nxterm.c b/src/demos/nanox/nxterm.c
 index 088b17e..25c3a40 100644
@@ -124,19 +139,6 @@ index 996ad71..4445cd5 100644
  
  #ifndef O_BINARY
  #define O_BINARY 	0
-diff --git a/src/drivers/keymap_standard.h b/src/drivers/keymap_standard.h
-index 3e3fc50..678cfe0 100644
---- a/src/drivers/keymap_standard.h
-+++ b/src/drivers/keymap_standard.h
-@@ -6,7 +6,7 @@ MWKEY_UNKNOWN, MWKEY_ESCAPE, '1', '2', '3',				/* 0*/
- '9', '0', '-', '=', MWKEY_BACKSPACE,					/* 10*/
- MWKEY_TAB, 'q', 'w', 'e', 'r',						/* 15*/
- 't', 'y', 'u', 'i', 'o',						/* 20*/
--'o', '[', ']', MWKEY_ENTER, MWKEY_LCTRL,				/* 25*/
-+'p', '[', ']', MWKEY_ENTER, MWKEY_LCTRL,				/* 25*/
- 'a', 's', 'd', 'f', 'g',						/* 30*/
- 'h', 'j', 'k', 'l', ';',						/* 35*/
- '\'', '`', MWKEY_LSHIFT, '\\', 'z',					/* 40*/
 diff --git a/src/drivers/scr_fb.c b/src/drivers/scr_fb.c
 index 898120d..c23dc93 100644
 --- a/src/drivers/scr_fb.c
@@ -198,10 +200,10 @@ index 535c3d5..ea737e1 100644
  #if _MSC_VER == 1500
  #define WIN64_PORT		0			/* =1 for compiling on 64-bit Windows*/
 diff --git a/src/include/nano-X.h b/src/include/nano-X.h
-index a2ee28b..048f70b 100644
+index a2ee28b..b4c5949 100644
 --- a/src/include/nano-X.h
 +++ b/src/include/nano-X.h
-@@ -1036,7 +1036,63 @@ typedef struct {
+@@ -1036,7 +1036,64 @@ typedef struct {
    #define main	rtems_main
  #endif
  
@@ -235,8 +237,11 @@ index a2ee28b..048f70b 100644
 +            VSF_LINUX_ASSERT(vsf_nanox_client_data_index >= 0);                 \
 +        }                                                                       \
 +        vsf_linux_localstorage_t *pls = vsf_linux_pls_get(vsf_nanox_client_data_index);\
++		VSF_LINUX_ASSERT(pls != NULL);											\
 +        if (NULL == pls->data) {                                                \
 +            vsf_nanox_client_data *dptr = malloc(sizeof(vsf_nanox_client_data));\
++            VSF_LINUX_ASSERT(dptr != NULL);                                     \
++			pls->data = dptr;                                                   \
 +            dptr->_nxSocket = -1;                                               \
 +            dptr->_nxGlobalLock = 0;                                            \
 +            dptr->_storedevent = 0;                                             \
@@ -247,8 +252,6 @@ index a2ee28b..048f70b 100644
 +            dptr->_reqbuf.bufmax = NULL;                                        \
 +            dptr->_reqbuf.buffer = NULL;                                        \
 +            dptr->_evlist = NULL;                                               \
-+            VSF_LINUX_ASSERT(pls != NULL);                                      \
-+            pls->data = dptr;                                                   \
 +        }                                                                       \
 +    }
 +
@@ -3557,18 +3560,10 @@ index 32f9677..0000000
 -/* misc APIs*/
 -DWORD WINAPI	GetTickCount(VOID);
 diff --git a/src/nanox/client.c b/src/nanox/client.c
-index 6e7aaa1..b05669e 100644
+index 6e7aaa1..4dd0d1a 100644
 --- a/src/nanox/client.c
 +++ b/src/nanox/client.c
-@@ -18,6 +18,7 @@
-  * documentation, just skip that step and we will do it for you.
-  */
- 
-+#define __VSF_LINUX_CLASS_INHERIT__
- #include <stdlib.h>
- #include "uni_std.h"
- #include "sys_time.h"
-@@ -77,7 +78,7 @@
+@@ -77,7 +77,7 @@
   */
  #define SHM_BLOCK_SIZE	4096
  
@@ -3577,7 +3572,7 @@ index 6e7aaa1..b05669e 100644
  /* exported global data */
  int 	   nxSocket = -1;	/* The network socket descriptor */
  LOCK_DECLARE(nxGlobalLock);	/* global lock for threads safety*/
-@@ -106,6 +107,14 @@ static EVENT_LIST *	evlist;
+@@ -106,6 +106,14 @@ static EVENT_LIST *	evlist;
   */
  static GR_FNCALLBACKEVENT ErrorFunc = GrDefaultErrorHandler;
  
@@ -3592,7 +3587,7 @@ index 6e7aaa1..b05669e 100644
  #else /* __ECOS*/
  /*
   * eCos uses a thread data pointer to store all statics in...
-@@ -932,6 +941,8 @@ GrGetNextEvent(GR_EVENT *ep)
+@@ -932,6 +940,8 @@ GrGetNextEvent(GR_EVENT *ep)
  void
  GrGetNextEventTimeout(GR_EVENT * ep, GR_TIMEOUT timeout)
  {
@@ -3614,18 +3609,10 @@ index ab9ccd0..8b35153 100644
  #include "nanowm.h"
  #include "nxdraw.h"
 diff --git a/src/nanox/nxproto.c b/src/nanox/nxproto.c
-index b796ee9..a42a914 100644
+index b796ee9..d952f3a 100644
 --- a/src/nanox/nxproto.c
 +++ b/src/nanox/nxproto.c
-@@ -3,6 +3,7 @@
-  *
-  * Nano-X Core Protocol Client Request Handling Routines
-  */ 
-+#define __VSF_LINUX_CLASS_INHERIT__
- #include "uni_std.h"
- #include <stdlib.h>
- #include <assert.h>
-@@ -13,7 +14,7 @@
+@@ -13,7 +13,7 @@
  
  #define SZREQBUF	2048	/* initial request buffer size*/
  
@@ -3799,6 +3786,608 @@ index 7cb683f..de7aa66 100644
  #include "nano-X.h"
  #include "nanowm.h"
  
+diff --git a/src/nx11/Atom.c b/src/nx11/Atom.c
+index 2619b86..ce812fc 100644
+--- a/src/nx11/Atom.c
++++ b/src/nx11/Atom.c
+@@ -3,6 +3,7 @@
+ #include "X11/Xatom.h"
+ #include "nxlib.h"
+ 
++#ifndef __VSF__
+ #define SZHASHTABLE	64
+ 
+ struct hash_t {
+@@ -13,6 +14,10 @@ struct hash_t {
+ 
+ static struct hash_t *hash_list[SZHASHTABLE];
+ static unsigned long atom_id = XA_LAST_PREDEFINED + 32;
++#else
++#define hash_list	(vsf_nanox_nx11_ctx->atom._hash_list)
++#define atom_id		(vsf_nanox_nx11_ctx->atom._atom_id)
++#endif
+ 
+ static unsigned char
+ hash_str(_Xconst char *name)
+@@ -29,6 +34,7 @@ hash_str(_Xconst char *name)
+ Atom
+ XInternAtom(Display * display, _Xconst char *atom_name, Bool only_if_exists)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	unsigned char hash = hash_str(atom_name);
+ 	struct hash_t *val;
+ 
+@@ -77,6 +83,7 @@ XInternAtoms(Display * display, char **names, int count,
+ char *
+ XGetAtomName(Display * display, Atom atom)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	int i;
+ 
+ 	for (i = 0; i < SZHASHTABLE; i++) {
+diff --git a/src/nx11/ChProperty.c b/src/nx11/ChProperty.c
+index 12e6cdf..40d7224 100644
+--- a/src/nx11/ChProperty.c
++++ b/src/nx11/ChProperty.c
+@@ -3,6 +3,7 @@
+ #include "nxlib.h"
+ #include "X11/Xatom.h"
+ 
++#ifndef __VSF__
+ #define SZHASHTABLE	32
+ struct window_props {
+ 	Atom property;
+@@ -20,12 +21,16 @@ struct windows {
+ 	struct windows *next;
+ };
+ static struct windows *window_list[SZHASHTABLE];
++#else
++#define window_list	(vsf_nanox_nx11_ctx->chproperty._window_list)
++#endif
+ 
+ int
+ XChangeProperty(Display * display, Window w, Atom property,
+ 		Atom type, int format, int mode,
+ 		_Xconst unsigned char *data, int nelements)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	struct windows *win = NULL;
+ 	struct window_props *prop = NULL;
+ 	Window prop_window;
+@@ -189,6 +194,7 @@ _nxDelPropData(struct window_props *prop)
+ int
+ XDeleteProperty(Display *display, Window w, Atom property)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	struct windows *win;
+ 	struct window_props *prop;
+ 	int hash = w % SZHASHTABLE;
+@@ -217,6 +223,7 @@ XDeleteProperty(Display *display, Window w, Atom property)
+ int
+ _nxDelAllProperty(Window w)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	struct windows *win;
+ 	struct window_props *prop;
+ 	int hash = w % SZHASHTABLE;
+@@ -243,6 +250,7 @@ XGetWindowProperty(Display * dpy, Window w, Atom property, long offset,
+ 	long len, Bool bDel, Atom req, Atom * type, int *format,
+ 	unsigned long *nitems, unsigned long *bytes, unsigned char **data)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	struct windows *win;
+ 	struct window_props *prop;
+ 	int hash = w % SZHASHTABLE;
+diff --git a/src/nx11/Colormap.c b/src/nx11/Colormap.c
+index 4056d86..d52abf7 100644
+--- a/src/nx11/Colormap.c
++++ b/src/nx11/Colormap.c
+@@ -5,13 +5,20 @@
+  * Local colormap functions to emulate X11 colormap scheme
+  */
+ 
++#ifndef __VSF__
+ static nxColormap *colormap_hash[32];
+ static int colormap_id = 1;
+ static Colormap _defaultColormap = 0;
++#else
++#define colormap_hash		(vsf_nanox_nx11_ctx->colormap._colormap_hash)
++#define colormap_id			(vsf_nanox_nx11_ctx->colormap._colormap_id)
++#define _defaultColormap	(vsf_nanox_nx11_ctx->colormap.__defaultColormap)
++#endif
+ 
+ static Colormap
+ createColormap(int color_count)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	int val = (colormap_id - 1) % 32;
+ 	nxColormap *local = (nxColormap *)Xcalloc(sizeof(nxColormap), 1);
+ 
+@@ -72,6 +79,7 @@ destroyColormap(Colormap id)
+ nxColormap *
+ _nxFindColormap(Colormap id)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	int val = (id - 1) % 32;
+ 	nxColormap *ptr = colormap_hash[val];
+ 
+@@ -89,6 +97,7 @@ _nxFindColormap(Colormap id)
+ Colormap
+ _nxDefaultColormap(Display *dpy)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	XColor t;
+ 	Colormap cm;
+ 
+diff --git a/src/nx11/Context.c b/src/nx11/Context.c
+index 370b1e1..623d50c 100644
+--- a/src/nx11/Context.c
++++ b/src/nx11/Context.c
+@@ -108,6 +108,7 @@ int main(int argc, char** argv)
+ #include "nxlib.h"
+ #include "X11/Xutil.h"
+ 
++#ifndef __VSF__
+ typedef struct _XCList {
+ 	Display *display;
+ 	XID rid;
+@@ -119,9 +120,13 @@ typedef struct _XCList {
+ } XCList;
+ 
+ XCList xcl;
++#else
++#define xcl			(vsf_nanox_nx11_ctx->context._xcl)
++#endif
+ 
+ int XFindContext(Display *display, XID rid, XContext context, XPointer *data)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	DPRINTF("XFindContext called...\n");
+ 	XCList *p = &xcl;
+ 	while (p->next) {
+@@ -140,6 +145,7 @@ int XSaveContext(Display *display, register XID rid, register XContext context,
+ int XSaveContext(Display *display, XID rid, XContext context, XPointer data)
+ #endif
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	DPRINTF("XSaveContext called...\n");
+ 	XCList *p = &xcl;
+ 	while (p->next) {
+@@ -164,6 +170,7 @@ int XSaveContext(Display *display, XID rid, XContext context, XPointer data)
+ //#endif
+ int XDeleteContext(Display *display, XID rid, XContext context)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	DPRINTF("XDeleteContext called...\n");
+ 	XCList *p = &xcl;
+ 	while (p->next) {
+diff --git a/src/nx11/CrGC.c b/src/nx11/CrGC.c
+index d3e463c..3317e9f 100644
+--- a/src/nx11/CrGC.c
++++ b/src/nx11/CrGC.c
+@@ -16,7 +16,7 @@
+  */
+ 
+ /* FIXME if these differ from NX defaults, must set at create time*/
+-static XGCValues initial_GC = {
++static const XGCValues initial_GC = {
+ 	GXcopy,			/* function */
+ 	AllPlanes,		/* plane_mask */
+ 	0L,			/* foreground */
+diff --git a/src/nx11/ErrorHandler.c b/src/nx11/ErrorHandler.c
+index 21b3a62..6f1e8b2 100644
+--- a/src/nx11/ErrorHandler.c
++++ b/src/nx11/ErrorHandler.c
+@@ -1,11 +1,17 @@
+ #include "nxlib.h"
+ 
++#ifndef __VSF__
+ static XIOErrorHandler _ioerrorfunc = 0;
+ static XErrorHandler _errorfunc = 0;
++#else
++#define _ioerrorfunc	(vsf_nanox_nx11_ctx->errorhandler.__ioerrorfunc)
++#define _errorfunc		(vsf_nanox_nx11_ctx->errorhandler.__errorfunc)
++#endif
+ 
+ void
+ _nxIOErrorHandler(GR_EVENT * event)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	/* Fixme:  Determine and send the display value here */
+ 	DPRINTF("XIOErrorHandler called\n");
+ 	if (_ioerrorfunc)
+@@ -17,6 +23,7 @@ _nxIOErrorHandler(GR_EVENT * event)
+ XIOErrorHandler
+ XSetIOErrorHandler(XIOErrorHandler handle)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	XIOErrorHandler prev = _ioerrorfunc;
+ 
+ 	GrSetErrorHandler(_nxIOErrorHandler);
+@@ -27,6 +34,7 @@ XSetIOErrorHandler(XIOErrorHandler handle)
+ void
+ _nxErrorHandler(GR_EVENT * event)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	/* Fixme:  Determine and send the display value here */
+ 	DPRINTF("XErrorHandler called\n");
+ 	if (_errorfunc)
+@@ -38,6 +46,7 @@ _nxErrorHandler(GR_EVENT * event)
+ XErrorHandler
+ XSetErrorHandler(XErrorHandler handle)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	XErrorHandler prev = _errorfunc;
+ 
+ 	GrSetErrorHandler(_nxErrorHandler);
+diff --git a/src/nx11/Extension.c b/src/nx11/Extension.c
+index e23b30d..f02c90e 100644
+--- a/src/nx11/Extension.c
++++ b/src/nx11/Extension.c
+@@ -7,6 +7,7 @@
+ #include <stdlib.h>
+ 
+ // from /usr/include/X11/extensions/shapestr.h
++#ifndef __VSF__
+ #define SHAPENAME "SHAPE"
+ #define SHAPE_MAJOR_VERSION	1	/* current version numbers */
+ #define SHAPE_MINOR_VERSION	1
+@@ -21,10 +22,14 @@ EXT_Manage exmanage[] = {
+ 	{ SHAPENAME, SHAPE_MAJOR_VERSION, LASTEvent+1, 0, },
+ 	{ NULL, 0, 0, 0 }
+ };
++#else
++#define exmanage	(vsf_nanox_nx11_ctx->extension._exmanage)
++#endif
+ 
+ Bool XQueryExtension(Display *dpy, _Xconst char *name,
+ 	int *major_opcode, int *first_event, int *first_error)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	EXT_Manage *p = exmanage;
+ 	DPRINTF("XQueryExtension called [%s]\n", name);
+ 
+@@ -49,9 +54,14 @@ XExtCodes *XInitExtension(Display *dpy, _Xconst char *name)
+ 	return 0;
+ }
+ 
++#ifndef __VSF__
+ static int ext = 0;
++#else
++#define ext			(vsf_nanox_nx11_ctx->extension._ext)
++#endif
+ XExtCodes *XAddExtension(Display *dpy)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	XExtCodes *codes = calloc(1, sizeof(XExtCodes));
+ 	if (codes) {
+ 		//codes->major_opcode = ext;
+@@ -62,6 +72,9 @@ XExtCodes *XAddExtension(Display *dpy)
+ 	/*DPRINTF("XAddExtension called\n");
+ 	return 0;*/
+ }
++#ifdef __VSF__
++#undef ext
++#endif
+ 
+ int (*XESetCloseDisplay(Display *dpy, int extension, int (*proc)()))()
+ {
+diff --git a/src/nx11/FontCursor.c b/src/nx11/FontCursor.c
+index 8d63f20..5d4b876 100644
+--- a/src/nx11/FontCursor.c
++++ b/src/nx11/FontCursor.c
+@@ -5,8 +5,14 @@
+ Cursor
+ XCreateFontCursor(Display * display, unsigned int shape)
+ {
++#ifndef __VSF__
+ 	static XColor fg = { 0, 0, 0, 0};	/* black*/
+ 	static XColor bg = { 0, 65535, 65535, 65535};	/* white*/
++#else
++#define fg		(vsf_nanox_nx11_ctx->fontcursor.XCreateFontCursor._fg)
++#define bg		(vsf_nanox_nx11_ctx->fontcursor.XCreateFontCursor._bg)
++	NANOX_NX11_VSF_GET_CONTEXT();
++#endif
+ 
+ 	if (_nxCursorFont == None) {
+ 		_nxCursorFont = XLoadFont(display, X_CURSOR_FONT);
+@@ -16,6 +22,10 @@ XCreateFontCursor(Display * display, unsigned int shape)
+ 
+ 	return XCreateGlyphCursor(display, _nxCursorFont, _nxCursorFont,
+ 			shape, shape+1, &fg, &bg);
++#ifdef __VSF__
++#undef fg
++#undef bg
++#endif
+ }
+ 
+ /* FIXME: must play with _Xconst because old Xlib.h proto differs*/
+diff --git a/src/nx11/Image.c b/src/nx11/Image.c
+index 571be13..2c930c6 100644
+--- a/src/nx11/Image.c
++++ b/src/nx11/Image.c
+@@ -32,7 +32,7 @@ get_pixel1(XImage *image, int x, int y)
+ static int
+ put_pixel1(XImage *image, int x, int y, unsigned long pixel)
+ {
+-	static unsigned char mask[] =
++	static const unsigned char mask[] =
+ 		{ 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
+ 
+ 	if (pixel)
+diff --git a/src/nx11/NextEvent.c b/src/nx11/NextEvent.c
+index d7b909f..5e005ca 100644
+--- a/src/nx11/NextEvent.c
++++ b/src/nx11/NextEvent.c
+@@ -71,7 +71,12 @@ translateXEventType(int xtype)
+ static void
+ translateNXEvent(Display *dpy, GR_EVENT * ev, XEvent * event)
+ {
++#ifndef __VSF__
+ 	static GR_TIMEOUT lasttime = 0;
++#else
++	NANOX_NX11_VSF_GET_CONTEXT();
++#define lasttime	(vsf_nanox_nx11_ctx->nextevent.translateNXEvent._lasttime)
++#endif
+ 
+ 	memset(event, 0, sizeof(*event)); /* for unhandled events...*/
+ 	event->xany.display = dpy;
+@@ -355,13 +360,23 @@ translateNXEvent(Display *dpy, GR_EVENT * ev, XEvent * event)
+ 	default:
+ 		DPRINTF("translateNXEvent: UNHANDLED EVENT %d\n", ev->type);
+ 	}
++#ifdef __VSF__
++#undef lasttime
++#endif
+ }
+ 
++#ifndef __VSF__
+ static XEvent saved_event;
+ static int saved = 0;
++#else
++#define saved_event	(vsf_nanox_nx11_ctx->nextevent._saved_event)
++#define saved		(vsf_nanox_nx11_ctx->nextevent._saved)
++#endif
++
+ int
+ XPutBackEvent(Display *display, XEvent *event)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	if (saved) {
+ 		DPRINTF("XPutBackEvent: lost event\n");
+ 		return 0;
+@@ -374,6 +389,7 @@ XPutBackEvent(Display *display, XEvent *event)
+ int
+ XEventsQueued(Display * display, int mode)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	int ret;
+ 	GR_EVENT temp;
+ 
+@@ -427,6 +443,7 @@ XQLength(Display * dpy)
+ int
+ XNextEvent(Display * dpy, XEvent * event)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	GR_EVENT ev;
+ 
+ 	FUNC_ENTER;
+@@ -444,6 +461,7 @@ XNextEvent(Display * dpy, XEvent * event)
+ int
+ XPeekEvent(Display * dpy, XEvent * event)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	GR_EVENT ev;
+ 
+ 	FUNC_ENTER;
+diff --git a/src/nx11/OpenDis.c b/src/nx11/OpenDis.c
+index 0d595cd..6f47c06 100644
+--- a/src/nx11/OpenDis.c
++++ b/src/nx11/OpenDis.c
+@@ -1,6 +1,7 @@
+ #include "nxlib.h"
+ #include <stdlib.h>
+ 
++#ifndef __VSF__
+ Font _nxCursorFont = None;	/* global because no dpy->cursor_font*/
+ 
+ /* required globals for emulation*/
+@@ -11,8 +12,10 @@ int (*_XLockMutex_fn)();
+ int (*_XUnlockMutex_fn)();
+ int *_Xglobal_lock;
+ 
++#endif
++
+ /* statics for this file*/
+-static char static_display_name[] = ":0";
++static const char static_display_name[] = ":0";
+ static Display *OutOfMemory(Display *dpy);
+ 
+ /* 
+@@ -22,13 +25,18 @@ Display *
+ XOpenDisplay(_Xconst char *display)
+ {
+ 	Display *dpy;
+-	static int fd = -1;
++#ifndef __VSF__
++	static int disp_fd = -1;
++#else
++	NANOX_NX11_VSF_GET_CONTEXT();
++#define disp_fd				(vsf_nanox_nx11_ctx->opendis.XOpenDisplay._fd)
++#endif
+ 	GR_SCREEN_INFO sinfo;
+ 
+ /*
+  * Connect with Nano-X server and allocate a display structure.
+  */
+-	if (fd < 0 && (fd = GrOpen()) < 0) {
++	if (disp_fd < 0 && (disp_fd = GrOpen()) < 0) {
+ 		EPRINTF("nxlib: can't connect to nano-X server\r\n");
+ 		return NULL;
+ 	}
+@@ -44,7 +52,7 @@ XOpenDisplay(_Xconst char *display)
+ 		return OutOfMemory(dpy);
+ 
+ 	/* Initialize as much of the display structure as we can.*/
+-	dpy->fd			= fd;
++	dpy->fd			= disp_fd;
+ 	dpy->display_name	= static_display_name;
+ 	dpy->proto_major_version= 11;
+ 	dpy->proto_minor_version= 6;
+@@ -206,6 +214,9 @@ XOpenDisplay(_Xconst char *display)
+ 	    }
+ 	}
+  	return dpy;
++#ifdef __VSF__
++#undef disp_fd
++#endif
+ }
+ 
+ /* XFreeDisplayStructure frees all the storage associated with a 
+diff --git a/src/nx11/Quarks.c b/src/nx11/Quarks.c
+index ec9e315..e193b4f 100644
+--- a/src/nx11/Quarks.c
++++ b/src/nx11/Quarks.c
+@@ -60,11 +60,12 @@ from The Open Group.
+ /* #define PERMQ */
+ 
+ typedef unsigned long Signature;
+-typedef unsigned long Entry;
+ #ifdef PERMQ
+ typedef unsigned char Bits;
+ #endif
+ 
++#ifndef __VSF__
++typedef unsigned long Entry;
+ static XrmQuark nextQuark = 1;	/* next available quark number */
+ static unsigned long quarkMask = 0;
+ static Entry zero = 0;
+@@ -75,6 +76,18 @@ static XrmString **stringTable = NULL;
+ static Bits **permTable = NULL;
+ #endif
+ static XrmQuark nextUniq = -1;	/* next quark from XrmUniqueQuark */
++#else
++#define nextQuark			(vsf_nanox_nx11_ctx->quarks._nextQuark)
++#define quarkMask			(vsf_nanox_nx11_ctx->quarks._quarkMask)
++#define zero				(vsf_nanox_nx11_ctx->quarks._zero)
++#define quarkTable			(vsf_nanox_nx11_ctx->quarks._quarkTable)
++#define quarkRehash			(vsf_nanox_nx11_ctx->quarks._quarkRehash)
++#define stringTable			(vsf_nanox_nx11_ctx->quarks._stringTable)
++#ifdef PERMQ
++#define permTable			(vsf_nanox_nx11_ctx->quarks._permTable)
++#endif
++#define nextUniq			(vsf_nanox_nx11_ctx->quarks._nextUniq)
++#endif
+ 
+ #define QUANTUMSHIFT	8
+ #define QUANTUMMASK	((1 << QUANTUMSHIFT) - 1)
+@@ -111,12 +124,18 @@ static XrmQuark nextUniq = -1;	/* next quark from XrmUniqueQuark */
+ #define DALIGN sizeof(double)
+ 
+ #define NEVERFREETABLESIZE ((8192-12) & ~(DALIGN-1))
++#ifndef __VSF__
+ static char *neverFreeTable = NULL;
+ static int  neverFreeTableSize = 0;
++#else
++#define neverFreeTable		(vsf_nanox_nx11_ctx->quarks._neverFreeTable)
++#define neverFreeTableSize	(vsf_nanox_nx11_ctx->quarks._neverFreeTableSize)
++#endif
+ 
+ static char *permalloc(length)
+     register unsigned int length;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     char *ret;
+ 
+     if (neverFreeTableSize < length) {
+@@ -158,6 +177,7 @@ static
+ char *Xpermalloc(length)
+     unsigned int length;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     int i;
+ 
+     if (neverFreeTableSize && length < NEVERFREETABLESIZE) {
+@@ -181,6 +201,7 @@ char *Xpermalloc(length)
+ static Bool
+ ExpandQuarkTable()
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     unsigned long oldmask, newmask;
+     register char c, *s;
+     register Entry *oldentries, *entries;
+@@ -256,6 +277,7 @@ XrmQuark _XrmInternalStringToQuark(name, len, sig, permstring)
+     Bool permstring;
+ #endif
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     register XrmQuark q;
+     register Entry entry;
+     register int idx, rehash;
+@@ -401,6 +423,7 @@ XrmQuark XrmPermStringToQuark(name)
+ 
+ XrmQuark XrmUniqueQuark()
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     XrmQuark q;
+ 
+     _XLockMutex(_Xglobal_lock);
+@@ -415,6 +438,7 @@ XrmQuark XrmUniqueQuark()
+ XrmString XrmQuarkToString(quark)
+     register XrmQuark quark;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     XrmString s;
+ 
+     _XLockMutex(_Xglobal_lock);
+diff --git a/src/nx11/SelInput.c b/src/nx11/SelInput.c
+index 8f26e1d..0a461c9 100644
+--- a/src/nx11/SelInput.c
++++ b/src/nx11/SelInput.c
+@@ -4,7 +4,7 @@
+ static struct {
+ 	unsigned long xevent;
+ 	GR_EVENT_MASK mwevent;
+-} events[] = {
++} const events[] = {
+ 	{ KeyPressMask, GR_EVENT_MASK_KEY_DOWN },
+ 	{ KeyReleaseMask, GR_EVENT_MASK_KEY_UP },
+ 	{ ButtonPressMask, GR_EVENT_MASK_BUTTON_DOWN },
+diff --git a/src/nx11/Selection.c b/src/nx11/Selection.c
+index c1a7554..6e640d6 100644
+--- a/src/nx11/Selection.c
++++ b/src/nx11/Selection.c
+@@ -11,6 +11,7 @@
+    remove them.  That's odd to me, but oh, well......
+ */
+ 
++#ifndef __VSF__
+ struct sstruct {
+ 	Atom selection;
+ 	Window owner;
+@@ -19,10 +20,14 @@ struct sstruct {
+ };
+ 
+ static struct sstruct *select_list = 0;
++#else
++#define select_list	(vsf_nanox_nx11_ctx->selection._select_list)
++#endif
+ 
+ int
+ XSetSelectionOwner(Display *display, Atom selection, Window owner, Time t)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	struct sstruct *select = select_list;
+ 	struct sstruct *prev = 0;
+ 	
+@@ -52,6 +57,7 @@ XSetSelectionOwner(Display *display, Atom selection, Window owner, Time t)
+ static struct sstruct *
+ find_selection(Atom selection)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	struct sstruct *select = select_list;
+ 	
+ 	for (; select; select = select->next) 
 diff --git a/src/nx11/SetAttributes.c b/src/nx11/SetAttributes.c
 index 51a7869..ded38f5 100644
 --- a/src/nx11/SetAttributes.c
@@ -3841,10 +4430,86 @@ index a7c8e89..093fbd6 100644
  	int (*add_pixel)            (struct _XImage *, long);
  #else
 diff --git a/src/nx11/Xrm.c b/src/nx11/Xrm.c
-index 3b5f4a0..2676546 100644
+index 3b5f4a0..f67bebf 100644
 --- a/src/nx11/Xrm.c
 +++ b/src/nx11/Xrm.c
-@@ -1608,6 +1608,7 @@ char * filename;
+@@ -126,7 +126,12 @@ Bob Scheifler
+ 
+ typedef unsigned long Signature;
+ 
++#ifndef __VSF__
+ static XrmQuark XrmQString, XrmQANY;
++#else
++#define XrmQString	(vsf_nanox_nx11_ctx->xrm._XrmQString)
++#define XrmQANY		(vsf_nanox_nx11_ctx->xrm._XrmQANY)
++#endif
+ 
+ typedef	Bool (*DBEnumProc)(
+ #if NeedNestedPrototypes    /* this is Nested on purpose, to match Xlib.h */
+@@ -261,8 +266,13 @@ typedef struct _EClosure {
+  * to bother looking for it.
+  */
+ 
++#ifndef __VSF__
+ static unsigned char *resourceQuarks = (unsigned char *)NULL;
+ static XrmQuark maxResourceQuark = -1;
++#else
++#define resourceQuarks		(vsf_nanox_nx11_ctx->xrm._resourceQuarks)
++#define maxResourceQuark	(vsf_nanox_nx11_ctx->xrm._maxResourceQuark)
++#endif
+ 
+ /* determines if a quark has been used for a value in any database */
+ #define IsResourceQuark(q)  ((q) > 0 && (q) <= maxResourceQuark && \
+@@ -298,7 +308,7 @@ typedef unsigned char XrmBits;
+ #define is_special(bits)	((bits) & (ENDOF|BSLASH))
+ 
+ /* parsing types */
+-static XrmBits Const xrmtypes[256] = {
++static const XrmBits Const xrmtypes[256] = {
+     EOS,0,0,0,0,0,0,0,
+     0,SPACE,EOL,0,0,
+ #if WIN32
+@@ -326,6 +336,7 @@ static XrmBits Const xrmtypes[256] = {
+ 
+ void XrmInitialize()
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     XrmQString = XrmPermStringToQuark("String");
+     XrmQANY = XrmPermStringToQuark("?");
+ }
+@@ -823,6 +834,7 @@ static void PutEntry(db, bindings, quarks, type, value)
+     XrmRepresentation	type;
+     XrmValuePtr		value;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     register NTable *pprev, *prev;
+     register NTable table;
+     register XrmQuark q;
+@@ -1060,6 +1072,7 @@ void XrmQPutStringResource(pdb, bindings, quarks, str)
+     char	    *str;
+ #endif
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     XrmValue	value;
+ 
+     if (!*pdb) *pdb = NewDatabase();
+@@ -1107,6 +1120,7 @@ static void GetDatabase(db, str, filename, doall)
+     char *filename;
+     Bool doall;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     char *rhs;
+     char *lhs, lhs_s[DEF_BUFF_SIZE];
+     XrmQuark quarks[QLIST_SIZE + 1];	/* allow for a terminal NullQuark */
+@@ -1541,6 +1555,7 @@ void XrmPutStringResource(pdb, specifier, str)
+     char	*str;
+ #endif
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     XrmValue	value;
+     XrmBinding	bindings[MAXDBDEPTH+1];
+     XrmQuark	quarks[MAXDBDEPTH+1];
+@@ -1608,6 +1623,7 @@ char * filename;
      /*
       * MS-Windows and OS/2 note: Default open mode includes O_TEXT
       */
@@ -3852,19 +4517,196 @@ index 3b5f4a0..2676546 100644
      if ( (fd = _XOpenFile (filename, O_RDONLY)) == -1 )
  	return (char *)NULL;
  
+@@ -1745,6 +1761,7 @@ static Bool EnumLTable(table, names, classes, level, closure)
+     register int	level;
+     register EClosure	closure;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     register VEntry *bucket;
+     register int i;
+     register VEntry entry;
+@@ -1825,6 +1842,7 @@ static Bool EnumNTable(table, names, classes, level, closure)
+     register int	level;
+     register EClosure	closure;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     register NTable	entry;
+     register XrmQuark	q;
+     register unsigned int leaf;
+@@ -2040,6 +2058,7 @@ static Bool DumpEntry(db, bindings, quarks, type, value, data)
+     XrmValuePtr		value;
+     XPointer		data;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     FILE			*stream = (FILE *)data;
+     register unsigned int	i;
+     register char		*s;
+@@ -2215,6 +2234,7 @@ static Bool SearchNEntry(table, names, classes, closure)
+     XrmClassList 	classes;
+     SClosure		closure;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     register NTable	entry;
+     register XrmQuark	q;
+     register unsigned int leaf;
+@@ -2325,6 +2345,7 @@ Bool XrmQGetSearchResource(searchList, name, class, pType, pValue)
+     	     XrmRepresentation	*pType;  /* RETURN */
+     	     XrmValue		*pValue; /* RETURN */
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     register LTable *list;
+     register LTable table;
+     register VEntry entry;
+@@ -2413,6 +2434,7 @@ static Bool GetVEntry(table, names, classes, closure)
+     XrmClassList 	classes;
+     VClosure		closure;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     register VEntry entry;
+     register XrmQuark q;
+ 
+@@ -2448,6 +2470,7 @@ static Bool GetLooseVEntry(table, names, classes, closure)
+     XrmClassList 	classes;
+     VClosure		closure;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     register VEntry	entry;
+     register XrmQuark	q;
+ 
+@@ -2490,6 +2513,7 @@ static Bool GetNEntry(table, names, classes, closure)
+     XrmClassList 	classes;
+     VClosure		closure;
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+     register NTable	entry;
+     register XrmQuark	q;
+     register unsigned int leaf;
 diff --git a/src/nx11/font_find.c b/src/nx11/font_find.c
-index 2bb5a6b..910f7fe 100644
+index 2bb5a6b..31f7bb1 100644
 --- a/src/nx11/font_find.c
 +++ b/src/nx11/font_find.c
-@@ -10,6 +10,7 @@
+@@ -10,9 +10,10 @@
  #include "uni_std.h"
  #include "nxlib.h"
  #include "X11/Xatom.h"
 +#include "X11/Xlcint.h"
  
  /* fontlist.c*/
- extern char *FONT_DIR_LIST[]; 				/* pcf/truetype/type1 font dir list*/
-@@ -1076,7 +1077,12 @@ XFreeFontPath(char **list)
+-extern char *FONT_DIR_LIST[]; 				/* pcf/truetype/type1 font dir list*/
++extern const char *FONT_DIR_LIST[]; 				/* pcf/truetype/type1 font dir list*/
+ extern nxStaticFontList staticFontList[];	/* static font dir list*/
+ 
+ /* font device-independent routines - font_find.c*/
+@@ -28,8 +29,13 @@ static void _nxSetFontDir(char **directories, int ndirs);
+ static void _nxFreeFontDir(char ***list);
+ 
+ /* nxlib font.c*/
++#ifndef __VSF__
+ static char **_nxfontlist = NULL;
+ static int _nxfontcount = 0;
++#else
++#define _nxfontlist		(vsf_nanox_nx11_ctx->font_find.__nxfontlist)
++#define _nxfontcount	(vsf_nanox_nx11_ctx->font_find.__nxfontcount)
++#endif
+ 
+ static FILE *
+ _nxOpenFontDir(char *str)
+@@ -72,6 +78,7 @@ _nxSetDefaultFontDir(void)
+ static void
+ _nxSetFontDir(char **directories, int ndirs)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	int i;
+ 
+ 	_nxFreeFontDir(&_nxfontlist);
+@@ -86,6 +93,7 @@ _nxSetFontDir(char **directories, int ndirs)
+ static void
+ _nxFreeFontDir(char ***addrlist)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	char **list = *addrlist;
+ 	int i;
+ 
+@@ -103,6 +111,7 @@ _nxFreeFontDir(char ***addrlist)
+ }
+ 
+ /* nxlib ListFonts.c*/
++#ifndef __VSF__
+ struct _list {
+ 	char **list;
+ 	int alloc;
+@@ -111,10 +120,14 @@ struct _list {
+ };
+ 
+ static struct _list *g_fontlist = NULL;
++#else
++#define g_fontlist		(vsf_nanox_nx11_ctx->font_find._g_fontlist)
++#endif
+ 
+ static struct _list *
+ _createFontList(void)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	struct _list *ptr;
+ 
+ 	if (!g_fontlist)
+@@ -164,6 +177,7 @@ _getFontList(struct _list *list, int *size)
+ void
+ font_freefontnames(char **fontlist)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	struct _list *ptr = g_fontlist;
+ 	struct _list *prev = NULL;
+ 
+@@ -276,6 +290,7 @@ match(char *pat, char *string)
+ static void
+ findfont_wildcard(char *pattern, int maxnames, struct _list *fontlist)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	int f, i;
+ 
+ 	DPRINTF("findfont_wildcard: '%s' maxnames %d\n", pattern, maxnames);
+@@ -436,6 +451,7 @@ any(int c, const char *str)
+ int
+ font_findalias(int index, const char *fontspec, char *alias)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	FILE *aliasfile;
+ 	int match = 0;
+ 	char *p;
+@@ -523,6 +539,7 @@ xlfdheight(const char *xlfd)
+ static char *
+ findfont_nowildcard(const char *fontspec, int *height)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	int i, f;
+ 	char buffer[128];
+ 	char path[256];
+@@ -750,6 +767,7 @@ findfont_nowildcard(const char *fontspec, int *height)
+ static char **
+ findXLFDfont(char *pattern, int maxnames, int *count, int chkalias)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	struct _list *fontlist = _createFontList();
+ 	int f;
+ 
+@@ -831,6 +849,7 @@ font_findstaticfont(char *fontname, unsigned char** data, int* size) {
+ char *
+ font_findfont(char *name, int height, int width, int *return_height)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	char *	   fontpath = NULL;
+ 	char **	   fontlist = NULL;
+ 	int f;
+@@ -1041,6 +1060,7 @@ XFreeFontNames(char **list)
+ static char **
+ _nxCopyFontDir(int *count)
+ {
++	NANOX_NX11_VSF_GET_CONTEXT();
+ 	int i;
+ 	char **list;
+ 
+@@ -1076,7 +1096,12 @@ XFreeFontPath(char **list)
  	return 1;
  }
  
@@ -3878,7 +4720,7 @@ index 2bb5a6b..910f7fe 100644
  XFontSet
  XCreateFontSet(Display *display, _Xconst char *base_font_name_list, 
  	char ***missing_charset_list_return, int *missing_charset_count_return,
-@@ -1084,7 +1090,12 @@ XCreateFontSet(Display *display, _Xconst char *base_font_name_list,
+@@ -1084,7 +1109,12 @@ XCreateFontSet(Display *display, _Xconst char *base_font_name_list,
  {
  	*missing_charset_list_return = NULL;
  	*missing_charset_count_return = 0;
@@ -3892,6 +4734,32 @@ index 2bb5a6b..910f7fe 100644
  }
  
  /* Stub out XGetFontProperty*/
+diff --git a/src/nx11/fontlist.c b/src/nx11/fontlist.c
+index 8362976..c0fe521 100644
+--- a/src/nx11/fontlist.c
++++ b/src/nx11/fontlist.c
+@@ -24,7 +24,7 @@
+ #define MSDOS_SYSTEM_PATH   "/usr/share/fonts"      /* fldisk central fonts */
+ #define ANDROID_SYSTEM_PATH "/system/fonts"
+ 
+-char *FONT_DIR_LIST[] = {									
++const char *FONT_DIR_LIST[] = {									
+     XLOCALFONTPATH,                             /* path to mwin fonts directory*/
+     XLOCALFONTPATH "/pcf",                      /* mwin pcf fonts w/fonts.dir*/
+     XLOCALFONTPATH "/truetype",                 /* mwin .ttf/.otf fonts w/fonts.dir*/
+diff --git a/src/nx11/nxlib.h b/src/nx11/nxlib.h
+index 953f4fd..47ae794 100644
+--- a/src/nx11/nxlib.h
++++ b/src/nx11/nxlib.h
+@@ -106,4 +106,8 @@ extern Font _nxCursorFont;
+ /* CrGC.c*/
+ int _nxConvertROP(int Xrop);
+ 
++#ifdef __VSF__
++# include "nanox_nx11_vsf.h"
++#endif
++
+ #endif /* _NXLIB_H_*/
 diff --git a/src/nx11/stub.c b/src/nx11/stub.c
 index 17080ad..beabf2e 100644
 --- a/src/nx11/stub.c
