@@ -1,0 +1,723 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\fltk">
+      <UniqueIdentifier>{3bbf4899-9391-4f61-90eb-bd525317bf35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\fltk\src">
+      <UniqueIdentifier>{96ab1146-b51c-4056-9b11-1514742039c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\fltk\src\xutf8">
+      <UniqueIdentifier>{55267352-9536-453d-90b6-92bfecd0c94a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\cmap.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\dump_compose.c">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_absolute.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_expand.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_ext.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_isdir.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_list.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_match.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_setext.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\flstring.c">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_abort.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_add_idle.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Adjuster.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_arc.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_arci.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_arg.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_ask.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Bitmap.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_BMP_Image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Box.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_boxtype.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Browser.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Browser_.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Browser_load.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Button.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_call_main.c">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Chart.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Check_Browser.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Check_Button.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Choice.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Clock.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_color.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Color_Chooser.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_color_mac.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_color_win32.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_compose.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Copy_Surface.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Counter.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_cursor.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_curve.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Device.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Dial.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_diamond_box.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_display.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_dnd.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_dnd_win32.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_dnd_x.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Double_Window.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_draw.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_draw_image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_draw_image_mac.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_draw_image_win32.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_draw_pixmap.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_encoding_latin1.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_encoding_mac_roman.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_engraved_label.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Browser.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Chooser.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Chooser2.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_file_dir.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Icon.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Icon2.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Input.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_font.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_font_mac.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_font_win32.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_font_x.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_font_xft.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_GDI_Printer.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_get_key.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_get_key_mac.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_get_key_win32.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_get_system_colors.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_GIF_Image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_gleam.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Gl_Choice.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Gl_Device_Plugin.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Gl_Overlay.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Gl_Window.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_grab.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Group.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_gtk.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Help_Dialog.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Help_Dialog_Dox.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Help_View.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_images_core.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Image_Surface.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Input.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Input_.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_JPEG_Image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_labeltype.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Light_Button.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_line_style.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_lock.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_add.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_Bar.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_Button.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_global.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_Window.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Multi_Label.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Native_File_Chooser.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Native_File_Chooser_common.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Native_File_Chooser_FLTK.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Native_File_Chooser_GTK.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Native_File_Chooser_WIN32.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_open_uri.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_oval_box.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_overlay.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_overlay_visual.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Overlay_Window.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_own_colormap.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Pack.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Paged_Device.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Pixmap.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_plastic.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_PNG_Image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_PNM_Image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Positioner.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_PostScript.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Preferences.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Printer.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Progress.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_read_image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_read_image_mac.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_read_image_win32.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_rect.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Repeat_Button.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Return_Button.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Roller.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_rounded_box.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_round_box.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Round_Button.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Scroll.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Scrollbar.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_scroll_area.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_font.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_fonts.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_fonts_mac.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_fonts_win32.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_fonts_x.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_fonts_xft.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_shadow_box.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Shared_Image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_shortcut.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_show_colormap.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Single_Window.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Slider.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_symbols.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Table.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Table_Row.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tabs.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Text_Buffer.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Text_Display.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Text_Editor.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tile.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tiled_Image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tooltip.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tree.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tree_Item.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tree_Item_Array.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tree_Prefs.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_utf.c">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_utf8.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Valuator.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Value_Input.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Value_Output.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Value_Slider.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_vertex.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_visual.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Widget.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_win32.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Window.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Window_fullscreen.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Window_hotspot.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Window_iconize.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Window_shape.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Wizard.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_x.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_XBM_Image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_XPM_Image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_bitmap.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_compatability.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_free.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_fselect.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_pixmap.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_timer.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\freeglut_geometry.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\freeglut_stroke_mono_roman.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\freeglut_stroke_roman.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\freeglut_teapot.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\glut_compatability.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\glut_font.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\gl_draw.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\gl_start.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\numericsort.c">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\print_panel.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\ps_image.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\scandir.c">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\scandir_posix.c">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\scandir_win32.c">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\screen_xywh.cxx">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\vsnprintf.c">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\case.c">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\fl_wcwidth.c">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\imKStoUCS.c">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\is_right2left.c">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\is_spacing.c">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\keysym2Ucs.c">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\mk_wcwidth.c">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\ucs2fontmap.c">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Input.c">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Utils.c">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Wrap.c">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\cgdebug.h">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fastarrow.h">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\flstring.h">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_cmap.h">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Font.H">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Gl_Choice.H">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_XColor.H">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\freeglut_teapot_data.h">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\mediumarrow.h">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\print_panel.h">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\slowarrow.h">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Xutf8.h">
+      <Filter>Source Files\fltk\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\Ximint.h">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\Xlibint.h">
+      <Filter>Source Files\fltk\src\xutf8</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

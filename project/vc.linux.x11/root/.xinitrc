@@ -1,4 +1,5 @@
 #! /bin/sh
 
 echo startup X Window
-nxterm
+nxterm &
+nxkdb &

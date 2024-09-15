@@ -25,20 +25,6 @@
     <ClInclude Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm_cfg.h" />
     <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport.h" />
     <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport_cfg.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\cgdebug.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fastarrow.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\flstring.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_cmap.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Font.H" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Gl_Choice.H" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_XColor.H" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\freeglut_teapot_data.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\mediumarrow.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\print_panel.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\slowarrow.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Xutf8.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\Ximint.h" />
-    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\Xlibint.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fb.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\genmem.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\hbf.h" />
@@ -550,343 +536,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\application\app\distbus\transport\stream\vsf_distbus_transport_stream.c" />
     <ClCompile Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\cmap.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\dump_compose.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_absolute.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_expand.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_ext.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_isdir.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_list.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_match.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\filename_setext.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\flstring.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_abort.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_add_idle.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Adjuster.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_arc.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_arci.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_arg.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_ask.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Bitmap.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_BMP_Image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Box.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_boxtype.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Browser.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Browser_.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Browser_load.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Button.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_call_main.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Chart.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Check_Browser.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Check_Button.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Choice.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Clock.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_color.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Color_Chooser.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_color_mac.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_color_win32.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_compose.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Copy_Surface.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Counter.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_cursor.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_curve.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Device.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Dial.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_diamond_box.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_display.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_dnd.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_dnd_win32.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_dnd_x.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Double_Window.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_draw.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_draw_image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_draw_image_mac.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_draw_image_win32.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_draw_pixmap.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_encoding_latin1.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_encoding_mac_roman.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_engraved_label.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Browser.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Chooser.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Chooser2.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_file_dir.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Icon.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Icon2.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_File_Input.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_font.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_font_mac.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_font_win32.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_font_x.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_font_xft.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_GDI_Printer.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_get_key.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_get_key_mac.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_get_key_win32.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_get_system_colors.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_GIF_Image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_gleam.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Gl_Choice.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Gl_Device_Plugin.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Gl_Overlay.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Gl_Window.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_grab.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Group.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_gtk.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Help_Dialog.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Help_Dialog_Dox.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Help_View.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_images_core.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Image_Surface.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Input.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Input_.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_JPEG_Image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_labeltype.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Light_Button.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_line_style.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_lock.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_add.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_Bar.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_Button.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_global.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Menu_Window.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Multi_Label.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Native_File_Chooser.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Native_File_Chooser_common.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Native_File_Chooser_FLTK.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Native_File_Chooser_GTK.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Native_File_Chooser_WIN32.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_open_uri.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_oval_box.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_overlay.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_overlay_visual.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Overlay_Window.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_own_colormap.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Pack.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Paged_Device.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Pixmap.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_plastic.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_PNG_Image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_PNM_Image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Positioner.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_PostScript.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Preferences.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Printer.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Progress.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_read_image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_read_image_mac.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_read_image_win32.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_rect.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Repeat_Button.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Return_Button.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Roller.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_rounded_box.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_round_box.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Round_Button.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Scroll.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Scrollbar.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_scroll_area.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_font.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_fonts.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_fonts_mac.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_fonts_win32.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_fonts_x.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_set_fonts_xft.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_shadow_box.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Shared_Image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_shortcut.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_show_colormap.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Single_Window.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Slider.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_symbols.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Table.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Table_Row.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tabs.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Text_Buffer.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Text_Display.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Text_Editor.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tile.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tiled_Image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tooltip.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tree.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tree_Item.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tree_Item_Array.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Tree_Prefs.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_utf.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_utf8.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Valuator.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Value_Input.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Value_Output.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Value_Slider.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\fl_vertex.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_visual.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Widget.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_win32.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Window.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Window_fullscreen.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Window_hotspot.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Window_iconize.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Window_shape.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_Wizard.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_x.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_XBM_Image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\Fl_XPM_Image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_bitmap.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_compatability.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_free.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_fselect.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_pixmap.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\forms_timer.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\freeglut_geometry.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\freeglut_stroke_mono_roman.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\freeglut_stroke_roman.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\freeglut_teapot.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\glut_compatability.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\glut_font.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\gl_draw.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\gl_start.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\numericsort.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\print_panel.cxx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\ps_image.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\scandir.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\scandir_posix.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\scandir_win32.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\screen_xywh.cxx" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\vsnprintf.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\case.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\fl_wcwidth.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\imKStoUCS.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\is_right2left.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\is_spacing.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\keysym2Ucs.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\mk_wcwidth.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\ucs2fontmap.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Input.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Utils.c" />
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\src\xutf8\utf8Wrap.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\test\forms.cxx" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxkbd.c">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=nxkdb_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1517,6 +1166,14 @@
     <None Include="..\..\vsf\source\shell\sys\linux\app\httpd\urihandler\file\__vsf_linux_urihandler_file.inc" />
     <None Include="..\..\vsf\source\shell\sys\linux\app\httpd\urihandler\websocket\__vsf_linux_urihandler_websocket.inc" />
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="Debug\libfltk.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="x64\Debug\libfltk.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{A77D8512-2E1C-4A55-A1DE-218BF944D49B}</ProjectGuid>
@@ -1592,9 +1249,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";FL_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\application\component\ui\sgl\platform\vsf;$(ProjectDir)..\..\application\component\ui\sgl\raw\source;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
@@ -1621,9 +1278,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";FL_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\application\component\ui\sgl\platform\vsf;$(ProjectDir)..\..\application\component\ui\sgl\raw\source;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
