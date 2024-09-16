@@ -172,7 +172,7 @@ typedef struct vsf_nanox_nx11_ctx_t {
         XrmQuark _maxResourceQuark;
     } xrm;
     struct {
-        MWKEYMOD _modstate
+        MWKEYMOD _modstate;
     } strkeysym;
 } vsf_nanox_nx11_ctx_t;
 

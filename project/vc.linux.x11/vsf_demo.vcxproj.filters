@@ -883,6 +883,12 @@
     <Filter Include="application\x11\fltk\lib64">
       <UniqueIdentifier>{9929e863-cd4b-4968-8e29-4e9472428668}</UniqueIdentifier>
     </Filter>
+    <Filter Include="application\x11\TinyGL">
+      <UniqueIdentifier>{64afa047-726f-4c24-9139-8b07c7563052}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\x11\TinyGL\src">
+      <UniqueIdentifier>{f58b7d83-ca0c-42b1-ac6a-0eb69ab0af17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2426,6 +2432,33 @@
     </ClInclude>
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\port\nanox_nx11_vsf.h">
       <Filter>application\x11\port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\msghandling.h">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\opinfo.h">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\specbuf.h">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zbuffer.h">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zfeatures.h">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zgl.h">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zline.h">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zmath.h">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\ztriangle.h">
+      <Filter>application\x11\TinyGL\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4114,6 +4147,90 @@
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\StrKeysym.c">
       <Filter>application\x11\port\nanox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\api.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\arrays.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\clear.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\clip.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\error.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\get.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\glx.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\image_util.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\init.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\light.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\list.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\matrix.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\memory.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\misc.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\msghandling.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\nglx.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\oscontext.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\select.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\specbuf.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\texture.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\vertex.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zbuffer.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zdither.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zline.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zmath.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\ztriangle.c">
+      <Filter>application\x11\TinyGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\examples\gears.c">
+      <Filter>application\x11\TinyGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\examples\nanox.c">
+      <Filter>application\x11\TinyGL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

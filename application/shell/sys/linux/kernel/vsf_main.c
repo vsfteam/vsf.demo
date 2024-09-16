@@ -921,12 +921,22 @@ bool app_shell_is_orig_busybox(void)
 #if VSF_LINUX_USE_X11 == ENABLED
 
 #include <nano-X.h>
+#include "nxlib.h"
 
 extern int fltk_main(int argc, char *argv[]);
 static int __fltk_main (int argc, char *argv[])
 {
     INIT_PER_THREAD_DATA();
+    NANOX_NX11_VSF_INIT_PROCESS_DATA();
     return fltk_main(argc, argv);
+}
+
+extern int tinygl_gears_main(int argc, char *argv[]);
+static int __tinygl_gears_main(int argc, char *argv[])
+{
+    INIT_PER_THREAD_DATA();
+    NANOX_NX11_VSF_INIT_PROCESS_DATA();
+    return tinygl_gears_main(argc, argv);
 }
 
 extern int nxterm_main(int argc, char **argv);
@@ -1132,6 +1142,7 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxterm", __nxterm_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxkdb", __nxkdb_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fltk", __fltk_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/gears", __tinygl_gears_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/startx", __startx_main);
 
     system("nanox_srv &");

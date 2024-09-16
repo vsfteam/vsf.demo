@@ -34,6 +34,15 @@
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\keysymstr.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\port\config.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\port\nanox_nx11_vsf.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\msghandling.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\opinfo.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\specbuf.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zbuffer.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zfeatures.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zgl.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zline.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zmath.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\ztriangle.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\kernel\vsf_usr_cfg.h" />
     <ClInclude Include="..\..\board\win\vsf_board.h" />
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h" />
@@ -782,6 +791,40 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyshft.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\StrKeysym.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox_nx11_vsf.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\examples\gears.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=tinygl_gears_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main=tinygl_gears_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\examples\nanox.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\api.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\arrays.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\clear.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\clip.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\error.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\get.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\glx.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\image_util.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\init.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\light.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\list.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\matrix.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\memory.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\misc.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\msghandling.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\nglx.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\oscontext.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\select.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\specbuf.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\texture.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\vertex.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zbuffer.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zdither.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zline.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zmath.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\ztriangle.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\hwtest_main.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_httpd.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_mdns.c" />
@@ -1257,7 +1300,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\TinyGL\include;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
@@ -1286,7 +1329,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\TinyGL\include;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
