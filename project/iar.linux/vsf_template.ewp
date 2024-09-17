@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-    <fileVersion>3</fileVersion>
+    <fileVersion>4</fileVersion>
     <configuration>
         <name>vsf_template_aic8800</name>
         <toolchain>
@@ -11,9 +11,13 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>31</version>
+                <version>36</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
+                <option>
+                    <name>BrowseInfoPath</name>
+                    <state>vsf_template_aic8800\BrowseInfo</state>
+                </option>
                 <option>
                     <name>ExePath</name>
                     <state>vsf_template_aic8800\Exe</state>
@@ -66,15 +70,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.40.2.22864</state>
-                </option>
-                <option>
-                    <name>GeneralEnableMisra</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>GeneralMisraVerbose</name>
-                    <state>0</state>
+                    <state>9.40.2.67586</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
@@ -97,26 +93,12 @@
                     <state>0</state>
                 </option>
                 <option>
-                    <name>GeneralMisraRules98</name>
-                    <version>0</version>
-                    <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                </option>
-                <option>
-                    <name>GeneralMisraVer</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>GeneralMisraRules04</name>
-                    <version>0</version>
-                    <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
-                </option>
-                <option>
                     <name>RTConfigPath2</name>
                     <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>27</version>
+                    <version>33</version>
                     <state>39</state>
                 </option>
                 <option>
@@ -133,7 +115,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>27</version>
+                    <version>33</version>
                     <state>39</state>
                 </option>
                 <option>
@@ -156,7 +138,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>27</version>
+                    <version>33</version>
                     <state>39</state>
                 </option>
                 <option>
@@ -209,13 +191,38 @@
                     <version>0</version>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>OGAarch64Abi</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>OG_32_64Device</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>BuildFilesPath</name>
+                    <state>vsf_template_aic8800</state>
+                </option>
+                <option>
+                    <name>PointerAuthentication</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>FPU64</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>OG_32_64DeviceCoreSlave</name>
+                    <version>33</version>
+                    <state>39</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>35</version>
+                <version>38</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -366,10 +373,6 @@
                     <state></state>
                 </option>
                 <option>
-                    <name>CompilerMisraOverride</name>
-                    <state>0</state>
-                </option>
-                <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\..\..\board\aic8800m</state>
                     <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
@@ -452,16 +455,6 @@
                 <option>
                     <name>CCOptLevelSlave</name>
                     <state>3</state>
-                </option>
-                <option>
-                    <name>CompilerMisraRules98</name>
-                    <version>0</version>
-                    <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                </option>
-                <option>
-                    <name>CompilerMisraRules04</name>
-                    <version>0</version>
-                    <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
                 </option>
                 <option>
                     <name>CCPosIndRopi</name>
@@ -548,13 +541,25 @@
                     <name>OICompilerExtraOption</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>CCStackProtection</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCPointerAutentiction</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCBranchTargetIdentification</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>10</version>
+                <version>12</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -710,6 +715,14 @@
                     <name>AsmNoLiteralPool</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>PreInclude</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>A_32_64Device</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -749,35 +762,19 @@
                 <extensions></extensions>
                 <cmdline></cmdline>
                 <hasPrio>0</hasPrio>
-            </data>
-        </settings>
-        <settings>
-            <name>BICOMP</name>
-            <archiveVersion>0</archiveVersion>
-            <data />
-        </settings>
-        <settings>
-            <name>BUILDACTION</name>
-            <archiveVersion>1</archiveVersion>
-            <data>
-                <prebuild></prebuild>
-                <postbuild></postbuild>
+                <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
         <settings>
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>23</version>
+                <version>27</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
                     <name>IlinkLibIOConfig</name>
                     <state>1</state>
-                </option>
-                <option>
-                    <name>XLinkMisraHandler</name>
-                    <state>0</state>
                 </option>
                 <option>
                     <name>IlinkInputFileSlave</name>
@@ -1104,6 +1101,42 @@
                     <name>IlinkRawBinaryAlign2</name>
                     <state></state>
                 </option>
+                <option>
+                    <name>IlinkLogCrtRoutineSelection</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogFragmentInfo</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogInlining</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogMerging</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkDemangle</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkWrapperFileEnable</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkWrapperFile</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkProcessor</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>IlinkFpuProcessor</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1128,8 +1161,8 @@
             </data>
         </settings>
         <settings>
-            <name>BILINK</name>
-            <archiveVersion>0</archiveVersion>
+            <name>BUILDACTION</name>
+            <archiveVersion>2</archiveVersion>
             <data />
         </settings>
     </configuration>
@@ -1143,9 +1176,13 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>31</version>
+                <version>36</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
+                <option>
+                    <name>BrowseInfoPath</name>
+                    <state>vsf_template_gd32h7xx\BrowseInfo</state>
+                </option>
                 <option>
                     <name>ExePath</name>
                     <state>vsf_template_gd32h7xx\Exe</state>
@@ -1190,7 +1227,7 @@
                 </option>
                 <option>
                     <name>RTDescription</name>
-                    <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
+                    <state>A compact configuration of the C/C++14 runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
                 </option>
                 <option>
                     <name>OGProductVersion</name>
@@ -1198,15 +1235,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.40.2.22864</state>
-                </option>
-                <option>
-                    <name>GeneralEnableMisra</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>GeneralMisraVerbose</name>
-                    <state>0</state>
+                    <state>9.40.2.67586</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
@@ -1229,26 +1258,12 @@
                     <state>0</state>
                 </option>
                 <option>
-                    <name>GeneralMisraRules98</name>
-                    <version>0</version>
-                    <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                </option>
-                <option>
-                    <name>GeneralMisraVer</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>GeneralMisraRules04</name>
-                    <version>0</version>
-                    <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
-                </option>
-                <option>
                     <name>RTConfigPath2</name>
                     <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>27</version>
+                    <version>33</version>
                     <state>41</state>
                 </option>
                 <option>
@@ -1265,7 +1280,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>27</version>
+                    <version>33</version>
                     <state>41</state>
                 </option>
                 <option>
@@ -1288,7 +1303,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>27</version>
+                    <version>33</version>
                     <state>41</state>
                 </option>
                 <option>
@@ -1341,13 +1356,38 @@
                     <version>0</version>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>OGAarch64Abi</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>OG_32_64Device</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>BuildFilesPath</name>
+                    <state>vsf_template_gd32h7xx</state>
+                </option>
+                <option>
+                    <name>PointerAuthentication</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>FPU64</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>OG_32_64DeviceCoreSlave</name>
+                    <version>33</version>
+                    <state>41</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>35</version>
+                <version>38</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1356,8 +1396,14 @@
                     <state>__GigaDevice__</state>
                     <state>__GD32H759IMT6__</state>
                     <state>GD32H7XX</state>
+                    <state>VSF_LINUX_USE_X11=ENABLED</state>
                     <state>__unix__</state>
                     <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                    <state>HAVE_FILEIO=1</state>
+                    <state>UNIX=1</state>
+                    <state>LINUX=1</state>
+                    <state>X11_RGBTXT="/root/share/X11/rgb.txt"</state>
+                    <state>USE_ALLOCA=0</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1477,14 +1523,16 @@
                     <state></state>
                 </option>
                 <option>
-                    <name>CompilerMisraOverride</name>
-                    <state>0</state>
-                </option>
-                <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\..\..\board\gd32h7xx</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Include</state>
                     <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
+                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port</state>
+                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\include</state>
+                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local</state>
+                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11</state>
+                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\fltk</state>
+                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include</state>
@@ -1519,16 +1567,6 @@
                 <option>
                     <name>CCOptLevelSlave</name>
                     <state>1</state>
-                </option>
-                <option>
-                    <name>CompilerMisraRules98</name>
-                    <version>0</version>
-                    <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                </option>
-                <option>
-                    <name>CompilerMisraRules04</name>
-                    <version>0</version>
-                    <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
                 </option>
                 <option>
                     <name>CCPosIndRopi</name>
@@ -1615,13 +1653,25 @@
                     <name>OICompilerExtraOption</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>CCStackProtection</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCPointerAutentiction</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCBranchTargetIdentification</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>10</version>
+                <version>12</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1777,6 +1827,14 @@
                     <name>AsmNoLiteralPool</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>PreInclude</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>A_32_64Device</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1816,35 +1874,19 @@
                 <extensions></extensions>
                 <cmdline></cmdline>
                 <hasPrio>0</hasPrio>
-            </data>
-        </settings>
-        <settings>
-            <name>BICOMP</name>
-            <archiveVersion>0</archiveVersion>
-            <data />
-        </settings>
-        <settings>
-            <name>BUILDACTION</name>
-            <archiveVersion>1</archiveVersion>
-            <data>
-                <prebuild></prebuild>
-                <postbuild></postbuild>
+                <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
         <settings>
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>23</version>
+                <version>27</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
                     <name>IlinkLibIOConfig</name>
                     <state>1</state>
-                </option>
-                <option>
-                    <name>XLinkMisraHandler</name>
-                    <state>0</state>
                 </option>
                 <option>
                     <name>IlinkInputFileSlave</name>
@@ -1916,7 +1958,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$\config\linker\GD\GD32H759xM.icf</state>
+                    <state>$TOOLKIT_DIR$/config/linker/GigaDevice/GD32H759xM.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -2171,6 +2213,42 @@
                     <name>IlinkRawBinaryAlign2</name>
                     <state></state>
                 </option>
+                <option>
+                    <name>IlinkLogCrtRoutineSelection</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogFragmentInfo</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogInlining</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogMerging</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkDemangle</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkWrapperFileEnable</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkWrapperFile</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkProcessor</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>IlinkFpuProcessor</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -2195,8 +2273,8 @@
             </data>
         </settings>
         <settings>
-            <name>BILINK</name>
-            <archiveVersion>0</archiveVersion>
+            <name>BUILDACTION</name>
+            <archiveVersion>2</archiveVersion>
             <data />
         </settings>
     </configuration>
@@ -2210,9 +2288,13 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>31</version>
+                <version>36</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
+                <option>
+                    <name>BrowseInfoPath</name>
+                    <state>vsf_template_stm32h7xx\BrowseInfo</state>
+                </option>
                 <option>
                     <name>ExePath</name>
                     <state>vsf_template_stm32h7xx\Exe</state>
@@ -2265,15 +2347,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.40.2.22864</state>
-                </option>
-                <option>
-                    <name>GeneralEnableMisra</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>GeneralMisraVerbose</name>
-                    <state>0</state>
+                    <state>9.40.2.67586</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
@@ -2296,26 +2370,12 @@
                     <state>0</state>
                 </option>
                 <option>
-                    <name>GeneralMisraRules98</name>
-                    <version>0</version>
-                    <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                </option>
-                <option>
-                    <name>GeneralMisraVer</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>GeneralMisraRules04</name>
-                    <version>0</version>
-                    <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
-                </option>
-                <option>
                     <name>RTConfigPath2</name>
                     <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>27</version>
+                    <version>33</version>
                     <state>41</state>
                 </option>
                 <option>
@@ -2332,7 +2392,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>27</version>
+                    <version>33</version>
                     <state>41</state>
                 </option>
                 <option>
@@ -2355,7 +2415,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>27</version>
+                    <version>33</version>
                     <state>41</state>
                 </option>
                 <option>
@@ -2408,13 +2468,38 @@
                     <version>0</version>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>OGAarch64Abi</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>OG_32_64Device</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>BuildFilesPath</name>
+                    <state>vsf_template_stm32h7xx</state>
+                </option>
+                <option>
+                    <name>PointerAuthentication</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>FPU64</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>OG_32_64DeviceCoreSlave</name>
+                    <version>33</version>
+                    <state>41</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>35</version>
+                <version>38</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -2544,10 +2629,6 @@
                     <state></state>
                 </option>
                 <option>
-                    <name>CompilerMisraOverride</name>
-                    <state>0</state>
-                </option>
-                <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\..\..\board\stm32h7xx</state>
                     <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
@@ -2586,16 +2667,6 @@
                 <option>
                     <name>CCOptLevelSlave</name>
                     <state>3</state>
-                </option>
-                <option>
-                    <name>CompilerMisraRules98</name>
-                    <version>0</version>
-                    <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                </option>
-                <option>
-                    <name>CompilerMisraRules04</name>
-                    <version>0</version>
-                    <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
                 </option>
                 <option>
                     <name>CCPosIndRopi</name>
@@ -2682,13 +2753,25 @@
                     <name>OICompilerExtraOption</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>CCStackProtection</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCPointerAutentiction</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCBranchTargetIdentification</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>10</version>
+                <version>12</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -2844,6 +2927,14 @@
                     <name>AsmNoLiteralPool</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>PreInclude</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>A_32_64Device</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -2883,35 +2974,19 @@
                 <extensions></extensions>
                 <cmdline></cmdline>
                 <hasPrio>0</hasPrio>
-            </data>
-        </settings>
-        <settings>
-            <name>BICOMP</name>
-            <archiveVersion>0</archiveVersion>
-            <data />
-        </settings>
-        <settings>
-            <name>BUILDACTION</name>
-            <archiveVersion>1</archiveVersion>
-            <data>
-                <prebuild></prebuild>
-                <postbuild></postbuild>
+                <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
         <settings>
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>23</version>
+                <version>27</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
                     <name>IlinkLibIOConfig</name>
                     <state>1</state>
-                </option>
-                <option>
-                    <name>XLinkMisraHandler</name>
-                    <state>0</state>
                 </option>
                 <option>
                     <name>IlinkInputFileSlave</name>
@@ -3238,6 +3313,42 @@
                     <name>IlinkRawBinaryAlign2</name>
                     <state></state>
                 </option>
+                <option>
+                    <name>IlinkLogCrtRoutineSelection</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogFragmentInfo</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogInlining</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogMerging</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkDemangle</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkWrapperFileEnable</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkWrapperFile</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkProcessor</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>IlinkFpuProcessor</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -3262,13 +3373,2219 @@
             </data>
         </settings>
         <settings>
-            <name>BILINK</name>
-            <archiveVersion>0</archiveVersion>
+            <name>BUILDACTION</name>
+            <archiveVersion>2</archiveVersion>
             <data />
         </settings>
     </configuration>
     <group>
         <name>application</name>
+        <group>
+            <name>x11</name>
+            <excluded>
+                <configuration>vsf_template_aic8800</configuration>
+                <configuration>vsf_template_stm32h7xx</configuration>
+            </excluded>
+            <group>
+                <name>nanox</name>
+                <group>
+                    <name>src</name>
+                    <group>
+                        <name>drivers</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fb.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fb.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fblin1.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fblin16.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fblin2.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fblin24.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fblin32.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fblin4.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fblin8.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fbportrait_down.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fbportrait_left.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fbportrait_right.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\genfont.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\genmem.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\genmem.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\hbf.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\hbf.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\kbd_null.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\mou_devmice.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\mou_null.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\osdep.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\rasterops.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\scr_fb.c</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>engine</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\convblit_8888.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\convblit_frameb.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\convblit_mask.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devarc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devblit.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devclip.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devclip1.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devclip2.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devdraw.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devfont.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devfont.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devimage.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devimage_stretch.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devkbd.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devlist.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devmouse.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devopen.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devpal1.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devpal2.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devpal4.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devpal8.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devpalgray4.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devpoly.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devrgn.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devrgn2.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devstipple.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\devtimer.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\font_dbcs.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\font_eucjp.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\font_fnt.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\font_freetype2.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\font_hbf.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\font_hzk.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\font_pcf.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\font_t1lib.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\image_bmp.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\image_gif.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\image_jpeg.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\image_png.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\image_pnm.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\image_tiff.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\image_xpm.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\engine\selfont.c</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>fonts</name>
+                        <group>
+                            <name>compiled</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\fonts\compiled\winFreeSansSerif11x13.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\fonts\compiled\X6x13.c</name>
+                            </file>
+                        </group>
+                    </group>
+                    <group>
+                        <name>nanox</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\client.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\clientfb.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxdraw.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxproto.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxproto.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxtransform.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxutil.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\serv.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvclip.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvclip1.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvclip2.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvevent.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvfunc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvmain.c</name>
+                            <configuration>
+                                <name>vsf_template_gd32h7xx</name>
+                                <settings>
+                                    <name>ICCARM</name>
+                                    <data>
+                                        <version>38</version>
+                                        <wantNonLocal>0</wantNonLocal>
+                                        <debug>1</debug>
+                                        <option>
+                                            <name>CCDefines</name>
+                                            <state>__VSF__</state>
+                                            <state>__GigaDevice__</state>
+                                            <state>__GD32H759IMT6__</state>
+                                            <state>GD32H7XX</state>
+                                            <state>VSF_LINUX_USE_X11=ENABLED</state>
+                                            <state>__unix__</state>
+                                            <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                            <state>HAVE_FILEIO=1</state>
+                                            <state>UNIX=1</state>
+                                            <state>LINUX=1</state>
+                                            <state>X11_RGBTXT="/root/share/X11/rgb.txt"</state>
+                                            <state>USE_ALLOCA=0</state>
+                                            <state>main=nanox_srv_main</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPreprocFile</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPreprocComments</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPreprocLine</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>CCListCFile</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCListCMnemonics</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCListCMessages</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCListAssFile</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCListAssSource</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCEnableRemarks</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCDiagSuppress</name>
+                                            <state></state>
+                                        </option>
+                                        <option>
+                                            <name>CCDiagRemark</name>
+                                            <state></state>
+                                        </option>
+                                        <option>
+                                            <name>CCDiagWarning</name>
+                                            <state></state>
+                                        </option>
+                                        <option>
+                                            <name>CCDiagError</name>
+                                            <state></state>
+                                        </option>
+                                        <option>
+                                            <name>CCObjPrefix</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>CCAllowList</name>
+                                            <version>1</version>
+                                            <state>00000000</state>
+                                        </option>
+                                        <option>
+                                            <name>CCDebugInfo</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>IEndianMode</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>IProcessor</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>IExtraOptionsCheck</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>IExtraOptions</name>
+                                            <state>--no_unaligned_access --lock_regs=r9</state>
+                                        </option>
+                                        <option>
+                                            <name>CCLangConformance</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCSignedPlainChar</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCRequirePrototypes</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCDiagWarnAreErr</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCCompilerRuntimeInfo</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>IFpuProcessor</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>OutputFile</name>
+                                            <state>$FILE_BNAME$.o</state>
+                                        </option>
+                                        <option>
+                                            <name>CCLibConfigHeader</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>PreInclude</name>
+                                            <state></state>
+                                        </option>
+                                        <option>
+                                            <name>CCIncludePath2</name>
+                                            <state>$PROJ_DIR$\..\..\board\gd32h7xx</state>
+                                            <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Include</state>
+                                            <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
+                                            <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port</state>
+                                            <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\include</state>
+                                            <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local</state>
+                                            <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11</state>
+                                            <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\fltk</state>
+                                            <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\include</state>
+                                            <state>$PROJ_DIR$\..\..\vsf\source</state>
+                                            <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
+                                            <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include</state>
+                                            <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\simple_libc</state>
+                                            <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\libusb</state>
+                                            <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\port</state>
+                                            <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw</state>
+                                            <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\port</state>
+                                            <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\include</state>
+                                        </option>
+                                        <option>
+                                            <name>CCStdIncCheck</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCCodeSection</name>
+                                            <state>.text</state>
+                                        </option>
+                                        <option>
+                                            <name>IProcessorMode2</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>CCOptLevel</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>CCOptStrategy</name>
+                                            <version>0</version>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>CCOptLevelSlave</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPosIndRopi</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPosIndRwpi</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPosIndNoDynInit</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>IccLang</name>
+                                            <state>2</state>
+                                        </option>
+                                        <option>
+                                            <name>IccCDialect</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>IccAllowVLA</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>IccStaticDestr</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>IccCppInlineSemantics</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>IccCmsis</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>IccFloatSemantics</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCOptimizationNoSizeConstraints</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCNoLiteralPool</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCOptStrategySlave</name>
+                                            <version>0</version>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>CCEncSource</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCEncOutput</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCEncOutputBom</name>
+                                            <state>1</state>
+                                        </option>
+                                        <option>
+                                            <name>CCEncInput</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>IccExceptions2</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>IccRTTI2</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCStackProtection</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPointerAutentiction</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCBranchTargetIdentification</name>
+                                            <state>0</state>
+                                        </option>
+                                    </data>
+                                </settings>
+                            </configuration>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvnet.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvnonet.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvutil.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\wmaction.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\wmclients.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\wmevents.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\wmutil.c</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>nx11</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\AllocColor.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Atom.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Backgnd.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\BdrWidth.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Bell.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Border.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\ChProperty.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\ChSaveSet.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\ChWindow.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\ClassHint.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\ClDisplay.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Clear.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\ClearArea.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Colormap.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Colorname.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Context.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Copy.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\CrBFData.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\CrCursor.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\CrGC.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\CrPFBData.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\CrPixmap.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\CrWindow.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\DefCursor.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\DestWind.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\DrArc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\DrLine.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\DrLines.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\DrPoint.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\DrRect.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\ErrorHandler.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Extension.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\FillPolygon.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\FillRct.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Flush.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\font_find.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\FontCursor.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\FontInfo.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\fontlist.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Free.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\FreeGC.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\GetGCVals.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\GetGeom.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\GetPntMap.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\GetWMProps.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Grab.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\IM.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Image.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\keysymstr.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\ListPix.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Locale.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\LowerWin.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\MapRaised.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\MapWindow.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Misc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\MoveWin.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\NextEvent.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\NXext.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\nxlib.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\OpenDis.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\ParseCmd.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\ParseColor.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\PmapBgnd.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Quarks.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\QueryBest.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\QueryColor.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\QueryFont.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\QueryPointer.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\QueryTree.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\RaiseWin.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Region.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\replace-lX11.sh</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\RepWindow.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Request.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Resource.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Screen.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Selection.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SelInput.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SetAttributes.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SetClip.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SetIFocus.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SetWMProps.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\SetWMProto.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Shape.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\StName.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\StrKeysym.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\StrToText.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\stub.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Sync.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Text.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Text16.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\TextExt.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\TextToStr.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Threads.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\UndefCurs.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\UnloadFont.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\UnmapWin.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Visual.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Window.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\WindowProperty.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Xinerama.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\XKB.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\XMisc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\Xrm.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\XtoNX.h</name>
+                        </file>
+                    </group>
+                </group>
+                <file>
+                    <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxkbd.c</name>
+                    <configuration>
+                        <name>vsf_template_gd32h7xx</name>
+                        <settings>
+                            <name>ICCARM</name>
+                            <data>
+                                <version>38</version>
+                                <wantNonLocal>0</wantNonLocal>
+                                <debug>1</debug>
+                                <option>
+                                    <name>CCDefines</name>
+                                    <state>__VSF__</state>
+                                    <state>__GigaDevice__</state>
+                                    <state>__GD32H759IMT6__</state>
+                                    <state>GD32H7XX</state>
+                                    <state>VSF_LINUX_USE_X11=ENABLED</state>
+                                    <state>__unix__</state>
+                                    <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                    <state>HAVE_FILEIO=1</state>
+                                    <state>UNIX=1</state>
+                                    <state>LINUX=1</state>
+                                    <state>X11_RGBTXT="/root/share/X11/rgb.txt"</state>
+                                    <state>USE_ALLOCA=0</state>
+                                    <state>main=nxkbd_main</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocComments</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocLine</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCListCFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMnemonics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMessages</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEnableRemarks</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagSuppress</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagRemark</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarning</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagError</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCObjPrefix</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCAllowList</name>
+                                    <version>1</version>
+                                    <state>00000000</state>
+                                </option>
+                                <option>
+                                    <name>CCDebugInfo</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IEndianMode</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptionsCheck</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptions</name>
+                                    <state>--no_unaligned_access --lock_regs=r9</state>
+                                </option>
+                                <option>
+                                    <name>CCLangConformance</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCSignedPlainChar</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCRequirePrototypes</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarnAreErr</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCompilerRuntimeInfo</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IFpuProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>OutputFile</name>
+                                    <state>$FILE_BNAME$.o</state>
+                                </option>
+                                <option>
+                                    <name>CCLibConfigHeader</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>PreInclude</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCIncludePath2</name>
+                                    <state>$PROJ_DIR$\..\..\board\gd32h7xx</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\fltk</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\simple_libc</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\libusb</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\include</state>
+                                </option>
+                                <option>
+                                    <name>CCStdIncCheck</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCodeSection</name>
+                                    <state>.text</state>
+                                </option>
+                                <option>
+                                    <name>IProcessorMode2</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevel</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategy</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevelSlave</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRopi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRwpi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndNoDynInit</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccLang</name>
+                                    <state>2</state>
+                                </option>
+                                <option>
+                                    <name>IccCDialect</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccAllowVLA</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccStaticDestr</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccCppInlineSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccCmsis</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccFloatSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptimizationNoSizeConstraints</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCNoLiteralPool</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategySlave</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutputBom</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncInput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccExceptions2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccRTTI2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCStackProtection</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPointerAutentiction</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCBranchTargetIdentification</name>
+                                    <state>0</state>
+                                </option>
+                            </data>
+                        </settings>
+                    </configuration>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxkbd_srvconn.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxterm.c</name>
+                    <configuration>
+                        <name>vsf_template_gd32h7xx</name>
+                        <settings>
+                            <name>ICCARM</name>
+                            <data>
+                                <version>38</version>
+                                <wantNonLocal>0</wantNonLocal>
+                                <debug>1</debug>
+                                <option>
+                                    <name>CCDefines</name>
+                                    <state>__VSF__</state>
+                                    <state>__GigaDevice__</state>
+                                    <state>__GD32H759IMT6__</state>
+                                    <state>GD32H7XX</state>
+                                    <state>VSF_LINUX_USE_X11=ENABLED</state>
+                                    <state>__unix__</state>
+                                    <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                    <state>HAVE_FILEIO=1</state>
+                                    <state>UNIX=1</state>
+                                    <state>LINUX=1</state>
+                                    <state>X11_RGBTXT="/root/share/X11/rgb.txt"</state>
+                                    <state>USE_ALLOCA=0</state>
+                                    <state>main=nxterm_main</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocComments</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocLine</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCListCFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMnemonics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMessages</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEnableRemarks</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagSuppress</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagRemark</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarning</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagError</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCObjPrefix</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCAllowList</name>
+                                    <version>1</version>
+                                    <state>00000000</state>
+                                </option>
+                                <option>
+                                    <name>CCDebugInfo</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IEndianMode</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptionsCheck</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptions</name>
+                                    <state>--no_unaligned_access --lock_regs=r9</state>
+                                </option>
+                                <option>
+                                    <name>CCLangConformance</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCSignedPlainChar</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCRequirePrototypes</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarnAreErr</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCompilerRuntimeInfo</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IFpuProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>OutputFile</name>
+                                    <state>$FILE_BNAME$.o</state>
+                                </option>
+                                <option>
+                                    <name>CCLibConfigHeader</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>PreInclude</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCIncludePath2</name>
+                                    <state>$PROJ_DIR$\..\..\board\gd32h7xx</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\fltk</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\simple_libc</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\libusb</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\include</state>
+                                </option>
+                                <option>
+                                    <name>CCStdIncCheck</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCodeSection</name>
+                                    <state>.text</state>
+                                </option>
+                                <option>
+                                    <name>IProcessorMode2</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevel</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategy</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevelSlave</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRopi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRwpi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndNoDynInit</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccLang</name>
+                                    <state>2</state>
+                                </option>
+                                <option>
+                                    <name>IccCDialect</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccAllowVLA</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccStaticDestr</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccCppInlineSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccCmsis</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccFloatSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptimizationNoSizeConstraints</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCNoLiteralPool</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategySlave</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutputBom</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncInput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccExceptions2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccRTTI2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCStackProtection</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPointerAutentiction</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCBranchTargetIdentification</name>
+                                    <state>0</state>
+                                </option>
+                            </data>
+                        </settings>
+                    </configuration>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\world.c</name>
+                    <configuration>
+                        <name>vsf_template_gd32h7xx</name>
+                        <settings>
+                            <name>ICCARM</name>
+                            <data>
+                                <version>38</version>
+                                <wantNonLocal>0</wantNonLocal>
+                                <debug>1</debug>
+                                <option>
+                                    <name>CCDefines</name>
+                                    <state>__VSF__</state>
+                                    <state>__GigaDevice__</state>
+                                    <state>__GD32H759IMT6__</state>
+                                    <state>GD32H7XX</state>
+                                    <state>VSF_LINUX_USE_X11=ENABLED</state>
+                                    <state>__unix__</state>
+                                    <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                    <state>HAVE_FILEIO=1</state>
+                                    <state>UNIX=1</state>
+                                    <state>LINUX=1</state>
+                                    <state>X11_RGBTXT="/root/share/X11/rgb.txt"</state>
+                                    <state>USE_ALLOCA=0</state>
+                                    <state>main=world_main</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocComments</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocLine</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCListCFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMnemonics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMessages</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEnableRemarks</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagSuppress</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagRemark</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarning</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagError</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCObjPrefix</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCAllowList</name>
+                                    <version>1</version>
+                                    <state>00000000</state>
+                                </option>
+                                <option>
+                                    <name>CCDebugInfo</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IEndianMode</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptionsCheck</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptions</name>
+                                    <state>--no_unaligned_access --lock_regs=r9</state>
+                                </option>
+                                <option>
+                                    <name>CCLangConformance</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCSignedPlainChar</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCRequirePrototypes</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarnAreErr</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCompilerRuntimeInfo</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IFpuProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>OutputFile</name>
+                                    <state>$FILE_BNAME$.o</state>
+                                </option>
+                                <option>
+                                    <name>CCLibConfigHeader</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>PreInclude</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCIncludePath2</name>
+                                    <state>$PROJ_DIR$\..\..\board\gd32h7xx</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\fltk</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\simple_libc</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\libusb</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\include</state>
+                                </option>
+                                <option>
+                                    <name>CCStdIncCheck</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCodeSection</name>
+                                    <state>.text</state>
+                                </option>
+                                <option>
+                                    <name>IProcessorMode2</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevel</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategy</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevelSlave</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRopi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRwpi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndNoDynInit</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccLang</name>
+                                    <state>2</state>
+                                </option>
+                                <option>
+                                    <name>IccCDialect</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccAllowVLA</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccStaticDestr</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccCppInlineSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccCmsis</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccFloatSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptimizationNoSizeConstraints</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCNoLiteralPool</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategySlave</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutputBom</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncInput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccExceptions2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccRTTI2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCStackProtection</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPointerAutentiction</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCBranchTargetIdentification</name>
+                                    <state>0</state>
+                                </option>
+                            </data>
+                        </settings>
+                    </configuration>
+                </file>
+            </group>
+            <group>
+                <name>port</name>
+                <group>
+                    <name>nanox</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port\nanox\kbd_ttyscan.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port\nanox\keyctrl.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port\nanox\keynorm.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port\nanox\keynum.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port\nanox\keyshft.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port\nanox\StrKeysym.c</name>
+                    </file>
+                </group>
+                <file>
+                    <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port\config.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port\nanox_nx11_vsf.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port\nanox_nx11_vsf.h</name>
+                </file>
+            </group>
+            <group>
+                <name>TinyGL</name>
+                <group>
+                    <name>src</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\api.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\arrays.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\clear.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\clip.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\error.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\get.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\glx.c</name>
+                        <excluded>
+                            <configuration>vsf_template_gd32h7xx</configuration>
+                        </excluded>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\image_util.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\init.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\light.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\list.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\matrix.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\memory.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\misc.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\msghandling.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\msghandling.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\nglx.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\opinfo.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\oscontext.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\select.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\specbuf.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\specbuf.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\texture.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\vertex.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zbuffer.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zbuffer.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zdither.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zfeatures.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zgl.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zline.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zline.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zmath.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zmath.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\ztriangle.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\src\ztriangle.h</name>
+                    </file>
+                </group>
+                <file>
+                    <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\examples\gears.c</name>
+                    <configuration>
+                        <name>vsf_template_gd32h7xx</name>
+                        <settings>
+                            <name>ICCARM</name>
+                            <data>
+                                <version>38</version>
+                                <wantNonLocal>0</wantNonLocal>
+                                <debug>1</debug>
+                                <option>
+                                    <name>CCDefines</name>
+                                    <state>__VSF__</state>
+                                    <state>__GigaDevice__</state>
+                                    <state>__GD32H759IMT6__</state>
+                                    <state>GD32H7XX</state>
+                                    <state>VSF_LINUX_USE_X11=ENABLED</state>
+                                    <state>__unix__</state>
+                                    <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                    <state>HAVE_FILEIO=1</state>
+                                    <state>UNIX=1</state>
+                                    <state>LINUX=1</state>
+                                    <state>X11_RGBTXT="/root/share/X11/rgb.txt"</state>
+                                    <state>USE_ALLOCA=0</state>
+                                    <state>main=tinygl_gears_main</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocComments</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocLine</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCListCFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMnemonics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMessages</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEnableRemarks</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagSuppress</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagRemark</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarning</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagError</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCObjPrefix</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCAllowList</name>
+                                    <version>1</version>
+                                    <state>00000000</state>
+                                </option>
+                                <option>
+                                    <name>CCDebugInfo</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IEndianMode</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptionsCheck</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptions</name>
+                                    <state>--no_unaligned_access --lock_regs=r9</state>
+                                </option>
+                                <option>
+                                    <name>CCLangConformance</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCSignedPlainChar</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCRequirePrototypes</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarnAreErr</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCompilerRuntimeInfo</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IFpuProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>OutputFile</name>
+                                    <state>$FILE_BNAME$.o</state>
+                                </option>
+                                <option>
+                                    <name>CCLibConfigHeader</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>PreInclude</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCIncludePath2</name>
+                                    <state>$PROJ_DIR$\..\..\board\gd32h7xx</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\fltk</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\simple_libc</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\libusb</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\include</state>
+                                </option>
+                                <option>
+                                    <name>CCStdIncCheck</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCodeSection</name>
+                                    <state>.text</state>
+                                </option>
+                                <option>
+                                    <name>IProcessorMode2</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevel</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategy</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevelSlave</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRopi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRwpi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndNoDynInit</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccLang</name>
+                                    <state>2</state>
+                                </option>
+                                <option>
+                                    <name>IccCDialect</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccAllowVLA</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccStaticDestr</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccCppInlineSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccCmsis</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccFloatSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptimizationNoSizeConstraints</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCNoLiteralPool</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategySlave</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutputBom</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncInput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccExceptions2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccRTTI2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCStackProtection</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPointerAutentiction</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCBranchTargetIdentification</name>
+                                    <state>0</state>
+                                </option>
+                            </data>
+                        </settings>
+                    </configuration>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\examples\nanox.c</name>
+                </file>
+            </group>
+        </group>
         <file>
             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\hwtest_main.c</name>
         </file>
@@ -7400,7 +9717,7 @@
                                 <settings>
                                     <name>ICCARM</name>
                                     <data>
-                                        <version>35</version>
+                                        <version>38</version>
                                         <wantNonLocal>1</wantNonLocal>
                                         <debug>1</debug>
                                         <option>
@@ -7533,10 +9850,6 @@
                                             <state></state>
                                         </option>
                                         <option>
-                                            <name>CompilerMisraOverride</name>
-                                            <state>0</state>
-                                        </option>
-                                        <option>
                                             <name>CCIncludePath2</name>
                                             <state>$PROJ_DIR$\..\..\config</state>
                                             <state>$PROJ_DIR$\..\..\vsf\source</state>
@@ -7577,16 +9890,6 @@
                                         <option>
                                             <name>CCOptLevelSlave</name>
                                             <state>3</state>
-                                        </option>
-                                        <option>
-                                            <name>CompilerMisraRules98</name>
-                                            <version>0</version>
-                                            <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                                        </option>
-                                        <option>
-                                            <name>CompilerMisraRules04</name>
-                                            <version>0</version>
-                                            <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
                                         </option>
                                         <option>
                                             <name>CCPosIndRopi</name>
@@ -7663,6 +9966,18 @@
                                         </option>
                                         <option>
                                             <name>IccRTTI2</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCStackProtection</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPointerAutentiction</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCBranchTargetIdentification</name>
                                             <state>0</state>
                                         </option>
                                     </data>
@@ -7673,7 +9988,7 @@
                                 <settings>
                                     <name>ICCARM</name>
                                     <data>
-                                        <version>35</version>
+                                        <version>38</version>
                                         <wantNonLocal>1</wantNonLocal>
                                         <debug>1</debug>
                                         <option>
@@ -7806,10 +10121,6 @@
                                             <state></state>
                                         </option>
                                         <option>
-                                            <name>CompilerMisraOverride</name>
-                                            <state>0</state>
-                                        </option>
-                                        <option>
                                             <name>CCIncludePath2</name>
                                             <state>$PROJ_DIR$\..\..\config</state>
                                             <state>$PROJ_DIR$\..\..\vsf\source</state>
@@ -7850,16 +10161,6 @@
                                         <option>
                                             <name>CCOptLevelSlave</name>
                                             <state>3</state>
-                                        </option>
-                                        <option>
-                                            <name>CompilerMisraRules98</name>
-                                            <version>0</version>
-                                            <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                                        </option>
-                                        <option>
-                                            <name>CompilerMisraRules04</name>
-                                            <version>0</version>
-                                            <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
                                         </option>
                                         <option>
                                             <name>CCPosIndRopi</name>
@@ -7936,6 +10237,18 @@
                                         </option>
                                         <option>
                                             <name>IccRTTI2</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCStackProtection</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPointerAutentiction</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCBranchTargetIdentification</name>
                                             <state>0</state>
                                         </option>
                                     </data>
@@ -7946,7 +10259,7 @@
                                 <settings>
                                     <name>ICCARM</name>
                                     <data>
-                                        <version>35</version>
+                                        <version>38</version>
                                         <wantNonLocal>1</wantNonLocal>
                                         <debug>1</debug>
                                         <option>
@@ -8079,10 +10392,6 @@
                                             <state></state>
                                         </option>
                                         <option>
-                                            <name>CompilerMisraOverride</name>
-                                            <state>0</state>
-                                        </option>
-                                        <option>
                                             <name>CCIncludePath2</name>
                                             <state>$PROJ_DIR$\..\..\config</state>
                                             <state>$PROJ_DIR$\..\..\vsf\source</state>
@@ -8123,16 +10432,6 @@
                                         <option>
                                             <name>CCOptLevelSlave</name>
                                             <state>3</state>
-                                        </option>
-                                        <option>
-                                            <name>CompilerMisraRules98</name>
-                                            <version>0</version>
-                                            <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                                        </option>
-                                        <option>
-                                            <name>CompilerMisraRules04</name>
-                                            <version>0</version>
-                                            <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
                                         </option>
                                         <option>
                                             <name>CCPosIndRopi</name>
@@ -8209,6 +10508,18 @@
                                         </option>
                                         <option>
                                             <name>IccRTTI2</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCStackProtection</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPointerAutentiction</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCBranchTargetIdentification</name>
                                             <state>0</state>
                                         </option>
                                     </data>
@@ -8336,15 +10647,6 @@
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\i2s\i2s.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>io</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\io\io.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\io\io.h</name>
                             </file>
                         </group>
                         <group>
@@ -9638,15 +11940,6 @@
                         </file>
                     </group>
                     <group>
-                        <name>io</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\io\io_common.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\io\io_template.h</name>
-                        </file>
-                    </group>
-                    <group>
                         <name>pm</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\pm\pm_template.h</name>
@@ -9752,9 +12045,6 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_implementation.h</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_io.h</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\template\vsf_template_mmc.h</name>
@@ -9995,15 +12285,6 @@
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\gpio\gpio.h</name>
-                                </file>
-                            </group>
-                            <group>
-                                <name>io</name>
-                                <file>
-                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\io\io.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\io\io.h</name>
                                 </file>
                             </group>
                             <group>
@@ -10960,15 +13241,6 @@
                             </file>
                         </group>
                         <group>
-                            <name>io</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.h</name>
-                            </file>
-                        </group>
-                        <group>
                             <name>pwm</name>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.c</name>
@@ -11200,15 +13472,6 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\i2s\vsf_remapped_i2s.h</name>
-                        </file>
-                    </group>
-                    <group>
-                        <name>io</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.h</name>
                         </file>
                     </group>
                     <group>

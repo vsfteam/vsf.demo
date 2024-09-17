@@ -1,4 +1,4 @@
- src/demos/nanox/nxterm.c      |  21 +-
+ src/demos/nanox/nxterm.c      |  27 +-
  src/demos/nanox/world.c       |   2 +-
  src/drivers/scr_fb.c          |   8 +
  src/include/lock.h            |   8 +
@@ -19,7 +19,7 @@
  src/include/wintern.h         | 113 ------
  src/include/wintools.h        |  31 --
  src/include/winuser.h         | 854 ------------------------------------------
- src/nanox/client.c            |  12 +-
+ src/nanox/client.c            |  14 +-
  src/nanox/nxdraw.c            |   1 +
  src/nanox/nxproto.c           |   2 +-
  src/nanox/serv.h              |  31 +-
@@ -29,8 +29,8 @@
  src/nanox/wmaction.c          |   1 +
  src/nanox/wmclients.c         |   1 +
  src/nanox/wmevents.c          |   1 +
- src/nx11/Atom.c               |   7 +
- src/nx11/ChProperty.c         |   8 +
+ src/nx11/Atom.c               |  15 +-
+ src/nx11/ChProperty.c         |  20 +-
  src/nx11/Colormap.c           |   9 +
  src/nx11/Context.c            |   7 +
  src/nx11/CrGC.c               |   2 +-
@@ -39,7 +39,7 @@
  src/nx11/FontCursor.c         |  10 +
  src/nx11/Image.c              |   2 +-
  src/nx11/NextEvent.c          |  18 +
- src/nx11/OpenDis.c            |  19 +-
+ src/nx11/OpenDis.c            |  23 +-
  src/nx11/Quarks.c             |  26 +-
  src/nx11/SelInput.c           |   2 +-
  src/nx11/Selection.c          |   6 +
@@ -50,10 +50,10 @@
  src/nx11/fontlist.c           |   2 +-
  src/nx11/nxlib.h              |   4 +
  src/nx11/stub.c               |  10 +-
- 52 files changed, 346 insertions(+), 3231 deletions(-)
+ 52 files changed, 362 insertions(+), 3247 deletions(-)
 
 diff --git a/src/demos/nanox/nxterm.c b/src/demos/nanox/nxterm.c
-index 088b17e..25c3a40 100644
+index 088b17e..afd54f5 100644
 --- a/src/demos/nanox/nxterm.c
 +++ b/src/demos/nanox/nxterm.c
 @@ -68,7 +68,7 @@
@@ -79,6 +79,24 @@ index 088b17e..25c3a40 100644
  
  #define debug_screen 0
  #define debug_kbd 0
+@@ -148,7 +148,7 @@ void esc1(unsigned char c);
+ void esc0(unsigned char c);
+ void esc100(unsigned char c); //ANSI codes
+ void printc(unsigned char c);
+-void init(void);
++static void init(void);
+ void term(void);
+ void usage(char *s);
+ int do_special_key(unsigned char *buffer, int key, int modifiers);
+@@ -1095,7 +1095,7 @@ void printc(unsigned char c)
+ }
+ 
+ 
+-void init(void)
++static void init(void)
+ {
+     curx = savx = 0;
+     cury = savy = 0;
 @@ -1182,7 +1182,7 @@ term(void)
  
  		case GR_EVENT_TYPE_EXPOSURE:
@@ -88,6 +106,15 @@ index 088b17e..25c3a40 100644
  			break;
  
  		case GR_EVENT_TYPE_FDINPUT:
+@@ -1548,7 +1548,7 @@ void usage(char *s)
+ }
+ 
+ #if UNIX
+-static void *mysignal(int signum, void *handler)
++static sighandler_t mysignal(int signum, sighandler_t handler)
+ {
+ 	struct sigaction sa, so;
+ 
 @@ -1933,7 +1933,7 @@ int term_init(void)
  	char pty_name[12];
  
@@ -3560,7 +3587,7 @@ index 32f9677..0000000
 -/* misc APIs*/
 -DWORD WINAPI	GetTickCount(VOID);
 diff --git a/src/nanox/client.c b/src/nanox/client.c
-index 6e7aaa1..4dd0d1a 100644
+index 6e7aaa1..f6b93af 100644
 --- a/src/nanox/client.c
 +++ b/src/nanox/client.c
 @@ -77,7 +77,7 @@
@@ -3587,6 +3614,15 @@ index 6e7aaa1..4dd0d1a 100644
  #else /* __ECOS*/
  /*
   * eCos uses a thread data pointer to store all statics in...
+@@ -437,7 +445,7 @@ GrClose(void)
+ 
+ #if GR_CLOSE_FIX
+ 	/* allow 1 second to flush*/
+-	void * oldSignalHandler = signal(SIGALRM, mySignalhandler);
++	sighandler_t oldSignalHandler = signal(SIGALRM, mySignalhandler);
+ 	alarm(1);
+ #endif
+ 	LOCK(&nxGlobalLock);
 @@ -932,6 +940,8 @@ GrGetNextEvent(GR_EVENT *ep)
  void
  GrGetNextEventTimeout(GR_EVENT * ep, GR_TIMEOUT timeout)
@@ -3787,20 +3823,25 @@ index 7cb683f..de7aa66 100644
  #include "nanowm.h"
  
 diff --git a/src/nx11/Atom.c b/src/nx11/Atom.c
-index 2619b86..ce812fc 100644
+index 2619b86..17e08e7 100644
 --- a/src/nx11/Atom.c
 +++ b/src/nx11/Atom.c
-@@ -3,6 +3,7 @@
+@@ -3,7 +3,8 @@
  #include "X11/Xatom.h"
  #include "nxlib.h"
  
+-#define SZHASHTABLE	64
 +#ifndef __VSF__
- #define SZHASHTABLE	64
++#define ATOM_SZHASHTABLE	64
  
  struct hash_t {
-@@ -13,6 +14,10 @@ struct hash_t {
+ 	char *name;
+@@ -11,8 +12,12 @@ struct hash_t {
+ 	struct hash_t *next;
+ };
  
- static struct hash_t *hash_list[SZHASHTABLE];
+-static struct hash_t *hash_list[SZHASHTABLE];
++static struct hash_t *hash_list[ATOM_SZHASHTABLE];
  static unsigned long atom_id = XA_LAST_PREDEFINED + 32;
 +#else
 +#define hash_list	(vsf_nanox_nx11_ctx->atom._hash_list)
@@ -3809,7 +3850,14 @@ index 2619b86..ce812fc 100644
  
  static unsigned char
  hash_str(_Xconst char *name)
-@@ -29,6 +34,7 @@ hash_str(_Xconst char *name)
+@@ -23,12 +28,13 @@ hash_str(_Xconst char *name)
+ 	for (i = 0; i < strlen(name); i++)
+ 		ch += name[i];
+ 
+-	return (ch % SZHASHTABLE);
++	return (ch % ATOM_SZHASHTABLE);
+ }
+ 
  Atom
  XInternAtom(Display * display, _Xconst char *atom_name, Bool only_if_exists)
  {
@@ -3817,30 +3865,38 @@ index 2619b86..ce812fc 100644
  	unsigned char hash = hash_str(atom_name);
  	struct hash_t *val;
  
-@@ -77,6 +83,7 @@ XInternAtoms(Display * display, char **names, int count,
+@@ -77,9 +83,10 @@ XInternAtoms(Display * display, char **names, int count,
  char *
  XGetAtomName(Display * display, Atom atom)
  {
 +	NANOX_NX11_VSF_GET_CONTEXT();
  	int i;
  
- 	for (i = 0; i < SZHASHTABLE; i++) {
+-	for (i = 0; i < SZHASHTABLE; i++) {
++	for (i = 0; i < ATOM_SZHASHTABLE; i++) {
+ 		struct hash_t *val;
+ 
+ 		for (val = hash_list[i]; val; val = val->next)
 diff --git a/src/nx11/ChProperty.c b/src/nx11/ChProperty.c
-index 12e6cdf..40d7224 100644
+index 12e6cdf..de06909 100644
 --- a/src/nx11/ChProperty.c
 +++ b/src/nx11/ChProperty.c
-@@ -3,6 +3,7 @@
+@@ -3,7 +3,8 @@
  #include "nxlib.h"
  #include "X11/Xatom.h"
  
+-#define SZHASHTABLE	32
 +#ifndef __VSF__
- #define SZHASHTABLE	32
++#define CHPROPERTY_SZHASHTABLE	32
  struct window_props {
  	Atom property;
-@@ -20,12 +21,16 @@ struct windows {
+ 	Atom type;
+@@ -19,17 +20,21 @@ struct windows {
+ 	struct window_props *properties;
  	struct windows *next;
  };
- static struct windows *window_list[SZHASHTABLE];
+-static struct windows *window_list[SZHASHTABLE];
++static struct windows *window_list[CHPROPERTY_SZHASHTABLE];
 +#else
 +#define window_list	(vsf_nanox_nx11_ctx->chproperty._window_list)
 +#endif
@@ -3854,30 +3910,47 @@ index 12e6cdf..40d7224 100644
  	struct windows *win = NULL;
  	struct window_props *prop = NULL;
  	Window prop_window;
-@@ -189,6 +194,7 @@ _nxDelPropData(struct window_props *prop)
+-	int hash = w % SZHASHTABLE;
++	int hash = w % CHPROPERTY_SZHASHTABLE;
+ 	GR_WM_PROPERTIES props;
+ 	
+ 	if (!nelements || data == NULL) {
+@@ -189,9 +194,10 @@ _nxDelPropData(struct window_props *prop)
  int
  XDeleteProperty(Display *display, Window w, Atom property)
  {
 +	NANOX_NX11_VSF_GET_CONTEXT();
  	struct windows *win;
  	struct window_props *prop;
- 	int hash = w % SZHASHTABLE;
-@@ -217,6 +223,7 @@ XDeleteProperty(Display *display, Window w, Atom property)
+-	int hash = w % SZHASHTABLE;
++	int hash = w % CHPROPERTY_SZHASHTABLE;
+ 
+ 	for (win = window_list[hash]; win; win = win->next)
+ 		if (win->w == w) {
+@@ -217,9 +223,10 @@ XDeleteProperty(Display *display, Window w, Atom property)
  int
  _nxDelAllProperty(Window w)
  {
 +	NANOX_NX11_VSF_GET_CONTEXT();
  	struct windows *win;
  	struct window_props *prop;
- 	int hash = w % SZHASHTABLE;
-@@ -243,6 +250,7 @@ XGetWindowProperty(Display * dpy, Window w, Atom property, long offset,
+-	int hash = w % SZHASHTABLE;
++	int hash = w % CHPROPERTY_SZHASHTABLE;
+ 
+ 	for (win = window_list[hash]; win; win = win->next)
+ 		if (win->w == w) {
+@@ -243,9 +250,10 @@ XGetWindowProperty(Display * dpy, Window w, Atom property, long offset,
  	long len, Bool bDel, Atom req, Atom * type, int *format,
  	unsigned long *nitems, unsigned long *bytes, unsigned char **data)
  {
 +	NANOX_NX11_VSF_GET_CONTEXT();
  	struct windows *win;
  	struct window_props *prop;
- 	int hash = w % SZHASHTABLE;
+-	int hash = w % SZHASHTABLE;
++	int hash = w % CHPROPERTY_SZHASHTABLE;
+ 
+ 	for (win = window_list[hash]; win; win = win->next) {
+ 		if (win->w == w) {
 diff --git a/src/nx11/Colormap.c b/src/nx11/Colormap.c
 index 4056d86..d52abf7 100644
 --- a/src/nx11/Colormap.c
@@ -4181,7 +4254,7 @@ index d7b909f..5e005ca 100644
  
  	FUNC_ENTER;
 diff --git a/src/nx11/OpenDis.c b/src/nx11/OpenDis.c
-index 0d595cd..6f47c06 100644
+index 0d595cd..89cf7e6 100644
 --- a/src/nx11/OpenDis.c
 +++ b/src/nx11/OpenDis.c
 @@ -1,6 +1,7 @@
@@ -4225,15 +4298,17 @@ index 0d595cd..6f47c06 100644
  		EPRINTF("nxlib: can't connect to nano-X server\r\n");
  		return NULL;
  	}
-@@ -44,7 +52,7 @@ XOpenDisplay(_Xconst char *display)
+@@ -44,8 +52,8 @@ XOpenDisplay(_Xconst char *display)
  		return OutOfMemory(dpy);
  
  	/* Initialize as much of the display structure as we can.*/
 -	dpy->fd			= fd;
+-	dpy->display_name	= static_display_name;
 +	dpy->fd			= disp_fd;
- 	dpy->display_name	= static_display_name;
++	dpy->display_name	= (char *)static_display_name;
  	dpy->proto_major_version= 11;
  	dpy->proto_minor_version= 6;
+ 	dpy->release 		= 0;
 @@ -206,6 +214,9 @@ XOpenDisplay(_Xconst char *display)
  	    }
  	}
@@ -4244,6 +4319,15 @@ index 0d595cd..6f47c06 100644
  }
  
  /* XFreeDisplayStructure frees all the storage associated with a 
+@@ -332,7 +343,7 @@ XRootWindowOfScreen(Screen *scr)
+ char *
+ XDisplayName(_Xconst char *string)
+ {
+-	return static_display_name;
++	return (char *)static_display_name;
+ }
+ 
+ VisualID
 diff --git a/src/nx11/Quarks.c b/src/nx11/Quarks.c
 index ec9e315..e193b4f 100644
 --- a/src/nx11/Quarks.c

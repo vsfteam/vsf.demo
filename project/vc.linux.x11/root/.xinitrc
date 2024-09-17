@@ -2,4 +2,4 @@
 
 echo startup X Window
 nxterm &
-nxkdb &
+nxkbd &

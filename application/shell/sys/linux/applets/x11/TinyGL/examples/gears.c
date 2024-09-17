@@ -251,7 +251,7 @@ void reshape( int width, int height )
 }
 
 
-static void init( void )
+void init( void )
 {
    static GLfloat pos[4] = {5.0, 5.0, 10.0, 0.0 };
    static GLfloat red[4] = {0.8, 0.1, 0.0, 1.0 };

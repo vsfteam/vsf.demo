@@ -12,7 +12,7 @@
 
 // Atom.c
 
-#define SZHASHTABLE     64
+#define ATOM_SZHASHTABLE        64
 
 struct hash_t {
     char *name;
@@ -22,7 +22,7 @@ struct hash_t {
 
 // ChProperty.c
 
-#define SZHASHTABLE	32
+#define CHPROPERTY_SZHASHTABLE	32
 
 struct window_props {
 	Atom property;
@@ -98,11 +98,11 @@ typedef unsigned long Entry;
 
 typedef struct vsf_nanox_nx11_ctx_t {
     struct {
-        struct hash_t *_hash_list[SZHASHTABLE];
+        struct hash_t *_hash_list[ATOM_SZHASHTABLE];
         unsigned long _atom_id;
     } atom;
     struct {
-        struct windows *_window_list[SZHASHTABLE];
+        struct windows *_window_list[CHPROPERTY_SZHASHTABLE];
     } chproperty;
     struct {
         nxColormap *_colormap_hash[32];

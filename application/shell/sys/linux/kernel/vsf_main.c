@@ -154,7 +154,7 @@
 
 #endif
 
-#define APP_CONFIG_FILE                             "/root/appcfg"
+#define APP_CONFIG_FILE                             "~/appcfg"
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
@@ -923,13 +923,15 @@ bool app_shell_is_orig_busybox(void)
 #include <nano-X.h>
 #include "nxlib.h"
 
-extern int fltk_main(int argc, char *argv[]);
-static int __fltk_main (int argc, char *argv[])
+#if VSF_LINUX_USE_FLTK == ENABLED
+extern int fltk_forms_main(int argc, char *argv[]);
+static int __fltk_forms_main(int argc, char *argv[])
 {
     INIT_PER_THREAD_DATA();
     NANOX_NX11_VSF_INIT_PROCESS_DATA();
-    return fltk_main(argc, argv);
+    return fltk_forms_main(argc, argv);
 }
+#endif
 
 extern int tinygl_gears_main(int argc, char *argv[]);
 static int __tinygl_gears_main(int argc, char *argv[])
@@ -946,11 +948,11 @@ static int __nxterm_main(int argc, char **argv)
     return nxterm_main(argc, argv);
 }
 
-extern int nxkdb_main(int argc, char **argv);
-static int __nxkdb_main(int argc, char **argv)
+extern int nxkbd_main(int argc, char **argv);
+static int __nxkbd_main(int argc, char **argv)
 {
     INIT_PER_THREAD_DATA();
-    return nxkdb_main(argc, argv);
+    return nxkbd_main(argc, argv);
 }
 
 extern int world_main(int argc, char **argv);
@@ -960,16 +962,16 @@ static int __world_main(int argc, char **argv)
     return world_main(argc, argv);
 }
 
-extern int nanox_main(int argc, char **argv);
-static int __nanox_main(int argc, char **argv)
+extern int nanox_srv_main(int argc, char **argv);
+static int __nanox_srv_main(int argc, char **argv)
 {
     INIT_PER_THREAD_DATA();
-    return nanox_main(argc, argv);
+    return nanox_srv_main(argc, argv);
 }
 
 static int __startx_main(int argc, char **argv)
 {
-    return execl("/bin/sh", "sh", "/root/.xinitrc", NULL);
+    return execl("/bin/sh", "sh", "~/.xinitrc", NULL);
 }
 #endif
 
@@ -1068,6 +1070,8 @@ int vsf_linux_create_fhs(void)
     }
     putenv("HOME=/root");
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/appcfg", __appcfg_main);
+#else
+#   error where should be ${HOME}?
 #endif
 
     // /usr
@@ -1137,11 +1141,13 @@ int vsf_linux_create_fhs(void)
 
 #if VSF_LINUX_USE_X11 == ENABLED
     extern int nanox_main(int argc, char** argv);
-    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nanox_srv", __nanox_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nanox_srv", __nanox_srv_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/world", __world_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxterm", __nxterm_main);
-    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxkdb", __nxkdb_main);
-    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fltk", __fltk_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxkbd", __nxkbd_main);
+#   if VSF_LINUX_USE_FLTK == ENABLED
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fltk", __fltk_forms_main);
+#   endif
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/gears", __tinygl_gears_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/startx", __startx_main);
 

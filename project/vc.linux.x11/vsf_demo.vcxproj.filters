@@ -865,9 +865,6 @@
     <Filter Include="application\x11\port\nanox">
       <UniqueIdentifier>{bc4cf699-48be-4491-bc8c-6b56bb7b64b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="application\x11\nanox\nxkbd">
-      <UniqueIdentifier>{eb517915-92d7-4c79-bee5-7d47b55bdc7a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="application\x11\fltk\lib32">
       <UniqueIdentifier>{c18d4b6e-5668-4259-bdaa-a51d7f4db7ce}</UniqueIdentifier>
     </Filter>
@@ -4103,18 +4100,6 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxkbd_srvconn.c">
       <Filter>application\x11\nanox</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyctrl.c">
-      <Filter>application\x11\nanox\nxkbd</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keynorm.c">
-      <Filter>application\x11\nanox\nxkbd</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keynum.c">
-      <Filter>application\x11\nanox\nxkbd</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyshft.c">
-      <Filter>application\x11\nanox\nxkbd</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox_nx11_vsf.c">
       <Filter>application\x11\port</Filter>
     </ClCompile>
@@ -4204,6 +4189,18 @@
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\examples\nanox.c">
       <Filter>application\x11\TinyGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyctrl.c">
+      <Filter>application\x11\port\nanox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keynorm.c">
+      <Filter>application\x11\port\nanox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keynum.c">
+      <Filter>application\x11\port\nanox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyshft.c">
+      <Filter>application\x11\port\nanox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

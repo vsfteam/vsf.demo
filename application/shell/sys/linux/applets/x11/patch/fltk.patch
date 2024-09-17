@@ -1,7 +1,9 @@
  FL/Fl.H                             | 4 ++++
  src/Fl_File_Chooser2.cxx            | 3 +++
  src/Fl_Native_File_Chooser_FLTK.cxx | 7 ++++---
- 3 files changed, 11 insertions(+), 3 deletions(-)
+ src/Fl_x.cxx                        | 2 +-
+ test/forms.cxx                      | 5 +++--
+ 5 files changed, 15 insertions(+), 6 deletions(-)
 
 diff --git a/FL/Fl.H b/FL/Fl.H
 index 30120b28f..90c5f9a4f 100644
@@ -57,3 +59,40 @@ index 617ea1d18..cdf814a8d 100644
  }
  
  /**
+diff --git a/src/Fl_x.cxx b/src/Fl_x.cxx
+index 70712cbde..d6a124f2c 100644
+--- a/src/Fl_x.cxx
++++ b/src/Fl_x.cxx
+@@ -764,7 +764,7 @@ void Fl::disable_im() {
+ void fl_open_display() {
+   if (fl_display) return;
+ 
+-  setlocale(LC_CTYPE, "");
++//  setlocale(LC_CTYPE, "");
+   XSetLocaleModifiers("");
+ 
+   XSetIOErrorHandler(io_error_handler);
+diff --git a/test/forms.cxx b/test/forms.cxx
+index d4f9ee0e2..710b02fa3 100644
+--- a/test/forms.cxx
++++ b/test/forms.cxx
+@@ -151,9 +151,9 @@ const char *browserlines[] = {
+    0
+ };
+ 
+-
++extern "C" {
+ int
+-main (int argc, char *argv[])
++fltk_forms_main (int argc, char *argv[])
+ {
+   FL_COLOR c = FL_BLACK;
+   const char **p;
+@@ -187,6 +187,7 @@ main (int argc, char *argv[])
+ 
+   return 0;
+ }
++}
+ 
+ //
+ // End of "$Id$".
