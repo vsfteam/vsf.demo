@@ -345,6 +345,11 @@ static int __vsf_board_init_linux_main(int argc, char **argv)
     return 0;
 }
 
+VSF_CAL_WEAK(vsf_board_prepare_hw_for_linux)
+void vsf_board_prepare_hw_for_linux(void)
+{
+}
+
 VSF_CAL_WEAK(vsf_linux_install_package_manager)
 void vsf_linux_install_package_manager(vk_romfs_info_t *fsinfo, bool can_uninstall, bool can_install)
 {
@@ -927,7 +932,9 @@ bool app_shell_is_orig_busybox(void)
 extern int fltk_forms_main(int argc, char *argv[]);
 static int __fltk_forms_main(int argc, char *argv[])
 {
+#if !NONETWORK
     INIT_PER_THREAD_DATA();
+#endif
     NANOX_NX11_VSF_INIT_PROCESS_DATA();
     return fltk_forms_main(argc, argv);
 }
@@ -936,38 +943,43 @@ static int __fltk_forms_main(int argc, char *argv[])
 extern int tinygl_gears_main(int argc, char *argv[]);
 static int __tinygl_gears_main(int argc, char *argv[])
 {
+#if !NONETWORK
     INIT_PER_THREAD_DATA();
+#endif
     NANOX_NX11_VSF_INIT_PROCESS_DATA();
     return tinygl_gears_main(argc, argv);
 }
 
 extern int nxterm_main(int argc, char **argv);
+extern int nxkbd_main(int argc, char **argv);
+extern int world_main(int argc, char **argv);
+extern int nanox_srv_main(int argc, char **argv);
+
+#if !NONETWORK
 static int __nxterm_main(int argc, char **argv)
 {
     INIT_PER_THREAD_DATA();
     return nxterm_main(argc, argv);
 }
 
-extern int nxkbd_main(int argc, char **argv);
 static int __nxkbd_main(int argc, char **argv)
 {
     INIT_PER_THREAD_DATA();
     return nxkbd_main(argc, argv);
 }
 
-extern int world_main(int argc, char **argv);
 static int __world_main(int argc, char **argv)
 {
     INIT_PER_THREAD_DATA();
     return world_main(argc, argv);
 }
 
-extern int nanox_srv_main(int argc, char **argv);
 static int __nanox_srv_main(int argc, char **argv)
 {
     INIT_PER_THREAD_DATA();
     return nanox_srv_main(argc, argv);
 }
+#endif
 
 static int __startx_main(int argc, char **argv)
 {
@@ -980,14 +992,42 @@ int vsf_linux_create_fhs(void)
     // 0. devfs, busybox, etc
     vsf_linux_vfs_init();
 
-    // 1. hardware driver
-#if VSF_HAL_USE_GPIO == ENABLED && VSF_HW_GPIO_COUNT > 0
-    vsf_linux_fs_bind_gpio_hw("/sys/class/gpio");
-#endif
+    // 0.5. root fs, some other initialization may depend on ${HOME}, so initialize /root first
 #if VSF_HAL_USE_FLASH == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
     vsf_flash_init(flash_mal.flash, NULL);
     vsf_flash_enable(flash_mal.flash);
     vk_mal_init(&flash_mal.use_as__vk_mal_t);
+#endif
+#if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && (APP_MSCBOOT_CFG_ROOT_SIZE > 0) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
+    vk_mal_init(&root_mal.use_as__vk_mal_t);
+
+    static vk_lfs_info_t __root_fs;
+    vsf_lfs_bind_mal(&__root_fs.config, &root_mal.use_as__vk_mal_t);
+
+    mkdir("/root", 0);
+    if (mount(NULL, "root", &vk_lfs_op, 0, (const void *)&__root_fs) != 0) {
+        printf("Fail to mount /root.\n");
+    }
+    putenv("HOME=/root");
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/appcfg", __appcfg_main);
+#elif defined(__WIN__)
+    static vk_winfs_info_t __root_fs = {
+        .root.name = "./root",
+    };
+    mkdir("/root", 0);
+    if (mount(NULL, "root", &vk_winfs_op, 0, (const void *)&__root_fs) != 0) {
+        printf("Fail to mount /root.\n");
+    }
+    putenv("HOME=/root");
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/appcfg", __appcfg_main);
+#else
+#   error where should be ${HOME}?
+#endif
+
+    // 1. hardware driver
+    vsf_board_prepare_hw_for_linux();
+#if VSF_HAL_USE_GPIO == ENABLED && VSF_HW_GPIO_COUNT > 0
+    vsf_linux_fs_bind_gpio_hw("/sys/class/gpio");
 #endif
 #if VSF_HAL_USE_I2C == ENABLED
     vsf_linux_fs_bind_i2c("/dev/i2c-0", vsf_board.i2c);
@@ -1046,33 +1086,7 @@ int vsf_linux_create_fhs(void)
     __sdmmc_mal.drv         = &vk_sdmmc_mal_drv;
 #endif
 
-    // 2. fs
-    // /root
-#if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && (APP_MSCBOOT_CFG_ROOT_SIZE > 0) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
-    vk_mal_init(&root_mal.use_as__vk_mal_t);
-
-    static vk_lfs_info_t __root_fs;
-    vsf_lfs_bind_mal(&__root_fs.config, &root_mal.use_as__vk_mal_t);
-
-    mkdir("/root", 0);
-    if (mount(NULL, "root", &vk_lfs_op, 0, (const void *)&__root_fs) != 0) {
-        printf("Fail to mount /root.\n");
-    }
-    putenv("HOME=/root");
-    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/appcfg", __appcfg_main);
-#elif defined(__WIN__)
-    static vk_winfs_info_t __root_fs = {
-        .root.name = "./root",
-    };
-    mkdir("/root", 0);
-    if (mount(NULL, "root", &vk_winfs_op, 0, (const void *)&__root_fs) != 0) {
-        printf("Fail to mount /root.\n");
-    }
-    putenv("HOME=/root");
-    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/appcfg", __appcfg_main);
-#else
-#   error where should be ${HOME}?
-#endif
+    // 2. non-root fs
 
     // /usr
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
@@ -1141,10 +1155,16 @@ int vsf_linux_create_fhs(void)
 
 #if VSF_LINUX_USE_X11 == ENABLED
     extern int nanox_main(int argc, char** argv);
+#if !NONETWORK
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nanox_srv", __nanox_srv_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/world", __world_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxterm", __nxterm_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxkbd", __nxkbd_main);
+#else
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/world", world_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxterm", nxterm_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxkbd", nxkbd_main);
+#endif
 #   if VSF_LINUX_USE_FLTK == ENABLED
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fltk", __fltk_forms_main);
 #   endif

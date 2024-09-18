@@ -114,7 +114,7 @@ vsf_board_t vsf_board = {
             .size.y             = VSF_BOARD_RGBLCD_HEIGHT,
         },
     },
-    .display_dev                = &vsf_board.display_fb.use_as__vk_disp_t,
+    .display_dev                = NULL,
     .bl_port                    = (vsf_gpio_t *)&vsf_hw_gpio9,
     .rst_port                   = (vsf_gpio_t *)&vsf_hw_gpio9,
     .bl_pin                     = 10,
@@ -226,8 +226,67 @@ bool vsf_app_driver_init(void)
     return true;
 }
 
-void vsf_board_init_linux(void)
+void vsf_board_prepare_hw_for_linux(void)
 {
+    char config[16];
+    if (!app_config_read("scr.valid", config, sizeof(config)) && (config[0] == '1')) {
+        if (app_config_read("scr.width", config, sizeof(config))) {
+            vsf_trace_error("scr.width not configured" VSF_TRACE_CFG_LINEEND);
+            goto scr_error;
+        }
+        *(uint16_t *)&vsf_board.display_fb.param.width = atoi(config);
+
+        if (app_config_read("scr.height", config, sizeof(config))) {
+            vsf_trace_error("scr.height not configured" VSF_TRACE_CFG_LINEEND);
+            goto scr_error;
+        }
+        *(uint16_t *)&vsf_board.display_fb.param.height = atoi(config);
+
+        if (app_config_read("scr.fps", config, sizeof(config))) {
+            vsf_trace_warning("scr.fps not configured, use 60 by default" VSF_TRACE_CFG_LINEEND);
+            vsf_board.hw_fb.timing.rgb.fps = 60;
+        } else {
+            vsf_board.hw_fb.timing.rgb.fps = atoi(config);
+        }
+
+        if (app_config_read("scr.hsw", config, sizeof(config))) {
+            vsf_trace_error("scr.hsw not configured" VSF_TRACE_CFG_LINEEND);
+            goto scr_error;
+        }
+        vsf_board.hw_fb.timing.rgb.hsw = atoi(config);
+        if (app_config_read("scr.hbp", config, sizeof(config))) {
+            vsf_trace_error("scr.hbp not configured" VSF_TRACE_CFG_LINEEND);
+            goto scr_error;
+        }
+        vsf_board.hw_fb.timing.rgb.hbp = atoi(config);
+        if (app_config_read("scr.hfp", config, sizeof(config))) {
+            vsf_trace_error("scr.hfp not configured" VSF_TRACE_CFG_LINEEND);
+            goto scr_error;
+        }
+        vsf_board.hw_fb.timing.rgb.hfp = atoi(config);
+        if (app_config_read("scr.vsw", config, sizeof(config))) {
+            vsf_trace_error("scr.vsw not configured" VSF_TRACE_CFG_LINEEND);
+            goto scr_error;
+        }
+        vsf_board.hw_fb.timing.rgb.vsw = atoi(config);
+        if (app_config_read("scr.vbp", config, sizeof(config))) {
+            vsf_trace_error("scr.vbp not configured" VSF_TRACE_CFG_LINEEND);
+            goto scr_error;
+        }
+        vsf_board.hw_fb.timing.rgb.vbp = atoi(config);
+        if (app_config_read("scr.vfp", config, sizeof(config))) {
+            vsf_trace_error("scr.vfp not configured" VSF_TRACE_CFG_LINEEND);
+            goto scr_error;
+        }
+        vsf_board.hw_fb.timing.rgb.vfp = atoi(config);
+        vsf_board.display_dev = &vsf_board.display_fb.use_as__vk_disp_t;
+    }
+
+    return;
+
+scr_error:
+    vsf_board.display_dev = NULL;
+    return;
 }
 
 void delay_us(uint32_t us)

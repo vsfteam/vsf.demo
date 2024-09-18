@@ -1,56 +1,59 @@
- src/demos/nanox/nxterm.c      |  27 +-
- src/demos/nanox/world.c       |   2 +-
- src/drivers/scr_fb.c          |   8 +
- src/include/lock.h            |   8 +
- src/include/mwconfig.h        |   2 +
- src/include/nano-X.h          |  59 ++-
- src/include/sys_time.h        |   3 +
- src/include/uni_std.h         |   4 +
- src/include/winctl.h          | 449 ----------------------
- src/include/windef.h          | 217 -----------
- src/include/windlg.h          | 178 ---------
- src/include/windows.h         | 210 -----------
- src/include/windowsx.h        |  55 ---
- src/include/winerror.h        |  65 ----
- src/include/winfont.h         | 166 --------
- src/include/wingdi.h          | 480 ------------------------
- src/include/winkbd.h          | 138 -------
- src/include/winres.h          | 227 -----------
- src/include/wintern.h         | 113 ------
- src/include/wintools.h        |  31 --
- src/include/winuser.h         | 854 ------------------------------------------
- src/nanox/client.c            |  14 +-
- src/nanox/nxdraw.c            |   1 +
- src/nanox/nxproto.c           |   2 +-
- src/nanox/serv.h              |  31 +-
- src/nanox/srvfunc.c           |   4 +-
- src/nanox/srvmain.c           |   2 +-
- src/nanox/srvutil.c           |   4 +-
- src/nanox/wmaction.c          |   1 +
- src/nanox/wmclients.c         |   1 +
- src/nanox/wmevents.c          |   1 +
- src/nx11/Atom.c               |  15 +-
- src/nx11/ChProperty.c         |  20 +-
- src/nx11/Colormap.c           |   9 +
- src/nx11/Context.c            |   7 +
- src/nx11/CrGC.c               |   2 +-
- src/nx11/ErrorHandler.c       |   9 +
- src/nx11/Extension.c          |  13 +
- src/nx11/FontCursor.c         |  10 +
- src/nx11/Image.c              |   2 +-
- src/nx11/NextEvent.c          |  18 +
- src/nx11/OpenDis.c            |  23 +-
- src/nx11/Quarks.c             |  26 +-
- src/nx11/SelInput.c           |   2 +-
- src/nx11/Selection.c          |   6 +
- src/nx11/SetAttributes.c      |   8 +-
- src/nx11/X11-local/X11/Xlib.h |   4 +-
- src/nx11/Xrm.c                |  26 +-
- src/nx11/font_find.c          |  36 +-
- src/nx11/fontlist.c           |   2 +-
- src/nx11/nxlib.h              |   4 +
- src/nx11/stub.c               |  10 +-
- 52 files changed, 362 insertions(+), 3247 deletions(-)
+ src/demos/nanox/nxterm.c                   |  27 +-
+ src/demos/nanox/world.c                    |   2 +-
+ src/drivers/scr_fb.c                       |   8 +
+ src/fonts/compiled/X6x13.c                 |   2 +-
+ src/fonts/compiled/winFreeSansSerif11x13.c |   2 +-
+ src/include/lock.h                         |   8 +
+ src/include/mwconfig.h                     |   2 +
+ src/include/nano-X.h                       |  59 +-
+ src/include/sys_time.h                     |   3 +
+ src/include/uni_std.h                      |   4 +
+ src/include/winctl.h                       | 449 ---------------
+ src/include/windef.h                       | 217 --------
+ src/include/windlg.h                       | 178 ------
+ src/include/windows.h                      | 210 -------
+ src/include/windowsx.h                     |  55 --
+ src/include/winerror.h                     |  65 ---
+ src/include/winfont.h                      | 166 ------
+ src/include/wingdi.h                       | 480 ----------------
+ src/include/winkbd.h                       | 138 -----
+ src/include/winres.h                       | 227 --------
+ src/include/wintern.h                      | 113 ----
+ src/include/wintools.h                     |  31 --
+ src/include/winuser.h                      | 854 -----------------------------
+ src/nanox/client.c                         |  14 +-
+ src/nanox/nxdraw.c                         |   1 +
+ src/nanox/nxproto.c                        |   6 +-
+ src/nanox/nxproto.h                        |   2 +-
+ src/nanox/serv.h                           |  31 +-
+ src/nanox/srvfunc.c                        |   4 +-
+ src/nanox/srvmain.c                        |   2 +-
+ src/nanox/srvutil.c                        |   4 +-
+ src/nanox/wmaction.c                       |   1 +
+ src/nanox/wmclients.c                      |   1 +
+ src/nanox/wmevents.c                       |   1 +
+ src/nx11/Atom.c                            |  15 +-
+ src/nx11/ChProperty.c                      |  20 +-
+ src/nx11/Colormap.c                        |   9 +
+ src/nx11/Context.c                         |   7 +
+ src/nx11/CrGC.c                            |   2 +-
+ src/nx11/ErrorHandler.c                    |   9 +
+ src/nx11/Extension.c                       |  13 +
+ src/nx11/FontCursor.c                      |  10 +
+ src/nx11/Image.c                           |   2 +-
+ src/nx11/NextEvent.c                       |  18 +
+ src/nx11/OpenDis.c                         |  23 +-
+ src/nx11/Quarks.c                          |  26 +-
+ src/nx11/SelInput.c                        |   2 +-
+ src/nx11/Selection.c                       |   6 +
+ src/nx11/SetAttributes.c                   |   8 +-
+ src/nx11/X11-local/X11/Xlib.h              |   4 +-
+ src/nx11/Xrm.c                             |  26 +-
+ src/nx11/font_find.c                       |  36 +-
+ src/nx11/fontlist.c                        |   2 +-
+ src/nx11/nxlib.h                           |   4 +
+ src/nx11/stub.c                            |  10 +-
+ 55 files changed, 367 insertions(+), 3252 deletions(-)
 
 diff --git a/src/demos/nanox/nxterm.c b/src/demos/nanox/nxterm.c
 index 088b17e..afd54f5 100644
@@ -154,7 +157,7 @@ index 088b17e..afd54f5 100644
  		exit(1);
  	}
 diff --git a/src/demos/nanox/world.c b/src/demos/nanox/world.c
-index 996ad71..4445cd5 100644
+index 996ad71..8c54edf 100644
 --- a/src/demos/nanox/world.c
 +++ b/src/demos/nanox/world.c
 @@ -15,7 +15,7 @@
@@ -162,7 +165,7 @@ index 996ad71..4445cd5 100644
  #include "nano-X.h"
  
 -#define	MAPFILE	"images/demos/nanox/world.map"
-+#define	MAPFILE	"root/images/world.map"
++#define	MAPFILE	"~/images/world.map"
  
  #ifndef O_BINARY
  #define O_BINARY 	0
@@ -185,6 +188,32 @@ index 898120d..c23dc93 100644
  #ifndef FB_TYPE_VGA_PLANES
  #define FB_TYPE_VGA_PLANES 4
  #endif
+diff --git a/src/fonts/compiled/X6x13.c b/src/fonts/compiled/X6x13.c
+index e63b8f1..3f54120 100644
+--- a/src/fonts/compiled/X6x13.c
++++ b/src/fonts/compiled/X6x13.c
+@@ -16,7 +16,7 @@
+ */
+ 
+ /* Font character bitmap data. */
+-static MWIMAGEBITS _X6x13_bits[] = {
++static const MWIMAGEBITS _X6x13_bits[] = {
+ 
+ /* Character 0 (0x00):
+    width 6
+diff --git a/src/fonts/compiled/winFreeSansSerif11x13.c b/src/fonts/compiled/winFreeSansSerif11x13.c
+index b471bfb..1976609 100644
+--- a/src/fonts/compiled/winFreeSansSerif11x13.c
++++ b/src/fonts/compiled/winFreeSansSerif11x13.c
+@@ -9,7 +9,7 @@
+  * Free Sans Serif
+  */
+ 
+-static MWIMAGEBITS winFreeSansSerif11x13_bits[] = {
++static const MWIMAGEBITS winFreeSansSerif11x13_bits[] = {
+ 
+ /* Character   (0x20):
+    ht=13, width=3
 diff --git a/src/include/lock.h b/src/include/lock.h
 index fa5db61..1968017 100644
 --- a/src/include/lock.h
@@ -227,7 +256,7 @@ index 535c3d5..ea737e1 100644
  #if _MSC_VER == 1500
  #define WIN64_PORT		0			/* =1 for compiling on 64-bit Windows*/
 diff --git a/src/include/nano-X.h b/src/include/nano-X.h
-index a2ee28b..b4c5949 100644
+index a2ee28b..479c1a5 100644
 --- a/src/include/nano-X.h
 +++ b/src/include/nano-X.h
 @@ -1036,7 +1036,64 @@ typedef struct {
@@ -235,7 +264,7 @@ index a2ee28b..b4c5949 100644
  #endif
  
 -#if __ECOS
-+#if defined(__VSF__)
++#if defined(__VSF__) && !NONETWORK
 +#include <sys/select.h>
 +#include "lock.h"
 +
@@ -3645,7 +3674,7 @@ index ab9ccd0..8b35153 100644
  #include "nanowm.h"
  #include "nxdraw.h"
 diff --git a/src/nanox/nxproto.c b/src/nanox/nxproto.c
-index b796ee9..d952f3a 100644
+index b796ee9..120d877 100644
 --- a/src/nanox/nxproto.c
 +++ b/src/nanox/nxproto.c
 @@ -13,7 +13,7 @@
@@ -3653,12 +3682,43 @@ index b796ee9..d952f3a 100644
  #define SZREQBUF	2048	/* initial request buffer size*/
  
 -#if !__ECOS
-+#if !__ECOS && !defined(__VSF__)
++#if !__ECOS && (!defined(__VSF__) || NONETWORK)
  static REQBUF	reqbuf;		/* request buffer*/
  extern int 	nxSocket;
  extern char *	nxSharedMem;
+@@ -39,7 +39,7 @@ nxAllocReq(int type, long size, long extra)
+ 	assert(aligned_len <= MAXREQUESTSZ);
+ 
+ 	/* flush buffer if required, and allocate larger one if required*/
+-	if(reqbuf.bufptr + aligned_len >= reqbuf.bufmax)
++	if(reqbuf.bufptr + aligned_len > reqbuf.bufmax)
+ 		nxFlushReq(aligned_len,1);
+ 
+ 	/* fill in request header*/
+@@ -179,7 +179,7 @@ nxFlushReq(long newsize, int reply_needed)
+ 	}
+ 
+ 	/* allocate larger buffer for current request, if needed*/
+-	if(reqbuf.bufptr + newsize >= reqbuf.bufmax) {
++	if(reqbuf.bufptr + newsize > reqbuf.bufmax) {
+ 		reqbuf.buffer = REALLOC(reqbuf.buffer, reqbuf.bufmax - reqbuf.buffer, newsize);
+ 		if(!reqbuf.buffer) {
+ 		       EPRINTF("nxFlushReq: Can't reallocate request buffer\n");
+diff --git a/src/nanox/nxproto.h b/src/nanox/nxproto.h
+index e9fd5c5..8b6d50e 100644
+--- a/src/nanox/nxproto.h
++++ b/src/nanox/nxproto.h
+@@ -33,7 +33,7 @@
+  * NOTE: MAXREQUESTSZ must be an _aligned_ multiple of 4, meaning
+  * that MAXREQUESTSZ = (MAXREQUESTSZ + 3) & ~3.
+  */
+-#define MAXREQUESTSZ	30000		/* max request size (65532)*/
++#define MAXREQUESTSZ	8192		/* max request size (65532)*/
+ 
+ typedef unsigned char	BYTE8;		/* 1 byte*/
+ typedef unsigned short	UINT16;		/* 2 bytes*/
 diff --git a/src/nanox/serv.h b/src/nanox/serv.h
-index d7379a0..54a25d3 100644
+index d7379a0..b786a10 100644
 --- a/src/nanox/serv.h
 +++ b/src/nanox/serv.h
 @@ -10,7 +10,7 @@
@@ -3666,7 +3726,7 @@ index d7379a0..54a25d3 100644
   */
  
 -#if __ECOS && !defined(_NO_SVR_MAPPING)
-+#if (defined(__VSF__) || __ECOS) && !defined(_NO_SVR_MAPPING)
++#if ((defined(__VSF__) && !NONETWORK) || __ECOS) && !defined(_NO_SVR_MAPPING)
  /*
   * Since eCos is a single task, multi-threaded environment, the
   * server and the client code share the same namespace.  This means

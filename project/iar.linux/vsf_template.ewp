@@ -1399,6 +1399,7 @@
                     <state>VSF_LINUX_USE_X11=ENABLED</state>
                     <state>__unix__</state>
                     <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                    <state>NONETWORK=1</state>
                     <state>HAVE_FILEIO=1</state>
                     <state>UNIX=1</state>
                     <state>LINUX=1</state>
@@ -1954,11 +1955,11 @@
                 </option>
                 <option>
                     <name>IlinkIcfOverride</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$/config/linker/GigaDevice/GD32H759xM.icf</state>
+                    <state>$PROJ_DIR$\target\GD32H7XX\gd32h7xx.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -3631,15 +3632,24 @@
                         <name>nanox</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\client.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\clientfb.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxdraw.c</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxproto.c</name>
+                            <excluded>
+                                <configuration>vsf_template_gd32h7xx</configuration>
+                            </excluded>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\nxproto.h</name>
@@ -3693,6 +3703,7 @@
                                             <state>VSF_LINUX_USE_X11=ENABLED</state>
                                             <state>__unix__</state>
                                             <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                            <state>NONETWORK=1</state>
                                             <state>HAVE_FILEIO=1</state>
                                             <state>UNIX=1</state>
                                             <state>LINUX=1</state>
@@ -3958,12 +3969,12 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvnet.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvnonet.c</name>
                             <excluded>
                                 <configuration>vsf_template_gd32h7xx</configuration>
                             </excluded>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvnonet.c</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nanox\srvutil.c</name>
@@ -4322,6 +4333,7 @@
                                     <state>VSF_LINUX_USE_X11=ENABLED</state>
                                     <state>__unix__</state>
                                     <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                    <state>NONETWORK=1</state>
                                     <state>HAVE_FILEIO=1</state>
                                     <state>UNIX=1</state>
                                     <state>LINUX=1</state>
@@ -4607,6 +4619,7 @@
                                     <state>VSF_LINUX_USE_X11=ENABLED</state>
                                     <state>__unix__</state>
                                     <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                    <state>NONETWORK=1</state>
                                     <state>HAVE_FILEIO=1</state>
                                     <state>UNIX=1</state>
                                     <state>LINUX=1</state>
@@ -4889,6 +4902,7 @@
                                     <state>VSF_LINUX_USE_X11=ENABLED</state>
                                     <state>__unix__</state>
                                     <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                    <state>NONETWORK=1</state>
                                     <state>HAVE_FILEIO=1</state>
                                     <state>UNIX=1</state>
                                     <state>LINUX=1</state>
@@ -5318,6 +5332,7 @@
                                     <state>VSF_LINUX_USE_X11=ENABLED</state>
                                     <state>__unix__</state>
                                     <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                    <state>NONETWORK=1</state>
                                     <state>HAVE_FILEIO=1</state>
                                     <state>UNIX=1</state>
                                     <state>LINUX=1</state>
