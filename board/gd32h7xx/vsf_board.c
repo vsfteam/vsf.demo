@@ -23,13 +23,6 @@
 #include "hal/driver/GigaDevice/GD32H7XX/common/vendor/Include/gd32h7xx.h"
 
 /*============================ MACROS ========================================*/
-
-// TODO: remove code below after bug in float support in simple_sprintf beging fixed
-#if VSF_USE_SIMPLE_SPRINTF == ENABLED && VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT == ENABLED
-// tested on IAR, use Low level optimization will be stable
-#   warning VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT is not stable now for CortexM7 targets
-#endif
-
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ PROTOTYPES ====================================*/
@@ -228,6 +221,7 @@ bool vsf_app_driver_init(void)
 
 void vsf_board_prepare_hw_for_linux(void)
 {
+#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
     char config[16];
     if (!app_config_read("scr.valid", config, sizeof(config)) && (config[0] == '1')) {
         if (app_config_read("scr.width", config, sizeof(config))) {
@@ -286,15 +280,18 @@ void vsf_board_prepare_hw_for_linux(void)
 
 scr_error:
     vsf_board.display_dev = NULL;
+#endif
     return;
 }
 
+VSF_CAL_WEAK(delay_us)
 void delay_us(uint32_t us)
 {
     vsf_systimer_tick_t cur_us = vsf_systimer_get_us(), due_us = cur_us + us;
     while (vsf_systimer_get_us() < due_us);
 }
 
+VSF_CAL_WEAK(delay_ms)
 void delay_ms(uint32_t ms)
 {
     delay_us(1000 * ms);
@@ -469,5 +466,21 @@ void vsf_board_init(void)
 #endif
 
     __sdram_init(EXMC_SDRAM_DEVICE0);
+
+#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
+    // it's a MUST to set frame buffer to write-through, no wirte allocate
+    vsf_hw_mpu_add_region(  0xC0000000,
+                            MPU_REGION_SIZE_4MB,
+                            MPU_INSTRUCTION_EXEC_NOT_PERMIT,
+                            MPU_AP_FULL_ACCESS,
+                            MPU_ACCESS_NON_SHAREABLE,
+                            MPU_ACCESS_CACHEABLE,
+                            MPU_ACCESS_NON_BUFFERABLE);
+#endif
+
+    vsf_heap_add_memory((vsf_mem_t){
+        .buffer     = (void *)(0xC0000000 + 4 * 1024 * 1024),
+        .size       = 28 * 1024 * 1024,
+    });
     vsf_gpio_set(vsf_board.bl_port, 1 << vsf_board.bl_pin);
 }

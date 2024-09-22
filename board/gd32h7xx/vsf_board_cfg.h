@@ -75,14 +75,14 @@
 #   define VSF_USE_HEAP                                 ENABLED
 #endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
-#   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   4
+#   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   9
 #   define VSF_HEAP_SIZE                                (768 * 1024)
 
-#define VSF_LINUX_CFG_STACKSIZE                         (16 * 1024)
-//#define VSF_KERNEL_CFG_THREAD_STACK_LARGE               ENABLED
-//#define VSF_LINUX_CFG_HEAP_SIZE                         (16 * 1024 * 1024)
-//#define VSF_LINUX_CFG_HEAP_ADDR                         (0xC0000000 + 8 * 1024 * 1024)
-//#define VSF_HEAP_CFG_MCB_ALIGN_BIT                      9
+#define VSF_LINUX_CFG_STACKSIZE                         (64 * 1024)
+#define VSF_KERNEL_CFG_THREAD_STACK_LARGE               ENABLED
+// first 4MB is used as double frame buffer, remaining 28MB is used as linux heap
+//#define VSF_LINUX_CFG_HEAP_SIZE                         (28 * 1024 * 1024)
+//#define VSF_LINUX_CFG_HEAP_ADDR                         (0xC0000000 + 4 * 1024 * 1024)
 
 #define VSF_USBH_USE_HCD_DWCOTG                         ENABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
