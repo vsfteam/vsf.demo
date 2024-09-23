@@ -1170,8 +1170,6 @@ int vsf_linux_create_fhs(void)
 #   endif
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/gears", __tinygl_gears_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/startx", __startx_main);
-
-    system("nanox_srv &");
 #endif
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
