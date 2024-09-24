@@ -81,8 +81,8 @@
 #define VSF_LINUX_CFG_STACKSIZE                         (64 * 1024)
 #define VSF_KERNEL_CFG_THREAD_STACK_LARGE               ENABLED
 // first 4MB is used as double frame buffer, remaining 28MB is used as linux heap
-//#define VSF_LINUX_CFG_HEAP_SIZE                         (28 * 1024 * 1024)
-//#define VSF_LINUX_CFG_HEAP_ADDR                         (0xC0000000 + 4 * 1024 * 1024)
+#define VSF_LINUX_CFG_HEAP_SIZE                         (28 * 1024 * 1024)
+#define VSF_LINUX_CFG_HEAP_ADDR                         (0xC0000000 + 4 * 1024 * 1024)
 
 #define VSF_USBH_USE_HCD_DWCOTG                         ENABLED
 #   define VSF_USBH_USE_HUB                             ENABLED

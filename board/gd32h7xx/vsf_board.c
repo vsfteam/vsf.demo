@@ -468,19 +468,34 @@ void vsf_board_init(void)
     __sdram_init(EXMC_SDRAM_DEVICE0);
 
 #if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
+    // All SDRAM MUST be write-through because for write-back,data will be in cache
+    //  before a block transfer to SDRAM, which will take the bus for a long time and
+    //  maybe affect normal TLI operation.
+    vsf_hw_mpu_add_region(  0xC0000000, 32 * 1024 * 1024,
+                            VSF_ARCH_MPU_NON_SHARABLE           |
+                            VSF_ARCH_MPU_EXECUTABLE             |
+                            VSF_ARCH_MPU_ACCESS_FULL            |
+                            VSF_ARCH_MPU_CACHABLE_WRITE_THROUGH_NOALLOC);
+
     // it's a MUST to set frame buffer to write-through, no wirte allocate
-    vsf_hw_mpu_add_region(  0xC0000000,
-                            MPU_REGION_SIZE_4MB,
-                            MPU_INSTRUCTION_EXEC_NOT_PERMIT,
-                            MPU_AP_FULL_ACCESS,
-                            MPU_ACCESS_NON_SHAREABLE,
-                            MPU_ACCESS_CACHEABLE,
-                            MPU_ACCESS_NON_BUFFERABLE);
+    vsf_hw_mpu_add_region(  0xC0000000, 4 * 1024 * 1024,
+                            VSF_ARCH_MPU_NON_SHARABLE           |
+                            VSF_ARCH_MPU_NON_EXECUTABLE         |
+                            VSF_ARCH_MPU_ACCESS_FULL            |
+                            VSF_ARCH_MPU_CACHABLE_WRITE_THROUGH_NOALLOC);
+#else
+    vsf_hw_mpu_add_region(  0xC0000000, 32 * 1024 * 1024,
+                            VSF_ARCH_MPU_NON_SHARABLE           |
+                            VSF_ARCH_MPU_EXECUTABLE             |
+                            VSF_ARCH_MPU_ACCESS_FULL            |
+                            VSF_ARCH_MPU_CACHABLE_WRITE_BACK_ALLOC);
 #endif
 
+#ifndef VSF_LINUX_CFG_HEAP_SIZE
     vsf_heap_add_memory((vsf_mem_t){
         .buffer     = (void *)(0xC0000000 + 4 * 1024 * 1024),
         .size       = 28 * 1024 * 1024,
     });
+#endif
     vsf_gpio_set(vsf_board.bl_port, 1 << vsf_board.bl_pin);
 }
