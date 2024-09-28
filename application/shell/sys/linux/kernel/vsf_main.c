@@ -115,6 +115,10 @@
 #   include "component/3rd-party/littlefs/port/lfs_port.h"
 #endif
 
+#if VSF_LINUX_USE_SDL2 == ENABLED
+#   include "SDL_config_vsf.h"
+#endif
+
 /*============================ MACROS ========================================*/
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
@@ -987,6 +991,31 @@ static int __startx_main(int argc, char **argv)
 }
 #endif
 
+#if APP_USE_SDLPAL == ENABLED
+#   include "../font.h"
+static int __sdlpal_main(int argc, char *argv[])
+{
+    // initialize font buffer first
+#   ifdef __WIN__
+    extern font_t *fontglyph_tw, __fontglyph_tw[];
+    extern font_t *fontglyph_jp, __fontglyph_jp[];
+    extern font_t *fontglyph_cn, __fontglyph_cn[];
+    fontglyph_tw = &__fontglyph_tw[0];
+    fontglyph_jp = &__fontglyph_jp[0];
+    fontglyph_cn = &__fontglyph_cn[0];
+
+    // unicode_font and font_width should be placed in ram with 65536 size
+    extern unsigned char (*unicode_font)[32], __unicode_font[][32];
+    extern unsigned char *font_width, __font_width[];
+    unicode_font = &__unicode_font[0];
+    font_width = &__font_width[0];
+#   endif
+
+    extern int sdlpal_main(int argc, char *argv[]);
+    return sdlpal_main(argc, argv);
+}
+#endif
+
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
@@ -1170,6 +1199,17 @@ int vsf_linux_create_fhs(void)
 #   endif
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/gears", __tinygl_gears_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/startx", __startx_main);
+#endif
+#if VSF_LINUX_USE_SDL2 == ENABLED
+    vsf_sdl2_init(&(vsf_sdl2_cfg_t){
+        .disp_dev = vsf_board.display_dev,
+#   if VSF_USE_AUDIO == ENABLED
+        .audio_dev = vsf_board.audio_dev,
+#   endif
+    });
+#   if APP_USE_SDLPAL == ENABLED
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/sdlpal", __sdlpal_main);
+#   endif
 #endif
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED

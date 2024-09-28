@@ -107,11 +107,13 @@ vsf_board_t vsf_board = {
     },
 #endif
 #if VSF_USE_AUDIO == ENABLED
+#   if VSF_AUDIO_USE_WINSOUND == ENABLED
     .audio_dev                  = &vsf_board.audio_winsound.use_as__vk_audio_dev_t,
     .audio_winsound             = {
         .drv                    = &vk_winsound_drv,
         .hw_prio                = APP_CFG_WINSOUND_ARCH_PRIO,
     },
+#   endif
 #endif
 #if VSF_USE_USB_HOST == ENABLED
     .usbh_dev                   = {

@@ -58,7 +58,9 @@ typedef struct vsf_board_t {
 #endif
 #if VSF_USE_AUDIO == ENABLED
     vk_audio_dev_t *audio_dev;
+#   if VSF_AUDIO_USE_WINSOUND == ENABLED
     vk_winsound_dev_t audio_winsound;
+#   endif
 #endif
 #if VSF_USE_USB_HOST == ENABLED
     vk_usbh_t usbh_dev;

@@ -64,6 +64,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #define VSF_USE_LITTLEFS                                ENABLED
 #define VSF_USE_TRACE                                   ENABLED
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
+#define VSF_USE_FIFO                                    ENABLED
 #ifndef VSF_USE_LOADER
 // currently, dynamic loader is not support for wasm in vsf
 #   ifdef __CPU_WEBASSEMBLY__

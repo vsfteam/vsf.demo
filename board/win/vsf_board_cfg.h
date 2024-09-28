@@ -84,7 +84,9 @@
 #   define VSF_BOARD_DISP_HEIGHT                        480
 #   define VSF_BOARD_DISP_WIDTH                         800
 #   define VSF_BOARD_DISP_COLOR                         VSF_DISP_COLOR_ARGB8888
-#define VSF_AUDIO_USE_WINSOUND                          ENABLED
+#define VSF_USE_AUDIO                                   ENABLED
+#   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
+#   define VSF_AUDIO_USE_WINSOUND                       ENABLED
 #define VSF_FS_USE_WINFS                                ENABLED
 #define VSF_USE_HEAP                                    ENABLED
 #define VSF_USE_DISTBUS                                 ENABLED

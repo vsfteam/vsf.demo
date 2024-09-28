@@ -31,3 +31,6 @@
 [submodule "application/shell/sys/linux/applets/sdl/raw"]
 	path = application/shell/sys/linux/applets/sdl/raw
 	url = ../../vsf-linux/SDL
+[submodule "application/shell/sys/linux/applets/sdl/sdlpal"]
+	path = application/shell/sys/linux/applets/sdl/sdlpal
+	url = ../../vsf-linux/sdlpal
