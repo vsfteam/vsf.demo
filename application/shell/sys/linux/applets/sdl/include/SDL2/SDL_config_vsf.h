@@ -1,9 +1,11 @@
 #include "vsf.h"
 
 // for arch
-#undef _WIN32
-#undef _MSC_VER
-#undef __SSE2__
+#ifdef __WIN__
+#   undef _WIN32
+#   undef _MSC_VER
+#   undef __SSE2__
+#endif
 
 // for sdl2
 #define SDL_TIMER_UNIX
@@ -99,6 +101,9 @@
 // for sdl_image
 #define LOAD_PNG
 
+#ifndef VSF_SDL2_CFG_T
+#define VSF_SDL2_CFG_T
+
 typedef struct vsf_sdl2_cfg_t {
     vk_disp_t *disp_dev;
 #if VSF_USE_AUDIO == ENABLED
@@ -118,5 +123,7 @@ typedef struct SDL_VSF_platform {
     bool is_disp_inited;
     bool is_audio_inited;
 } SDL_VSF_platform;
+#endif
+
 extern SDL_VSF_platform SDL_platform;
 extern void vsf_sdl2_init(vsf_sdl2_cfg_t *cfg);

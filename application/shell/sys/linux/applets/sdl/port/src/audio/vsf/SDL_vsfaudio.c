@@ -8,6 +8,10 @@
 
 #if VSF_USE_AUDIO == ENABLED
 
+#if !(VSF_USE_SIMPLE_STREAM == ENABLED) || !(VSF_USE_FIFO == ENABLED)
+#   error VSF_USE_SIMPLE_STREAM and VSF_USE_FIFO must be enabled
+#endif
+
 #define VSF_AUDIO_MOD               "VSF_AUDIO"
 #define _THIS                       SDL_AudioDevice *_this
 
