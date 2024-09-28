@@ -28,3 +28,6 @@
 [submodule "application/shell/sys/linux/applets/x11/nanox"]
 	path = application/shell/sys/linux/applets/x11/nanox
 	url = https://github.com/ghaerr/microwindows
+[submodule "application/shell/sys/linux/applets/sdl/raw"]
+	path = application/shell/sys/linux/applets/sdl/raw
+	url = ../../vsf-linux/SDL

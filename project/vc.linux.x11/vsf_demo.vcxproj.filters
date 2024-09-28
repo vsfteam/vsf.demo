@@ -877,6 +877,99 @@
     <Filter Include="application\x11\TinyGL\src">
       <UniqueIdentifier>{f58b7d83-ca0c-42b1-ac6a-0eb69ab0af17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="application\sdl">
+      <UniqueIdentifier>{6e5de512-3fe4-4982-9368-de0c618cc1ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw">
+      <UniqueIdentifier>{f3f95337-495e-49c3-9dc0-6d145a6f7f4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src">
+      <UniqueIdentifier>{4ce58123-3961-4efe-9f95-ad931b9f71f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\atomic">
+      <UniqueIdentifier>{6aef97c3-8d0f-4896-965e-4fc78b0cbc76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\audio">
+      <UniqueIdentifier>{74a36e19-f5b2-4a8a-ab44-9efae0956f6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\audio\dummy">
+      <UniqueIdentifier>{558d2fc0-41c2-4d1a-a6e1-dea9c349b2f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\cpuinfo">
+      <UniqueIdentifier>{28288228-6b58-4f3d-a664-40144b0fa36b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\events">
+      <UniqueIdentifier>{4ec1c79e-7c93-4555-afd6-7879b16b92d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\file">
+      <UniqueIdentifier>{d0d06b91-fb39-4db3-8bc9-c633d5762163}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\filesystem">
+      <UniqueIdentifier>{36f100cf-77a1-453e-b3c5-b37d7dc10823}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\filesystem\unix">
+      <UniqueIdentifier>{b6406ca6-0d49-46bf-9abf-2453f00e0f0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\joystick">
+      <UniqueIdentifier>{8f96bdd6-a484-4e7f-afdc-941e3995656e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\joystick\dummy">
+      <UniqueIdentifier>{5d8dde54-8505-4ebe-b053-546ac625d398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\render">
+      <UniqueIdentifier>{11bba8e6-b813-4b56-bf45-22321687d785}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\render\software">
+      <UniqueIdentifier>{0d579ea5-1387-45f3-945c-5eb8c3496a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\stdlib">
+      <UniqueIdentifier>{02c69c30-4f9c-4741-b3ae-f2a8ee29dfa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\thread">
+      <UniqueIdentifier>{124e3bfa-4e7c-45c4-bd34-5fa3135d87b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\thread\pthread">
+      <UniqueIdentifier>{f56c6b08-aead-4367-b23f-a8a1829ebbc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\timer">
+      <UniqueIdentifier>{b75fc6b1-8a7e-45da-bf08-26c881099f51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\timer\unix">
+      <UniqueIdentifier>{55bd5b5e-7804-426d-b406-b54cbf0022c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\video">
+      <UniqueIdentifier>{61862b06-0974-4875-878a-8932b5a1adf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\video\dummy">
+      <UniqueIdentifier>{3d69986c-5149-47e2-90f9-38117e8a921c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\raw\src\video\yuv2rgb">
+      <UniqueIdentifier>{1bbd3023-8a1f-4e03-ba23-fa71df440b39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\port">
+      <UniqueIdentifier>{ab078a8b-b6ca-4c43-a950-35962f0b4be0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\port\src">
+      <UniqueIdentifier>{0ec7d6bf-0fe4-48f2-9fe6-fa74ac785f5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\port\src\audio">
+      <UniqueIdentifier>{a96454b1-c1de-4f9c-835a-22dc3a3542d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\port\src\audio\vsf">
+      <UniqueIdentifier>{ffa1d2b4-e0da-4931-b9ca-55d65f35d079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\port\src\video">
+      <UniqueIdentifier>{96a972e3-0aa1-476e-ad11-0c0b9d5e5d12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\port\src\main">
+      <UniqueIdentifier>{343f147f-0fe6-4f92-b18c-25d89735d182}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\port\src\main\vsf">
+      <UniqueIdentifier>{bc83dc47-7c47-45c8-96ac-c6d6d3144fa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\sdl\port\src\video\vsf">
+      <UniqueIdentifier>{7afbb525-195a-4b6f-b552-a478a84c0aa8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2438,6 +2531,207 @@
     </ClInclude>
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\ztriangle.h">
       <Filter>application\x11\TinyGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\dummy\SDL_dummyaudio.h">
+      <Filter>application\sdl\raw\src\audio\dummy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audio_c.h">
+      <Filter>application\sdl\raw\src\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audio_resampler_filter.h">
+      <Filter>application\sdl\raw\src\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audiodev_c.h">
+      <Filter>application\sdl\raw\src\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_sysaudio.h">
+      <Filter>application\sdl\raw\src\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_wave.h">
+      <Filter>application\sdl\raw\src\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\blank_cursor.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\default_cursor.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\imKStoUCS.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_clipboardevents_c.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_displayevents_c.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_dropevents_c.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_events_c.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_gesture_c.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_keyboard_c.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_mouse_c.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_sysevents.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_touch_c.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_windowevents_c.h">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\controller_type.h">
+      <Filter>application\sdl\raw\src\joystick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\SDL_gamecontrollerdb.h">
+      <Filter>application\sdl\raw\src\joystick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\SDL_joystick_c.h">
+      <Filter>application\sdl\raw\src\joystick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\SDL_sysjoystick.h">
+      <Filter>application\sdl\raw\src\joystick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\usb_ids.h">
+      <Filter>application\sdl\raw\src\joystick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendfillrect.h">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendline.h">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendpoint.h">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_draw.h">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_drawline.h">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_drawpoint.h">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_render_sw_c.h">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_rotate.h">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_triangle.h">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_d3dmath.h">
+      <Filter>application\sdl\raw\src\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_sysrender.h">
+      <Filter>application\sdl\raw\src\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_yuv_sw_c.h">
+      <Filter>application\sdl\raw\src\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_sysmutex_c.h">
+      <Filter>application\sdl\raw\src\thread\pthread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_systhread_c.h">
+      <Filter>application\sdl\raw\src\thread\pthread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\SDL_systhread.h">
+      <Filter>application\sdl\raw\src\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\SDL_thread_c.h">
+      <Filter>application\sdl\raw\src\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\timer\SDL_timer_c.h">
+      <Filter>application\sdl\raw\src\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullevents_c.h">
+      <Filter>application\sdl\raw\src\video\dummy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullframebuffer_c.h">
+      <Filter>application\sdl\raw\src\video\dummy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullvideo.h">
+      <Filter>application\sdl\raw\src\video\dummy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\yuv2rgb\yuv_rgb.h">
+      <Filter>application\sdl\raw\src\video\yuv2rgb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\yuv2rgb\yuv_rgb_sse_func.h">
+      <Filter>application\sdl\raw\src\video\yuv2rgb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\yuv2rgb\yuv_rgb_std_func.h">
+      <Filter>application\sdl\raw\src\video\yuv2rgb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_auto.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_copy.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_slow.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_egl_c.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_pixels_c.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_rect_c.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_rect_impl.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_RLEaccel_c.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_shape_internals.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_sysvideo.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_vulkan_internal.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_yuv_c.h">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_assert_c.h">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_dataqueue.h">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_error_c.h">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_hints_c.h">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_internal.h">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_list.h">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_log_c.h">
+      <Filter>application\sdl\raw\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4201,6 +4495,273 @@
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\port\nanox\keyshft.c">
       <Filter>application\x11\port\nanox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\atomic\SDL_atomic.c">
+      <Filter>application\sdl\raw\src\atomic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\atomic\SDL_spinlock.c">
+      <Filter>application\sdl\raw\src\atomic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\dummy\SDL_dummyaudio.c">
+      <Filter>application\sdl\raw\src\audio\dummy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audio.c">
+      <Filter>application\sdl\raw\src\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audiocvt.c">
+      <Filter>application\sdl\raw\src\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audiodev.c">
+      <Filter>application\sdl\raw\src\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audiotypecvt.c">
+      <Filter>application\sdl\raw\src\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_mixer.c">
+      <Filter>application\sdl\raw\src\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_wave.c">
+      <Filter>application\sdl\raw\src\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\cpuinfo\SDL_cpuinfo.c">
+      <Filter>application\sdl\raw\src\cpuinfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\imKStoUCS.c">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_clipboardevents.c">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_displayevents.c">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_dropevents.c">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_events.c">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_gesture.c">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_keyboard.c">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_mouse.c">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_quit.c">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_touch.c">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_windowevents.c">
+      <Filter>application\sdl\raw\src\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\file\SDL_rwops.c">
+      <Filter>application\sdl\raw\src\file</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\filesystem\unix\SDL_sysfilesystem.c">
+      <Filter>application\sdl\raw\src\filesystem\unix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\dummy\SDL_sysjoystick.c">
+      <Filter>application\sdl\raw\src\joystick\dummy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\SDL_gamecontroller.c">
+      <Filter>application\sdl\raw\src\joystick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\SDL_joystick.c">
+      <Filter>application\sdl\raw\src\joystick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendfillrect.c">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendline.c">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendpoint.c">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_drawline.c">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_drawpoint.c">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_render_sw.c">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_rotate.c">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_triangle.c">
+      <Filter>application\sdl\raw\src\render\software</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_d3dmath.c">
+      <Filter>application\sdl\raw\src\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_render.c">
+      <Filter>application\sdl\raw\src\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_yuv_sw.c">
+      <Filter>application\sdl\raw\src\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_crc32.c">
+      <Filter>application\sdl\raw\src\stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_getenv.c">
+      <Filter>application\sdl\raw\src\stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_iconv.c">
+      <Filter>application\sdl\raw\src\stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_malloc.c">
+      <Filter>application\sdl\raw\src\stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_qsort.c">
+      <Filter>application\sdl\raw\src\stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_stdlib.c">
+      <Filter>application\sdl\raw\src\stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_string.c">
+      <Filter>application\sdl\raw\src\stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_strtokr.c">
+      <Filter>application\sdl\raw\src\stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_syscond.c">
+      <Filter>application\sdl\raw\src\thread\pthread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_sysmutex.c">
+      <Filter>application\sdl\raw\src\thread\pthread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_syssem.c">
+      <Filter>application\sdl\raw\src\thread\pthread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_systhread.c">
+      <Filter>application\sdl\raw\src\thread\pthread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_systls.c">
+      <Filter>application\sdl\raw\src\thread\pthread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\SDL_thread.c">
+      <Filter>application\sdl\raw\src\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\timer\unix\SDL_systimer.c">
+      <Filter>application\sdl\raw\src\timer\unix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\timer\SDL_timer.c">
+      <Filter>application\sdl\raw\src\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullevents.c">
+      <Filter>application\sdl\raw\src\video\dummy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullframebuffer.c">
+      <Filter>application\sdl\raw\src\video\dummy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullvideo.c">
+      <Filter>application\sdl\raw\src\video\dummy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\yuv2rgb\yuv_rgb.c">
+      <Filter>application\sdl\raw\src\video\yuv2rgb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_0.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_1.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_A.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_auto.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_copy.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_N.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_slow.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_bmp.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_clipboard.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_egl.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_fillrect.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_pixels.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_rect.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_RLEaccel.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_shape.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_stretch.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_surface.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_video.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_vulkan_utils.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_yuv.c">
+      <Filter>application\sdl\raw\src\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL.c">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_assert.c">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_dataqueue.c">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_error.c">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_hints.c">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_list.c">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_log.c">
+      <Filter>application\sdl\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\port\src\audio\vsf\SDL_vsfaudio.c">
+      <Filter>application\sdl\port\src\audio\vsf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\port\src\main\vsf\SDL_vsf_main.c">
+      <Filter>application\sdl\port\src\main\vsf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\port\src\video\vsf\SDL_vsfvideo.c">
+      <Filter>application\sdl\port\src\video\vsf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\port\sdl2_platform_vsf.c">
+      <Filter>application\sdl\port\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

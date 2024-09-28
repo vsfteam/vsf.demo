@@ -25,6 +25,73 @@
     <ClInclude Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm_cfg.h" />
     <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport.h" />
     <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport_cfg.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\dummy\SDL_dummyaudio.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audiodev_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audio_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audio_resampler_filter.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_sysaudio.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_wave.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\blank_cursor.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\default_cursor.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\imKStoUCS.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_clipboardevents_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_displayevents_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_dropevents_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_events_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_gesture_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_keyboard_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_mouse_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_sysevents.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_touch_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_windowevents_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\controller_type.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\SDL_gamecontrollerdb.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\SDL_joystick_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\SDL_sysjoystick.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\usb_ids.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_d3dmath.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_sysrender.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_yuv_sw_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendfillrect.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendline.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendpoint.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_draw.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_drawline.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_drawpoint.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_render_sw_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_rotate.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_triangle.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_assert_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_dataqueue.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_error_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_hints_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_internal.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_list.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_log_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_sysmutex_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_systhread_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\SDL_systhread.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\SDL_thread_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\timer\SDL_timer_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullevents_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullframebuffer_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullvideo.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_auto.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_copy.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_slow.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_egl_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_pixels_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_rect_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_rect_impl.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_RLEaccel_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_shape_internals.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_sysvideo.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_vulkan_internal.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_yuv_c.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\yuv2rgb\yuv_rgb.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\yuv2rgb\yuv_rgb_sse_func.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\yuv2rgb\yuv_rgb_std_func.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\fb.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\genmem.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\drivers\hbf.h" />
@@ -543,6 +610,95 @@
   <ItemGroup>
     <ClCompile Include="..\..\application\app\distbus\transport\stream\vsf_distbus_transport_stream.c" />
     <ClCompile Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\port\sdl2_platform_vsf.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\port\src\audio\vsf\SDL_vsfaudio.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\port\src\main\vsf\SDL_vsf_main.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\port\src\video\vsf\SDL_vsfvideo.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\atomic\SDL_atomic.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\atomic\SDL_spinlock.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\dummy\SDL_dummyaudio.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audio.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audiocvt.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audiodev.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_audiotypecvt.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_mixer.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\audio\SDL_wave.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\cpuinfo\SDL_cpuinfo.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\imKStoUCS.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_clipboardevents.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_displayevents.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_dropevents.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_events.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_gesture.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_keyboard.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_mouse.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_quit.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_touch.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\events\SDL_windowevents.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\filesystem\unix\SDL_sysfilesystem.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\file\SDL_rwops.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\dummy\SDL_sysjoystick.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\SDL_gamecontroller.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\joystick\SDL_joystick.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_d3dmath.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_render.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\SDL_yuv_sw.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendfillrect.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendline.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_blendpoint.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_drawline.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_drawpoint.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_render_sw.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_rotate.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\render\software\SDL_triangle.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_assert.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_dataqueue.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_error.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_hints.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_list.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\SDL_log.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_crc32.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_getenv.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_iconv.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_malloc.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_qsort.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_stdlib.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_string.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\stdlib\SDL_strtokr.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_syscond.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_sysmutex.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_syssem.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_systhread.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\pthread\SDL_systls.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\thread\SDL_thread.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\timer\SDL_timer.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\timer\unix\SDL_systimer.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullevents.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullframebuffer.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\dummy\SDL_nullvideo.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_0.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_1.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_A.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_auto.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_copy.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_N.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_blit_slow.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_bmp.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_clipboard.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_egl.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_fillrect.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_pixels.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_rect.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_RLEaccel.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_shape.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_stretch.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_surface.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_video.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_vulkan_utils.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_yuv.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\yuv2rgb\yuv_rgb.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\test\forms.cxx" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxkbd.c">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=nxkbd_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1305,9 +1461,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;VSF_LINUX_USE_FLTK=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;NONETWORK=1;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;VSF_LINUX_USE_FLTK=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;NONETWORK=1;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";SIGWINCH=28;VSF_USER_ENTRY=SDL_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\TinyGL\include;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\TinyGL\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\sdl\include\SDL2;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
@@ -1334,9 +1490,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;VSF_LINUX_USE_FLTK=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;NONETWORK=1;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;VSF_LINUX_USE_FLTK=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;NONETWORK=1;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";SIGWINCH=28;VSF_USER_ENTRY=SDL_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\TinyGL\include;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\TinyGL\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\sdl\include\SDL2;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
