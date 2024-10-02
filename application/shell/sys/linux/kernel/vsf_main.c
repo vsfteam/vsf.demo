@@ -993,23 +993,102 @@ static int __startx_main(int argc, char **argv)
 
 #if APP_USE_SDLPAL == ENABLED
 #   include "../font.h"
+
+static int __sdlpal_load_file(const char *filename, void **buffer, uint32_t size)
+{
+    if (NULL == *buffer) {
+        FILE *fp = fopen(filename, "r");
+        if (NULL == fp) {
+            printf("fail to open %s\n", filename);
+            return -1;
+        }
+        *buffer = malloc(size);
+        if (NULL == *buffer) {
+            printf("fail to allocate buffer for %s\n", filename);
+            fclose(fp);
+            return -1;
+        }
+        if (fread(*buffer, 1, size, fp) != size) {
+            printf("fail to read %s\n", filename);
+            free(*buffer);
+            *buffer = NULL;
+            fclose(fp);
+            return -1;
+        }
+        fclose(fp);
+    }
+    return 0;
+}
+
 static int __sdlpal_main(int argc, char *argv[])
 {
-    // initialize font buffer first
-#   ifdef __WIN__
-    extern font_t *fontglyph_tw, __fontglyph_tw[];
-    extern font_t *fontglyph_jp, __fontglyph_jp[];
-    extern font_t *fontglyph_cn, __fontglyph_cn[];
+    #define unicode_font_size       65536
+    #define fontglyph_cn_size       8836
+    #define fontglyph_jp_size       6879
+    #define fontglyph_tw_size       13826
+    extern unsigned char (*unicode_font)[32];
+    extern unsigned char *font_width;
+    extern font_t *fontglyph_tw;
+    extern font_t *fontglyph_jp;
+    extern font_t *fontglyph_cn;
+
+#if 0
+    // save font resources to files
+    extern const unsigned char __unicode_font[unicode_font_size][32];
+    extern const unsigned char __font_width[unicode_font_size];
+    extern font_t __fontglyph_tw[fontglyph_tw_size];
+    extern font_t __fontglyph_jp[fontglyph_jp_size];
+    extern font_t __fontglyph_cn[fontglyph_cn_size];
+
+    FILE *fp;
+
+    // code to save font data in file
+    fp = fopen("/usr/sdlpal/fontflyph_tw.bin", "w+");
+    fwrite(__fontglyph_tw, sizeof(__fontglyph_tw), 1, fp);
+    fclose(fp);
+    fp = fopen("/usr/sdlpal/fontflyph_cn.bin", "w+");
+    fwrite(__fontglyph_cn, sizeof(__fontglyph_cn), 1, fp);
+    fclose(fp);
+    fp = fopen("/usr/sdlpal/fontflyph_jp.bin", "w+");
+    fwrite(__fontglyph_jp, sizeof(__fontglyph_jp), 1, fp);
+    fclose(fp);
+
+    fp = fopen("/usr/sdlpal/unicode_font.bin", "w+");
+    fwrite(__unicode_font, sizeof(__unicode_font), 1, fp);
+    fclose(fp);
+    fp = fopen("/usr/sdlpal/unicode_font_width.bin", "w+");
+    fwrite(__font_width, sizeof(__font_width), 1, fp);
+    fclose(fp);
+#endif
+
+#if 1
+    // load font resources from files
+    if (__sdlpal_load_file("fontflyph_tw.bin", (void **)&fontglyph_tw, fontglyph_tw_size * sizeof(font_t))) {
+        return -1;
+    }
+    if (__sdlpal_load_file("fontflyph_jp.bin", (void **)&fontglyph_jp, fontglyph_jp_size * sizeof(font_t))) {
+        return -1;
+    }
+    if (__sdlpal_load_file("fontflyph_cn.bin", (void **)&fontglyph_cn, fontglyph_cn_size * sizeof(font_t))) {
+        return -1;
+    }
+
+    if (__sdlpal_load_file("unicode_font.bin", (void **)&unicode_font, unicode_font_size * 32)) {
+        return -1;
+    }
+    if (__sdlpal_load_file("unicode_font_width.bin", (void **)&font_width, unicode_font_size)) {
+        return -1;
+    }
+#elif 1
+    // font is in .rodata
     fontglyph_tw = &__fontglyph_tw[0];
     fontglyph_jp = &__fontglyph_jp[0];
     fontglyph_cn = &__fontglyph_cn[0];
-
-    // unicode_font and font_width should be placed in ram with 65536 size
-    extern unsigned char (*unicode_font)[32], __unicode_font[][32];
-    extern unsigned char *font_width, __font_width[];
     unicode_font = &__unicode_font[0];
     font_width = &__font_width[0];
-#   endif
+#else
+#   error how to load font resources?
+#endif
 
     extern int sdlpal_main(int argc, char *argv[]);
     return sdlpal_main(argc, argv);
