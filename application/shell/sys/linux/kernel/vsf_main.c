@@ -1102,8 +1102,6 @@ int vsf_linux_create_fhs(void)
 
     // 0.5. root fs, some other initialization may depend on ${HOME}, so initialize /root first
 #if VSF_HAL_USE_FLASH == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
-    vsf_flash_init(flash_mal.flash, NULL);
-    vsf_flash_enable(flash_mal.flash);
     vk_mal_init(&flash_mal.use_as__vk_mal_t);
 #endif
 #if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && (APP_MSCBOOT_CFG_ROOT_SIZE > 0) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
