@@ -317,6 +317,9 @@ void delay_ms(uint32_t ms)
 
 static void __sdram_init(uint32_t sdram_device)
 {
+    // code below depends on 300MHz EXMC clock
+    VSF_ASSERT(vsf_hw_clk_get_freq_hz(&VSF_HW_CLK_EXMC) == 300 * 1000 * 1000);
+
     exmc_sdram_parameter_struct sdram_init_struct;
     exmc_sdram_timing_parameter_struct sdram_timing_init_struct = {
         .load_mode_register_delay = 2,
@@ -499,3 +502,11 @@ void vsf_board_init(void)
 #endif
     vsf_gpio_set(vsf_board.bl_port, 1 << vsf_board.bl_pin);
 }
+
+
+#if __IS_COMPILER_IAR__ && (defined(__VSF_CPP__) || defined(__OOC_CPP__)) && (VSF_USE_LINUX == ENABLED)
+// For IAR EWARM 9.60.2, cexit.o contains _exit and __cexit_call_dtors.
+//  If __cexit_call_dtors is not implemented, link will fail with duplicate definitations for "_exit"
+void __cexit_call_dtors(void) {}
+#endif
+
