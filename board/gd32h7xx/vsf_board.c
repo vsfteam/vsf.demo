@@ -229,7 +229,7 @@ bool vsf_app_driver_init(void)
 
 void vsf_board_prepare_hw_for_linux(void)
 {
-#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
+#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
     char config[16];
     if (!app_config_read("scr.valid", config, sizeof(config)) && (config[0] == '1')) {
         if (app_config_read("scr.width", config, sizeof(config))) {
@@ -288,6 +288,8 @@ void vsf_board_prepare_hw_for_linux(void)
 
 scr_error:
     vsf_board.display_dev = NULL;
+#else
+    vsf_board.display_dev = &vsf_board.display_fb.use_as__vk_disp_t;
 #endif
     return;
 }
