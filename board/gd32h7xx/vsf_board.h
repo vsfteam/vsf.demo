@@ -63,6 +63,12 @@ typedef struct vsf_board_t {
     vsf_gpio_t *rst_port;
     uint8_t bl_pin, rst_pin;
 #endif
+#if VSF_USE_AUDIO == ENABLED
+    vk_audio_dev_t *audio_dev;
+#   if VSF_AUDIO_USE_DUMMY == ENABLED
+    vk_audio_dummy_dev_t audio_dummy;
+#   endif
+#endif
 } vsf_board_t;
 #endif
 

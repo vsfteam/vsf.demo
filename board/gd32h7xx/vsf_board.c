@@ -113,6 +113,14 @@ vsf_board_t vsf_board = {
     .bl_pin                     = 10,
     .rst_pin                    = 11,
 #endif
+#if VSF_USE_AUDIO == ENABLED
+#   if VSF_AUDIO_USE_DUMMY == ENABLED
+    .audio_dev                  = &vsf_board.audio_dummy.use_as__vk_audio_dev_t,
+    .audio_dummy                = {
+        .drv                    = &vk_audio_dummy_drv,
+    },
+#   endif
+#endif
 };
 #endif
 

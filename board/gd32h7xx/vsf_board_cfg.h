@@ -76,9 +76,9 @@
 #endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   9
-#   define VSF_HEAP_SIZE                                (768 * 1024)
+#   define VSF_HEAP_SIZE                                (384 * 1024)
 
-#define VSF_LINUX_CFG_STACKSIZE                         (64 * 1024)
+#define VSF_LINUX_CFG_STACKSIZE                         (256 * 1024)
 #define VSF_KERNEL_CFG_THREAD_STACK_LARGE               ENABLED
 // first 4MB is used as double frame buffer, remaining 28MB is used as linux heap
 #define VSF_LINUX_CFG_HEAP_SIZE                         (28 * 1024 * 1024)
@@ -115,6 +115,10 @@
 #   define VSF_BOARD_RGBLCD_FPS                         60
 #endif
 
+#define VSF_USE_AUDIO                                   ENABLED
+#   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
+#   define VSF_AUDIO_USE_DUMMY                          ENABLED
+
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
  *----------------------------------------------------------------------------*/
@@ -130,9 +134,9 @@
 
 #define APP_MSCBOOT_CFG_BOOTLOADER_SIZE                 0
 #define APP_MSCBOOT_CFG_BOOTLOADER_ADDR                 0
-#define APP_MSCBOOT_CFG_FW_SIZE                         (1 * 1024 * 1024)
+#define APP_MSCBOOT_CFG_FW_SIZE                         ((2048) * 1024)
 #define APP_MSCBOOT_CFG_FW_ADDR                         (APP_MSCBOOT_CFG_BOOTLOADER_ADDR + APP_MSCBOOT_CFG_BOOTLOADER_SIZE)
-#define APP_MSCBOOT_CFG_ROMFS_SIZE                      (2 * 1024 * 1024)
+#define APP_MSCBOOT_CFG_ROMFS_SIZE                      ((1024) * 1024)
 #define APP_MSCBOOT_CFG_ROMFS_ADDR                      (APP_MSCBOOT_CFG_FW_ADDR + APP_MSCBOOT_CFG_FW_SIZE)
 #define APP_MSCBOOT_CFG_ROOT_SIZE                       (512 * 1024)
 #define APP_MSCBOOT_CFG_ROOT_ADDR                       (APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_ROMFS_SIZE)
