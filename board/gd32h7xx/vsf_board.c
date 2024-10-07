@@ -503,6 +503,7 @@ void vsf_board_init(void)
     vsf_gpio_set(vsf_board.bl_port, 1 << vsf_board.bl_pin);
 }
 
+// WORKAROUNDS
 
 #if __IS_COMPILER_IAR__ && (defined(__VSF_CPP__) || defined(__OOC_CPP__)) && (VSF_USE_LINUX == ENABLED)
 // For IAR EWARM 9.60.2, cexit.o contains _exit and __cexit_call_dtors.
@@ -510,3 +511,53 @@ void vsf_board_init(void)
 void __cexit_call_dtors(void) {}
 #endif
 
+#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
+// if TLI is enabled, and sdram is used as frame buffer, original memcpy will use
+//  performance optimization to read/write multiple words in one instructions,
+//  which will cause delay in accessing frame buffer by TLI.
+// Implement memcpy without these instructions
+void *memcpy(void *dst, const void *src, size_t n)
+{
+    size_t aligned_n = n & ~3, round;
+
+    if (!((uintptr_t)dst & 3) && !((uintptr_t)src & 3) && (aligned_n > 0)) {
+        uint32_t *src32 = (uint32_t *)src;
+        uint32_t *dst32 = (uint32_t *)dst;
+        src = (const void *)((uintptr_t)src + aligned_n);
+        dst = (void *)((uintptr_t)dst + aligned_n);
+        n -= aligned_n;
+        aligned_n >>= 2;
+
+        round = (aligned_n + 7) >> 3;
+        switch (aligned_n & 7) {
+            case 0: do {    *dst32++ = *src32++;
+            case 7:         *dst32++ = *src32++;
+            case 6:         *dst32++ = *src32++;
+            case 5:         *dst32++ = *src32++;
+            case 4:         *dst32++ = *src32++;
+            case 3:         *dst32++ = *src32++;
+            case 2:         *dst32++ = *src32++;
+            case 1:         *dst32++ = *src32++;
+            } while (--round);
+        }
+    }
+
+    if (n > 0) {
+        uint8_t *src8 = (uint8_t *)src;
+        uint8_t *dst8 = (uint8_t *)dst;
+        round = (n + 7) >> 3;
+        switch (n & 7) {
+            case 0: do {    *dst8++ = *src8++;
+            case 7:         *dst8++ = *src8++;
+            case 6:         *dst8++ = *src8++;
+            case 5:         *dst8++ = *src8++;
+            case 4:         *dst8++ = *src8++;
+            case 3:         *dst8++ = *src8++;
+            case 2:         *dst8++ = *src8++;
+            case 1:         *dst8++ = *src8++;
+            } while (--round);
+        }
+    }
+    return dst;
+}
+#endif
