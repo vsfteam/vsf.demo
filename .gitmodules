@@ -34,3 +34,6 @@
 [submodule "application/shell/sys/linux/applets/sdl/sdlpal"]
 	path = application/shell/sys/linux/applets/sdl/sdlpal
 	url = ../../vsf-linux/sdlpal
+[submodule "application/shell/sys/linux/applets/sdl/mgba"]
+	path = application/shell/sys/linux/applets/sdl/mgba
+	url = ../../vsf-linux/mgba
