@@ -55,7 +55,7 @@ typedef struct vsf_board_t {
     uint8_t sdio_bus_width;
     uint32_t sdio_voltage;
 #endif
-#if VSF_USE_UI == ENABLED
+#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
     vsf_hw_fb_t hw_fb;
     vk_disp_fb_t display_fb;
     vk_disp_t *display_dev;

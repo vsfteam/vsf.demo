@@ -75,14 +75,7 @@
 #   define VSF_USE_HEAP                                 ENABLED
 #endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
-#   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   9
-#   define VSF_HEAP_SIZE                                (384 * 1024)
-
-#define VSF_LINUX_CFG_STACKSIZE                         (256 * 1024)
-#define VSF_KERNEL_CFG_THREAD_STACK_LARGE               ENABLED
-// first 4MB is used as double frame buffer, remaining 28MB is used as linux heap
-#define VSF_LINUX_CFG_HEAP_SIZE                         (28 * 1024 * 1024)
-#define VSF_LINUX_CFG_HEAP_ADDR                         (0xC0000000 + 4 * 1024 * 1024)
+#   define VSF_HEAP_SIZE                                (256 * 1024)
 
 #define VSF_USBH_USE_HCD_DWCOTG                         ENABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
@@ -120,11 +113,27 @@
 //#   define VSF_BOARD_RGBLCD_LAYER0_WIDTH                320
 //#   define VSF_BOARD_RGBLCD_LAYER0_HEIGHT               240
 //#   define VSF_BOARD_RGBLCD_LAYER0_COLOR                VSF_DISP_COLOR_RGB565
+// If VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T is defines, layer0 frame buffer will be put in sram.
+// VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T MUST corresponds to VSF_BOARD_RGBLCD_LAYER0_COLOR
+//#   define VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T        uint16_t
 #endif
 
 #define VSF_USE_AUDIO                                   ENABLED
 #   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
 #   define VSF_AUDIO_USE_DUMMY                          ENABLED
+
+#define VSF_LINUX_CFG_STACKSIZE                         (256 * 1024)
+#define VSF_KERNEL_CFG_THREAD_STACK_LARGE               ENABLED
+#ifdef VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T
+#   define VSF_LINUX_CFG_HEAP_SIZE                      (32 * 1024 * 1024)
+#   define VSF_LINUX_CFG_HEAP_ADDR                      (0xC0000000)
+#   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   10
+#else
+// first 4MB is used as double frame buffer, remaining 28MB is used as linux heap
+#   define VSF_LINUX_CFG_HEAP_SIZE                      (28 * 1024 * 1024)
+#   define VSF_LINUX_CFG_HEAP_ADDR                      (0xC0000000 + 4 * 1024 * 1024)
+#   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   9
+#endif
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *

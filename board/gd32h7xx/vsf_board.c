@@ -48,6 +48,11 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
 };
 #endif
 
+#ifdef VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T
+static VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T __vsf_hw_rgblcd_layer0_fb
+    [2][VSF_BOARD_RGBLCD_LAYER0_WIDTH * VSF_BOARD_RGBLCD_LAYER0_HEIGHT] VSF_CAL_ALIGN(8);
+#endif
+
 /*============================ GLOBAL VARIABLES ==============================*/
 
 #if VSF_USE_USB_DEVICE == ENABLED
@@ -105,7 +110,11 @@ vsf_board_t vsf_board = {
             .drv                = &vk_disp_drv_fb,
             .color              = VSF_BOARD_RGBLCD_LAYER0_COLOR,
         },
+#ifdef VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T
+        .buffer                 = (void *)__vsf_hw_rgblcd_layer0_fb,
+#else
         .buffer                 = (void *)0xC0000000,
+#endif
         .drv                    = &vsf_disp_hw_fb_drv,
         .drv_param              = (void *)&vsf_board.hw_fb,
         .fb_size                = vsf_disp_get_pixel_format_bytesize(VSF_BOARD_RGBLCD_LAYER0_COLOR)
@@ -250,13 +259,13 @@ void vsf_board_prepare_hw_for_linux(void)
             vsf_trace_error("scr.width not configured" VSF_TRACE_CFG_LINEEND);
             goto scr_error;
         }
-        *(uint16_t *)&vsf_board.display_fb.param.width = atoi(config);
+        *(uint16_t *)&vsf_board.display_fb.param.width = vsf_board.hw_fb.width = atoi(config);
 
         if (app_config_read("scr.height", config, sizeof(config))) {
             vsf_trace_error("scr.height not configured" VSF_TRACE_CFG_LINEEND);
             goto scr_error;
         }
-        *(uint16_t *)&vsf_board.display_fb.param.height = atoi(config);
+        *(uint16_t *)&vsf_board.display_fb.param.height = vsf_board.hw_fb.height = atoi(config);
 
         if (app_config_read("scr.fps", config, sizeof(config))) {
             vsf_trace_warning("scr.fps not configured, use 60 by default" VSF_TRACE_CFG_LINEEND);
@@ -495,6 +504,13 @@ void vsf_board_init(void)
     __sdram_init(EXMC_SDRAM_DEVICE0);
 
 #if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
+#   ifdef VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T
+    vsf_hw_mpu_add_region(  0xC0000000, 32 * 1024 * 1024,
+                            VSF_ARCH_MPU_NON_SHARABLE           |
+                            VSF_ARCH_MPU_EXECUTABLE             |
+                            VSF_ARCH_MPU_ACCESS_FULL            |
+                            VSF_ARCH_MPU_CACHABLE_WRITE_BACK_ALLOC);
+#   else
     // All SDRAM MUST be write-through because for write-back,data will be in cache
     //  before a block transfer to SDRAM, which will take the bus for a long time and
     //  maybe affect normal TLI operation.
@@ -510,6 +526,7 @@ void vsf_board_init(void)
                             VSF_ARCH_MPU_NON_EXECUTABLE         |
                             VSF_ARCH_MPU_ACCESS_FULL            |
                             VSF_ARCH_MPU_CACHABLE_WRITE_THROUGH_NOALLOC);
+#   endif
 #else
     vsf_hw_mpu_add_region(  0xC0000000, 32 * 1024 * 1024,
                             VSF_ARCH_MPU_NON_SHARABLE           |
@@ -520,8 +537,13 @@ void vsf_board_init(void)
 
 #ifndef VSF_LINUX_CFG_HEAP_SIZE
     vsf_heap_add_memory((vsf_mem_t){
+#   ifdef VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T
+        .buffer     = (void *)(0xC0000000),
+        .size       = 32 * 1024 * 1024,
+#   else
         .buffer     = (void *)(0xC0000000 + 4 * 1024 * 1024),
         .size       = 28 * 1024 * 1024,
+#   endif
     });
 #endif
     vsf_gpio_set(vsf_board.bl_port, 1 << vsf_board.bl_pin);
