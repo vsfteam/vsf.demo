@@ -113,6 +113,13 @@
 #   define VSF_BOARD_RGBLCD_VFP                         13
 #   define VSF_BOARD_RGBLCD_COLOR                       VSF_DISP_COLOR_ARGB8888
 #   define VSF_BOARD_RGBLCD_FPS                         60
+
+// VSF_BOARD_RGBLCD_HEIGHT/VSF_BOARD_RGBLCD_WIDTH are for the screen
+// VSF_BOARD_RGBLCD_LAYWER_WIDTH/VSF_BOARD_RGBLCD_LAYWER_HEIGHT are for the fb,
+//  which can be part of the screen. If not defined, screen settings will be used.
+//#   define VSF_BOARD_RGBLCD_LAYER0_WIDTH                320
+//#   define VSF_BOARD_RGBLCD_LAYER0_HEIGHT               240
+//#   define VSF_BOARD_RGBLCD_LAYER0_COLOR                VSF_DISP_COLOR_RGB565
 #endif
 
 #define VSF_USE_AUDIO                                   ENABLED

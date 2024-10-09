@@ -23,6 +23,19 @@
 #include "hal/driver/GigaDevice/GD32H7XX/common/vendor/Include/gd32h7xx.h"
 
 /*============================ MACROS ========================================*/
+
+#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
+#   ifndef VSF_BOARD_RGBLCD_LAYER0_WIDTH
+#       define VSF_BOARD_RGBLCD_LAYER0_WIDTH        VSF_BOARD_RGBLCD_WIDTH
+#   endif
+#   ifndef VSF_BOARD_RGBLCD_LAYER0_HEIGHT
+#       define VSF_BOARD_RGBLCD_LAYER0_HEIGHT       VSF_BOARD_RGBLCD_HEIGHT
+#   endif
+#   ifndef VSF_BOARD_RGBLCD_LAYER0_COLOR
+#       define VSF_BOARD_RGBLCD_LAYER0_COLOR        VSF_BOARD_RGBLCD_COLOR
+#   endif
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ PROTOTYPES ====================================*/
@@ -87,24 +100,25 @@ vsf_board_t vsf_board = {
     },
     .display_fb                 = {
         .param                  = {
-            .height             = VSF_BOARD_RGBLCD_HEIGHT,
-            .width              = VSF_BOARD_RGBLCD_WIDTH,
+            .height             = VSF_BOARD_RGBLCD_LAYER0_HEIGHT,
+            .width              = VSF_BOARD_RGBLCD_LAYER0_WIDTH,
             .drv                = &vk_disp_drv_fb,
-            .color              = VSF_BOARD_RGBLCD_COLOR,
+            .color              = VSF_BOARD_RGBLCD_LAYER0_COLOR,
         },
         .buffer                 = (void *)0xC0000000,
         .drv                    = &vsf_disp_hw_fb_drv,
         .drv_param              = (void *)&vsf_board.hw_fb,
-        .fb_size                = vsf_disp_get_pixel_format_bytesize(VSF_BOARD_RGBLCD_COLOR)
-                                * VSF_BOARD_RGBLCD_WIDTH * VSF_BOARD_RGBLCD_HEIGHT,
+        .fb_size                = vsf_disp_get_pixel_format_bytesize(VSF_BOARD_RGBLCD_LAYER0_COLOR)
+                                * VSF_BOARD_RGBLCD_LAYER0_WIDTH * VSF_BOARD_RGBLCD_LAYER0_HEIGHT,
         .fb_num                 = 2,        // front/bancend frame buffer
         .layer_idx              = 0,
+        .layer_color            = VSF_BOARD_RGBLCD_LAYER0_COLOR,
         .layer_alpha            = 0xFF,
         .layer_area             = {
-            .pos.x              = 0,
-            .pos.y              = 0,
-            .size.x             = VSF_BOARD_RGBLCD_WIDTH,
-            .size.y             = VSF_BOARD_RGBLCD_HEIGHT,
+            .pos.x              = (VSF_BOARD_RGBLCD_WIDTH - VSF_BOARD_RGBLCD_LAYER0_WIDTH) / 2,
+            .pos.y              = (VSF_BOARD_RGBLCD_HEIGHT - VSF_BOARD_RGBLCD_LAYER0_HEIGHT) / 2,
+            .size.x             = VSF_BOARD_RGBLCD_LAYER0_WIDTH,
+            .size.y             = VSF_BOARD_RGBLCD_LAYER0_HEIGHT,
         },
     },
     .display_dev                = NULL,
