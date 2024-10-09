@@ -912,11 +912,43 @@ static int __fill_screen_main(int argc, char **argv)
     }
 
     vsf_heap_free(linebuf);
+    close(fd);
     return 0;
 
 fail_close_fd:
     close(fd);
     return -1;
+}
+
+static int __write_screen_main(int argc, char **argv)
+{
+    if (argc != 4) {
+        printf("%s X Y COLOR", argv[0]);
+        return -1;
+    }
+
+    int fd = open("/dev/fb0", O_RDWR);
+    if (fd < 0) {
+        fprintf(stderr, "fail to open /dev/fb0\n");
+        return -1;
+    }
+
+    struct fb_var_screeninfo fb_var;
+    ioctl(fd, FBIOGET_VSCREENINFO, &fb_var);
+
+    uint8_t pixel_size = (fb_var.bits_per_pixel + 7) >> 3;
+    uint32_t disp_color = strtoul(argv[3], NULL, 0);
+    vk_disp_area_t area = {
+        .size.x = 1,
+        .size.y = 1,
+        .pos.x = strtoul(argv[1], NULL, 0),
+        .pos.y = strtoul(argv[2], NULL, 0),
+    };
+
+    ioctl(fd, FBIOSET_AREA, &area);
+    write(fd, &disp_color, pixel_size);
+    close(fd);
+    return 0;
 }
 #   endif
 #endif
@@ -1127,7 +1159,7 @@ int vsf_linux_create_fhs(void)
     putenv("HOME=/root");
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/appcfg", __appcfg_main);
 #else
-#   error where should be ${HOME}?
+#   warning where should be ${HOME}?
 #endif
 
     // 1. hardware driver
@@ -1156,6 +1188,7 @@ int vsf_linux_create_fhs(void)
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/ui", ui_main);
 #   if VSF_LINUX_USE_DEVFS == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fill_screen", __fill_screen_main);
+        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/write_screen", __write_screen_main);
 #   endif
     }
 #endif
@@ -1286,6 +1319,10 @@ int vsf_linux_create_fhs(void)
     });
 #   if APP_USE_SDLPAL == ENABLED
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/sdlpal", __sdlpal_main);
+#   endif
+#   if APP_USE_MGBA == ENABLED
+    extern int mgba_main(int argc, char **argv);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/mgba", mgba_main);
 #   endif
 #endif
 
