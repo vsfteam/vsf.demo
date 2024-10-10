@@ -229,7 +229,11 @@ vk_cached_mal_t romfs_mal = {
 
 #if VSF_HAL_USE_SDIO == ENABLED
 static vk_sdmmc_mal_t __sdmmc_mal = {
+#   ifdef VSF_HAL_SDIO_MAX_CLOCK_HZ
+    .working_clock_hz       = VSF_HAL_SDIO_MAX_CLOCK_HZ,
+#   else
     .working_clock_hz       = 50 * 1000 * 1000,
+#   endif
     .uhs_en                 = false,
 };
 enum __sdmmc_state_t {

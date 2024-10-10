@@ -29,6 +29,8 @@
 
 #define VSF_HAL_USE_I2C                                 DISABLED
 
+#define VSF_HAL_SDIO_MAX_CLOCK_HZ                       (25 * 1000 * 1000)
+
 /*============================ INCLUDES ======================================*/
 
 // retrieve compiler information
