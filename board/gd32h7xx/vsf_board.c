@@ -53,6 +53,14 @@ static VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T __vsf_hw_rgblcd_layer0_fb
     [2][VSF_BOARD_RGBLCD_LAYER0_WIDTH * VSF_BOARD_RGBLCD_LAYER0_HEIGHT] VSF_CAL_ALIGN(8);
 #endif
 
+#   if      defined(VSF_BOARD_RGBLCD_LAYER1_WIDTH)                              \
+        &&  defined(VSF_BOARD_RGBLCD_LAYER1_HEIGHT)                             \
+        &&  defined(VSF_BOARD_RGBLCD_LAYER1_COLOR)                              \
+        &&  defined(VSF_BOARD_RGBLCD_LAYER1_SRAM_BUFFER_T)
+static VSF_BOARD_RGBLCD_LAYER1_SRAM_BUFFER_T __vsf_hw_rgblcd_layer1_fb
+    [2][VSF_BOARD_RGBLCD_LAYER1_WIDTH * VSF_BOARD_RGBLCD_LAYER1_HEIGHT] VSF_CAL_ALIGN(8);
+#endif
+
 /*============================ GLOBAL VARIABLES ==============================*/
 
 #if VSF_USE_USB_DEVICE == ENABLED
@@ -103,7 +111,7 @@ vsf_board_t vsf_board = {
             .use_pixel_clk      = true,
         },
     },
-    .display_fb                 = {
+    .display_fb_layer0          = {
         .param                  = {
             .height             = VSF_BOARD_RGBLCD_LAYER0_HEIGHT,
             .width              = VSF_BOARD_RGBLCD_LAYER0_WIDTH,
@@ -135,6 +143,34 @@ vsf_board_t vsf_board = {
     .rst_port                   = (vsf_gpio_t *)&vsf_hw_gpio9,
     .bl_pin                     = 10,
     .rst_pin                    = 11,
+#   if      defined(VSF_BOARD_RGBLCD_LAYER1_WIDTH)                              \
+        &&  defined(VSF_BOARD_RGBLCD_LAYER1_HEIGHT)                             \
+        &&  defined(VSF_BOARD_RGBLCD_LAYER1_COLOR)                              \
+        &&  defined(VSF_BOARD_RGBLCD_LAYER1_SRAM_BUFFER_T)
+    .display_fb_layer1          = {
+        .param                  = {
+            .height             = VSF_BOARD_RGBLCD_LAYER1_HEIGHT,
+            .width              = VSF_BOARD_RGBLCD_LAYER1_WIDTH,
+            .drv                = &vk_disp_drv_fb,
+            .color              = VSF_BOARD_RGBLCD_LAYER1_COLOR,
+        },
+        .buffer                 = (void *)__vsf_hw_rgblcd_layer1_fb,
+        .drv                    = &vsf_disp_hw_fb_drv,
+        .drv_param              = (void *)&vsf_board.hw_fb,
+        .fb_size                = vsf_disp_get_pixel_format_bytesize(VSF_BOARD_RGBLCD_LAYER1_COLOR)
+                                * VSF_BOARD_RGBLCD_LAYER1_WIDTH * VSF_BOARD_RGBLCD_LAYER1_HEIGHT,
+        .fb_num                 = 2,        // front/bancend frame buffer
+        .layer_idx              = 1,
+        .layer_color            = VSF_BOARD_RGBLCD_LAYER1_COLOR,
+        .layer_alpha            = 0xFF,
+        .layer_area             = {
+            .pos.x              = (VSF_BOARD_RGBLCD_WIDTH - VSF_BOARD_RGBLCD_LAYER1_WIDTH) / 2,
+            .pos.y              = (VSF_BOARD_RGBLCD_HEIGHT - VSF_BOARD_RGBLCD_LAYER1_HEIGHT) / 2,
+            .size.x             = VSF_BOARD_RGBLCD_LAYER1_WIDTH,
+            .size.y             = VSF_BOARD_RGBLCD_LAYER1_HEIGHT,
+        },
+    },
+#   endif
 #endif
 #if VSF_USE_AUDIO == ENABLED
 #   if VSF_AUDIO_USE_DUMMY == ENABLED
@@ -259,13 +295,13 @@ void vsf_board_prepare_hw_for_linux(void)
             vsf_trace_error("scr.width not configured" VSF_TRACE_CFG_LINEEND);
             goto scr_error;
         }
-        *(uint16_t *)&vsf_board.display_fb.param.width = vsf_board.hw_fb.width = atoi(config);
+        *(uint16_t *)&vsf_board.display_fb_layer0.param.width = vsf_board.hw_fb.width = atoi(config);
 
         if (app_config_read("scr.height", config, sizeof(config))) {
             vsf_trace_error("scr.height not configured" VSF_TRACE_CFG_LINEEND);
             goto scr_error;
         }
-        *(uint16_t *)&vsf_board.display_fb.param.height = vsf_board.hw_fb.height = atoi(config);
+        *(uint16_t *)&vsf_board.display_fb_layer0.param.height = vsf_board.hw_fb.height = atoi(config);
 
         if (app_config_read("scr.fps", config, sizeof(config))) {
             vsf_trace_warning("scr.fps not configured, use 60 by default" VSF_TRACE_CFG_LINEEND);
@@ -304,7 +340,7 @@ void vsf_board_prepare_hw_for_linux(void)
             goto scr_error;
         }
         vsf_board.hw_fb.timing.rgb.vfp = atoi(config);
-        vsf_board.display_dev = &vsf_board.display_fb.use_as__vk_disp_t;
+        vsf_board.display_dev = &vsf_board.display_fb_layer0.use_as__vk_disp_t;
     }
 
     return;
@@ -312,7 +348,7 @@ void vsf_board_prepare_hw_for_linux(void)
 scr_error:
     vsf_board.display_dev = NULL;
 #else
-    vsf_board.display_dev = &vsf_board.display_fb.use_as__vk_disp_t;
+    vsf_board.display_dev = &vsf_board.display_fb_layer0.use_as__vk_disp_t;
 #endif
     return;
 }

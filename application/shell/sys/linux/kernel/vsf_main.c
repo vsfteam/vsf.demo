@@ -1312,7 +1312,11 @@ int vsf_linux_create_fhs(void)
 #endif
 #if VSF_LINUX_USE_SDL2 == ENABLED
     vsf_sdl2_init(&(vsf_sdl2_cfg_t){
+#   ifdef VSF_BOARD_DISPLAY_SDL
+        .disp_dev = VSF_BOARD_DISPLAY_SDL,
+#   else
         .disp_dev = vsf_board.display_dev,
+#   endif
 #   if VSF_USE_AUDIO == ENABLED
         .audio_dev = vsf_board.audio_dev,
 #   endif

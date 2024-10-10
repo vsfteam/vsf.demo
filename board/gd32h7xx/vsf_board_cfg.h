@@ -116,6 +116,11 @@
 // If VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T is defines, layer0 frame buffer will be put in sram.
 // VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T MUST corresponds to VSF_BOARD_RGBLCD_LAYER0_COLOR
 //#   define VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T        uint16_t
+
+#   define VSF_BOARD_RGBLCD_LAYER1_WIDTH                320
+#   define VSF_BOARD_RGBLCD_LAYER1_HEIGHT               240
+#   define VSF_BOARD_RGBLCD_LAYER1_COLOR                VSF_DISP_COLOR_RGB565
+#   define VSF_BOARD_RGBLCD_LAYER1_SRAM_BUFFER_T        uint16_t
 #endif
 
 #define VSF_USE_AUDIO                                   ENABLED
@@ -133,6 +138,14 @@
 #   define VSF_LINUX_CFG_HEAP_SIZE                      (28 * 1024 * 1024)
 #   define VSF_LINUX_CFG_HEAP_ADDR                      (0xC0000000 + 4 * 1024 * 1024)
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   9
+#endif
+
+// use layer1 as SDL display
+#if     defined(VSF_BOARD_RGBLCD_LAYER1_WIDTH)                                  \
+    &&  defined(VSF_BOARD_RGBLCD_LAYER1_HEIGHT)                                 \
+    &&  defined(VSF_BOARD_RGBLCD_LAYER1_COLOR)                                  \
+    &&  defined(VSF_BOARD_RGBLCD_LAYER1_SRAM_BUFFER_T)
+#   define VSF_BOARD_DISPLAY_SDL                        (&vsf_board.display_fb_layer1.use_as__vk_disp_t)
 #endif
 
 /*----------------------------------------------------------------------------*
