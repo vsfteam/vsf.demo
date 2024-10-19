@@ -229,7 +229,7 @@ static void __VSF_DEBUG_STREAM_TX_INIT(void)
     vsf_stream_connect_tx(&VSF_DEBUG_STREAM_RX.use_as__vsf_stream_t);
     err = vsf_usart_init(debug_usart, &(vsf_usart_cfg_t){
         .mode               = VSF_USART_8_BIT_LENGTH | VSF_USART_1_STOPBIT | VSF_USART_NO_PARITY
-                            | VSF_USART_TX_ENABLE | VSF_USART_RX_ENABLE,
+                            | VSF_USART_TX_ENABLE | VSF_USART_RX_ENABLE | VSF_USART_RX_FIFO_THRESHOLD_NOT_EMPTY,
         .baudrate           = 921600,
         .isr                = {
             .handler_fn     = __vsf_debug_stream_isrhandler,
@@ -288,7 +288,8 @@ bool vsf_app_driver_init(void)
 
 void vsf_board_prepare_hw_for_linux(void)
 {
-#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
+#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
+#   ifdef APP_MSCBOOT_CFG_FLASH
     char config[16];
     if (!app_config_read("scr.valid", config, sizeof(config)) && (config[0] == '1')) {
         if (app_config_read("scr.width", config, sizeof(config))) {
@@ -347,8 +348,9 @@ void vsf_board_prepare_hw_for_linux(void)
 
 scr_error:
     vsf_board.display_dev = NULL;
-#else
+#   else
     vsf_board.display_dev = &vsf_board.display_fb_layer0.use_as__vk_disp_t;
+#   endif
 #endif
     return;
 }
