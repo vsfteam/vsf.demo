@@ -95,7 +95,7 @@ vsf_board_t vsf_board = {
 #endif
 #if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
     .hw_fb                      = {
-        .type                   = VSF_HW_FB_RGB,
+        .color_type             = VSF_HW_FB_RGB,
         .width                  = VSF_BOARD_RGBLCD_WIDTH,
         .height                 = VSF_BOARD_RGBLCD_HEIGHT,
         .pixel_format           = VSF_DISP_COLOR_ARGB8888,
@@ -109,6 +109,10 @@ vsf_board_t vsf_board = {
             .vfp                = VSF_BOARD_RGBLCD_VFP,
             .use_de             = true,
             .use_pixel_clk      = true,
+            .polarity           = VSF_HW_FB_HSYNC_POL_LOW
+                                | VSF_HW_FB_VSYNC_POL_LOW
+                                | VSF_HW_FB_DE_POL_LOW
+                                | VSF_HW_FB_PIXELCLK_NORMAL,
         },
     },
     .display_fb_layer0          = {
@@ -118,18 +122,19 @@ vsf_board_t vsf_board = {
             .drv                = &vk_disp_drv_fb,
             .color              = VSF_BOARD_RGBLCD_LAYER0_COLOR,
         },
-#ifdef VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T
+#   ifdef VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T
         .buffer                 = (void *)__vsf_hw_rgblcd_layer0_fb,
-#else
+#   else
         .buffer                 = (void *)0xC0000000,
-#endif
+#   endif
         .drv                    = &vsf_disp_hw_fb_drv,
         .drv_param              = (void *)&vsf_board.hw_fb,
         .fb_size                = vsf_disp_get_pixel_format_bytesize(VSF_BOARD_RGBLCD_LAYER0_COLOR)
                                 * VSF_BOARD_RGBLCD_LAYER0_WIDTH * VSF_BOARD_RGBLCD_LAYER0_HEIGHT,
         .fb_num                 = 2,        // front/bancend frame buffer
         .layer_idx              = 0,
-        .layer_color            = VSF_BOARD_RGBLCD_LAYER0_COLOR,
+        .layer_color_type       = VSF_BOARD_RGBLCD_LAYER0_COLOR,
+        .layer_default_color    = 0,
         .layer_alpha            = 0xFF,
         .layer_area             = {
             .pos.x              = (VSF_BOARD_RGBLCD_WIDTH - VSF_BOARD_RGBLCD_LAYER0_WIDTH) / 2,
@@ -138,7 +143,11 @@ vsf_board_t vsf_board = {
             .size.y             = VSF_BOARD_RGBLCD_LAYER0_HEIGHT,
         },
     },
+#   if defined(APP_MSCBOOT_CFG_FLASH) && VSF_USE_LINUX == ENABLED
     .display_dev                = NULL,
+#   else
+    .display_dev                = &vsf_board.display_fb_layer0.use_as__vk_disp_t,
+#   endif
     .bl_port                    = (vsf_gpio_t *)&vsf_hw_gpio9,
     .rst_port                   = (vsf_gpio_t *)&vsf_hw_gpio9,
     .bl_pin                     = 10,
@@ -358,8 +367,8 @@ scr_error:
 VSF_CAL_WEAK(delay_us)
 void delay_us(uint32_t us)
 {
-    vsf_systimer_tick_t cur_us = vsf_systimer_get_us(), due_us = cur_us + us;
-    while (vsf_systimer_get_us() < due_us);
+    vsf_systimer_tick_t cur_us = vsf_systimer_tick_to_us(vsf_systimer_get()), due_us = cur_us + us;
+    while (vsf_systimer_tick_to_us(vsf_systimer_get()) < due_us);
 }
 
 VSF_CAL_WEAK(delay_ms)
@@ -543,7 +552,7 @@ void vsf_board_init(void)
 
 #if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
 #   ifdef VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T
-    vsf_hw_mpu_add_region(  0xC0000000, 32 * 1024 * 1024,
+    vsf_arch_mpu_add_region(0xC0000000, 32 * 1024 * 1024,
                             VSF_ARCH_MPU_NON_SHARABLE           |
                             VSF_ARCH_MPU_EXECUTABLE             |
                             VSF_ARCH_MPU_ACCESS_FULL            |
@@ -552,21 +561,21 @@ void vsf_board_init(void)
     // All SDRAM MUST be write-through because for write-back,data will be in cache
     //  before a block transfer to SDRAM, which will take the bus for a long time and
     //  maybe affect normal TLI operation.
-    vsf_hw_mpu_add_region(  0xC0000000, 32 * 1024 * 1024,
+    vsf_arch_mpu_add_region(0xC0000000, 32 * 1024 * 1024,
                             VSF_ARCH_MPU_NON_SHARABLE           |
                             VSF_ARCH_MPU_EXECUTABLE             |
                             VSF_ARCH_MPU_ACCESS_FULL            |
                             VSF_ARCH_MPU_CACHABLE_WRITE_THROUGH_NOALLOC);
 
     // it's a MUST to set frame buffer to write-through, no wirte allocate
-    vsf_hw_mpu_add_region(  0xC0000000, 4 * 1024 * 1024,
+    vsf_arch_mpu_add_region(0xC0000000, 4 * 1024 * 1024,
                             VSF_ARCH_MPU_NON_SHARABLE           |
                             VSF_ARCH_MPU_NON_EXECUTABLE         |
                             VSF_ARCH_MPU_ACCESS_FULL            |
                             VSF_ARCH_MPU_CACHABLE_WRITE_THROUGH_NOALLOC);
 #   endif
 #else
-    vsf_hw_mpu_add_region(  0xC0000000, 32 * 1024 * 1024,
+    vsf_arch_mpu_add_region(0xC0000000, 32 * 1024 * 1024,
                             VSF_ARCH_MPU_NON_SHARABLE           |
                             VSF_ARCH_MPU_EXECUTABLE             |
                             VSF_ARCH_MPU_ACCESS_FULL            |
@@ -585,6 +594,7 @@ void vsf_board_init(void)
     });
 #endif
     vsf_gpio_set(vsf_board.bl_port, 1 << vsf_board.bl_pin);
+    vsf_gpio_set_output(vsf_board.bl_port, 1 << vsf_board.bl_pin);
 }
 
 // WORKAROUNDS
@@ -643,5 +653,83 @@ void *memcpy(void *dst, const void *src, size_t n)
         }
     }
     return dst;
+}
+#endif
+
+// Enable RGB_TEST and disable other codes in application
+// Do not enable VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T, so that the frame buffer is in SDRAM.
+#define RGB_TEST 0
+#if RGB_TEST
+
+#ifdef VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T
+#   warning VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T is defined, frame buffer will not be in SDRAM, test below is meaningless.
+#endif
+
+int VSF_USER_ENTRY(void)
+{
+    vsf_board_init();
+#if VSF_USE_TRACE == ENABLED
+    vsf_start_trace();
+#endif
+
+    if (vsf_board.display_dev != NULL) {
+        vk_disp_init(vsf_board.display_dev);
+
+        if (vsf_board.display_fb_layer0.param.color == VSF_DISP_COLOR_RGB565) {
+            uint16_t *ptr = (uint16_t *)vsf_board.display_fb_layer0.buffer;
+            for (int i = 0; i < vsf_board.display_fb_layer0.param.height; i++) {
+                for (int j = 0; j < vsf_board.display_fb_layer0.param.width; j++) {
+                    if (j < (vsf_board.display_fb_layer0.param.width / 2)) {
+                        *ptr++ = 0xF800;
+                    } else {
+                        *ptr++ = 0x001F;
+                    }
+                }
+            }
+        } else if (vsf_board.display_fb_layer0.param.color == VSF_DISP_COLOR_ARGB8888) {
+            uint32_t *ptr = (uint32_t *)vsf_board.display_fb_layer0.buffer;
+            for (int i = 0; i < vsf_board.display_fb_layer0.param.height; i++) {
+                for (int j = 0; j < vsf_board.display_fb_layer0.param.width; j++) {
+                    if (j < (vsf_board.display_fb_layer0.param.width / 2)) {
+                        *ptr++ = 0xFFFF0000;
+                    } else {
+                        *ptr++ = 0xFF0000FF;
+                    }
+                }
+            }
+        } else {
+            vsf_trace_error("not supported color" VSF_TRACE_CFG_LINEEND);
+            VSF_ASSERT(false);
+        }
+
+        uint32_t *src = (uint32_t *)0xC0000000 + 1 * 1024 * 1024;
+        uint32_t *dst = src + 1 * 1024 * 1024;
+#if 0
+        // write data to sdram will be OK even if sdram is configured to write_back_alloc
+        while (1) {
+            for (int i = 0; i < 64 * 1024; i++) {
+                src[i] = i;
+            }
+        }
+#elif 0
+        // if sdram is configured to write_back_alloc, test below will fail
+        // if sdram is configured to write_through_noalloc, test below will be ok
+        while (1) {
+            for (int i = 0; i < 64 * 1024; i++) {
+                src[i] = i;
+            }
+            for (int i = 0; i < 64 * 1024; i++) {
+                if (src[i] != i) {
+                    vsf_trace_error("fail to verify 0x%p\r\n", &src[i]);
+                }
+            }
+        }
+#elif 1
+        // test below will fail without memcpy reimplementation above
+        while (1) {
+            memcpy(dst, src, 4 * 1024 * 1024);
+        }
+#endif
+    }
 }
 #endif
