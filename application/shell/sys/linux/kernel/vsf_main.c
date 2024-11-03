@@ -229,11 +229,9 @@ vk_cached_mal_t romfs_mal = {
 
 #if VSF_HAL_USE_SDIO == ENABLED
 static vk_sdmmc_mal_t __sdmmc_mal = {
-#   ifdef VSF_HAL_SDIO_MAX_CLOCK_HZ
-    .working_clock_hz       = VSF_HAL_SDIO_MAX_CLOCK_HZ,
-#   else
+    .drv                    = &vk_sdmmc_mal_drv,
+    .hw_priority            = vsf_arch_prio_0,
     .working_clock_hz       = 50 * 1000 * 1000,
-#   endif
     .uhs_en                 = false,
 };
 enum __sdmmc_state_t {
@@ -992,6 +990,8 @@ static int __tinygl_gears_main(int argc, char *argv[])
 
 extern int nxterm_main(int argc, char **argv);
 extern int nxkbd_main(int argc, char **argv);
+extern int nxclock_main(int argc, char **argv);
+extern int nxeyes_main(int argc, char **argv);
 extern int world_main(int argc, char **argv);
 extern int nanox_srv_main(int argc, char **argv);
 
@@ -1006,6 +1006,18 @@ static int __nxkbd_main(int argc, char **argv)
 {
     INIT_PER_THREAD_DATA();
     return nxkbd_main(argc, argv);
+}
+
+static int __nxclock_main(int argc, char **argv)
+{
+    INIT_PER_THREAD_DATA();
+    return nxclock_main(argc, argv);
+}
+
+static int __nxeyes_main(int argc, char **argv)
+{
+    INIT_PER_THREAD_DATA();
+    return nxeyes_main(argc, argv);
 }
 
 static int __world_main(int argc, char **argv)
@@ -1222,11 +1234,9 @@ int vsf_linux_create_fhs(void)
 #   endif
 #endif
 #if VSF_HAL_USE_SDIO == ENABLED
-    __sdmmc_mal.sdio        = vsf_board.sdio;
-    __sdmmc_mal.hw_priority = vsf_arch_prio_0;
-    __sdmmc_mal.voltage     = vsf_board.sdio_voltage;
-    __sdmmc_mal.bus_width   = vsf_board.sdio_bus_width;
-    __sdmmc_mal.drv         = &vk_sdmmc_mal_drv;
+    __sdmmc_mal.sdio                = vsf_board.sdio;
+    __sdmmc_mal.voltage             = vsf_board.sdio_voltage;
+    __sdmmc_mal.bus_width           = vsf_board.sdio_bus_width;
 #endif
 
     // 2. non-root fs
@@ -1303,10 +1313,14 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/world", __world_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxterm", __nxterm_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxkbd", __nxkbd_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxclock", __nxclock_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxeyes", __nxeyes_main);
 #else
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/world", world_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxterm", nxterm_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxkbd", nxkbd_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxclock", nxclock_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/nxeyes", nxeyes_main);
 #endif
 #   if VSF_LINUX_USE_FLTK == ENABLED
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fltk", __fltk_forms_main);

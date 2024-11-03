@@ -59,6 +59,8 @@ typedef struct vsf_board_t {
     vsf_hw_fb_t hw_fb;
     vk_disp_fb_t display_fb_layer0;
     vk_disp_t *display_dev;
+#   define VSF_BOARD_DISP_HAS_BACKLIGHT
+#   define VSF_BOARD_DISP_HAS_RESET
     vsf_gpio_t *bl_port;
     vsf_gpio_t *rst_port;
     uint8_t bl_pin, rst_pin;

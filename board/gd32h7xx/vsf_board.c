@@ -170,7 +170,7 @@ vsf_board_t vsf_board = {
                                 * VSF_BOARD_RGBLCD_LAYER1_WIDTH * VSF_BOARD_RGBLCD_LAYER1_HEIGHT,
         .fb_num                 = 2,        // front/bancend frame buffer
         .layer_idx              = 1,
-        .layer_color            = VSF_BOARD_RGBLCD_LAYER1_COLOR,
+        .layer_color_type       = VSF_BOARD_RGBLCD_LAYER1_COLOR,
         .layer_alpha            = 0xFF,
         .layer_area             = {
             .pos.x              = (VSF_BOARD_RGBLCD_WIDTH - VSF_BOARD_RGBLCD_LAYER1_WIDTH) / 2,
