@@ -28,7 +28,7 @@ static VSF_CAL_NO_INIT vsf_tgui_demo_t __tgui_demo;
 
 // UI frame
 
-static uint32_t __vsf_tgui_panel_buffer[1024 / 4];
+static uint32_t __vsf_tgui_panel_buffer[4096 / 4];
 
 static vsf_tgui_frame_t *__vsf_tgui_frame_root = NULL;
 
@@ -105,8 +105,11 @@ typedef struct vsf_tgui_frame_root_t {
 
 def_tgui_panel(tgui_root_panel_t,
     tgui_contains(
-        vsf_tgui_label_t     tInformation;
-        vsf_tgui_button_t    tOK;
+        use_tgui_panel(tAppPanel,
+            tgui_contains(
+                vsf_tgui_button_t tApp[9];
+            )
+        )
     )
 )
 // TODO: add ui-related variables here
@@ -115,20 +118,39 @@ end_def_tgui_panel(tgui_root_panel_t)
 
 describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
     tgui_region(0, 0, VSF_BOARD_DISP_WIDTH, VSF_BOARD_DISP_HEIGHT),
-    tgui_text(tTitle, "Info", false),
+    tgui_text(tTitle, "Application", false),
     tgui_padding(VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE),
 
-    tgui_label(tInformation, tgui_null_parent(tgui_root_panel_t), tInformation, tOK,
-        tgui_text(tLabel, "This is a popup message. \nPlease click the OK button to close", false, VSF_TGUI_ALIGN_MID_LEFT),
-        tgui_region(0, VSF_TGUI_CFG_BORDER_SIZE * 3, VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE, 80),
-        tgui_sv_tile_show_corner(false),
-        tgui_sv_font_color(VSF_TGUI_COLOR_BLACK),
-    ),
+#define __app_button(__idx, __pre_idx, __next_idx, ...)                         \
+    tgui_button(tApp[__idx], &(tgui_null_parent(tgui_root_panel_t)->tAppPanel), tApp[__pre_idx], tApp[__next_idx],\
+        tgui_size(64, 76),                                                      \
+        tgui_margin(2, 2, 2, 2),                                                \
+        tgui_sv_tile_show_corner(false),                                        \
+        tgui_sv_background_color(VSF_TGUI_COLOR_TRANSPARENT),                   \
+        tgui_sv_font(VSF_TGUI_FONT_DEJAVUSERIF_S12),                            \
+        tgui_background((vsf_tgui_tile_t*)&empty_L, VSF_TGUI_ALIGN_TOP),        \
+        tgui_text(tLabel, "App" #__idx, false, VSF_TGUI_ALIGN_BOTTOM),          \
+        __VA_ARGS__                                                             \
+    )
 
-    tgui_button(tOK, tgui_null_parent(tgui_root_panel_t), tInformation, tOK,
-        tgui_region((VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE - 100) / 2,
-                    VSF_TGUI_CFG_BORDER_SIZE * 4 + 80, 100, 0),
-        tgui_text(tLabel, "OK", true),
+    tgui_panel(tAppPanel, tgui_null_parent(tgui_root_panel_t), tAppPanel, tAppPanel,
+        tgui_region(0, VSF_TGUI_CFG_BORDER_SIZE * 3,
+            VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE, 0),
+        tgui_sv_tile_show_corner(false),
+        tgui_container_type(VSF_TGUI_CONTAINER_TYPE_STREAM_HORIZONTAL),
+        tgui_sv_background_color(VSF_TGUI_COLOR_TRANSPARENT),
+
+        tgui_contains(
+            __app_button(0, 0, 1),
+            __app_button(1, 0, 2),
+            __app_button(2, 1, 3),
+            __app_button(3, 2, 4),
+            __app_button(4, 3, 5),
+            __app_button(5, 4, 6),
+            __app_button(6, 5, 7),
+            __app_button(7, 6, 8),
+            __app_button(8, 7, 8),
+        )
     ),
 );
 

@@ -125,7 +125,9 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #           define VSF_TGUI_CFG_SV_DRAW_LOG             DISABLED
 #       define VSF_TGUI_CFG_FONT_USE_FREETYPE           ENABLED
 #           define VSF_TGUI_FONTS                                               \
-                TGUI_FT2_FONT_DEF(VSF_TGUI_FONT_DEJAVUSERIF_S24,  "DejaVuSerif.ttf",  16)
+                TGUI_FT2_FONT_DEF(VSF_TGUI_FONT_DEJAVUSERIF_S16,    "DejaVuSerif.ttf",  16),\
+                TGUI_FT2_FONT_DEF(VSF_TGUI_FONT_DEJAVUSERIF_S12,    "DejaVuSerif.ttf",  12),\
+                TGUI_FT2_FONT_DEF(VSF_TGUI_FONT_DEJAVUSERIF_S8,     "DejaVuSerif.ttf",  8)
 
 #       define VSF_TGUI_KEY_OK                          0x0D
 #       define VSF_TGUI_KEY_CANCEL                      0x1B
