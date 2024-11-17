@@ -3,11 +3,105 @@
 
 #if VSF_USE_UI == ENABLED
 
+// UI instance
+
+#ifndef VSF_TGUI_CFG_EVTQ_MAX
+#   define VSF_TGUI_CFG_EVTQ_MAX            32
+#endif
+
+typedef struct {
+    vsf_tgui_t instance;
+    vsf_tgui_evt_t evtq_buffer[VSF_TGUI_CFG_EVTQ_MAX];
+#if VSF_TGUI_CFG_REFRESH_SCHEME == VSF_TGUI_REFRESH_SCHEME_BREADTH_FIRST_TRAVERSAL
+    uint16_t bfs_buffer[VSF_TGUI_CFG_EVTQ_MAX];
+#endif
+    vk_input_notifier_t input_notifier;
+#if     VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_ARGB_8888
+    uint32_t pfb[VSF_BOARD_DISP_WIDTH * 10];
+#elif   VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_RGB_565 || VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_BGR_565
+    uint16_t pfb[VSF_BOARD_DISP_WIDTH * 10];
+#else
+#   error TODO: add support for the specifed display color format
+#endif
+} vsf_tgui_demo_t;
+static VSF_CAL_NO_INIT vsf_tgui_demo_t __tgui_demo;
+
+// UI frame
+
+static uint32_t __vsf_tgui_panel_buffer[1024 / 4];
+
+static vsf_tgui_frame_t *__vsf_tgui_frame_root = NULL;
+
+vsf_tgui_frame_t * vsf_tgui_frame_new(int frame_size, vsf_tgui_frame_init_t fn_init, char *tile)
+{
+    VSF_ASSERT(frame_size >= sizeof(vsf_tgui_frame_t));
+    VSF_ASSERT(fn_init != NULL);
+
+    vsf_tgui_frame_t *frame = vsf_heap_malloc(frame_size);
+    if (NULL == frame) {
+        VSF_ASSERT(false);
+        return NULL;
+    }
+
+    memset(frame, 0, frame_size);
+
+    frame->__fn_init = fn_init;
+    frame->__tile = tile;
+    frame->__next = __vsf_tgui_frame_root;
+    __vsf_tgui_frame_root = frame;
+    fn_init(&__tgui_demo.instance, frame, __vsf_tgui_panel_buffer, sizeof(__vsf_tgui_panel_buffer));
+
+    return frame;
+}
+
+void vsf_tgui_frame_exit(void)
+{
+    vsf_tgui_frame_t *frame = __vsf_tgui_frame_root;
+    VSF_ASSERT(frame != NULL);
+
+    vk_tgui_close_root_container(&__tgui_demo.instance);
+
+    __vsf_tgui_frame_root = frame->__next;
+    vsf_heap_free(frame);
+
+    if (__vsf_tgui_frame_root != NULL) {
+        frame = __vsf_tgui_frame_root;
+        frame->__fn_init(&__tgui_demo.instance, frame, __vsf_tgui_panel_buffer, sizeof(__vsf_tgui_panel_buffer));
+    }
+}
+
+// UI Image(tile) resources
+
+#include "./images/demo_images.h"
+#include "./images/demo_images_data.h"
+
+unsigned char * vsf_tgui_tile_get_pixelmap(const vsf_tgui_tile_t *tile_ptr)
+{
+    VSF_TGUI_ASSERT(tile_ptr != NULL);
+
+    uint_fast8_t tile_type = tile_ptr->_.tCore.Attribute.u2RootTileType;
+    switch (tile_type) {
+    case 0:  // buf_offset tile
+        VSF_ASSERT(__vsf_tgui_frame_root != NULL);
+        return (unsigned char *)&__vsf_tgui_frame_root->__tile[tile_ptr->tBufRoot.ptBitmap];
+    case 2:  // buf_addr tile
+        return (unsigned char *)tile_ptr->tBufRoot.ptBitmap;
+    default:
+        VSF_TGUI_ASSERT(0);
+        return NULL;
+    }
+}
+
 // UI description
 
 #ifndef VSF_TGUI_CFG_BORDER_SIZE
 #   define VSF_TGUI_CFG_BORDER_SIZE         16
 #endif
+
+typedef struct vsf_tgui_frame_root_t {
+    implement(vsf_tgui_frame_t)
+    vsf_eda_t *eda;
+} vsf_tgui_frame_root_t;
 
 def_tgui_panel(tgui_root_panel_t,
     tgui_contains(
@@ -16,6 +110,7 @@ def_tgui_panel(tgui_root_panel_t,
     )
 )
 // TODO: add ui-related variables here
+char *cmdline;
 end_def_tgui_panel(tgui_root_panel_t)
 
 describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
@@ -37,10 +132,14 @@ describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
     ),
 );
 
-// UI Image(tile) resources
+static void __vsf_tgui_frame_root_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size)
+{
+    VSF_ASSERT(panel_size >= sizeof(tgui_root_panel_t));
+    tgui_initalize_top_container(root_panel_descriptor, (tgui_root_panel_t *)panel);
+    vk_tgui_set_root_container(gui, (vsf_tgui_root_container_t *)panel, true);
+}
 
-#include "./images/demo_images.h"
-#include "./images/demo_images_data.h"
+// UI corner
 
 static const vsf_tgui_tile_t __controls_container_corner_tiles[CORNOR_TILE_NUM] = {
     [CORNOR_TILE_IN_TOP_LEFT] = {
@@ -119,18 +218,6 @@ const vsf_tgui_tile_t * vsf_tgui_control_v_get_corner_tile(vsf_tgui_control_t *c
     return NULL;
 }
 
-unsigned char * vsf_tgui_tile_get_pixelmap(const vsf_tgui_tile_t *tile_ptr)
-{
-    VSF_TGUI_ASSERT(tile_ptr != NULL);
-
-    if (tile_ptr->_.tCore.Attribute.u2RootTileType == 0) {  // buf tile
-        return (unsigned char *)&__tiles_data[(uint32_t)tile_ptr->tBufRoot.ptBitmap];
-    } else {                                                // index tile
-        VSF_TGUI_ASSERT(0);
-        return NULL;
-    }
-}
-
 // UI font
 
 #if VSF_TGUI_CFG_FONT_USE_FREETYPE == ENABLED
@@ -164,33 +251,6 @@ FT_FILE ft_root = {
 
 int ui_main(int argc, char **argv)
 {
-    // UI instance
-
-#ifndef VSF_TGUI_CFG_EVTQ_MAX
-#   define VSF_TGUI_CFG_EVTQ_MAX            32
-#endif
-
-    typedef struct {
-        vsf_tgui_t instance;
-        vsf_tgui_evt_t evtq_buffer[VSF_TGUI_CFG_EVTQ_MAX];
-#if VSF_TGUI_CFG_REFRESH_SCHEME == VSF_TGUI_REFRESH_SCHEME_BREADTH_FIRST_TRAVERSAL
-        uint16_t bfs_buffer[VSF_TGUI_CFG_EVTQ_MAX];
-#endif
-        vk_input_notifier_t input_notifier;
-#if     VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_ARGB_8888
-        uint32_t pfb[VSF_BOARD_DISP_WIDTH * 10];
-#elif   VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_RGB_565 || VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_BGR_565
-        uint16_t pfb[VSF_BOARD_DISP_WIDTH * 10];
-#else
-#   error TODO: add support for the specifed display color format
-#endif
-
-        union {
-            tgui_root_panel_t root_panel;
-        };
-    } vsf_tgui_demo_t;
-    static VSF_CAL_NO_INIT vsf_tgui_demo_t __tgui_demo;
-
     static const vsf_tgui_cfg_t __cfg = {
         .evt_queue = {
             .obj_ptr = __tgui_demo.evtq_buffer,
@@ -209,9 +269,6 @@ int ui_main(int argc, char **argv)
         return -1;
     }
 
-    tgui_initalize_top_container(root_panel_descriptor, &__tgui_demo.root_panel);
-    vk_tgui_set_root_container(&__tgui_demo.instance, (vsf_tgui_root_container_t *)&__tgui_demo.root_panel, true);
-
     vsf_tgui_fonts_init((vsf_tgui_font_t *)vsf_tgui_font_get(0), vsf_tgui_font_number(), "/");
     vsf_tgui_sv_bind_disp(&__tgui_demo.instance, vsf_board.display_dev, &__tgui_demo.pfb, dimof(__tgui_demo.pfb));
 
@@ -223,6 +280,40 @@ int ui_main(int argc, char **argv)
 #endif
         ;
     vsf_tgui_input_init(&__tgui_demo.instance, &__tgui_demo.input_notifier);
+
+    // start root panel frame
+    vsf_tgui_frame_root_t *root_frame = (vsf_tgui_frame_root_t *)vsf_tgui_frame_new(
+        sizeof(vsf_tgui_frame_root_t), __vsf_tgui_frame_root_init, (char *)__tiles_data);
+    root_frame->eda = vsf_eda_get_cur();
+
+    int stdout_pipe[2], stdin_pipe[2], stderr_pipe[2];
+    if ((pipe(stdout_pipe) != 0) || (pipe(stdin_pipe) != 0) || (pipe(stderr_pipe) != 0)) {
+        printf("fail to create stdio pipes\r\n");
+        VSF_ASSERT(false);
+        return -1;
+    }
+
+    pid_t pid;
+    while (true) {
+        vsf_thread_wfe(VSF_EVT_USER);
+
+        pid = vfork();
+        if (pid < 0) {
+            printf("fail to fork\r\n");
+            continue;
+        }
+
+        if (pid > 0) {
+            
+        } else {
+            dup2(stdin_pipe[0], STDIN_FILENO);
+            dup2(stdout_pipe[1], STDOUT_FILENO);
+            dup2(stderr_pipe[1], STDERR_FILENO);
+
+            tgui_root_panel_t *root_panel = (tgui_root_panel_t *)__vsf_tgui_panel_buffer;
+            system(root_panel->cmdline);
+        }
+    }
     return 0;
 }
 #endif

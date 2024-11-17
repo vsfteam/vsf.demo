@@ -27,6 +27,7 @@
 #define TILES_TEXT_LIST \
     "corner12\n" /*width: 24, height: 24, L*/ \
     "corner16\n" /*width: 32, height: 32, L*/ \
+    "empty\n" /*width: 64, height: 64, L*/ \
     "None"
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -34,8 +35,9 @@
 /*============================ GLOBAL VARIABLES ==============================*/
 extern const vsf_tgui_tile_buf_root_t corner12_L; //corner12:L, width: 24, height: 24
 extern const vsf_tgui_tile_buf_root_t corner16_L; //corner16:L, width: 32, height: 32
+extern const vsf_tgui_tile_buf_root_t empty_L; //empty:L, width: 64, height: 64
 
-extern const vsf_tgui_tile_t *tiles_list[2];
+extern const vsf_tgui_tile_t *tiles_list[3];
 
 /*============================ PROTOTYPES ====================================*/
 

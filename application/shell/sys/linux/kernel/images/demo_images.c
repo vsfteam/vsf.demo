@@ -62,9 +62,29 @@ const vsf_tgui_tile_buf_root_t corner16_L  = {
     .ptBitmap = (vsf_tgui_disp_ram_uintptr_t)0x240,
 };
 
-const vsf_tgui_tile_t* tiles_list[2] = {
+const vsf_tgui_tile_buf_root_t empty_L  = {
+    .use_as__vsf_tgui_tile_core_t = {
+        .Attribute = {
+            .u2RootTileType = 0,
+            .u2ColorType = 2,
+            .u3ColorSize = 3,
+            .bIsRootTile = 1,
+        },
+#if VSF_TGUI_CFG_SUPPORT_NAME_STRING == ENABLED
+        .name_ptr = "empty_L",
+#endif
+    },
+    .tSize = {
+        .iWidth = 64,
+        .iHeight = 64,
+    },
+    .ptBitmap = (vsf_tgui_disp_ram_uintptr_t)0x640,
+};
+
+const vsf_tgui_tile_t* tiles_list[3] = {
     (const vsf_tgui_tile_t *)&corner12_L, //corner12:L, width: 24, height: 24
     (const vsf_tgui_tile_t *)&corner16_L, //corner16:L, width: 32, height: 32
+    (const vsf_tgui_tile_t *)&empty_L, //empty:L, width: 64, height: 64
 };
 
 /*============================ LOCAL VARIABLES ===============================*/
