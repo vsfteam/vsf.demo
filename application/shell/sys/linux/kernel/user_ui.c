@@ -9,13 +9,13 @@
 #   define VSF_TGUI_CFG_BORDER_SIZE         16
 #endif
 
-declare_tgui_panel(tgui_root_panel_t)
 def_tgui_panel(tgui_root_panel_t,
     tgui_contains(
         vsf_tgui_label_t     tInformation;
         vsf_tgui_button_t    tOK;
     )
 )
+// TODO: add ui-related variables here
 end_def_tgui_panel(tgui_root_panel_t)
 
 describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
@@ -159,6 +159,8 @@ FT_FILE ft_root = {
     .d.child_size       = sizeof(FT_FILE),
 };
 #endif
+
+// UI main
 
 int ui_main(int argc, char **argv)
 {
