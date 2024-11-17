@@ -25,6 +25,8 @@
     <ClInclude Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm_cfg.h" />
     <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport.h" />
     <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport_cfg.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\kernel\images\demo_images.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\kernel\images\demo_images_data.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\kernel\vsf_usr_cfg.h" />
     <ClInclude Include="..\..\board\win\vsf_board.h" />
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h" />
@@ -533,6 +535,7 @@
     <ClCompile Include="..\..\application\app\distbus\transport\stream\vsf_distbus_transport_stream.c" />
     <ClCompile Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\hwtest_main.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\kernel\images\demo_images.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_httpd.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_mdns.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_qrcode.c" />

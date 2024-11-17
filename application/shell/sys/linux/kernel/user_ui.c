@@ -3,13 +3,10 @@
 
 #if VSF_USE_UI == ENABLED
 
-#if VSF_TGUI_CFG_FONT_USE_FREETYPE == ENABLED
-#   include <ft2build.h>
-#   include FT_FREETYPE_H
-#endif
+// UI description
 
-#ifndef VSF_TGUI_CFG_EVTQ_MAX
-#   define VSF_TGUI_CFG_EVTQ_MAX            32
+#ifndef VSF_TGUI_CFG_BORDER_SIZE
+#   define VSF_TGUI_CFG_BORDER_SIZE         16
 #endif
 
 declare_tgui_panel(tgui_root_panel_t)
@@ -23,44 +20,125 @@ end_def_tgui_panel(tgui_root_panel_t)
 
 describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
     tgui_region(0, 0, VSF_BOARD_DISP_WIDTH, VSF_BOARD_DISP_HEIGHT),
-    tgui_text(tTitle, "  Info", false, VSF_TGUI_ALIGN_CENTER),
-    tgui_padding(16, 16, 16, 16),
+    tgui_text(tTitle, "Info", false),
+    tgui_padding(VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE),
 
     tgui_label(tInformation, tgui_null_parent(tgui_root_panel_t), tInformation, tOK,
         tgui_text(tLabel, "This is a popup message. \nPlease click the OK button to close", false, VSF_TGUI_ALIGN_MID_LEFT),
-        tgui_region(0, 56, 240 - 32, 80),
+        tgui_region(0, VSF_TGUI_CFG_BORDER_SIZE * 3, VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE, 80),
         tgui_sv_tile_show_corner(false),
         tgui_sv_font_color(VSF_TGUI_COLOR_BLACK),
     ),
 
     tgui_button(tOK, tgui_null_parent(tgui_root_panel_t), tInformation, tOK,
-        tgui_location(170, 140),
+        tgui_region((VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE - 100) / 2,
+                    VSF_TGUI_CFG_BORDER_SIZE * 4 + 80, 100, 0),
         tgui_text(tLabel, "OK", true),
     ),
 );
 
-typedef struct {
-    vsf_tgui_t instance;
-    vsf_tgui_evt_t evtq_buffer[VSF_TGUI_CFG_EVTQ_MAX];
-#if VSF_TGUI_CFG_REFRESH_SCHEME == VSF_TGUI_REFRESH_SCHEME_BREADTH_FIRST_TRAVERSAL
-    uint16_t bfs_buffer[VSF_TGUI_CFG_EVTQ_MAX];
-#endif
-    vk_input_notifier_t input_notifier;
-#if     VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_ARGB_8888
-    uint32_t pfb[VSF_BOARD_DISP_WIDTH * 10];
-#elif   VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_RGB_565 || VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_BGR_565
-    uint16_t pfb[VSF_BOARD_DISP_WIDTH * 10];
-#else
-#   error TODO: add support for the specifed display color format
-#endif
+// UI Image(tile) resources
 
-    union {
-        tgui_root_panel_t root_panel;
-    };
-} vsf_tgui_demo_t;
-static VSF_CAL_NO_INIT vsf_tgui_demo_t __tgui_demo;
+#include "./images/demo_images.h"
+#include "./images/demo_images_data.h"
+
+static const vsf_tgui_tile_t __controls_container_corner_tiles[CORNOR_TILE_NUM] = {
+    [CORNOR_TILE_IN_TOP_LEFT] = {
+        .tChild = {
+            .tSize = {.iWidth = 12, .iHeight = 12, },
+            .parent_ptr = (vsf_tgui_tile_core_t*)&corner12_L,
+            .tLocation = {.iX = 0, .iY = 0},
+        },
+    },
+    [CORNOR_TILE_IN_TOP_RIGHT] = {
+        .tChild = {
+            .tSize = {.iWidth = 12, .iHeight = 12, },
+            .parent_ptr = (vsf_tgui_tile_core_t*)&corner12_L,
+            .tLocation = {.iX = 12, .iY = 0},
+        },
+    },
+    [CORNOR_TILE_IN_BOTTOM_LEFT] = {
+        .tChild = {
+            .tSize = {.iWidth = 12, .iHeight = 12, },
+            .parent_ptr = (vsf_tgui_tile_core_t*)&corner12_L,
+            .tLocation = {.iX = 0, .iY = 12},
+        },
+    },
+    [CORNOR_TILE_IN_BOTTOM_RIGHT] = {
+        .tChild = {
+            .tSize = {.iWidth = 12, .iHeight = 12, },
+            .parent_ptr = (vsf_tgui_tile_core_t*)&corner12_L,
+            .tLocation = {.iX = 12, .iY = 12},
+        },
+    },
+};
+
+static const vsf_tgui_tile_t __controls_label_corner_tiles[CORNOR_TILE_NUM] = {
+    [CORNOR_TILE_IN_TOP_LEFT] = {
+        .tChild = {
+            .tSize = {.iWidth = 16, .iHeight = 16, },
+            .parent_ptr = (vsf_tgui_tile_core_t*)&corner16_L,
+            .tLocation = {.iX = 0, .iY = 0},
+        },
+    },
+    [CORNOR_TILE_IN_TOP_RIGHT] = {
+        .tChild = {
+            .tSize = {.iWidth = 16, .iHeight = 16, },
+            .parent_ptr = (vsf_tgui_tile_core_t*)&corner16_L,
+            .tLocation = {.iX = 16, .iY = 0},
+        },
+    },
+    [CORNOR_TILE_IN_BOTTOM_LEFT] = {
+        .tChild = {
+            .tSize = {.iWidth = 16, .iHeight = 16, },
+            .parent_ptr = (vsf_tgui_tile_core_t*)&corner16_L,
+            .tLocation = {.iX = 0, .iY = 16},
+        },
+    },
+    [CORNOR_TILE_IN_BOTTOM_RIGHT] = {
+        .tChild = {
+            .tSize = {.iWidth = 16, .iHeight = 16, },
+            .parent_ptr = (vsf_tgui_tile_core_t*)&corner16_L,
+            .tLocation = {.iX = 16, .iY = 16},
+        },
+    },
+};
+
+const vsf_tgui_tile_t * vsf_tgui_control_v_get_corner_tile(vsf_tgui_control_t *control_ptr, vsf_tgui_sv_cornor_tile_mode_t mode)
+{
+    if (control_ptr->id == VSF_TGUI_COMPONENT_ID_BUTTON || control_ptr->id == VSF_TGUI_COMPONENT_ID_LABEL) {
+        if (mode < dimof(__controls_label_corner_tiles)) {
+            return &__controls_label_corner_tiles[mode];
+        }
+    } else /*if (control_ptr->id == VSF_TGUI_COMPONENT_ID_CONTAINER || control_ptr->id == VSF_TGUI_COMPONENT_ID_PANEL)*/ {
+        if (mode < dimof(__controls_container_corner_tiles)) {
+            return &__controls_container_corner_tiles[mode];
+        }
+    }
+
+    return NULL;
+}
+
+unsigned char * vsf_tgui_tile_get_pixelmap(const vsf_tgui_tile_t *tile_ptr)
+{
+    VSF_TGUI_ASSERT(tile_ptr != NULL);
+
+    if (tile_ptr->_.tCore.Attribute.u2RootTileType == 0) {  // buf tile
+        return (unsigned char *)&__tiles_data[(uint32_t)tile_ptr->tBufRoot.ptBitmap];
+    } else {                                                // index tile
+        VSF_TGUI_ASSERT(0);
+        return NULL;
+    }
+}
+
+// UI font
 
 #if VSF_TGUI_CFG_FONT_USE_FREETYPE == ENABLED
+
+#if VSF_TGUI_CFG_FONT_USE_FREETYPE == ENABLED
+#   include <ft2build.h>
+#   include FT_FREETYPE_H
+#endif
 
 #include "./__font.h"
 
@@ -84,6 +162,33 @@ FT_FILE ft_root = {
 
 int ui_main(int argc, char **argv)
 {
+    // UI instance
+
+#ifndef VSF_TGUI_CFG_EVTQ_MAX
+#   define VSF_TGUI_CFG_EVTQ_MAX            32
+#endif
+
+    typedef struct {
+        vsf_tgui_t instance;
+        vsf_tgui_evt_t evtq_buffer[VSF_TGUI_CFG_EVTQ_MAX];
+#if VSF_TGUI_CFG_REFRESH_SCHEME == VSF_TGUI_REFRESH_SCHEME_BREADTH_FIRST_TRAVERSAL
+        uint16_t bfs_buffer[VSF_TGUI_CFG_EVTQ_MAX];
+#endif
+        vk_input_notifier_t input_notifier;
+#if     VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_ARGB_8888
+        uint32_t pfb[VSF_BOARD_DISP_WIDTH * 10];
+#elif   VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_RGB_565 || VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_BGR_565
+        uint16_t pfb[VSF_BOARD_DISP_WIDTH * 10];
+#else
+#   error TODO: add support for the specifed display color format
+#endif
+
+        union {
+            tgui_root_panel_t root_panel;
+        };
+    } vsf_tgui_demo_t;
+    static VSF_CAL_NO_INIT vsf_tgui_demo_t __tgui_demo;
+
     static const vsf_tgui_cfg_t __cfg = {
         .evt_queue = {
             .obj_ptr = __tgui_demo.evtq_buffer,

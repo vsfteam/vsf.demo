@@ -856,6 +856,9 @@
     <Filter Include="vsf\component\3rd-party\freetype\raw\src\base">
       <UniqueIdentifier>{b85fb4ba-2b39-4c5c-9afe-9101059506a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="application\images">
+      <UniqueIdentifier>{e9823085-cc5b-4fd0-a130-67640a81d259}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2385,6 +2388,12 @@
     <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbase.h">
       <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\kernel\images\demo_images.h">
+      <Filter>application\images</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\linux\kernel\images\demo_images_data.h">
+      <Filter>application\images</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3604,6 +3613,9 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\cid\type1cid.c">
       <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\kernel\images\demo_images.c">
+      <Filter>application\images</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
