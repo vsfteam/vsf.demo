@@ -46,7 +46,13 @@ typedef struct {
     uint16_t bfs_buffer[VSF_TGUI_CFG_EVTQ_MAX];
 #endif
     vk_input_notifier_t input_notifier;
+#if     VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_ARGB_8888
+    uint32_t pfb[VSF_BOARD_DISP_WIDTH * 10];
+#elif   VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_RGB_565 || VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_BGR_565
     uint16_t pfb[VSF_BOARD_DISP_WIDTH * 10];
+#else
+#   error TODO: add support for the specifed display color format
+#endif
 
     union {
         tgui_root_panel_t root_panel;

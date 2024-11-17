@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-    <fileVersion>3</fileVersion>
+    <fileVersion>4</fileVersion>
     <configuration>
         <name>vsf_template_aic8800</name>
         <toolchain>
@@ -11,9 +11,13 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>31</version>
+                <version>37</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
+                <option>
+                    <name>BrowseInfoPath</name>
+                    <state>vsf_template_aic8800\BrowseInfo</state>
+                </option>
                 <option>
                     <name>ExePath</name>
                     <state>vsf_template_aic8800\Exe</state>
@@ -66,15 +70,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.40.2.22864</state>
-                </option>
-                <option>
-                    <name>GeneralEnableMisra</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>GeneralMisraVerbose</name>
-                    <state>0</state>
+                    <state>9.60.2.5384</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
@@ -97,26 +93,12 @@
                     <state>0</state>
                 </option>
                 <option>
-                    <name>GeneralMisraRules98</name>
-                    <version>0</version>
-                    <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                </option>
-                <option>
-                    <name>GeneralMisraVer</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>GeneralMisraRules04</name>
-                    <version>0</version>
-                    <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
-                </option>
-                <option>
                     <name>RTConfigPath2</name>
                     <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>27</version>
+                    <version>34</version>
                     <state>39</state>
                 </option>
                 <option>
@@ -133,7 +115,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>27</version>
+                    <version>34</version>
                     <state>39</state>
                 </option>
                 <option>
@@ -156,7 +138,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>27</version>
+                    <version>34</version>
                     <state>39</state>
                 </option>
                 <option>
@@ -209,13 +191,42 @@
                     <version>0</version>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>OGAarch64Abi</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>OG_32_64Device</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>BuildFilesPath</name>
+                    <state>vsf_template_aic8800</state>
+                </option>
+                <option>
+                    <name>PointerAuthentication</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>FPU64</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>OG_32_64DeviceCoreSlave</name>
+                    <version>34</version>
+                    <state>39</state>
+                </option>
+                <option>
+                    <name>GOutputSo</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>35</version>
+                <version>39</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -361,10 +372,6 @@
                     <state></state>
                 </option>
                 <option>
-                    <name>CompilerMisraOverride</name>
-                    <state>0</state>
-                </option>
-                <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\..\..\board\aic8800m</state>
                     <state>$PROJ_DIR$\..\..\application\kernel\helloworld</state>
@@ -440,16 +447,6 @@
                 <option>
                     <name>CCOptLevelSlave</name>
                     <state>3</state>
-                </option>
-                <option>
-                    <name>CompilerMisraRules98</name>
-                    <version>0</version>
-                    <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                </option>
-                <option>
-                    <name>CompilerMisraRules04</name>
-                    <version>0</version>
-                    <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
                 </option>
                 <option>
                     <name>CCPosIndRopi</name>
@@ -536,13 +533,33 @@
                     <name>OICompilerExtraOption</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>CCStackProtection</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCPointerAutentiction</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCBranchTargetIdentification</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCPosRadRwpi</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCPosSharedSlave</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>10</version>
+                <version>12</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -698,6 +715,14 @@
                     <name>AsmNoLiteralPool</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>PreInclude</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>A_32_64Device</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -732,40 +757,23 @@
         </settings>
         <settings>
             <name>CUSTOM</name>
-            <archiveVersion>3</archiveVersion>
+            <archiveVersion>4</archiveVersion>
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>0</hasPrio>
-            </data>
-        </settings>
-        <settings>
-            <name>BICOMP</name>
-            <archiveVersion>0</archiveVersion>
-            <data />
-        </settings>
-        <settings>
-            <name>BUILDACTION</name>
-            <archiveVersion>1</archiveVersion>
-            <data>
-                <prebuild></prebuild>
-                <postbuild></postbuild>
+                <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
         <settings>
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>23</version>
+                <version>28</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
                     <name>IlinkLibIOConfig</name>
                     <state>1</state>
-                </option>
-                <option>
-                    <name>XLinkMisraHandler</name>
-                    <state>0</state>
                 </option>
                 <option>
                     <name>IlinkInputFileSlave</name>
@@ -1092,6 +1100,46 @@
                     <name>IlinkRawBinaryAlign2</name>
                     <state></state>
                 </option>
+                <option>
+                    <name>IlinkLogCrtRoutineSelection</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogFragmentInfo</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogInlining</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogMerging</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkDemangle</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkWrapperFileEnable</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkWrapperFile</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkProcessor</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>IlinkFpuProcessor</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>IlinkSharedSlave</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1116,8 +1164,8 @@
             </data>
         </settings>
         <settings>
-            <name>BILINK</name>
-            <archiveVersion>0</archiveVersion>
+            <name>BUILDACTION</name>
+            <archiveVersion>2</archiveVersion>
             <data />
         </settings>
     </configuration>
@@ -4556,21 +4604,21 @@
                         </file>
                     </group>
                     <group>
-                        <name>sdmmc_mal</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\sdmmc_mal\vsf_sdmmc_mal.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\sdmmc_mal\vsf_sdmmc_mal.h</name>
-                        </file>
-                    </group>
-                    <group>
                         <name>scsi_mal</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\scsi_mal\vsf_scsi_mal.c</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\scsi_mal\vsf_scsi_mal.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>sdmmc_mal</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\sdmmc_mal\vsf_sdmmc_mal.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\mal\driver\sdmmc_mal\vsf_sdmmc_mal.h</name>
                         </file>
                     </group>
                 </group>
@@ -5125,7 +5173,7 @@
                                 <settings>
                                     <name>ICCARM</name>
                                     <data>
-                                        <version>35</version>
+                                        <version>39</version>
                                         <wantNonLocal>1</wantNonLocal>
                                         <debug>1</debug>
                                         <option>
@@ -5258,10 +5306,6 @@
                                             <state></state>
                                         </option>
                                         <option>
-                                            <name>CompilerMisraOverride</name>
-                                            <state>0</state>
-                                        </option>
-                                        <option>
                                             <name>CCIncludePath2</name>
                                             <state>$PROJ_DIR$\..\..\config</state>
                                             <state>$PROJ_DIR$\..\..\vsf\source</state>
@@ -5302,16 +5346,6 @@
                                         <option>
                                             <name>CCOptLevelSlave</name>
                                             <state>3</state>
-                                        </option>
-                                        <option>
-                                            <name>CompilerMisraRules98</name>
-                                            <version>0</version>
-                                            <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                                        </option>
-                                        <option>
-                                            <name>CompilerMisraRules04</name>
-                                            <version>0</version>
-                                            <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
                                         </option>
                                         <option>
                                             <name>CCPosIndRopi</name>
@@ -5388,6 +5422,26 @@
                                         </option>
                                         <option>
                                             <name>IccRTTI2</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCStackProtection</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPointerAutentiction</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCBranchTargetIdentification</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPosRadRwpi</name>
+                                            <state>0</state>
+                                        </option>
+                                        <option>
+                                            <name>CCPosSharedSlave</name>
                                             <state>0</state>
                                         </option>
                                     </data>
@@ -5512,24 +5566,6 @@
                             </file>
                         </group>
                         <group>
-                            <name>io</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\io\io.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\io\io.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>sdio</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\sdio\sdio.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\sdio\sdio.h</name>
-                            </file>
-                        </group>
-                        <group>
                             <name>port</name>
                             <group>
                                 <name>arch</name>
@@ -5581,6 +5617,15 @@
                             </group>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\port\compiler.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>sdio</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\sdio\sdio.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\sdio\sdio.h</name>
                             </file>
                         </group>
                         <group>
@@ -6803,30 +6848,6 @@
                         </file>
                     </group>
                     <group>
-                        <name>io</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\io\io_common.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\io\io_template.h</name>
-                        </file>
-                    </group>
-                    <group>
-                        <name>sdio</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_common.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_probe.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_probe.h</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_template.h</name>
-                        </file>
-                    </group>
-                    <group>
                         <name>pm</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\pm\pm_template.h</name>
@@ -6860,6 +6881,21 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\rtc\rtc_template.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>sdio</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_probe.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_probe.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\sdio\sdio_template.h</name>
                         </file>
                     </group>
                     <group>
@@ -7720,12 +7756,12 @@
                             </file>
                         </group>
                         <group>
-                            <name>io</name>
+                            <name>pwm</name>
                             <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.c</name>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.c</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.h</name>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.h</name>
                             </file>
                         </group>
                         <group>
@@ -7735,15 +7771,6 @@
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\sdio\vsf_hal_distbus_sdio.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>pwm</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.h</name>
                             </file>
                         </group>
                         <group>
@@ -7961,12 +7988,12 @@
                         </file>
                     </group>
                     <group>
-                        <name>io</name>
+                        <name>pwm</name>
                         <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.c</name>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.h</name>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.h</name>
                         </file>
                     </group>
                     <group>
@@ -7976,15 +8003,6 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\sdio\vsf_remapped_sdio.h</name>
-                        </file>
-                    </group>
-                    <group>
-                        <name>pwm</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.c</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.h</name>
                         </file>
                     </group>
                     <group>
