@@ -601,9 +601,6 @@
     <Filter Include="vsf\hal\driver\common\i2c">
       <UniqueIdentifier>{027e69cc-bb2c-4e15-93ec-5535b5977a1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vsf\hal\driver\common\io">
-      <UniqueIdentifier>{2e36809c-b123-4d7a-b52c-0aaff4247867}</UniqueIdentifier>
-    </Filter>
     <Filter Include="vsf\hal\driver\common\rtc">
       <UniqueIdentifier>{cb40b38e-8e30-495c-ab18-c565c395e37d}</UniqueIdentifier>
     </Filter>
@@ -654,9 +651,6 @@
     </Filter>
     <Filter Include="vsf\hal\driver\common\template">
       <UniqueIdentifier>{f526c50f-6308-4240-862d-1a8d8b5b655e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vsf\hal\driver\vsf\distbus\io">
-      <UniqueIdentifier>{ad473625-9d73-4160-ae74-3a97f4be4e1b}</UniqueIdentifier>
     </Filter>
     <Filter Include="vsf\hal\driver\vsf\distbus\gpio">
       <UniqueIdentifier>{55d2bf71-3712-46f9-9358-ee3be2d73faf}</UniqueIdentifier>
@@ -711,9 +705,6 @@
     </Filter>
     <Filter Include="vsf\hal\utilities\remap\gpio">
       <UniqueIdentifier>{a6341666-4546-4489-902e-d2712a081c34}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vsf\hal\utilities\remap\io">
-      <UniqueIdentifier>{ce3c697d-3667-4953-9bab-76022ce22c6b}</UniqueIdentifier>
     </Filter>
     <Filter Include="vsf\hal\utilities\remap\i2c">
       <UniqueIdentifier>{6992f4c5-6547-4e96-891f-ee17324ad084}</UniqueIdentifier>
@@ -811,36 +802,6 @@
     <Filter Include="vsf\component\3rd-party\qrcode\raw\src">
       <UniqueIdentifier>{ffa443be-b60a-4d69-8fc8-d4564de2bb5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="application\sgl">
-      <UniqueIdentifier>{33e8f0f3-2391-4698-a7e6-0003871bd283}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\sgl\platform">
-      <UniqueIdentifier>{6f6eb5ea-24b9-4a32-9a69-b81376c18ce2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\sgl\platform\vsf">
-      <UniqueIdentifier>{d7824b4c-d161-4462-8dae-e19f007a1765}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\sgl\platform\raw">
-      <UniqueIdentifier>{63a28fc6-b63d-438e-b8dc-6845dd4143f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\sgl\platform\raw\source">
-      <UniqueIdentifier>{22234301-0493-42ca-8723-4572042f0c39}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\sgl\platform\raw\source\core">
-      <UniqueIdentifier>{5c19da48-883f-47a5-a9ca-8fc2ed09ea63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\sgl\platform\raw\source\draw">
-      <UniqueIdentifier>{11139c4b-c606-4be5-a17d-22dbdc49ecd4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\sgl\platform\raw\source\fonts">
-      <UniqueIdentifier>{ef990f23-08ee-4e71-8329-950c0cf37b4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\sgl\platform\raw\source\libs">
-      <UniqueIdentifier>{a51bcb48-34af-4e98-acc3-012a3d5dc77c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\sgl\platform\raw\source\widget">
-      <UniqueIdentifier>{4bf48935-8a9a-460a-a89f-3a7f38e4da42}</UniqueIdentifier>
-    </Filter>
     <Filter Include="vsf\shell\sys\linux\include\linux\device">
       <UniqueIdentifier>{74253c82-349f-4f74-80dc-91c2286d34ce}</UniqueIdentifier>
     </Filter>
@@ -867,6 +828,33 @@
     </Filter>
     <Filter Include="vsf\hal\utilities\remap\sdio">
       <UniqueIdentifier>{1b397d19-7702-4292-b82a-7b979fc53ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\ui\tgui\port">
+      <UniqueIdentifier>{01e08a54-195c-48b7-a2b0-0237de6dbd52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\ui\tgui\port\font">
+      <UniqueIdentifier>{40b5f44d-dec8-474d-ad42-a2797e46bb2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\ui\tgui\port\view">
+      <UniqueIdentifier>{e99864c5-d6c1-47f5-83ca-c2f00019b568}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\freetype">
+      <UniqueIdentifier>{bd6d3828-be79-439b-9016-05c5b89b6bfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\freetype\port">
+      <UniqueIdentifier>{3af9f489-ad62-4c6e-ad46-27ce7e16ee36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\freetype\port\vsf_config">
+      <UniqueIdentifier>{c3abf948-8cca-4b5f-b907-a4abefc0566f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\freetype\raw">
+      <UniqueIdentifier>{9ba69304-0a5b-4033-ae02-06bb77cdde34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\freetype\raw\src">
+      <UniqueIdentifier>{c3c468b9-808f-4ae6-9161-465d02ec78b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\freetype\raw\src\base">
+      <UniqueIdentifier>{b85fb4ba-2b39-4c5c-9afe-9101059506a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1323,9 +1311,6 @@
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\__vk_tgui_slider.h">
       <Filter>vsf\component\ui\tgui\controls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\__vsf_tgui_controls_common.h">
-      <Filter>vsf\component\ui\tgui\controls</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\vsf_msg_tree_cfg.h">
       <Filter>vsf\component\ui\tgui\controls</Filter>
     </ClInclude>
@@ -1372,9 +1357,6 @@
       <Filter>vsf\component\ui\tgui\view\simple_view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_draw.h">
-      <Filter>vsf\component\ui\tgui\view\simple_view</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_font.h">
       <Filter>vsf\component\ui\tgui\view\simple_view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_label.h">
@@ -1866,9 +1848,6 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\common\pwm\pwm_template.h">
       <Filter>vsf\hal\driver\common\pwm</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\driver\common\io\io_template.h">
-      <Filter>vsf\hal\driver\common\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\driver\common\i2c\i2c_request.h">
       <Filter>vsf\hal\driver\common\i2c</Filter>
     </ClInclude>
@@ -1986,9 +1965,6 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\common\template\vsf_template_usb.h">
       <Filter>vsf\hal\driver\common\template</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.h">
-      <Filter>vsf\hal\driver\vsf\distbus\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.h">
       <Filter>vsf\hal\driver\vsf\distbus\gpio</Filter>
     </ClInclude>
@@ -2045,9 +2021,6 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\utilities\stream\vsf_hal_stream.h">
       <Filter>vsf\hal\utilities\stream</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.h">
-      <Filter>vsf\hal\utilities\remap\io</Filter>
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\i2c\vsf_remapped_i2c.h">
       <Filter>vsf\hal\utilities\remap\i2c</Filter>
@@ -2168,123 +2141,6 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\component\3rd-party\qrcode\raw\src\qrcode.h">
       <Filter>vsf\component\3rd-party\qrcode\raw\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\platform\vsf\sgl_platform.h">
-      <Filter>application\sgl\platform\vsf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_anim.h">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_core.h">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_device.h">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_event.h">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_list.h">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_log.h">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_obj.h">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_page.h">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_task.h">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw.h">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_arc.h">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_circle.h">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_font.h">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_icon.h">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_line.h">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_misc.h">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_pie.h">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_rect.h">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_font.h">
-      <Filter>application\sgl\platform\raw\source\fonts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_math.h">
-      <Filter>application\sgl\platform\raw\source\libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_mem.h">
-      <Filter>application\sgl\platform\raw\source\libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_string.h">
-      <Filter>application\sgl\platform\raw\source\libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_types.h">
-      <Filter>application\sgl\platform\raw\source\libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_arcbar.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_box.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_button.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_checkbox.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_combox.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_keypad.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_label.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_listview.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_number.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_object.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_pgsbar.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_radiobtn.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_switch.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_textedit.h">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\sgl.h">
-      <Filter>application\sgl\platform\raw\source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\atomic.h">
       <Filter>vsf\shell\sys\linux\include\linux</Filter>
@@ -2501,6 +2357,33 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\sdio\vsf_remapped_sdio.h">
       <Filter>vsf\hal\utilities\remap\sdio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\port\view\vsf_tgui_sv_port.h">
+      <Filter>vsf\component\ui\tgui\port\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\port\vsf_tgui_port.h">
+      <Filter>vsf\component\ui\tgui\port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftconfig.h">
+      <Filter>vsf\component\3rd-party\freetype\port\vsf_config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftheader.h">
+      <Filter>vsf\component\3rd-party\freetype\port\vsf_config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftmodule.h">
+      <Filter>vsf\component\3rd-party\freetype\port\vsf_config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftoption.h">
+      <Filter>vsf\component\3rd-party\freetype\port\vsf_config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftstdlib.h">
+      <Filter>vsf\component\3rd-party\freetype\port\vsf_config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\ft2build.h">
+      <Filter>vsf\component\3rd-party\freetype\port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbase.h">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2960,9 +2843,6 @@
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\vsf_tgui_input.c">
       <Filter>vsf\component\ui\tgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_font.c">
-      <Filter>vsf\component\ui\tgui\view\simple_view</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\usb\host\class\DL1x5\vsf_usbh_dl1x5.c">
       <Filter>vsf\component\usb\host\class\DL1x5</Filter>
     </ClCompile>
@@ -3086,9 +2966,6 @@
     <ClCompile Include="..\..\vsf\source\hal\driver\common\pwm\pwm_common.c">
       <Filter>vsf\hal\driver\common\pwm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vsf\source\hal\driver\common\io\io_common.c">
-      <Filter>vsf\hal\driver\common\io</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\driver\common\i2c\i2c_common.c">
       <Filter>vsf\hal\driver\common\i2c</Filter>
     </ClCompile>
@@ -3134,9 +3011,6 @@
     <ClCompile Include="..\..\vsf\source\hal\driver\common\gpio\gpio_common.c">
       <Filter>vsf\hal\driver\common\gpio</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.c">
-      <Filter>vsf\hal\driver\vsf\distbus\io</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.c">
       <Filter>vsf\hal\driver\vsf\distbus\gpio</Filter>
     </ClCompile>
@@ -3175,9 +3049,6 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\gpio\vsf_remapped_gpio.c">
       <Filter>vsf\hal\utilities\remap\gpio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.c">
-      <Filter>vsf\hal\utilities\remap\io</Filter>
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\i2c\vsf_remapped_i2c.c">
       <Filter>vsf\hal\utilities\remap\i2c</Filter>
@@ -3569,132 +3440,6 @@
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_mdns.c">
       <Filter>application</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\platform\vsf\sgl_platform_vsf.c">
-      <Filter>application\sgl\platform\vsf</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_anim.c">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_device.c">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_event.c">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_log.c">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_obj.c">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_page.c">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_task.c">
-      <Filter>application\sgl\platform\raw\source\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw.c">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_arc.c">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_circle.c">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_font.c">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_icon.c">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_line.c">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_misc.c">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_pie.c">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_rect.c">
-      <Filter>application\sgl\platform\raw\source\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_consolas12.c">
-      <Filter>application\sgl\platform\raw\source\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_consolas15.c">
-      <Filter>application\sgl\platform\raw\source\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_song10.c">
-      <Filter>application\sgl\platform\raw\source\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_song12.c">
-      <Filter>application\sgl\platform\raw\source\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_song23.c">
-      <Filter>application\sgl\platform\raw\source\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_awesome23.c">
-      <Filter>application\sgl\platform\raw\source\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_cascadia_mono17.c">
-      <Filter>application\sgl\platform\raw\source\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_math.c">
-      <Filter>application\sgl\platform\raw\source\libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_mem.c">
-      <Filter>application\sgl\platform\raw\source\libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_sprintf.c">
-      <Filter>application\sgl\platform\raw\source\libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_string.c">
-      <Filter>application\sgl\platform\raw\source\libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_arcbar.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_box.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_button.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_checkbox.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_combox.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_keypad.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_label.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_listview.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_number.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_object.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_pgsbar.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_radiobtn.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_switch.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_textedit.c">
-      <Filter>application\sgl\platform\raw\source\widget</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_ui.c">
       <Filter>application</Filter>
     </ClCompile>
@@ -3728,6 +3473,138 @@
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\sdio\vsf_remapped_sdio.c">
       <Filter>vsf\hal\utilities\remap\sdio</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\font\vsf_tgui_font_port_freetype.c">
+      <Filter>vsf\component\ui\tgui\port\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\view\vsf_tgui_sv_port.c">
+      <Filter>vsf\component\ui\tgui\port\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\vsf_tgui_port.c">
+      <Filter>vsf\component\ui\tgui\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbase.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbbox.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbdf.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbitmap.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftcid.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftdebug.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftfstype.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftgasp.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftglyph.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftgxval.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftinit.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftmm.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftotval.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftpfr.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftstroke.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftsynth.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftsystem.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\fttype1.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftwinfnt.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\autofit\autofit.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\bdf\bdf.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\cff\cff.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\bzip2\ftbzip2.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\cache\ftcache.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\gzip\ftgzip.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\lzw\ftlzw.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\gxvalid\gxvalid.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\otvalid\otvalid.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\pcf\pcf.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\pfr\pfr.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\psaux\psaux.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\pshinter\pshinter.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\psnames\psnames.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\raster\raster.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\sfnt\sfnt.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\smooth\smooth.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\truetype\truetype.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\type1\type1.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\type42\type42.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\winfonts\winfnt.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\cid\type1cid.c">
+      <Filter>vsf\component\3rd-party\freetype\raw\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">
@@ -3756,9 +3633,6 @@
     </None>
     <None Include="..\..\vsf\source\hal\driver\common\pwm\timer_to_pwm.inc">
       <Filter>vsf\hal\driver\common\pwm</Filter>
-    </None>
-    <None Include="..\..\vsf\source\hal\driver\common\io\io_template.inc">
-      <Filter>vsf\hal\driver\common\io</Filter>
     </None>
     <None Include="..\..\vsf\source\hal\driver\common\i2c\i2c_template.inc">
       <Filter>vsf\hal\driver\common\i2c</Filter>

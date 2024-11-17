@@ -84,6 +84,7 @@
 #   define VSF_BOARD_DISP_HEIGHT                        480
 #   define VSF_BOARD_DISP_WIDTH                         800
 #   define VSF_BOARD_DISP_COLOR                         VSF_DISP_COLOR_ARGB8888
+#   define VSF_TGUI_CFG_DISP_COLOR                      VSF_TGUI_COLOR_ARGB_8888
 #define VSF_USE_AUDIO                                   ENABLED
 #   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
 #   define VSF_AUDIO_USE_WINSOUND                       ENABLED

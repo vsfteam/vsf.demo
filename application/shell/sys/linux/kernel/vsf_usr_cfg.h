@@ -113,6 +113,37 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #       define VSF_USBH_USE_UVC                         ENABLED
 #endif
 
+#if VSF_USE_UI == ENABLED
+#   define VSF_USE_TINY_GUI                             ENABLED
+#       define VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL      VSF_TGUI_V_TEMPLATE_SIMPLE_VIEW
+#       define VSF_TGUI_CFG_COLOR_MODE                  VSF_TGUI_COLOR_ARGB_8888
+// define VSF_TGUI_CFG_DISP_COLOR in board layer
+//#       define VSF_TGUI_CFG_DISP_COLOR                  VSF_TGUI_COLOR_RGB_565
+#       define VSF_TGUI_CFG_SUPPORT_NAME_STRING         ENABLED
+#       define VSF_TGUI_LOG                             vsf_trace
+#           define VSF_TGUI_CFG_SV_PORT_LOG             DISABLED
+#           define VSF_TGUI_CFG_SV_DRAW_LOG             DISABLED
+#       define VSF_TGUI_CFG_FONT_USE_FREETYPE           ENABLED
+#           define VSF_TGUI_FONTS                                               \
+                TGUI_FT2_FONT_DEF(VSF_TGUI_FONT_DEJAVUSERIF_S24,  "DejaVuSerif.ttf",  16)
+
+#       define VSF_TGUI_KEY_OK                          0x0D
+#       define VSF_TGUI_KEY_CANCEL                      0x1B
+#       define VSF_TGUI_KEY_UP                          0x52
+#       define VSF_TGUI_KEY_DOWN                        0x51
+#       define VSF_TGUI_KEY_LEFT                        0x50
+#       define VSF_TGUI_KEY_RIGHT                       0x4F
+
+#   if VSF_USE_TINY_GUI == ENABLED
+#       define VSF_USE_MSG_TREE                         ENABLED
+#       define VSF_MSGT_NODE_OFFSET_TYPE                int16_t
+#       define VSF_MSG_TREE_CFG_SUPPORT_NAME_STRING     VSF_TGUI_CFG_SUPPORT_NAME_STRING
+
+#       define VSF_KERNEL_CFG_EDA_SUPPORT_TASK          ENABLED
+#       define VSF_KERNEL_CFG_EDA_SUPPORT_PT            ENABLED
+#   endif
+#endif
+
 #define VSF_USE_LINUX                                   ENABLED
 #   ifndef VSF_LINUX_CFG_STACKSIZE
 #       define VSF_LINUX_CFG_STACKSIZE                  8192

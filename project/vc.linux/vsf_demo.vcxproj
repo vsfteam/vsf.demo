@@ -25,48 +25,16 @@
     <ClInclude Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm_cfg.h" />
     <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport.h" />
     <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport_cfg.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\platform\vsf\sgl_platform.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_anim.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_core.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_device.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_event.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_list.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_log.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_obj.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_page.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\core\sgl_task.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_arc.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_circle.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_font.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_icon.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_line.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_misc.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_pie.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_rect.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_font.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_math.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_mem.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_string.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_types.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\sgl.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_arcbar.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_box.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_button.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_checkbox.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_combox.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_keypad.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_label.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_listview.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_number.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_object.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_pgsbar.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_radiobtn.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_switch.h" />
-    <ClInclude Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_textedit.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\kernel\vsf_usr_cfg.h" />
     <ClInclude Include="..\..\board\win\vsf_board.h" />
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\ft2build.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftconfig.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftheader.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftmodule.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftoption.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftstdlib.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbase.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\tls_session\mbedtls_tls_session.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\vplt\mbedtls_vplt.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\port\platform_vsf.h" />
@@ -159,14 +127,14 @@
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_panel.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_text_list.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\__vk_tgui_slider.h" />
-    <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\__vsf_tgui_controls_common.h" />
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\port\view\vsf_tgui_sv_port.h" />
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\port\vsf_tgui_port.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\utilities\vsf_tgui_text.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_button.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_color.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_container.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_control.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_draw.h" />
-    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_font.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_label.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_list.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_panel.h" />
@@ -253,7 +221,6 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\common\i2c\i2c_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\i2c\multiplex_i2c.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\i2s\i2s_template.h" />
-    <ClInclude Include="..\..\vsf\source\hal\driver\common\io\io_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\pwm\pwm_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\rng\rng_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\rtc\rtc_common.h" />
@@ -291,7 +258,6 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.h" />
-    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\sdio\vsf_hal_distbus_sdio.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.h" />
@@ -310,7 +276,6 @@
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\gpio\vsf_remapped_gpio.h" />
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\i2c\vsf_remapped_i2c.h" />
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\i2s\vsf_remapped_i2s.h" />
-    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.h" />
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.h" />
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\sdio\vsf_remapped_sdio.h" />
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\spi\vsf_remapped_spi.h" />
@@ -567,48 +532,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\application\app\distbus\transport\stream\vsf_distbus_transport_stream.c" />
     <ClCompile Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\platform\vsf\sgl_platform_vsf.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_anim.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_device.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_event.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_log.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_obj.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_page.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\core\sgl_task.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_arc.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_circle.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_font.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_icon.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_line.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_misc.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_pie.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\draw\sgl_draw_rect.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_consolas12.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_consolas15.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_song10.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_song12.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_ascii_song23.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_awesome23.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\fonts\sgl_cascadia_mono17.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_math.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_mem.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_sprintf.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\libs\sgl_string.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_arcbar.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_box.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_button.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_checkbox.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_combox.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_keypad.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_label.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_listview.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_number.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_object.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_pgsbar.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_radiobtn.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_switch.c" />
-    <ClCompile Include="..\..\application\component\ui\sgl\raw\source\widget\sgl_textedit.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\hwtest_main.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_httpd.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_mdns.c" />
@@ -617,6 +540,47 @@
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\vsf_linux_package_manager.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\vsf_main.c" />
     <ClCompile Include="..\..\board\win\vsf_board.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\autofit\autofit.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbase.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbbox.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbdf.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbitmap.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftcid.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftdebug.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftfstype.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftgasp.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftglyph.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftgxval.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftinit.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftmm.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftotval.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftpfr.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftstroke.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftsynth.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftsystem.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\fttype1.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftwinfnt.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\bdf\bdf.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\bzip2\ftbzip2.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\cache\ftcache.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\cff\cff.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\cid\type1cid.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\gxvalid\gxvalid.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\gzip\ftgzip.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\lzw\ftlzw.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\otvalid\otvalid.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\pcf\pcf.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\pfr\pfr.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\psaux\psaux.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\pshinter\pshinter.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\psnames\psnames.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\raster\raster.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\sfnt\sfnt.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\smooth\smooth.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\truetype\truetype.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\type1\type1.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\type42\type42.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\winfonts\winfnt.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\tls_session\mbedtls_tls_session.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\vplt\mbedtls_vplt.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\port\platform_vsf.c" />
@@ -772,13 +736,15 @@
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_panel.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_text_list.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\controls\__vk_tgui_slider.c" />
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\font\vsf_tgui_font_port_freetype.c" />
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\view\vsf_tgui_sv_port.c" />
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\vsf_tgui_port.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\utilities\vsf_tgui_text.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_button.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_color.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_container.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_control.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_draw.c" />
-    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_font.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_label.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_list.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_panel.c" />
@@ -838,7 +804,6 @@
     <ClCompile Include="..\..\vsf\source\hal\driver\common\i2c\i2c_request.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\i2c\multiplex_i2c.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\i2s\i2s_common.c" />
-    <ClCompile Include="..\..\vsf\source\hal\driver\common\io\io_common.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\pwm\pwm_common.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\rng\rng_common.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\rtc\rtc_common.c" />
@@ -854,7 +819,6 @@
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.c" />
-    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\sdio\vsf_hal_distbus_sdio.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.c" />
@@ -871,7 +835,6 @@
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\gpio\vsf_remapped_gpio.c" />
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\i2c\vsf_remapped_i2c.c" />
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\i2s\vsf_remapped_i2s.c" />
-    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.c" />
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.c" />
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\sdio\vsf_remapped_sdio.c" />
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\spi\vsf_remapped_spi.c" />
@@ -988,7 +951,6 @@
     <None Include="..\..\vsf\source\hal\driver\common\gpio\gpio_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\i2c\i2c_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\i2s\i2s_template.inc" />
-    <None Include="..\..\vsf\source\hal\driver\common\io\io_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\pwm\pwm_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\pwm\timer_to_pwm.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\rng\rng_template.inc" />
@@ -1075,9 +1037,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\application\component\ui\sgl\platform\vsf;$(ProjectDir)..\..\application\component\ui\sgl\raw\source;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
@@ -1103,9 +1065,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\application\component\ui\sgl\platform\vsf;$(ProjectDir)..\..\application\component\ui\sgl\raw\source;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
