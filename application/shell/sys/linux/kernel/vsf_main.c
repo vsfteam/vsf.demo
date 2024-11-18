@@ -28,8 +28,6 @@
  *     source/component/3rd-party/PLOOC/raw
  *     source/component/3rd-party/qrcode/raw if VSF_USE_UI is enabled
  *   optional:
- *    if VSF_USE_UI is enabled, sgl is used
- *     application/component/ui/sgl/raw if VSF_USE_UI is enabled
  *    for root directory in embedded hardware, littlefs is used
  *     source/component/3rd-party/littlefs/raw
  *    for AIC8800M(not for AIC8800M40B/AIC8800M80)
@@ -42,9 +40,6 @@
  *   vsf/source/shell/sys/linux/include/simple_libc if VSF_LINUX_USE_SIMPLE_LIBC is enabled
  *   vsf/source/shell/sys/linux/include/libusb if VSF_USBH_USE_LIBUSB is enabled
  *   optional:
- *    if VSF_USE_UI is enabled, sgl is used
- *     application/component/ui/sgl/platform/vsf
- *     application/component/ui/sgl/raw/source
  *    for root directory in embedded hardware, littlefs is used
  *     vsf/source/component/3rd-party/littlefs/port
  *     vsf/source/component/3rd-party/littlefs/raw
@@ -61,9 +56,6 @@
  *   vsf/source/shell/sys/linux/lib/3rd-party/regex excluding engine.c
  *   ./*.c
  *   optional:
- *    if VSF_USE_UI is enabled, sgl is used
- *     application/component/ui/sgl/platform/vsf/*
- *     application/component/ui/sgl/raw/*
  *    for root directory in embedded hardware, littlefs is used
  *     vsf/source/component/3rd-party/littlefs/port/*
  *     vsf/source/component/3rd-party/littlefs/raw/*
