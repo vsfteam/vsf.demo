@@ -423,7 +423,7 @@ int ui_main(int argc, char **argv)
     vsf_ui_executor_ctx_t *executor;
     fd_set rfds, wfds;
     pid_t pid;
-    int fd_num, fd_max = executor_notifier;
+    int fd_num;
 
     __vsf_ui_eventfd_priv = vsf_linux_fd_get(executor_notifier)->priv;
     vsf_slist_init(&executor_queue);
@@ -431,12 +431,22 @@ int ui_main(int argc, char **argv)
         FD_ZERO(&rfds);
         FD_ZERO(&wfds);
         FD_SET(executor_notifier, &rfds);
+        fd_num = executor_notifier;
         __vsf_slist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &executor_queue) {
             FD_SET(_->__stdin_pipe[1], &wfds);
+            if (_->__stdin_pipe[1] > fd_num) {
+                fd_num = _->__stdin_pipe[1];
+            }
             FD_SET(_->__stdout_pipe[0], &rfds);
+            if (_->__stdout_pipe[0] > fd_num) {
+                fd_num = _->__stdout_pipe[0];
+            }
             FD_SET(_->__stderr_pipe[0], &rfds);
+            if (_->__stderr_pipe[0] > fd_num) {
+                fd_num = _->__stderr_pipe[0];
+            }
         }
-        fd_num = select(fd_max + 1, &rfds, &wfds, NULL, NULL);
+        fd_num = select(fd_num + 1, &rfds, &wfds, NULL, NULL);
         if (fd_num <= 0) { continue; }
 
         if (FD_ISSET(executor_notifier, &rfds)) {
