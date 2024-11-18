@@ -1,7 +1,47 @@
+#define __VSF_LINUX_FS_CLASS_INHERIT__
 #include <unistd.h>
+#include <sys/eventfd.h>
+
 #include <vsf_board.h>
 
 #if VSF_USE_UI == ENABLED
+
+// executor
+
+typedef struct vsf_ui_executor_ctx_t vsf_ui_executor_ctx_t;
+struct vsf_ui_executor_ctx_t {
+    vsf_dlist_node_t __node;
+
+    char *cmd;
+    char **args;
+    void (*on_select)(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds);
+
+    int __pid;
+    int __stdout_pipe[2], __stdin_pipe[2], __stderr_pipe[2];
+};
+
+static vsf_dlist_t __vsf_ui_executor_queue_pending;
+static vsf_linux_fd_priv_t *__vsf_ui_eventfd_priv = NULL;
+
+extern void eventfd_inc_isr(vsf_linux_fd_priv_t *eventfd_priv);
+
+void vsf_tgui_execute_in_shell(vsf_ui_executor_ctx_t *ctx)
+{
+    ctx->__pid = -1;
+    ctx->__stdout_pipe[0] = -1;
+    ctx->__stdout_pipe[1] = -1;
+    ctx->__stdin_pipe[0] = -1;
+    ctx->__stdin_pipe[1] = -1;
+    ctx->__stderr_pipe[0] = -1;
+    ctx->__stderr_pipe[1] = -1;
+
+    vsf_protect_t orig = vsf_protect_int();
+        vsf_dlist_add_to_tail(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue_pending, ctx);
+    vsf_unprotect_int(orig);
+
+    VSF_ASSERT(__vsf_ui_eventfd_priv != NULL);
+    eventfd_inc_isr(__vsf_ui_eventfd_priv);
+}
 
 // UI instance
 
@@ -74,6 +114,11 @@ void vsf_tgui_frame_exit(void)
     }
 }
 
+vsf_tgui_panel_t * vsf_tgui_get_cur_panel(void)
+{
+    return (vsf_tgui_panel_t *)__vsf_tgui_panel_buffer;
+}
+
 // UI Image(tile) resources
 
 #include "./images/demo_images.h"
@@ -104,10 +149,10 @@ unsigned char * vsf_tgui_tile_get_pixelmap(const vsf_tgui_tile_t *tile_ptr)
 
 typedef struct vsf_tgui_frame_root_t {
     implement(vsf_tgui_frame_t)
-    vsf_eda_t *eda;
     struct {
         char *name;
-        char *cmdline;
+        char *cmd;
+        char **args;
         vsf_tgui_tile_t *icon;
     } app[9];
 } vsf_tgui_frame_root_t;
@@ -116,14 +161,34 @@ def_tgui_panel(tgui_root_panel_t,
     tgui_contains(
         use_tgui_panel(tAppPanel,
             tgui_contains(
-                vsf_tgui_button_t tApp[9];
+                vsf_tgui_button_t tAppBtn[9];
             )
         )
     )
 )
-// TODO: add ui-related variables here
-char *cmdline;
+vsf_ui_executor_ctx_t executor;
+vsf_tgui_frame_root_t *frame;
 end_def_tgui_panel(tgui_root_panel_t)
+
+static void __vsf_tgui_frame_root_on_select(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
+{
+}
+
+static fsm_rt_t __vsf_tgui_root_frame_on_appbtn_click(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
+{
+    tgui_root_panel_t *root_panel = (tgui_root_panel_t *)vsf_tgui_get_cur_panel();
+    int btn_idx = (vsf_tgui_button_t *)control_ptr - root_panel->tAppPanel.tAppBtn;
+    vsf_tgui_frame_root_t *root_frame = root_panel->frame;
+
+    root_panel->executor.cmd = root_frame->app[btn_idx].cmd;
+    root_panel->executor.args = root_frame->app[btn_idx].args;
+    root_panel->executor.on_select = __vsf_tgui_frame_root_on_select;
+    vsf_tgui_execute_in_shell(&root_panel->executor);
+    return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
+}
+static const vsf_tgui_user_evt_handler __vsf_tgui_root_frame_appbtn_handler[] = {
+    tgui_msg_handler(VSF_TGUI_EVT_POINTER_CLICK, __vsf_tgui_root_frame_on_appbtn_click)
+};
 
 describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
     tgui_region(0, 0, VSF_BOARD_DISP_WIDTH, VSF_BOARD_DISP_HEIGHT),
@@ -131,7 +196,7 @@ describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
     tgui_padding(VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE),
 
 #define __app_button(__idx, __pre_idx, __next_idx, ...)                         \
-    tgui_button(tApp[__idx], &(tgui_null_parent(tgui_root_panel_t)->tAppPanel), tApp[__pre_idx], tApp[__next_idx],\
+    tgui_button(tAppBtn[__idx], &(tgui_null_parent(tgui_root_panel_t)->tAppPanel), tAppBtn[__pre_idx], tAppBtn[__next_idx],\
         tgui_size(64, 76),                                                      \
         tgui_margin(2, 2, 2, 2),                                                \
         tgui_sv_tile_show_corner(false),                                        \
@@ -139,6 +204,10 @@ describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
         tgui_sv_font(VSF_TGUI_FONT_DEJAVUSERIF_S12),                            \
         tgui_background((vsf_tgui_tile_t*)&res_empty_RGBA, VSF_TGUI_ALIGN_TOP), \
         tgui_text(tLabel, "Slot" #__idx "\nEmpty", false, VSF_TGUI_ALIGN_BOTTOM),\
+        .tMSGMap = {                                                            \
+            .ptItems = __vsf_tgui_root_frame_appbtn_handler,                    \
+            .chCount = dimof(__vsf_tgui_root_frame_appbtn_handler),             \
+        },                                                                      \
         __VA_ARGS__                                                             \
     )
 
@@ -168,20 +237,20 @@ static void __vsf_tgui_frame_root_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame,
     vsf_tgui_frame_root_t *root_frame = (vsf_tgui_frame_root_t *)frame;
     tgui_root_panel_t *root_panel = (tgui_root_panel_t *)panel;
     VSF_ASSERT(panel_size >= sizeof(tgui_root_panel_t));
-    tgui_initalize_top_container(root_panel_descriptor, root_panel);
 
+    tgui_initalize_top_container(root_panel_descriptor, root_panel);
+    root_panel->frame = root_frame;
     for (int i = 0; i < dimof(root_frame->app); i++) {
         if (root_frame->app[i].name != NULL) {
-            vsf_tgui_text_set(&root_panel->tAppPanel.tApp[i].tLabel, &(const vsf_tgui_string_t){
+            vsf_tgui_text_set(&root_panel->tAppPanel.tAppBtn[i].tLabel, &(const vsf_tgui_string_t){
                 .pstrText = root_frame->app[i].name,
 #if VSF_TGUI_CFG_SAFE_STRING_MODE == ENABLED
                 .s16_size = strlen(root_frame->app[i].name),
 #endif
             });
-            root_panel->tAppPanel.tApp[i].tBackground.ptTile = root_frame->app[i].icon;
+            root_panel->tAppPanel.tAppBtn[i].tBackground.ptTile = root_frame->app[i].icon;
         }
     }
-
     vk_tgui_set_root_container(gui, (vsf_tgui_root_container_t *)panel, true);
 }
 
@@ -330,42 +399,88 @@ int ui_main(int argc, char **argv)
     // start root panel frame
     vsf_tgui_frame_root_t *root_frame = (vsf_tgui_frame_root_t *)vsf_tgui_frame_new(
         sizeof(vsf_tgui_frame_root_t), __vsf_tgui_frame_root_init, (char *)__tiles_data);
-    root_frame->eda = vsf_eda_get_cur();
     // TODO: load applications
     root_frame->app[0].name = "Local\nApps";
-    root_frame->app[0].cmdline = "vpm list-local";
+    root_frame->app[0].cmd = "vpm";
+    static const char *__vpm_list_local_args[] = {
+        "vpm", "list-local", NULL
+    };
+    root_frame->app[0].args = (char **)__vpm_list_local_args;
     root_frame->app[0].icon = (vsf_tgui_tile_t *)&res_local_RGBA;
     root_frame->app[1].name = "Remote\nApps";
-    root_frame->app[1].cmdline = "vpm list-remote";
+    root_frame->app[1].cmd = "vpm";
+    static const char *__vpm_list_remmote_args[] = {
+        "vpm", "list-remote", NULL
+    };
+    root_frame->app[1].args = (char **)__vpm_list_remmote_args;
     root_frame->app[1].icon = (vsf_tgui_tile_t *)&res_cloud_RGBA;
     vsf_tgui_frame_init(&root_frame->use_as__vsf_tgui_frame_t);
 
-    int stdout_pipe[2], stdin_pipe[2], stderr_pipe[2];
-    if ((pipe(stdout_pipe) != 0) || (pipe(stdin_pipe) != 0) || (pipe(stderr_pipe) != 0)) {
-        printf("fail to create stdio pipes\r\n");
-        VSF_ASSERT(false);
-        return -1;
-    }
-
+    int executor_notifier = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+    VSF_ASSERT(executor_notifier >= 0);
+    eventfd_t eventfd_value;
+    vsf_dlist_t executor_queue;
+    vsf_ui_executor_ctx_t *executor;
+    fd_set rfds, wfds;
     pid_t pid;
-    while (true) {
-        vsf_thread_wfe(VSF_EVT_USER);
+    int fd_num, fd_max = executor_notifier;
 
-        pid = vfork();
-        if (pid < 0) {
-            printf("fail to fork\r\n");
-            continue;
+    __vsf_ui_eventfd_priv = vsf_linux_fd_get(executor_notifier)->priv;
+    vsf_slist_init(&executor_queue);
+    while (true) {
+        FD_ZERO(&rfds);
+        FD_ZERO(&wfds);
+        FD_SET(executor_notifier, &rfds);
+        __vsf_slist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &executor_queue) {
+            FD_SET(_->__stdin_pipe[1], &wfds);
+            FD_SET(_->__stdout_pipe[0], &rfds);
+            FD_SET(_->__stderr_pipe[0], &rfds);
+        }
+        fd_num = select(fd_max + 1, &rfds, &wfds, NULL, NULL);
+        if (fd_num <= 0) { continue; }
+
+        if (FD_ISSET(executor_notifier, &rfds)) {
+            eventfd_read(executor_notifier, &eventfd_value);
+            vsf_protect_t orig = vsf_protect_int();
+                vsf_dlist_remove_head(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue_pending, executor);
+            vsf_unprotect_int(orig);
+
+            VSF_ASSERT(executor!= NULL);
+            vsf_dlist_add_to_tail(vsf_ui_executor_ctx_t, __node, &executor_queue, executor);
+
+            if (    (pipe(executor->__stdout_pipe) != 0)
+                ||  (pipe(executor->__stdin_pipe) != 0)
+                ||  (pipe(executor->__stderr_pipe) != 0)) {
+                printf("fail to create stdio pipes\r\n");
+                VSF_ASSERT(false);
+                continue;
+            }
+
+            pid = vfork();
+            if (pid < 0) {
+                printf("fail to fork\r\n");
+                continue;
+            }else if (pid > 0) {
+                executor->__pid = pid;
+            } else if (pid == 0) {
+                dup2(executor->__stdin_pipe[0], STDIN_FILENO);
+                dup2(executor->__stdout_pipe[1], STDOUT_FILENO);
+                dup2(executor->__stderr_pipe[1], STDERR_FILENO);
+
+                execvp(executor->cmd, executor->args);
+                VSF_ASSERT(false);
+            }
         }
 
-        if (pid > 0) {
+        __vsf_slist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &executor_queue) {
+            if (    FD_ISSET(_->__stdin_pipe[1], &wfds)
+                ||  FD_ISSET(_->__stdout_pipe[0], &rfds)
+                ||  FD_ISSET(_->__stderr_pipe[0], &rfds)) {
 
-        } else {
-            dup2(stdin_pipe[0], STDIN_FILENO);
-            dup2(stdout_pipe[1], STDOUT_FILENO);
-            dup2(stderr_pipe[1], STDERR_FILENO);
-
-            tgui_root_panel_t *root_panel = (tgui_root_panel_t *)__vsf_tgui_panel_buffer;
-            system(root_panel->cmdline);
+                if (_->on_select != NULL) {
+                    _->on_select(_, &rfds, &wfds);
+                }
+            }
         }
     }
     return 0;
