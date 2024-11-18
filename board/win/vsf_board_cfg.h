@@ -51,6 +51,9 @@
 #   define VSF_WIN_USART_CFG_USE_AS_HW_USART            DISABLED
 #endif
 
+#define VSF_BOARD_ARCH_STR                              "x86_64"
+#define VSF_BOARD_ARCH_APP_FORMAT                       "pe"
+
 /*----------------------------------------------------------------------------*
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/

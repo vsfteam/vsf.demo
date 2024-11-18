@@ -103,6 +103,7 @@
     <ClInclude Include="..\..\vsf\source\component\scsi\vsf_scsi_cfg.h" />
     <ClInclude Include="..\..\vsf\source\component\tcpip\netdrv\driver\wpcap\vsf_netdrv_wpcap.h" />
     <ClInclude Include="..\..\vsf\source\component\tcpip\netdrv\vsf_netdrv.h" />
+    <ClInclude Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.h" />
     <ClInclude Include="..\..\vsf\source\component\tcpip\socket\driver\lwip\vsf_socket_lwip.h" />
     <ClInclude Include="..\..\vsf\source\component\tcpip\socket\driver\win\vsf_socket_win.h" />
     <ClInclude Include="..\..\vsf\source\component\tcpip\socket\vsf_socket.h" />
@@ -716,6 +717,7 @@
     <ClCompile Include="..\..\vsf\source\component\scsi\vsf_scsi.c" />
     <ClCompile Include="..\..\vsf\source\component\tcpip\netdrv\driver\wpcap\vsf_netdrv_wpcap.c" />
     <ClCompile Include="..\..\vsf\source\component\tcpip\netdrv\vsf_netdrv.c" />
+    <ClCompile Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.c" />
     <ClCompile Include="..\..\vsf\source\component\tcpip\socket\driver\lwip\vsf_socket_lwip.c" />
     <ClCompile Include="..\..\vsf\source\component\tcpip\socket\driver\win\vsf_socket_win.c" />
     <ClCompile Include="..\..\vsf\source\component\tcpip\socket\vsf_socket.c" />

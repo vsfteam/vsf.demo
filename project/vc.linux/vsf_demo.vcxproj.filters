@@ -859,6 +859,15 @@
     <Filter Include="application\images">
       <UniqueIdentifier>{e9823085-cc5b-4fd0-a130-67640a81d259}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\component\tcpip\protocol">
+      <UniqueIdentifier>{c399f26e-0ef7-4ddc-a946-84ea08ab04a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\tcpip\protocol\http">
+      <UniqueIdentifier>{b1ff752b-b835-4ae5-bb52-74800205c1e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\tcpip\protocol\http\client">
+      <UniqueIdentifier>{ff982720-0d1a-4849-b3ca-cc7208a52cb5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2394,6 +2403,9 @@
     <ClInclude Include="..\..\application\shell\sys\linux\kernel\images\demo_images_data.h">
       <Filter>application\images</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.h">
+      <Filter>vsf\component\tcpip\protocol\http\client</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3616,6 +3628,9 @@
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\images\demo_images.c">
       <Filter>application\images</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.c">
+      <Filter>vsf\component\tcpip\protocol\http\client</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

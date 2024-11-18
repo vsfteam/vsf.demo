@@ -49,9 +49,13 @@ vsf_tgui_frame_t * vsf_tgui_frame_new(int frame_size, vsf_tgui_frame_init_t fn_i
     frame->__tile = tile;
     frame->__next = __vsf_tgui_frame_root;
     __vsf_tgui_frame_root = frame;
-    fn_init(&__tgui_demo.instance, frame, __vsf_tgui_panel_buffer, sizeof(__vsf_tgui_panel_buffer));
 
     return frame;
+}
+
+void vsf_tgui_frame_init(vsf_tgui_frame_t *frame)
+{
+    frame->__fn_init(&__tgui_demo.instance, frame, __vsf_tgui_panel_buffer, sizeof(__vsf_tgui_panel_buffer));
 }
 
 void vsf_tgui_frame_exit(void)
@@ -101,6 +105,11 @@ unsigned char * vsf_tgui_tile_get_pixelmap(const vsf_tgui_tile_t *tile_ptr)
 typedef struct vsf_tgui_frame_root_t {
     implement(vsf_tgui_frame_t)
     vsf_eda_t *eda;
+    struct {
+        char *name;
+        char *cmdline;
+        vsf_tgui_tile_t *icon;
+    } app[9];
 } vsf_tgui_frame_root_t;
 
 def_tgui_panel(tgui_root_panel_t,
@@ -156,8 +165,23 @@ describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
 
 static void __vsf_tgui_frame_root_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size)
 {
+    vsf_tgui_frame_root_t *root_frame = (vsf_tgui_frame_root_t *)frame;
+    tgui_root_panel_t *root_panel = (tgui_root_panel_t *)panel;
     VSF_ASSERT(panel_size >= sizeof(tgui_root_panel_t));
-    tgui_initalize_top_container(root_panel_descriptor, (tgui_root_panel_t *)panel);
+    tgui_initalize_top_container(root_panel_descriptor, root_panel);
+
+    for (int i = 0; i < dimof(root_frame->app); i++) {
+        if (root_frame->app[i].name != NULL) {
+            vsf_tgui_text_set(&root_panel->tAppPanel.tApp[i].tLabel, &(const vsf_tgui_string_t){
+                .pstrText = root_frame->app[i].name,
+#if VSF_TGUI_CFG_SAFE_STRING_MODE == ENABLED
+                .s16_size = strlen(root_frame->app[i].name),
+#endif
+            });
+            root_panel->tAppPanel.tApp[i].tBackground.ptTile = root_frame->app[i].icon;
+        }
+    }
+
     vk_tgui_set_root_container(gui, (vsf_tgui_root_container_t *)panel, true);
 }
 
@@ -307,6 +331,14 @@ int ui_main(int argc, char **argv)
     vsf_tgui_frame_root_t *root_frame = (vsf_tgui_frame_root_t *)vsf_tgui_frame_new(
         sizeof(vsf_tgui_frame_root_t), __vsf_tgui_frame_root_init, (char *)__tiles_data);
     root_frame->eda = vsf_eda_get_cur();
+    // TODO: load applications
+    root_frame->app[0].name = "Local\nApps";
+    root_frame->app[0].cmdline = "vpm list-local";
+    root_frame->app[0].icon = (vsf_tgui_tile_t *)&res_local_RGBA;
+    root_frame->app[1].name = "Remote\nApps";
+    root_frame->app[1].cmdline = "vpm list-remote";
+    root_frame->app[1].icon = (vsf_tgui_tile_t *)&res_cloud_RGBA;
+    vsf_tgui_frame_init(&root_frame->use_as__vsf_tgui_frame_t);
 
     int stdout_pipe[2], stdin_pipe[2], stderr_pipe[2];
     if ((pipe(stdout_pipe) != 0) || (pipe(stdin_pipe) != 0) || (pipe(stderr_pipe) != 0)) {

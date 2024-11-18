@@ -153,6 +153,7 @@ struct vsf_tgui_frame_t {
     vsf_tgui_frame_init_t __fn_init;
 };
 extern vsf_tgui_frame_t * vsf_tgui_frame_new(int frame_size, vsf_tgui_frame_init_t fn_init, char *tile);
+extern void vsf_tgui_frame_init(vsf_tgui_frame_t *frame);
 extern void vsf_tgui_frame_exit(void);
 #   endif
 #endif

@@ -2,9 +2,8 @@
 #define __VSF_FLASH_MAL_CLASS_INHERIT__
 
 #include <unistd.h>
+#include <fcntl.h>
 #include <stdio.h>
-
-#if defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE) && defined(APP_MSCBOOT_CFG_ROOT_ADDR)
 
 #if VSF_USE_MBEDTLS == ENABLED
 #   include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
@@ -17,15 +16,23 @@
 #define __VPM_BUF_SIZE                      512
 #define __VPM_HOST_PATH_SIZE                512
 
+#if     VSF_HAL_USE_FLASH == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)          \
+    &&  defined(APP_MSCBOOT_CFG_ROMFS_SIZE) && defined(APP_MSCBOOT_CFG_ROMFS_ADDR)
+#   define VPM_ROMFS_IS_FLASH_MAL
 extern vk_cached_mal_t romfs_mal;
+#endif
 
 struct __vpm_t {
+#ifdef VPM_ROMFS_IS_FLASH_MAL
     vk_romfs_info_t *fsinfo;
+#else
+    const char *package_path;
+#endif
     bool can_uninstall;
     bool can_install;
 } static __vpm;
 
-#if VSF_USE_MBEDTLS == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
+#if VSF_USE_MBEDTLS == ENABLED
 static void __vpm_parse_host_path(char *buf, int bufsize, char **host, char **path)
 {
     char *cur = buf;
@@ -54,6 +61,7 @@ void vpm_on_installed(void)
 
 static int __vpm_install_package(char *package)
 {
+#ifdef VPM_ROMFS_IS_FLASH_MAL
     vk_romfs_header_t *image = (vk_romfs_header_t *)__vpm.fsinfo->image;
     char *tmp;
     while ((image != NULL) && vsf_romfs_is_image_valid(image)) {
@@ -68,9 +76,9 @@ static int __vpm_install_package(char *package)
         printf("not enough romfs space\n");
         return -1;
     }
+#endif
 
-#if VSF_USE_MBEDTLS == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
-    vk_romfs_header_t header = { 0 };
+#if VSF_USE_MBEDTLS == ENABLED
     vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) +
                     sizeof(mbedtls_session_t) + __VPM_BUF_SIZE + __VPM_HOST_PATH_SIZE);
     if (NULL == http) {
@@ -82,19 +90,45 @@ static int __vpm_install_package(char *package)
     http->op = &vsf_mbedtls_http_op;
     http->param = session;
     vsf_http_client_init(http);
-    vk_mal_init(&romfs_mal.use_as__vk_mal_t);
 
+    int result = 0, rsize, remain;
+    uint32_t checksum = 0, totalsize = 0;
     uint8_t *buf = (uint8_t *)&session[1];
     char *host = (char *)buf + __VPM_BUF_SIZE, *path;
     __vpm_parse_host_path(host, __VPM_HOST_PATH_SIZE, &host, &path);
 
+#   ifdef VPM_ROMFS_IS_FLASH_MAL
+    vk_romfs_header_t header = { 0 };
+    vk_mal_init(&romfs_mal.use_as__vk_mal_t);
+
     uint64_t flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
-    int result = 0, rsize, remain;
-    uint32_t checksum = 0, totalsize = 0;
     strcpy((char *)buf, path);
-    strcat((char *)buf, VSF_BOARD_ARCH_STR "/romfs/");
+    strcat((char *)buf, VSF_BOARD_ARCH_STR "/" VSF_BOARD_ARCH_APP_FORMAT "/");
     strcat((char *)buf, package);
     strcat((char *)buf, ".img");
+#   else
+    int fd_root = open(__vpm.package_path, 0);
+    if (fd_root < 0) {
+        printf("failed to open %s to download package\n", __vpm.package_path);
+        free(http);
+        return -1;
+    }
+    char package_name[strlen(package) + 5];
+    char install_cmdline[8 + strlen(__vpm.package_path) + strlen(package_name) + 2];
+    strcpy(package_name, package);
+    strcat(package_name, ".deb");
+    int fd_package = openat(fd_root, package_name, O_RDWR | O_CREAT | O_TRUNC);
+    close(fd_root);
+    if (fd_package < 0) {
+        printf("failed to create %s\n", package_name);
+        free(http);
+        return -1;
+    }
+
+    strcpy((char *)buf, path);
+    strcat((char *)buf, VSF_BOARD_ARCH_STR "/" VSF_BOARD_ARCH_APP_FORMAT "/");
+    strcat((char *)buf, package_name);
+#   endif
 
     result = vsf_http_client_request(http, &(vsf_http_client_req_t){
         .host       = host,
@@ -103,10 +137,10 @@ static int __vpm_install_package(char *package)
         .path       = (char *)buf,
     });
     if ((result < 0) || (http->resp_status != 200)) {
-        printf("failed to start http\n");
+        printf("failed to start http with response %d\n", http->resp_status);
         result = -1;
         goto do_exit;
-    }
+    } 
 
     remain = http->content_length;
     if (!remain) {
@@ -115,7 +149,11 @@ static int __vpm_install_package(char *package)
 Uninstall and install %s again if fail to run\n", package);
     }
 
+#   ifdef VPM_ROMFS_IS_FLASH_MAL
     printf("installing %s:", package);
+#   else
+    printf("downloading %s:", package);
+#   endif
     while (remain > 0) {
         rsize = vsf_min(__VPM_BUF_SIZE, remain);
         rsize = vsf_http_client_read(http, buf, rsize);
@@ -125,17 +163,22 @@ Uninstall and install %s again if fail to run\n", package);
             for (int i = 0; i < rsize; i++) {
                 checksum += buf[i];
             }
+#   ifdef VPM_ROMFS_IS_FLASH_MAL
             if (0 == header.size) {
                 header = *(vk_romfs_header_t *)buf;
                 memset(buf, 0xFF, sizeof(header));
             }
             vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, rsize, buf);
             flash_addr += rsize;
+#   else
+            write(fd_package, buf, rsize);
+#   endif
             printf("*");
         } else if (!rsize) {
             break;
         }
     }
+#   ifdef VPM_ROMFS_IS_FLASH_MAL
     if (totalsize >= be32_to_cpu(header.size)) {
         if (header.size != 0) {
             vk_romfs_header_t header_zero = { 0 };
@@ -152,12 +195,27 @@ Uninstall and install %s again if fail to run\n", package);
         printf("\nconnection closed before all data received, remaining %d\n", remain);
         result = -1;
     }
+#   else
+    printf("\nsuccess with checksum %08X for %d bytes\nInstalling %s with dpkg\n", checksum, totalsize, package);
+    strcpy(install_cmdline, "dpkg -i ");
+    strcat(install_cmdline, __vpm.package_path);
+    strcat(install_cmdline, "/");
+    strcat(install_cmdline, package_name);
+    system(install_cmdline);
+    result = 0;
+#   endif
 
 do_exit:
     vsf_http_client_close(http);
     free(http);
 
+#   ifdef VPM_ROMFS_IS_FLASH_MAL
     vk_mal_fini(&romfs_mal.use_as__vk_mal_t);
+#   else
+    if (fd_package >= 0) {
+        close(fd_package);
+    }
+#   endif
     return result;
 #else
     printf("mbedtls is needed for the current command\n");
@@ -165,6 +223,18 @@ do_exit:
 #endif
 }
 
+static int __vpm_install_packages(char *argv[])
+{
+    int num_installed = 0;
+    while (*argv != NULL) {
+        if (!__vpm_install_package(*argv++)) {
+            num_installed++;
+        }
+    }
+    return num_installed;
+}
+
+#ifdef VPM_ROMFS_IS_FLASH_MAL
 static int __vpm_install_local_package(char *path)
 {
     uint8_t *buffer = NULL;
@@ -288,17 +358,6 @@ do_exit_close_file:
     return result;
 }
 
-static int __vpm_install_packages(char *argv[])
-{
-    int num_installed = 0;
-    while (*argv != NULL) {
-        if (!__vpm_install_package(*argv++)) {
-            num_installed++;
-        }
-    }
-    return num_installed;
-}
-
 static int __vpm_install_local_packages(char *argv[])
 {
     int num_installed = 0;
@@ -338,7 +397,6 @@ static int __vpm_uninstall_packages(char *argv[])
         return 0;
     }
 
-#if defined(APP_MSCBOOT_CFG_FLASH)
     vk_mal_init(&romfs_mal.use_as__vk_mal_t);
 
     uint64_t flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
@@ -363,10 +421,6 @@ static int __vpm_uninstall_packages(char *argv[])
 
     vk_mal_fini(&romfs_mal.use_as__vk_mal_t);
     return 0;
-#else
-    printf("flash operation is not enabled for the current command\n");
-    return -1;
-#endif
 }
 
 static int __vpm_list_local_packages(void)
@@ -379,6 +433,24 @@ static int __vpm_list_local_packages(void)
     }
     return 0;
 }
+#else
+static int __vpm_list_local_packages(void)
+{
+    DIR *dirp = opendir(__vpm.package_path);
+    if (dirp != NULL) {
+        struct dirent *entry;
+        char *ext;
+        while ((entry = readdir(dirp)) != NULL) {
+            if (    (entry->d_type == DT_REG)
+                &&  (ext = strrchr(entry->d_name, '.'))
+                &&  !strcmp(ext, ".deb")) {
+                printf("%s\n", entry->d_name);
+            }
+        }
+    }
+    return 0;
+}
+#endif
 
 static int __vpm_list_remote_packages(void)
 {
@@ -401,7 +473,7 @@ static int __vpm_list_remote_packages(void)
 
     int result = 0, rsize, remain;
     strcpy((char *)buf, path);
-    strcat((char *)buf, VSF_BOARD_ARCH_STR "/romfs/");
+    strcat((char *)buf, VSF_BOARD_ARCH_STR "/" VSF_BOARD_ARCH_APP_FORMAT "/");
     strcat((char *)buf, "list.txt");
 
     result = vsf_http_client_request(http, &(vsf_http_client_req_t){
@@ -474,6 +546,7 @@ commands:\n\
             return 0;
         }
         return -1;
+#ifdef VPM_ROMFS_IS_FLASH_MAL
     } else if (!strcmp(argv[1], "install-local")) {
         if (!__vpm.can_install) {
             printf("vpm: Can not install packages in current mode, Please reboot to LinuxBoot mode\n");
@@ -490,6 +563,7 @@ commands:\n\
             return -1;
         }
         return __vpm_uninstall_packages(&argv[2]);
+#endif
     } else if (!strcmp(argv[1], "repo")) {
         if (2 == argc) {
         } else if (4 == argc) {
@@ -515,12 +589,20 @@ commands:\n\
     }
 }
 
-void vsf_linux_install_package_manager(vk_romfs_info_t *fsinfo, bool can_uninstall, bool can_install)
+void vsf_linux_install_package_manager(
+#ifdef VPM_ROMFS_IS_FLASH_MAL
+    vk_romfs_info_t *fsinfo,
+#else
+    const char *package_path,
+#endif
+    bool can_uninstall, bool can_install)
 {
+#ifdef VPM_ROMFS_IS_FLASH_MAL
     __vpm.fsinfo = fsinfo;
+#else
+    __vpm.package_path = package_path;
+#endif
     __vpm.can_uninstall = can_uninstall;
     __vpm.can_install = can_install;
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/vpm", __vpm_main);
 }
-
-#endif      // APP_MSCBOOT_CFG_FLASH && APP_MSCBOOT_CFG_ROOT_SIZE && APP_MSCBOOT_CFG_ROOT_ADDR

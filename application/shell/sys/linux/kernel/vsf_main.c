@@ -349,7 +349,13 @@ void vsf_board_prepare_hw_for_linux(void)
 }
 
 VSF_CAL_WEAK(vsf_linux_install_package_manager)
-void vsf_linux_install_package_manager(vk_romfs_info_t *fsinfo, bool can_uninstall, bool can_install)
+void vsf_linux_install_package_manager(
+#ifdef __WIN__
+    const char *package_path,
+#else
+    vk_romfs_info_t *fsinfo,
+#endif
+    bool can_uninstall, bool can_install)
 {
 }
 
@@ -1281,6 +1287,7 @@ int vsf_linux_create_fhs(void)
     if (mount(NULL, "usr", &vk_winfs_op, 0, (const void *)&__usr_fs) != 0) {
         printf("Fail to mount /usr.\n");
     }
+    vsf_linux_install_package_manager("/usr", true, true);
     busybox_install();
 #else
     busybox_install();
