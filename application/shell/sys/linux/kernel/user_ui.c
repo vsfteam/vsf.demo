@@ -17,9 +17,9 @@ typedef struct {
 #endif
     vk_input_notifier_t input_notifier;
 #if     VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_ARGB_8888
-    uint32_t pfb[VSF_BOARD_DISP_WIDTH * 10];
+    uint32_t pfb[VSF_BOARD_DISP_WIDTH * 30];
 #elif   VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_RGB_565 || VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_BGR_565
-    uint16_t pfb[VSF_BOARD_DISP_WIDTH * 10];
+    uint16_t pfb[VSF_BOARD_DISP_WIDTH * 30];
 #else
 #   error TODO: add support for the specifed display color format
 #endif
@@ -128,8 +128,8 @@ describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
         tgui_sv_tile_show_corner(false),                                        \
         tgui_sv_background_color(VSF_TGUI_COLOR_TRANSPARENT),                   \
         tgui_sv_font(VSF_TGUI_FONT_DEJAVUSERIF_S12),                            \
-        tgui_background((vsf_tgui_tile_t*)&empty_L, VSF_TGUI_ALIGN_TOP),        \
-        tgui_text(tLabel, "App" #__idx, false, VSF_TGUI_ALIGN_BOTTOM),          \
+        tgui_background((vsf_tgui_tile_t*)&res_empty_RGBA, VSF_TGUI_ALIGN_TOP), \
+        tgui_text(tLabel, "Slot" #__idx "\nEmpty", false, VSF_TGUI_ALIGN_BOTTOM),\
         __VA_ARGS__                                                             \
     )
 
@@ -326,7 +326,7 @@ int ui_main(int argc, char **argv)
         }
 
         if (pid > 0) {
-            
+
         } else {
             dup2(stdin_pipe[0], STDIN_FILENO);
             dup2(stdout_pipe[1], STDOUT_FILENO);
