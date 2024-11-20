@@ -232,15 +232,10 @@ static void __vsf_tgui_frame_applist_executor_on_select(vsf_ui_executor_ctx_t *c
             if (NULL == end) { break; }
             *end++ = '\0';
 
-            vsf_tgui_container_t *container = vsf_tgui_container_new("tAppContainer");
-            vsf_tgui_container_set_type(container, VSF_TGUI_CONTAINER_TYPE_LINE_STREAM_HORIZONTAL);
-            vsf_tgui_control_set_margin(container, 0, 2, 0, 2);
-
             vsf_tgui_label_t *label = vsf_tgui_label_new("tAppName");
             vsf_tgui_label_set_text_static(label, vsf_heap_strdup(applist_frame->appname));
             vsf_tui_control_set_size(label, (VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) * 2 / 3,
                 2 * VSF_TGUI_CFG_BORDER_SIZE);
-            vsf_tgui_control_add(container, NULL, &label->use_as__vsf_tgui_control_t);
 
             vsf_tgui_button_t *btn = vsf_tgui_button_new("tOpBtn");
             if (applist_frame->is_remote) {
@@ -250,8 +245,13 @@ static void __vsf_tgui_frame_applist_executor_on_select(vsf_ui_executor_ctx_t *c
             }
             vsf_tui_control_set_size(btn, (VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) / 3,
                 2 * VSF_TGUI_CFG_BORDER_SIZE);
-            vsf_tgui_control_add(container, &label->use_as__vsf_tgui_control_t, &btn->use_as__vsf_tgui_control_t);
 
+            vsf_tgui_container_t *container = vsf_tgui_container_new("tAppContainer");
+            vsf_tgui_container_set_type(container, VSF_TGUI_CONTAINER_TYPE_LINE_STREAM_HORIZONTAL);
+            vsf_tgui_control_set_margin(container, 0, 2, 0, 2);
+
+            vsf_tgui_control_add(container, NULL, &label->use_as__vsf_tgui_control_t);
+            vsf_tgui_control_add(container, &label->use_as__vsf_tgui_control_t, &btn->use_as__vsf_tgui_control_t);
             vsf_tgui_control_add(&applist_panel->tAppList.use_as__vsf_tgui_container_t, NULL, &container->use_as__vsf_tgui_control_t);
             vsf_tgui_control_sync(&applist_panel->tAppList.use_as__vsf_tgui_container_t, &container->use_as__vsf_tgui_control_t);
 
