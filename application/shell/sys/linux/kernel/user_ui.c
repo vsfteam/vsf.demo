@@ -190,7 +190,7 @@ describ_tgui_panel(tgui_applist_panel_t, applist_panel_descriptor,
     tgui_list(tAppList, tgui_null_parent(tgui_applist_panel_t), tAppList, tAppList,
         tgui_region(0, VSF_TGUI_CFG_BORDER_SIZE * 3,
             VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE,
-            VSF_BOARD_DISP_WIDTH - 4 * VSF_TGUI_CFG_BORDER_SIZE),
+            VSF_BOARD_DISP_HEIGHT - 5 * VSF_TGUI_CFG_BORDER_SIZE),
 
         tgui_list_items(
             tgui_container_type(VSF_TGUI_CONTAINER_TYPE_LINE_STREAM_VERTICAL),
