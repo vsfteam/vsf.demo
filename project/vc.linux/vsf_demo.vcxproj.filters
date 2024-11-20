@@ -868,6 +868,12 @@
     <Filter Include="vsf\component\tcpip\protocol\http\client">
       <UniqueIdentifier>{ff982720-0d1a-4849-b3ca-cc7208a52cb5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\component\ui\tgui\ext">
+      <UniqueIdentifier>{940814ba-dabd-4ba7-b4ba-036f65d9e8c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\ui\tgui\ext\dynamic">
+      <UniqueIdentifier>{a59d084b-77f4-4128-b2c3-18651a809580}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2406,6 +2412,9 @@
     <ClInclude Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.h">
       <Filter>vsf\component\tcpip\protocol\http\client</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\ext\dynamic\vsf_tgui_dynamic.h">
+      <Filter>vsf\component\ui\tgui\ext\dynamic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3631,6 +3640,9 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.c">
       <Filter>vsf\component\tcpip\protocol\http\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\ext\dynamic\vsf_tgui_dynamic.c">
+      <Filter>vsf\component\ui\tgui\ext\dynamic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

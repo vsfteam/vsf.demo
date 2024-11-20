@@ -15,15 +15,19 @@ struct vsf_ui_executor_ctx_t {
     char *cmd;
     char **args;
     int (*fn_select)(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds);
+    // if NULL == rfds, it means on_exit
     void (*on_select)(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds);
     void *param;
 
+    bool exited;
     int __pid;
     int __stdout_pipe[2], __stdin_pipe[2], __stderr_pipe[2];
 };
 
 static vsf_dlist_t __vsf_ui_executor_queue_pending;
-static vsf_linux_fd_priv_t *__vsf_ui_eventfd_priv = NULL;
+static vsf_dlist_t __vsf_ui_executor_queue;
+static vsf_linux_fd_priv_t *__vsf_ui_new_eventfd_priv = NULL;
+static vsf_linux_fd_priv_t *__vsf_ui_exit_eventfd_priv = NULL;
 
 extern void eventfd_inc_isr(vsf_linux_fd_priv_t *eventfd_priv);
 
@@ -41,8 +45,19 @@ void vsf_tgui_execute_in_shell(vsf_ui_executor_ctx_t *ctx)
         vsf_dlist_add_to_tail(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue_pending, ctx);
     vsf_unprotect_int(orig);
 
-    VSF_ASSERT(__vsf_ui_eventfd_priv != NULL);
-    eventfd_inc_isr(__vsf_ui_eventfd_priv);
+    VSF_ASSERT(__vsf_ui_new_eventfd_priv != NULL);
+    eventfd_inc_isr(__vsf_ui_new_eventfd_priv);
+}
+
+void __vsf_ui_executor_atexit(void)
+{
+    pid_t pid = getpid();
+    __vsf_slist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue) {
+        if (_->__pid == pid) {
+            _->exited = true;
+            eventfd_inc_isr(__vsf_ui_exit_eventfd_priv);
+        }
+    }
 }
 
 // UI instance
@@ -156,14 +171,6 @@ typedef struct vsf_tgui_frame_applist_t {
     bool is_remote;
 } vsf_tgui_frame_applist_t;
 
-def_tgui_panel_ex(vsf_gui_app_container_t, tAppContainer,
-    tgui_contains(
-        vsf_tgui_label_t tAppName;
-        vsf_tgui_button_t tOpBtn;
-    )
-)
-end_def_tgui_panel(vsf_gui_app_container_t)
-
 def_tgui_panel(tgui_applist_panel_t,
     tgui_contains(
         use_tgui_list(tAppList,
@@ -189,6 +196,7 @@ describ_tgui_panel(tgui_applist_panel_t, applist_panel_descriptor,
             tgui_container_type(VSF_TGUI_CONTAINER_TYPE_LINE_STREAM_VERTICAL),
 
             tgui_button(tExitBtn, &(tgui_null_parent(tgui_applist_panel_t)->tAppList.list), tExitBtn, tExitBtn,
+                .bIsEnabled = false,
                 tgui_size(VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE, 2 * VSF_TGUI_CFG_BORDER_SIZE),
                 tgui_text(tLabel, "Exit", false),
                 tgui_margin(0, 2, 0, 2),
@@ -207,9 +215,12 @@ static void __vsf_tgui_frame_applist_executor_on_select(vsf_ui_executor_ctx_t *c
 {
     vsf_tgui_frame_applist_t *applist_frame = (vsf_tgui_frame_applist_t *)ctx->param;
     tgui_applist_panel_t *applist_panel = applist_frame->panel;
-    bool is_to_refresh = false;
 
-    if (FD_ISSET(ctx->__stdout_pipe[0], rfds)) {
+    if (NULL == rfds) {
+        applist_panel->tAppList.list.tExitBtn.bIsEnabled = true;
+        vk_tgui_refresh_ex(applist_panel->gui_ptr, &applist_panel->tAppList.list.tExitBtn.use_as__vsf_tgui_control_t, NULL);
+    } else if (FD_ISSET(ctx->__stdout_pipe[0], rfds)) {
+        bool is_to_refresh = false;
         char *end = applist_frame->appname + strlen(applist_frame->appname);
         size_t len = read(ctx->__stdout_pipe[0], end, sizeof(applist_frame->appname) - (size_t)(end - applist_frame->appname));
         end[len] = '\0';
@@ -219,88 +230,34 @@ static void __vsf_tgui_frame_applist_executor_on_select(vsf_ui_executor_ctx_t *c
             if (NULL == end) { break; }
             *end++ = '\0';
 
-            vsf_gui_app_container_t *app_container = vsf_heap_malloc(sizeof(vsf_gui_app_container_t));
-            VSF_ASSERT(app_container != NULL);
-            memset(app_container, 0, sizeof(vsf_gui_app_container_t));
+            vsf_tgui_container_t *container = vsf_tgui_container_new("tAppContainer");
+            vsf_tgui_container_set_type(container, VSF_TGUI_CONTAINER_TYPE_LINE_STREAM_HORIZONTAL);
+            vsf_tgui_control_set_margin(container, 0, 2, 0, 2);
 
-            app_container->id = VSF_TGUI_COMPONENT_ID_PANEL;
-            app_container->show_corner_tile = true;
-            app_container->tile_trans_rate = 0xFF;
-            app_container->is_top = false;
-            app_container->is_container = true;
-            app_container->bIsEnabled = true;
-            app_container->bIsVisible = true;
-            app_container->background_color = VSF_TGUI_CFG_SV_CONTAINER_BACKGROUND_COLOR;
-            app_container->ContainerAttribute.u5Type = VSF_TGUI_CONTAINER_TYPE_LINE_STREAM_HORIZONTAL;
-            app_container->ContainerAttribute.bIsAutoSize = true;
-            app_container->tSize = (vsf_tgui_size_t){VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE, 2 * VSF_TGUI_CFG_BORDER_SIZE};
-            app_container->tMargin = (vsf_tgui_margin_t){0, 2, 0, 2};
+            vsf_tgui_label_t *label = vsf_tgui_label_new("tAppName");
+            vsf_tgui_label_set_text_static(label, vsf_heap_strdup(applist_frame->appname));
+            vsf_tui_control_set_size(label, (VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) * 2 / 3,
+                2 * VSF_TGUI_CFG_BORDER_SIZE);
+            vsf_tgui_control_add(container, NULL, &label->use_as__vsf_tgui_control_t);
 
-            app_container->parent_ptr = (vsf_msgt_container_t *)&applist_panel->tAppList.list.use_as__vsf_msgt_node_t;
-#if VSF_TGUI_CFG_SUPPORT_NAME_STRING == ENABLED
-            app_container->node_name_ptr = "[vsf_tgui_panel_t][tAppContainer]";
-#endif
-            app_container->node_ptr = (vsf_msgt_node_t *)&app_container->tAppContainer_FirstNode;
+            vsf_tgui_button_t *btn = vsf_tgui_button_new("tOpBtn");
+            if (applist_frame->is_remote) {
+                vsf_tgui_button_set_text_static(btn, "Install");
+            } else {
+                vsf_tgui_button_set_text_static(btn, "Remove");
+            }
+            vsf_tui_control_set_size(btn, (VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) / 3,
+                2 * VSF_TGUI_CFG_BORDER_SIZE);
+            vsf_tgui_control_add(container, &label->use_as__vsf_tgui_control_t, &btn->use_as__vsf_tgui_control_t);
 
-            vsf_tgui_label_t *label = &app_container->tAppName;
-            vsf_tgui_button_t *btn = &app_container->tOpBtn;
-            label->id = VSF_TGUI_COMPONENT_ID_LABEL;
-            label->bIsEnabled = true;
-            label->bIsVisible = true;
-            label->show_corner_tile = true;
-            label->tile_trans_rate = 0xFF;
-            label->tLabel.tString.pstrText = vsf_heap_strdup(applist_frame->appname);
-            label->tLabel.tString.s16_size = strlen(label->tLabel.tString.pstrText);
-            label->tLabel.bIsChanged = true;
-            label->tLabel.bIsAutoSize = false;
-            label->background_color = VSF_TGUI_CFG_SV_LABEL_BACKGROUND_COLOR;
-            label->font_color = VSF_TGUI_CFG_SV_LABEL_TEXT_COLOR;
-            label->tSize = (vsf_tgui_size_t){(VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) * 2 / 3, 2 * VSF_TGUI_CFG_BORDER_SIZE};
-
-            label->parent_ptr = (vsf_msgt_container_t *)&app_container->use_as__vsf_msgt_node_t;
-            label->Offset.next = (intptr_t)btn - (intptr_t)label;
-#if VSF_TGUI_CFG_SUPPORT_NAME_STRING == ENABLED
-            label->node_name_ptr = "[vsf_tgui_label_t][tAppName]";
-#endif
-
-            btn->id = VSF_TGUI_COMPONENT_ID_BUTTON;
-            btn->bIsEnabled = true;
-            btn->bIsVisible = true;
-            btn->show_corner_tile = true;
-            btn->tile_trans_rate = 0xFF;
-            btn->tLabel.tString.pstrText = "Install";
-            btn->tLabel.tString.s16_size = strlen(btn->tLabel.tString.pstrText);
-            btn->tLabel.bIsChanged = true;
-            btn->tLabel.bIsAutoSize = false;
-            btn->background_color = VSF_TGUI_CFG_SV_BUTTON_BACKGROUND_COLOR;
-            btn->font_color = VSF_TGUI_CFG_SV_BUTTON_TEXT_COLOR;
-            btn->tSize = (vsf_tgui_size_t){(VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) / 3, 2 * VSF_TGUI_CFG_BORDER_SIZE};
-
-            btn->parent_ptr = (vsf_msgt_container_t *)&app_container->use_as__vsf_msgt_node_t;
-            btn->Offset.next = 0;
-#if VSF_TGUI_CFG_SUPPORT_NAME_STRING == ENABLED
-            btn->node_name_ptr = "[vsf_tgui_button_t][tOpBtn]";
-#endif
-
-            vk_tgui_send_message(applist_panel->gui_ptr, (vsf_tgui_evt_t) {
-                .msg = VSF_TGUI_EVT_ON_LOAD,
-                .target_ptr = &app_container->use_as__vsf_tgui_control_t,
-            });
-            vk_tgui_send_message(applist_panel->gui_ptr, (vsf_tgui_evt_t) {
-                .msg = VSF_TGUI_EVT_UPDATE,
-                .target_ptr = (vsf_tgui_control_t*)&applist_panel->tAppList,
-            });
-
-            vsf_trace_debug("new app: %s %p %p\r\n", applist_frame->appname, app_container, app_container->node_ptr);
-
-            app_container->Offset.next = (intptr_t)applist_panel->tAppList.list.node_ptr - (intptr_t)app_container;
-            applist_panel->tAppList.list.node_ptr = &app_container->use_as__vsf_msgt_node_t;
+            vsf_tgui_control_add(&applist_panel->tAppList.use_as__vsf_tgui_container_t, NULL, &container->use_as__vsf_tgui_control_t);
+            vsf_tgui_control_sync(&applist_panel->tAppList.use_as__vsf_tgui_container_t, &container->use_as__vsf_tgui_control_t);
 
             is_to_refresh = true;
             strcpy(applist_frame->appname, end);
         }
         if (is_to_refresh) {
-            vk_tgui_refresh(applist_panel->gui_ptr);
+            vk_tgui_refresh_ex(applist_panel->gui_ptr, &applist_panel->tAppList.use_as__vsf_tgui_control_t, NULL);
         }
     }
 }
@@ -662,23 +619,25 @@ int ui_main(int argc, char **argv)
     root_frame->app[1].fn_select = __vsf_tgui_frame_applist_executor_select;
     vsf_tgui_frame_init(&root_frame->use_as__vsf_tgui_frame_t);
 
-    int executor_notifier = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
-    VSF_ASSERT(executor_notifier >= 0);
+    int executor_exit_notifier = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+    int executor_new_notifier = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+    VSF_ASSERT((executor_new_notifier >= 0) && (executor_exit_notifier >= 0));
     eventfd_t eventfd_value;
-    vsf_dlist_t executor_queue;
     vsf_ui_executor_ctx_t *executor;
     fd_set rfds, wfds;
     pid_t pid;
     int fd_num;
 
-    __vsf_ui_eventfd_priv = vsf_linux_fd_get(executor_notifier)->priv;
-    vsf_slist_init(&executor_queue);
+    __vsf_ui_new_eventfd_priv = vsf_linux_fd_get(executor_new_notifier)->priv;
+    __vsf_ui_exit_eventfd_priv = vsf_linux_fd_get(executor_exit_notifier)->priv;
+    vsf_slist_init(&__vsf_ui_executor_queue);
     while (true) {
         FD_ZERO(&rfds);
         FD_ZERO(&wfds);
-        FD_SET(executor_notifier, &rfds);
-        fd_num = executor_notifier;
-        __vsf_slist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &executor_queue) {
+        FD_SET(executor_new_notifier, &rfds);
+        FD_SET(executor_exit_notifier, &rfds);
+        fd_num = vsf_max(executor_exit_notifier, executor_new_notifier);
+        __vsf_slist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue) {
             if (_->fn_select!= NULL) {
                 int fd = _->fn_select(_, &rfds, &wfds);
                 if (fd > fd_num) {
@@ -689,14 +648,14 @@ int ui_main(int argc, char **argv)
         fd_num = select(fd_num + 1, &rfds, &wfds, NULL, NULL);
         if (fd_num <= 0) { continue; }
 
-        if (FD_ISSET(executor_notifier, &rfds)) {
-            eventfd_read(executor_notifier, &eventfd_value);
+        if (FD_ISSET(executor_new_notifier, &rfds)) {
+            eventfd_read(executor_new_notifier, &eventfd_value);
             vsf_protect_t orig = vsf_protect_int();
                 vsf_dlist_remove_head(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue_pending, executor);
             vsf_unprotect_int(orig);
 
             VSF_ASSERT(executor!= NULL);
-            vsf_dlist_add_to_tail(vsf_ui_executor_ctx_t, __node, &executor_queue, executor);
+            vsf_dlist_add_to_tail(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue, executor);
 
             if (    (pipe(executor->__stdout_pipe) != 0)
                 ||  (pipe(executor->__stdin_pipe) != 0)
@@ -716,13 +675,32 @@ int ui_main(int argc, char **argv)
                 dup2(executor->__stdin_pipe[0], STDIN_FILENO);
                 dup2(executor->__stdout_pipe[1], STDOUT_FILENO);
                 dup2(executor->__stderr_pipe[1], STDERR_FILENO);
+                close(executor->__stdin_pipe[0]);
+                close(executor->__stdout_pipe[1]);
+                close(executor->__stderr_pipe[1]);
+                close(executor->__stdin_pipe[1]);
+                close(executor->__stdout_pipe[0]);
+                close(executor->__stderr_pipe[0]);
+
+                atexit(__vsf_ui_executor_atexit);
 
                 execvp(executor->cmd, executor->args);
                 VSF_ASSERT(false);
             }
         }
+        if (FD_ISSET(executor_exit_notifier, &rfds)) {
+            eventfd_read(executor_exit_notifier, &eventfd_value);
+        }
 
-        __vsf_slist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &executor_queue) {
+        __vsf_slist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue) {
+            if (_->exited) {
+                close(_->__stdin_pipe[1]);
+                close(_->__stdout_pipe[0]);
+                close(_->__stderr_pipe[0]);
+                if (_->on_select != NULL) {
+                    _->on_select(_, NULL, NULL);
+                }
+            }
             if (    FD_ISSET(_->__stdin_pipe[1], &wfds)
                 ||  FD_ISSET(_->__stdout_pipe[0], &rfds)
                 ||  FD_ISSET(_->__stderr_pipe[0], &rfds)) {
