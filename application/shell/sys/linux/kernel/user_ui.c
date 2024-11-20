@@ -221,8 +221,10 @@ static void __vsf_tgui_frame_applist_executor_on_select(vsf_ui_executor_ctx_t *c
         vk_tgui_refresh_ex(applist_panel->gui_ptr, &applist_panel->tAppList.list.tExitBtn.use_as__vsf_tgui_control_t, NULL);
     } else if (FD_ISSET(ctx->__stdout_pipe[0], rfds)) {
         bool is_to_refresh = false;
-        char *end = applist_frame->appname + strlen(applist_frame->appname);
-        size_t len = read(ctx->__stdout_pipe[0], end, sizeof(applist_frame->appname) - (size_t)(end - applist_frame->appname));
+        size_t len = strlen(applist_frame->appname);
+        char *end = applist_frame->appname + len;
+
+        len = read(ctx->__stdout_pipe[0], end, sizeof(applist_frame->appname) - len - 1);
         end[len] = '\0';
 
         while (true) {
