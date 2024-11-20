@@ -138,7 +138,6 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 
 #   if VSF_USE_TINY_GUI == ENABLED
 #       define VSF_USE_MSG_TREE                         ENABLED
-#       define VSF_MSGT_NODE_OFFSET_TYPE                int16_t
 #       define VSF_MSG_TREE_CFG_SUPPORT_NAME_STRING     VSF_TGUI_CFG_SUPPORT_NAME_STRING
 
 #       define VSF_KERNEL_CFG_EDA_SUPPORT_TASK          ENABLED

@@ -168,12 +168,11 @@ def_tgui_panel(tgui_applist_panel_t,
     tgui_contains(
         use_tgui_list(tAppList,
             tgui_contains(
-                vsf_gui_app_container_t tAppContainer;
+                vsf_tgui_button_t tExitBtn;
             )
         )
     )
 )
-int app_num;
 vsf_tgui_frame_applist_t *frame;
 end_def_tgui_panel(tgui_applist_panel_t)
 
@@ -188,24 +187,12 @@ describ_tgui_panel(tgui_applist_panel_t, applist_panel_descriptor,
 
         tgui_list_items(
             tgui_container_type(VSF_TGUI_CONTAINER_TYPE_LINE_STREAM_VERTICAL),
-#if 1
-            tgui_panel(tAppContainer, &(tgui_null_parent(tgui_applist_panel_t)->tAppList.list), tAppContainer, tAppContainer,
-                tgui_container_type(VSF_TGUI_CONTAINER_TYPE_LINE_STREAM_HORIZONTAL),
 
-                tgui_contains(
-                    tgui_label(tAppName, &(tgui_null_parent(tgui_applist_panel_t)->tAppList.list.tAppContainer), tAppName, tOpBtn,
-                        tgui_text(tLabel, "AppName", false),
-                        tgui_size((VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) * 2 / 3, 2 * VSF_TGUI_CFG_BORDER_SIZE),
-                        tgui_margin(0, 2, 0, 2),
-                    ),
-                    tgui_button(tOpBtn, &(tgui_null_parent(tgui_applist_panel_t)->tAppList.list.tAppContainer), tAppName, tOpBtn,
-                        tgui_size((VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) / 3, 2 * VSF_TGUI_CFG_BORDER_SIZE),
-                        tgui_text(tLabel, "Install", false),
-                        tgui_margin(0, 2, 0, 2),
-                    ),
-                )
-            )
-#endif
+            tgui_button(tExitBtn, &(tgui_null_parent(tgui_applist_panel_t)->tAppList.list), tExitBtn, tExitBtn,
+                tgui_size(VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE, 2 * VSF_TGUI_CFG_BORDER_SIZE),
+                tgui_text(tLabel, "Exit", false),
+                tgui_margin(0, 2, 0, 2),
+            ),
         )
     ),
 );
@@ -220,6 +207,7 @@ static void __vsf_tgui_frame_applist_executor_on_select(vsf_ui_executor_ctx_t *c
 {
     vsf_tgui_frame_applist_t *applist_frame = (vsf_tgui_frame_applist_t *)ctx->param;
     tgui_applist_panel_t *applist_panel = applist_frame->panel;
+    bool is_to_refresh = false;
 
     if (FD_ISSET(ctx->__stdout_pipe[0], rfds)) {
         char *end = applist_frame->appname + strlen(applist_frame->appname);
@@ -231,33 +219,88 @@ static void __vsf_tgui_frame_applist_executor_on_select(vsf_ui_executor_ctx_t *c
             if (NULL == end) { break; }
             *end++ = '\0';
 
-            vsf_trace_debug("app: %s" VSF_TRACE_CFG_LINEEND, applist_frame->appname);
-
-#if 0
-            vsf_gui_app_container_t *app_container;
-            bool is_to_append = applist_panel->app_num > 0;
-            if (!is_to_append) {
-                app_container = &applist_panel->tAppList.list.tAppContainer;
-            } else {
-                app_container = vsf_heap_malloc(sizeof(vsf_gui_app_container_t));
-                VSF_ASSERT(app_container != NULL);
-            }
-            applist_panel->app_num++;
+            vsf_gui_app_container_t *app_container = vsf_heap_malloc(sizeof(vsf_gui_app_container_t));
+            VSF_ASSERT(app_container != NULL);
+            memset(app_container, 0, sizeof(vsf_gui_app_container_t));
 
             app_container->id = VSF_TGUI_COMPONENT_ID_PANEL;
-            app_container->Offset.next = 0;
-            app_container->tTitle.tString.pstrText = vsf_heap_strdup(applist_frame->appname);
-#if VSF_TGUI_CFG_SAFE_STRING_MODE == ENABLED
-            app_container->tTitle.tString.s16_size = strlen(applist_frame->appname);
-#endif
-            app_container->id = VSF_TGUI_COMPONENT_ID_PANEL;
-//            app_container->
+            app_container->show_corner_tile = true;
+            app_container->tile_trans_rate = 0xFF;
+            app_container->is_top = false;
+            app_container->is_container = true;
+            app_container->bIsEnabled = true;
+            app_container->bIsVisible = true;
+            app_container->background_color = VSF_TGUI_CFG_SV_CONTAINER_BACKGROUND_COLOR;
+            app_container->ContainerAttribute.u5Type = VSF_TGUI_CONTAINER_TYPE_LINE_STREAM_HORIZONTAL;
+            app_container->ContainerAttribute.bIsAutoSize = true;
+            app_container->tSize = (vsf_tgui_size_t){VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE, 2 * VSF_TGUI_CFG_BORDER_SIZE};
+            app_container->tMargin = (vsf_tgui_margin_t){0, 2, 0, 2};
 
-            if (is_to_append) {
-                
-            }
+            app_container->parent_ptr = (vsf_msgt_container_t *)&applist_panel->tAppList.list.use_as__vsf_msgt_node_t;
+#if VSF_TGUI_CFG_SUPPORT_NAME_STRING == ENABLED
+            app_container->node_name_ptr = "[vsf_tgui_panel_t][tAppContainer]";
 #endif
+            app_container->node_ptr = (vsf_msgt_node_t *)&app_container->tAppContainer_FirstNode;
+
+            vsf_tgui_label_t *label = &app_container->tAppName;
+            vsf_tgui_button_t *btn = &app_container->tOpBtn;
+            label->id = VSF_TGUI_COMPONENT_ID_LABEL;
+            label->bIsEnabled = true;
+            label->bIsVisible = true;
+            label->show_corner_tile = true;
+            label->tile_trans_rate = 0xFF;
+            label->tLabel.tString.pstrText = vsf_heap_strdup(applist_frame->appname);
+            label->tLabel.tString.s16_size = strlen(label->tLabel.tString.pstrText);
+            label->tLabel.bIsChanged = true;
+            label->tLabel.bIsAutoSize = false;
+            label->background_color = VSF_TGUI_CFG_SV_LABEL_BACKGROUND_COLOR;
+            label->font_color = VSF_TGUI_CFG_SV_LABEL_TEXT_COLOR;
+            label->tSize = (vsf_tgui_size_t){(VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) * 2 / 3, 2 * VSF_TGUI_CFG_BORDER_SIZE};
+
+            label->parent_ptr = (vsf_msgt_container_t *)&app_container->use_as__vsf_msgt_node_t;
+            label->Offset.next = (intptr_t)btn - (intptr_t)label;
+#if VSF_TGUI_CFG_SUPPORT_NAME_STRING == ENABLED
+            label->node_name_ptr = "[vsf_tgui_label_t][tAppName]";
+#endif
+
+            btn->id = VSF_TGUI_COMPONENT_ID_BUTTON;
+            btn->bIsEnabled = true;
+            btn->bIsVisible = true;
+            btn->show_corner_tile = true;
+            btn->tile_trans_rate = 0xFF;
+            btn->tLabel.tString.pstrText = "Install";
+            btn->tLabel.tString.s16_size = strlen(btn->tLabel.tString.pstrText);
+            btn->tLabel.bIsChanged = true;
+            btn->tLabel.bIsAutoSize = false;
+            btn->background_color = VSF_TGUI_CFG_SV_BUTTON_BACKGROUND_COLOR;
+            btn->font_color = VSF_TGUI_CFG_SV_BUTTON_TEXT_COLOR;
+            btn->tSize = (vsf_tgui_size_t){(VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) / 3, 2 * VSF_TGUI_CFG_BORDER_SIZE};
+
+            btn->parent_ptr = (vsf_msgt_container_t *)&app_container->use_as__vsf_msgt_node_t;
+            btn->Offset.next = 0;
+#if VSF_TGUI_CFG_SUPPORT_NAME_STRING == ENABLED
+            btn->node_name_ptr = "[vsf_tgui_button_t][tOpBtn]";
+#endif
+
+            vk_tgui_send_message(applist_panel->gui_ptr, (vsf_tgui_evt_t) {
+                .msg = VSF_TGUI_EVT_ON_LOAD,
+                .target_ptr = &app_container->use_as__vsf_tgui_control_t,
+            });
+            vk_tgui_send_message(applist_panel->gui_ptr, (vsf_tgui_evt_t) {
+                .msg = VSF_TGUI_EVT_UPDATE,
+                .target_ptr = (vsf_tgui_control_t*)&applist_panel->tAppList,
+            });
+
+            vsf_trace_debug("new app: %s %p %p\r\n", applist_frame->appname, app_container, app_container->node_ptr);
+
+            app_container->Offset.next = (intptr_t)applist_panel->tAppList.list.node_ptr - (intptr_t)app_container;
+            applist_panel->tAppList.list.node_ptr = &app_container->use_as__vsf_msgt_node_t;
+
+            is_to_refresh = true;
             strcpy(applist_frame->appname, end);
+        }
+        if (is_to_refresh) {
+            vk_tgui_refresh(applist_panel->gui_ptr);
         }
     }
 }
