@@ -19,15 +19,15 @@ struct vsf_ui_executor_ctx_t {
     void (*on_select)(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds);
     void *param;
 
-    bool exited;
+    bool __exited;
     int __pid;
     int __stdout_pipe[2], __stdin_pipe[2], __stderr_pipe[2];
 };
 
-static vsf_dlist_t __vsf_ui_executor_queue_pending;
-static vsf_dlist_t __vsf_ui_executor_queue;
-static vsf_linux_fd_priv_t *__vsf_ui_new_eventfd_priv = NULL;
-static vsf_linux_fd_priv_t *__vsf_ui_exit_eventfd_priv = NULL;
+static VSF_CAL_NO_INIT vsf_dlist_t __vsf_ui_executor_queue_pending;
+static VSF_CAL_NO_INIT vsf_dlist_t __vsf_ui_executor_queue;
+static VSF_CAL_NO_INIT vsf_linux_fd_priv_t *__vsf_ui_new_eventfd_priv;
+static VSF_CAL_NO_INIT vsf_linux_fd_priv_t *__vsf_ui_exit_eventfd_priv;
 
 extern void eventfd_inc_isr(vsf_linux_fd_priv_t *eventfd_priv);
 
@@ -52,9 +52,9 @@ void vsf_tgui_execute_in_shell(vsf_ui_executor_ctx_t *ctx)
 void __vsf_ui_executor_atexit(void)
 {
     pid_t pid = getpid();
-    __vsf_slist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue) {
+    __vsf_dlist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue) {
         if (_->__pid == pid) {
-            _->exited = true;
+            _->__exited = true;
             eventfd_inc_isr(__vsf_ui_exit_eventfd_priv);
         }
     }
@@ -183,6 +183,38 @@ def_tgui_panel(tgui_applist_panel_t,
 vsf_tgui_frame_applist_t *frame;
 end_def_tgui_panel(tgui_applist_panel_t)
 
+static fsm_rt_t __vsf_tgui_frame_applist_on_depose(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
+{
+    vsf_tgui_list_t *list = (vsf_tgui_list_t *)control_ptr;
+    vsf_tgui_control_t *control = vsf_tgui_list_get_child(list), *control_next;
+
+    // the last control which Offset.next is 0 is the static tExitBtn
+    while (control->Offset.next != 0) {
+        control_next = (vsf_tgui_control_t *)((intptr_t)control + control->Offset.next);
+        if (control->id == VSF_TGUI_COMPONENT_ID_LABEL) {
+            vsf_tgui_label_t *label = (vsf_tgui_label_t *)control;
+            if (label->tLabel.tString.pstrText != NULL) {
+                vsf_heap_free((void *)label->tLabel.tString.pstrText);
+            }
+        }
+        vsf_tgui_control_remove(&list->use_as__vsf_tgui_container_t, control);
+        vsf_tgui_control_destroy(control);
+        control = control_next;
+    }
+
+    vsf_tgui_frame_exit();
+    return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
+}
+
+static fsm_rt_t __vsf_tgui_applist_frame_on_exit_click(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
+{
+    const vsf_tgui_root_container_t* ptTopContainer = vk_tgui_control_get_top(control_ptr);
+    vsf_tgui_t *gui_ptr = ptTopContainer->gui_ptr;
+
+    vk_tgui_close_root_container(gui_ptr);
+    return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
+}
+
 describ_tgui_panel(tgui_applist_panel_t, applist_panel_descriptor,
     tgui_region(0, 0, VSF_BOARD_DISP_WIDTH, VSF_BOARD_DISP_HEIGHT),
     tgui_padding(VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE),
@@ -191,6 +223,9 @@ describ_tgui_panel(tgui_applist_panel_t, applist_panel_descriptor,
         tgui_region(0, VSF_TGUI_CFG_BORDER_SIZE * 3,
             VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE,
             VSF_BOARD_DISP_HEIGHT - 5 * VSF_TGUI_CFG_BORDER_SIZE),
+        tgui_msgmap(
+            tgui_msg_handler(VSF_TGUI_EVT_ON_DEPOSE, __vsf_tgui_frame_applist_on_depose),
+        ),
 
         tgui_list_items(
             tgui_container_type(VSF_TGUI_CONTAINER_TYPE_LINE_STREAM_VERTICAL),
@@ -200,6 +235,9 @@ describ_tgui_panel(tgui_applist_panel_t, applist_panel_descriptor,
                 tgui_size(VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE, 2 * VSF_TGUI_CFG_BORDER_SIZE),
                 tgui_text(tLabel, "Exit", false),
                 tgui_margin(0, 2, 0, 2),
+                tgui_msgmap(
+                    tgui_msg_handler(VSF_TGUI_EVT_POINTER_CLICK, __vsf_tgui_applist_frame_on_exit_click),
+                ),
             ),
         )
     ),
@@ -324,7 +362,6 @@ typedef struct vsf_tgui_app_t {
 
 typedef struct vsf_tgui_frame_root_t {
     implement(vsf_tgui_frame_t)
-    vsf_tgui_t *gui;
     vsf_tgui_app_t app[9];
     int cur_appidx;
 } vsf_tgui_frame_root_t;
@@ -350,7 +387,6 @@ static fsm_rt_t __vsf_tgui_frame_root_on_depose(vsf_tgui_control_t *control_ptr,
     VSF_ASSERT(root_frame->cur_appidx < dimof(root_frame->app));
     vsf_tgui_app_t *app = &root_frame->app[root_frame->cur_appidx];
 
-    vsf_tgui_frame_exit();
     if ((app->frame_init != NULL) && (app->frame_size > 0)) {
         vsf_tgui_frame_t *frame;
         frame = vsf_tgui_frame_new(app->frame_size, app->frame_init);
@@ -372,10 +408,12 @@ static fsm_rt_t __vsf_tgui_root_frame_on_appbtn_click(vsf_tgui_control_t *contro
 {
     tgui_root_panel_t *root_panel = (tgui_root_panel_t *)vsf_tgui_get_cur_panel();
     vsf_tgui_frame_root_t *root_frame = root_panel->frame;
+    const vsf_tgui_root_container_t* ptTopContainer = vk_tgui_control_get_top(control_ptr);
+    vsf_tgui_t *gui_ptr = ptTopContainer->gui_ptr;
 
     root_frame->cur_appidx = (vsf_tgui_button_t *)control_ptr - root_panel->tAppPanel.tAppBtn;
 
-    vk_tgui_close_root_container(root_frame->gui);
+    vk_tgui_close_root_container(gui_ptr);
     return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
 }
 static const vsf_tgui_user_evt_handler __vsf_tgui_root_frame_appbtn_handler[] = {
@@ -434,7 +472,6 @@ static void __vsf_tgui_frame_root_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame,
     VSF_ASSERT(panel_size >= sizeof(tgui_root_panel_t));
 
     tgui_initalize_top_container(root_panel_descriptor, root_panel);
-    root_frame->gui = gui;
     root_frame->__tile = (char *)__tiles_data;
     root_panel->frame = root_frame;
     for (int i = 0; i < dimof(root_frame->app); i++) {
@@ -632,14 +669,15 @@ int ui_main(int argc, char **argv)
 
     __vsf_ui_new_eventfd_priv = vsf_linux_fd_get(executor_new_notifier)->priv;
     __vsf_ui_exit_eventfd_priv = vsf_linux_fd_get(executor_exit_notifier)->priv;
-    vsf_slist_init(&__vsf_ui_executor_queue);
+    vsf_dlist_init(&__vsf_ui_executor_queue);
+    vsf_dlist_init(&__vsf_ui_executor_queue_pending);
     while (true) {
         FD_ZERO(&rfds);
         FD_ZERO(&wfds);
         FD_SET(executor_new_notifier, &rfds);
         FD_SET(executor_exit_notifier, &rfds);
         fd_num = vsf_max(executor_exit_notifier, executor_new_notifier);
-        __vsf_slist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue) {
+        __vsf_dlist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue) {
             if (_->fn_select!= NULL) {
                 int fd = _->fn_select(_, &rfds, &wfds);
                 if (fd > fd_num) {
@@ -659,6 +697,7 @@ int ui_main(int argc, char **argv)
             VSF_ASSERT(executor!= NULL);
             vsf_dlist_add_to_tail(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue, executor);
 
+            executor->__exited = false;
             if (    (pipe(executor->__stdout_pipe) != 0)
                 ||  (pipe(executor->__stdin_pipe) != 0)
                 ||  (pipe(executor->__stderr_pipe) != 0)) {
@@ -694,14 +733,15 @@ int ui_main(int argc, char **argv)
             eventfd_read(executor_exit_notifier, &eventfd_value);
         }
 
-        __vsf_slist_foreach_unsafe(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue) {
-            if (_->exited) {
+        __vsf_dlist_foreach_next_unsafe(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue) {
+            if (_->__exited) {
                 close(_->__stdin_pipe[1]);
                 close(_->__stdout_pipe[0]);
                 close(_->__stderr_pipe[0]);
                 if (_->on_select != NULL) {
                     _->on_select(_, NULL, NULL);
                 }
+                vsf_dlist_remove(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue, _);
             }
             if (    FD_ISSET(_->__stdin_pipe[1], &wfds)
                 ||  FD_ISSET(_->__stdout_pipe[0], &rfds)
