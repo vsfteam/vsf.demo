@@ -444,7 +444,10 @@ static int __vpm_list_local_packages(void)
             if (    (entry->d_type == DT_REG)
                 &&  (ext = strrchr(entry->d_name, '.'))
                 &&  !strcmp(ext, ".deb")) {
+
+                *ext = '\0';
                 printf("%s\n", entry->d_name);
+                *ext = '.';
             }
         }
     }

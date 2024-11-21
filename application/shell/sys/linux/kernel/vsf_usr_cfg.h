@@ -145,7 +145,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 
 typedef struct vsf_tgui_frame_t vsf_tgui_frame_t;
 typedef struct vsf_tgui_t vsf_tgui_t;
-typedef void (*vsf_tgui_frame_init_t)(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size);
+typedef void (*vsf_tgui_frame_init_t)(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size, int is_first);
 struct vsf_tgui_frame_t {
     vsf_tgui_frame_t *__next;
     char *__tile;

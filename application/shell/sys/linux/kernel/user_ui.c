@@ -87,7 +87,7 @@ static VSF_CAL_NO_INIT vsf_tgui_demo_t __tgui_demo;
 
 static uint32_t __vsf_tgui_panel_buffer[4096 / 4];
 
-static vsf_tgui_frame_t *__vsf_tgui_frame_root = NULL;
+static vsf_tgui_frame_t *__vsf_tgui_root_frame = NULL;
 
 vsf_tgui_frame_t * vsf_tgui_frame_new(int frame_size, vsf_tgui_frame_init_t fn_init)
 {
@@ -103,28 +103,28 @@ vsf_tgui_frame_t * vsf_tgui_frame_new(int frame_size, vsf_tgui_frame_init_t fn_i
     memset(frame, 0, frame_size);
 
     frame->__fn_init = fn_init;
-    frame->__next = __vsf_tgui_frame_root;
-    __vsf_tgui_frame_root = frame;
+    frame->__next = __vsf_tgui_root_frame;
+    __vsf_tgui_root_frame = frame;
 
     return frame;
 }
 
 void vsf_tgui_frame_init(vsf_tgui_frame_t *frame)
 {
-    frame->__fn_init(&__tgui_demo.instance, frame, __vsf_tgui_panel_buffer, sizeof(__vsf_tgui_panel_buffer));
+    frame->__fn_init(&__tgui_demo.instance, frame, __vsf_tgui_panel_buffer, sizeof(__vsf_tgui_panel_buffer), true);
 }
 
 void vsf_tgui_frame_exit(void)
 {
-    vsf_tgui_frame_t *frame = __vsf_tgui_frame_root;
+    vsf_tgui_frame_t *frame = __vsf_tgui_root_frame;
     VSF_ASSERT(frame != NULL);
 
-    __vsf_tgui_frame_root = frame->__next;
+    __vsf_tgui_root_frame = frame->__next;
     vsf_heap_free(frame);
 
-    if (__vsf_tgui_frame_root != NULL) {
-        frame = __vsf_tgui_frame_root;
-        frame->__fn_init(&__tgui_demo.instance, frame, __vsf_tgui_panel_buffer, sizeof(__vsf_tgui_panel_buffer));
+    if (__vsf_tgui_root_frame != NULL) {
+        frame = __vsf_tgui_root_frame;
+        frame->__fn_init(&__tgui_demo.instance, frame, __vsf_tgui_panel_buffer, sizeof(__vsf_tgui_panel_buffer), false);
     }
 }
 
@@ -145,8 +145,8 @@ unsigned char * vsf_tgui_tile_get_pixelmap(const vsf_tgui_tile_t *tile_ptr)
     uint_fast8_t tile_type = tile_ptr->_.tCore.Attribute.u2RootTileType;
     switch (tile_type) {
     case 0:  // buf_offset tile
-        VSF_ASSERT(__vsf_tgui_frame_root != NULL);
-        return (unsigned char *)&__vsf_tgui_frame_root->__tile[tile_ptr->tBufRoot.ptBitmap];
+        VSF_ASSERT(__vsf_tgui_root_frame != NULL);
+        return (unsigned char *)&__vsf_tgui_root_frame->__tile[tile_ptr->tBufRoot.ptBitmap];
     case 2:  // buf_addr tile
         return (unsigned char *)tile_ptr->tBufRoot.ptBitmap;
     default:
@@ -161,15 +161,123 @@ unsigned char * vsf_tgui_tile_get_pixelmap(const vsf_tgui_tile_t *tile_ptr)
 #   define VSF_TGUI_CFG_BORDER_SIZE         16
 #endif
 
+static vsf_ui_executor_ctx_t __vsf_tgui_app_executor;
+
+// popup information frame
+
+declare_tgui_panel(vsf_tgui_popup_panel_t)
+typedef struct vsf_tgui_popup_frame_t {
+    implement(vsf_tgui_frame_t)
+    const char *pstrTitle;
+    const char *pstrInformation;
+    bool can_exit;
+    vsf_tgui_popup_panel_t *panel;
+    void *param;
+} vsf_tgui_popup_frame_t;
+
+def_tgui_panel(vsf_tgui_popup_panel_t,
+    tgui_contains(
+        vsf_tgui_label_t tInformation;
+        vsf_tgui_button_t tOK;
+    )
+)
+vsf_tgui_popup_frame_t *frame;
+end_def_tgui_panel(vsf_tgui_popup_panel_t)
+
+static fsm_rt_t __vsf_tgui_popup_frame_on_depose(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
+{
+    vsf_tgui_frame_exit();
+    return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
+}
+
+static fsm_rt_t __vsf_tgui_popup_frame_on_ok_click(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
+{
+    vsf_tgui_popup_panel_t *popup_panel = (vsf_tgui_popup_panel_t *)vk_tgui_control_get_top(control_ptr);
+    vsf_tgui_popup_frame_t *popup_frame = popup_panel->frame;
+
+    if (popup_frame->can_exit) {
+        vk_tgui_close_root_container(popup_panel->gui_ptr);
+    }
+    return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
+}
+
+describ_tgui_panel(vsf_tgui_popup_panel_t, popup_panel_descriptor,
+    tgui_region(120, 120, 0, 0),
+    tgui_sv_tile_show_corner(false),
+    tgui_padding(VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE),
+
+    tgui_msgmap(
+        tgui_msg_handler(VSF_TGUI_EVT_ON_DEPOSE, __vsf_tgui_popup_frame_on_depose),
+    ),
+
+    tgui_label(tInformation, tgui_null_parent(vsf_tgui_popup_panel_t), tInformation, tOK,
+        tgui_region(0, 56, 400, 80),
+        tgui_sv_tile_show_corner(false),
+        tgui_sv_font_color(VSF_TGUI_COLOR_BLACK),
+    ),
+
+    tgui_button(tOK, tgui_null_parent(vsf_tgui_popup_panel_t), tInformation, tOK,
+//        .bIsEnabled = false,
+        tgui_location(170, 140),
+        tgui_text(tLabel, "OK", true),
+        tgui_msgmap(
+            tgui_msg_handler(VSF_TGUI_EVT_POINTER_CLICK, __vsf_tgui_popup_frame_on_ok_click),
+        ),
+    ),
+);
+
+static void __vsf_tgui_popup_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size, int is_first)
+{
+    vsf_tgui_popup_frame_t *popup_frame = (vsf_tgui_popup_frame_t *)frame;
+    vsf_tgui_popup_panel_t *popup_panel = (vsf_tgui_popup_panel_t *)panel;
+    VSF_ASSERT(panel_size >= sizeof(vsf_tgui_popup_panel_t));
+
+    tgui_initalize_top_container(popup_panel_descriptor, popup_panel);
+    popup_frame->panel = popup_panel;
+    popup_frame->__tile = (char *)__tiles_data;
+    popup_panel->frame = popup_frame;
+    vsf_tgui_text_set(&popup_panel->tTitle, &(const vsf_tgui_string_t){
+        .pstrText = popup_frame->pstrTitle,
+#if VSF_TGUI_CFG_SAFE_STRING_MODE == ENABLED
+        .s16_size = strlen(popup_frame->pstrTitle),
+#endif
+    });
+    vsf_tgui_text_set(&popup_panel->tInformation.tLabel, &(const vsf_tgui_string_t){
+        .pstrText = popup_frame->pstrInformation,
+#if VSF_TGUI_CFG_SAFE_STRING_MODE == ENABLED
+        .s16_size = strlen(popup_frame->pstrInformation),
+#endif
+    });
+    vk_tgui_set_root_container(gui, (vsf_tgui_root_container_t *)popup_panel, true);
+}
+
+vsf_tgui_popup_frame_t * vsf_tgui_popup(const char *pstrTitle, const char *pstrInformation)
+{
+    vsf_tgui_popup_frame_t *frame = (vsf_tgui_popup_frame_t *)vsf_tgui_frame_new(
+        sizeof(vsf_tgui_popup_frame_t), __vsf_tgui_popup_frame_init);
+    frame->pstrTitle = pstrTitle;
+    frame->pstrInformation = pstrInformation;
+    vsf_tgui_frame_init(&frame->use_as__vsf_tgui_frame_t);
+    return frame;
+}
+
 // local_app & remote_app frame
 
 declare_tgui_panel(tgui_applist_panel_t)
-typedef struct vsf_tgui_frame_applist_t {
+typedef struct vsf_tgui_applist_frame_t {
     implement(vsf_tgui_frame_t)
     tgui_applist_panel_t *panel;
+
+    vsf_ui_executor_ctx_t executor;
+    char *args[4];
+    char *info;
+    int info_size;
+
+    char appname_to_execute[64];
     char appname[64];
     bool is_remote;
-} vsf_tgui_frame_applist_t;
+    bool is_operation;
+} vsf_tgui_applist_frame_t;
 
 def_tgui_panel(tgui_applist_panel_t,
     tgui_contains(
@@ -180,11 +288,58 @@ def_tgui_panel(tgui_applist_panel_t,
         )
     )
 )
-vsf_tgui_frame_applist_t *frame;
+vsf_tgui_applist_frame_t *frame;
 end_def_tgui_panel(tgui_applist_panel_t)
 
-static fsm_rt_t __vsf_tgui_frame_applist_on_depose(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
+static int __vsf_tgui_applist_frame_opbtn_executor_select(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
 {
+    FD_SET(ctx->__stdout_pipe[0], rfds);
+    return ctx->__stdout_pipe[0];
+}
+
+static void __vsf_tgui_applist_frame_opbtn_executor_on_select(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
+{
+    vsf_tgui_popup_frame_t *popup_frame = (vsf_tgui_popup_frame_t *)ctx->param;
+    vsf_tgui_applist_frame_t *applist_frame = (vsf_tgui_applist_frame_t *)popup_frame->param;
+    vsf_tgui_popup_panel_t *popup_panel = popup_frame->panel;
+
+    if (NULL == rfds) {
+        applist_frame->is_operation = false;
+        popup_frame->can_exit = true;
+//        popup_panel->tOK.bIsEnabled = true;
+//        vk_tgui_refresh_ex(popup_panel->gui_ptr, &popup_panel->use_as__vsf_tgui_control_t, NULL);
+    } else if (FD_ISSET(ctx->__stdout_pipe[0], rfds)) {
+        bool is_to_refresh = false;
+        vsf_linux_fd_t *sfd = vsf_linux_fd_get(ctx->__stdout_pipe[0]);
+        vsf_linux_stream_priv_t *stream_priv = (vsf_linux_stream_priv_t *)sfd->priv;
+        vsf_stream_t *stream = stream_priv->stream_rx;
+        uint_fast32_t rbuff_size;
+
+        while (true) {
+            rbuff_size = vsf_stream_get_data_size(stream);
+            if (rbuff_size <= 0) {
+                break;
+            }
+
+            applist_frame->info = vsf_heap_realloc(applist_frame->info, applist_frame->info_size + rbuff_size + 1);
+            read(ctx->__stdout_pipe[0], &applist_frame->info[applist_frame->info_size], rbuff_size);
+            applist_frame->info_size += rbuff_size;
+            applist_frame->info[applist_frame->info_size] = '\0';
+
+            vsf_tgui_label_set_text_static(&popup_panel->tInformation, applist_frame->info);
+            is_to_refresh = true;
+        }
+
+        if (is_to_refresh) {
+            vk_tgui_refresh_ex(popup_panel->gui_ptr, &popup_panel->use_as__vsf_tgui_control_t, NULL);
+        }
+    }
+}
+
+static fsm_rt_t __vsf_tgui_applist_frame_on_depose(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
+{
+    tgui_applist_panel_t *applist_panel = (tgui_applist_panel_t *)vk_tgui_control_get_top(control_ptr);
+    vsf_tgui_applist_frame_t *applist_frame = applist_panel->frame;
     vsf_tgui_list_t *list = (vsf_tgui_list_t *)control_ptr;
     vsf_tgui_control_t *control = vsf_tgui_list_get_child(list), *control_next;
 
@@ -202,16 +357,52 @@ static fsm_rt_t __vsf_tgui_frame_applist_on_depose(vsf_tgui_control_t *control_p
         control = control_next;
     }
 
-    vsf_tgui_frame_exit();
+    if (applist_frame->is_operation) {
+        vsf_tgui_popup_frame_t *popup_frame = vsf_tgui_popup("Information", "");
+        popup_frame->param = applist_frame;
+
+        applist_frame->executor.param = popup_frame;
+        applist_frame->args[0] = "vpm";
+        if (applist_frame->is_remote) {
+            applist_frame->args[1] = "install";
+        } else {
+            applist_frame->args[1] = "uninstall";
+        }
+        applist_frame->args[2] = applist_frame->appname_to_execute;
+        applist_frame->executor.cmd = applist_frame->args[0];
+        applist_frame->executor.args = applist_frame->args;
+        applist_frame->executor.on_select = __vsf_tgui_applist_frame_opbtn_executor_on_select;
+        applist_frame->executor.fn_select = __vsf_tgui_applist_frame_opbtn_executor_select;
+        vsf_tgui_execute_in_shell(&applist_frame->executor);
+    } else {
+        vsf_tgui_frame_exit();
+    }
     return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
 }
 
 static fsm_rt_t __vsf_tgui_applist_frame_on_exit_click(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
 {
-    const vsf_tgui_root_container_t* ptTopContainer = vk_tgui_control_get_top(control_ptr);
+    const vsf_tgui_root_container_t *ptTopContainer = vk_tgui_control_get_top(control_ptr);
     vsf_tgui_t *gui_ptr = ptTopContainer->gui_ptr;
 
     vk_tgui_close_root_container(gui_ptr);
+    return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
+}
+
+static fsm_rt_t __vsf_tgui_applist_frame_on_opbtn_click(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
+{
+    tgui_applist_panel_t *applist_panel = (tgui_applist_panel_t *)vk_tgui_control_get_top(control_ptr);
+    vsf_tgui_applist_frame_t *applist_frame = applist_panel->frame;
+    vsf_msgt_container_t *container = control_ptr->parent_ptr;
+    vsf_tgui_label_t *label = (vsf_tgui_label_t *)container->node_ptr;
+
+    strcpy(applist_frame->appname_to_execute, label->tLabel.tString.pstrText);
+    char *end = strchr(applist_frame->appname_to_execute, ' ');
+    if (end != NULL) {
+        *end = '\0';
+    }
+    applist_frame->is_operation = true;
+    vk_tgui_close_root_container(applist_panel->gui_ptr);
     return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
 }
 
@@ -224,7 +415,7 @@ describ_tgui_panel(tgui_applist_panel_t, applist_panel_descriptor,
             VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE,
             VSF_BOARD_DISP_HEIGHT - 5 * VSF_TGUI_CFG_BORDER_SIZE),
         tgui_msgmap(
-            tgui_msg_handler(VSF_TGUI_EVT_ON_DEPOSE, __vsf_tgui_frame_applist_on_depose),
+            tgui_msg_handler(VSF_TGUI_EVT_ON_DEPOSE, __vsf_tgui_applist_frame_on_depose),
         ),
 
         tgui_list_items(
@@ -243,15 +434,18 @@ describ_tgui_panel(tgui_applist_panel_t, applist_panel_descriptor,
     ),
 );
 
-static int __vsf_tgui_frame_applist_executor_select(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
+static int __vsf_tgui_applist_frame_executor_select(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
 {
     FD_SET(ctx->__stdout_pipe[0], rfds);
     return ctx->__stdout_pipe[0];
 }
 
-static void __vsf_tgui_frame_applist_executor_on_select(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
+static void __vsf_tgui_applist_frame_executor_on_select(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
 {
-    vsf_tgui_frame_applist_t *applist_frame = (vsf_tgui_frame_applist_t *)ctx->param;
+    static const vsf_tgui_user_evt_handler __vsf_tgui_applist_frame_opbtn_handler[] = {
+        tgui_msg_handler(VSF_TGUI_EVT_POINTER_CLICK, __vsf_tgui_applist_frame_on_opbtn_click)
+    };
+    vsf_tgui_applist_frame_t *applist_frame = (vsf_tgui_applist_frame_t *)ctx->param;
     tgui_applist_panel_t *applist_panel = applist_frame->panel;
 
     if (NULL == rfds) {
@@ -283,6 +477,9 @@ static void __vsf_tgui_frame_applist_executor_on_select(vsf_ui_executor_ctx_t *c
             }
             vsf_tui_control_set_size(btn, (VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) / 3,
                 2 * VSF_TGUI_CFG_BORDER_SIZE);
+            vsf_control_set_msghandler(&btn->use_as__vsf_tgui_control_t,
+                __vsf_tgui_applist_frame_opbtn_handler,
+                dimof(__vsf_tgui_applist_frame_opbtn_handler));
 
             vsf_tgui_container_t *container = vsf_tgui_container_new("tAppContainer");
             vsf_tgui_container_set_type(container, VSF_TGUI_CONTAINER_TYPE_LINE_STREAM_HORIZONTAL);
@@ -302,13 +499,17 @@ static void __vsf_tgui_frame_applist_executor_on_select(vsf_ui_executor_ctx_t *c
     }
 }
 
-static void __vsf_tgui_frame_local_applist_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size)
+static void __vsf_tgui_local_applist_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size, int is_first)
 {
     static const char *__title = "Local Applications";
 
-    vsf_tgui_frame_applist_t *applist_frame = (vsf_tgui_frame_applist_t *)frame;
+    vsf_tgui_applist_frame_t *applist_frame = (vsf_tgui_applist_frame_t *)frame;
     tgui_applist_panel_t *applist_panel = (tgui_applist_panel_t *)panel;
     VSF_ASSERT(panel_size >= sizeof(tgui_applist_panel_t));
+
+    if (applist_frame->info != NULL) {
+        vsf_heap_free(applist_frame->info);
+    }
 
     tgui_initalize_top_container(applist_panel_descriptor, applist_panel);
     applist_panel->frame = applist_frame;
@@ -322,13 +523,17 @@ static void __vsf_tgui_frame_local_applist_init(vsf_tgui_t *gui, vsf_tgui_frame_
 #endif
     });
     vk_tgui_set_root_container(gui, (vsf_tgui_root_container_t *)applist_panel, true);
+
+    if (!is_first) {
+        vsf_tgui_execute_in_shell(&__vsf_tgui_app_executor);
+    }
 }
 
-static void __vsf_tgui_frame_remote_applist_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size)
+static void __vsf_tgui_remote_applist_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size, int is_first)
 {
     static const char *__title = "Remote Applications";
 
-    vsf_tgui_frame_applist_t *applist_frame = (vsf_tgui_frame_applist_t *)frame;
+    vsf_tgui_applist_frame_t *applist_frame = (vsf_tgui_applist_frame_t *)frame;
     tgui_applist_panel_t *applist_panel = (tgui_applist_panel_t *)panel;
     VSF_ASSERT(panel_size >= sizeof(tgui_applist_panel_t));
 
@@ -344,6 +549,10 @@ static void __vsf_tgui_frame_remote_applist_init(vsf_tgui_t *gui, vsf_tgui_frame
 #endif
     });
     vk_tgui_set_root_container(gui, (vsf_tgui_root_container_t *)applist_panel, true);
+
+    if (!is_first) {
+        vsf_tgui_execute_in_shell(&__vsf_tgui_app_executor);
+    }
 }
 
 // root frame: application loader
@@ -360,11 +569,11 @@ typedef struct vsf_tgui_app_t {
     void (*on_select)(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds);
 } vsf_tgui_app_t;
 
-typedef struct vsf_tgui_frame_root_t {
+typedef struct vsf_tgui_root_frame_t {
     implement(vsf_tgui_frame_t)
     vsf_tgui_app_t app[9];
     int cur_appidx;
-} vsf_tgui_frame_root_t;
+} vsf_tgui_root_frame_t;
 
 def_tgui_panel(tgui_root_panel_t,
     tgui_contains(
@@ -375,21 +584,18 @@ def_tgui_panel(tgui_root_panel_t,
         )
     )
 )
-vsf_tgui_frame_root_t *frame;
+vsf_tgui_root_frame_t *frame;
 end_def_tgui_panel(tgui_root_panel_t)
 
-static vsf_ui_executor_ctx_t __vsf_tgui_app_executor;
-
-static fsm_rt_t __vsf_tgui_frame_root_on_depose(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
+static fsm_rt_t __vsf_tgui_root_frame_on_depose(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
 {
     tgui_root_panel_t *root_panel = (tgui_root_panel_t *)vsf_tgui_get_cur_panel();
-    vsf_tgui_frame_root_t *root_frame = root_panel->frame;
+    vsf_tgui_root_frame_t *root_frame = root_panel->frame;
     VSF_ASSERT(root_frame->cur_appidx < dimof(root_frame->app));
     vsf_tgui_app_t *app = &root_frame->app[root_frame->cur_appidx];
 
     if ((app->frame_init != NULL) && (app->frame_size > 0)) {
-        vsf_tgui_frame_t *frame;
-        frame = vsf_tgui_frame_new(app->frame_size, app->frame_init);
+        vsf_tgui_frame_t *frame = vsf_tgui_frame_new(app->frame_size, app->frame_init);
         vsf_tgui_frame_init(frame);
         __vsf_tgui_app_executor.param = frame;
     } else {
@@ -407,8 +613,8 @@ static fsm_rt_t __vsf_tgui_frame_root_on_depose(vsf_tgui_control_t *control_ptr,
 static fsm_rt_t __vsf_tgui_root_frame_on_appbtn_click(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
 {
     tgui_root_panel_t *root_panel = (tgui_root_panel_t *)vsf_tgui_get_cur_panel();
-    vsf_tgui_frame_root_t *root_frame = root_panel->frame;
-    const vsf_tgui_root_container_t* ptTopContainer = vk_tgui_control_get_top(control_ptr);
+    vsf_tgui_root_frame_t *root_frame = root_panel->frame;
+    const vsf_tgui_root_container_t *ptTopContainer = vk_tgui_control_get_top(control_ptr);
     vsf_tgui_t *gui_ptr = ptTopContainer->gui_ptr;
 
     root_frame->cur_appidx = (vsf_tgui_button_t *)control_ptr - root_panel->tAppPanel.tAppBtn;
@@ -425,7 +631,7 @@ describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
     tgui_text(tTitle, "Application", false),
     tgui_padding(VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE),
     tgui_msgmap(
-        tgui_msg_handler(VSF_TGUI_EVT_ON_DEPOSE, __vsf_tgui_frame_root_on_depose),
+        tgui_msg_handler(VSF_TGUI_EVT_ON_DEPOSE, __vsf_tgui_root_frame_on_depose),
     ),
 
 #define __app_button(__idx, __pre_idx, __next_idx, ...)                         \
@@ -465,9 +671,9 @@ describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
     ),
 );
 
-static void __vsf_tgui_frame_root_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size)
+static void __vsf_tgui_root_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size, int is_first)
 {
-    vsf_tgui_frame_root_t *root_frame = (vsf_tgui_frame_root_t *)frame;
+    vsf_tgui_root_frame_t *root_frame = (vsf_tgui_root_frame_t *)frame;
     tgui_root_panel_t *root_panel = (tgui_root_panel_t *)panel;
     VSF_ASSERT(panel_size >= sizeof(tgui_root_panel_t));
 
@@ -631,8 +837,8 @@ int ui_main(int argc, char **argv)
     vsf_tgui_input_init(&__tgui_demo.instance, &__tgui_demo.input_notifier);
 
     // start root panel frame
-    vsf_tgui_frame_root_t *root_frame = (vsf_tgui_frame_root_t *)vsf_tgui_frame_new(
-        sizeof(vsf_tgui_frame_root_t), __vsf_tgui_frame_root_init);
+    vsf_tgui_root_frame_t *root_frame = (vsf_tgui_root_frame_t *)vsf_tgui_frame_new(
+        sizeof(vsf_tgui_root_frame_t), __vsf_tgui_root_frame_init);
     // TODO: load applications
     root_frame->app[0].name = "Local\nApps";
     root_frame->app[0].cmd = "vpm";
@@ -641,10 +847,10 @@ int ui_main(int argc, char **argv)
     };
     root_frame->app[0].args = (char **)__vpm_list_local_args;
     root_frame->app[0].icon = (vsf_tgui_tile_t *)&res_local_RGBA;
-    root_frame->app[0].frame_size = sizeof(vsf_tgui_frame_applist_t);
-    root_frame->app[0].frame_init = __vsf_tgui_frame_local_applist_init;
-    root_frame->app[0].on_select = __vsf_tgui_frame_applist_executor_on_select;
-    root_frame->app[0].fn_select = __vsf_tgui_frame_applist_executor_select;
+    root_frame->app[0].frame_size = sizeof(vsf_tgui_applist_frame_t);
+    root_frame->app[0].frame_init = __vsf_tgui_local_applist_frame_init;
+    root_frame->app[0].on_select = __vsf_tgui_applist_frame_executor_on_select;
+    root_frame->app[0].fn_select = __vsf_tgui_applist_frame_executor_select;
     root_frame->app[1].name = "Remote\nApps";
     root_frame->app[1].cmd = "vpm";
     static const char *__vpm_list_remmote_args[] = {
@@ -652,10 +858,10 @@ int ui_main(int argc, char **argv)
     };
     root_frame->app[1].args = (char **)__vpm_list_remmote_args;
     root_frame->app[1].icon = (vsf_tgui_tile_t *)&res_cloud_RGBA;
-    root_frame->app[1].frame_size = sizeof(vsf_tgui_frame_applist_t);
-    root_frame->app[1].frame_init = __vsf_tgui_frame_remote_applist_init;
-    root_frame->app[1].on_select = __vsf_tgui_frame_applist_executor_on_select;
-    root_frame->app[1].fn_select = __vsf_tgui_frame_applist_executor_select;
+    root_frame->app[1].frame_size = sizeof(vsf_tgui_applist_frame_t);
+    root_frame->app[1].frame_init = __vsf_tgui_remote_applist_frame_init;
+    root_frame->app[1].on_select = __vsf_tgui_applist_frame_executor_on_select;
+    root_frame->app[1].fn_select = __vsf_tgui_applist_frame_executor_select;
     vsf_tgui_frame_init(&root_frame->use_as__vsf_tgui_frame_t);
 
     int executor_exit_notifier = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
@@ -742,8 +948,7 @@ int ui_main(int argc, char **argv)
                     _->on_select(_, NULL, NULL);
                 }
                 vsf_dlist_remove(vsf_ui_executor_ctx_t, __node, &__vsf_ui_executor_queue, _);
-            }
-            if (    FD_ISSET(_->__stdin_pipe[1], &wfds)
+            } else if (    FD_ISSET(_->__stdin_pipe[1], &wfds)
                 ||  FD_ISSET(_->__stdout_pipe[0], &rfds)
                 ||  FD_ISSET(_->__stderr_pipe[0], &rfds)) {
 
