@@ -202,8 +202,7 @@ static fsm_rt_t __vsf_tgui_popup_frame_on_ok_click(vsf_tgui_control_t *control_p
 }
 
 describ_tgui_panel(vsf_tgui_popup_panel_t, popup_panel_descriptor,
-    tgui_region(120, 120, 0, 0),
-    tgui_sv_tile_show_corner(false),
+    tgui_region(0, 0, VSF_BOARD_DISP_WIDTH, VSF_BOARD_DISP_HEIGHT),
     tgui_padding(VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE, VSF_TGUI_CFG_BORDER_SIZE),
 
     tgui_msgmap(
@@ -211,14 +210,20 @@ describ_tgui_panel(vsf_tgui_popup_panel_t, popup_panel_descriptor,
     ),
 
     tgui_label(tInformation, tgui_null_parent(vsf_tgui_popup_panel_t), tInformation, tOK,
-        tgui_region(0, 56, 400, 80),
+        tgui_region(0, 3 * VSF_TGUI_CFG_BORDER_SIZE,
+            VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE,
+            VSF_BOARD_DISP_HEIGHT - 9 * VSF_TGUI_CFG_BORDER_SIZE),
         tgui_sv_tile_show_corner(false),
         tgui_sv_font_color(VSF_TGUI_COLOR_BLACK),
     ),
 
     tgui_button(tOK, tgui_null_parent(vsf_tgui_popup_panel_t), tInformation, tOK,
 //        .bIsEnabled = false,
-        tgui_location(170, 140),
+        tgui_region((VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) / 4,
+            VSF_BOARD_DISP_HEIGHT - 5 * VSF_TGUI_CFG_BORDER_SIZE,
+            (VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) / 2,
+            2 * VSF_TGUI_CFG_BORDER_SIZE
+        ),
         tgui_text(tLabel, "OK", true),
         tgui_msgmap(
             tgui_msg_handler(VSF_TGUI_EVT_POINTER_CLICK, __vsf_tgui_popup_frame_on_ok_click),
@@ -358,7 +363,12 @@ static fsm_rt_t __vsf_tgui_applist_frame_on_depose(vsf_tgui_control_t *control_p
     }
 
     if (applist_frame->is_operation) {
-        vsf_tgui_popup_frame_t *popup_frame = vsf_tgui_popup("Information", "");
+        vsf_tgui_popup_frame_t *popup_frame;
+        if (applist_frame->is_remote) {
+            popup_frame = vsf_tgui_popup("Installing", "");
+        } else {
+            popup_frame = vsf_tgui_popup("uninstalling", "");
+        }
         popup_frame->param = applist_frame;
 
         applist_frame->executor.param = popup_frame;
