@@ -170,7 +170,6 @@ typedef struct vsf_tgui_popup_frame_t {
     implement(vsf_tgui_frame_t)
     const char *pstrTitle;
     const char *pstrInformation;
-    bool can_exit;
     vsf_tgui_popup_panel_t *panel;
     void *param;
 } vsf_tgui_popup_frame_t;
@@ -193,11 +192,8 @@ static fsm_rt_t __vsf_tgui_popup_frame_on_depose(vsf_tgui_control_t *control_ptr
 static fsm_rt_t __vsf_tgui_popup_frame_on_ok_click(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
 {
     vsf_tgui_popup_panel_t *popup_panel = (vsf_tgui_popup_panel_t *)vk_tgui_control_get_top(control_ptr);
-    vsf_tgui_popup_frame_t *popup_frame = popup_panel->frame;
 
-    if (popup_frame->can_exit) {
-        vk_tgui_close_root_container(popup_panel->gui_ptr);
-    }
+    vk_tgui_close_root_container(popup_panel->gui_ptr);
     return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
 }
 
@@ -218,7 +214,7 @@ describ_tgui_panel(vsf_tgui_popup_panel_t, popup_panel_descriptor,
     ),
 
     tgui_button(tOK, tgui_null_parent(vsf_tgui_popup_panel_t), tInformation, tOK,
-//        .bIsEnabled = false,
+        .bIsEnabled = false,
         tgui_region((VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) / 4,
             VSF_BOARD_DISP_HEIGHT - 5 * VSF_TGUI_CFG_BORDER_SIZE,
             (VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE) / 2,
@@ -310,9 +306,8 @@ static void __vsf_tgui_applist_frame_opbtn_executor_on_select(vsf_ui_executor_ct
 
     if (NULL == rfds) {
         applist_frame->is_operation = false;
-        popup_frame->can_exit = true;
-//        popup_panel->tOK.bIsEnabled = true;
-//        vk_tgui_refresh_ex(popup_panel->gui_ptr, &popup_panel->use_as__vsf_tgui_control_t, NULL);
+        popup_panel->tOK.bIsEnabled = true;
+        vk_tgui_refresh_ex(popup_panel->gui_ptr, &popup_panel->use_as__vsf_tgui_control_t, NULL);
     } else if (FD_ISSET(ctx->__stdout_pipe[0], rfds)) {
         bool is_to_refresh = false;
         vsf_linux_fd_t *sfd = vsf_linux_fd_get(ctx->__stdout_pipe[0]);
