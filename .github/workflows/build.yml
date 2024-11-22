@@ -45,7 +45,7 @@ jobs:
             path: "application/component/fs/mount/thread"
         include:
           - target: "aic8800"
-          - path: "application/board/aic8800m_uikit/bootloader"
+            path: "application/board/aic8800m_uikit/bootloader"
 
     steps:
       - name: get latest cmake and ninja
