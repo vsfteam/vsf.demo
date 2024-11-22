@@ -62,6 +62,9 @@ jobs:
       - name: update project
         run: |
           sed -i -e "s|application/kernel/helloworld|${{matrix.path}}|g" project/cmake/${{matrix.target}}/CMakeLists.txt
+          if [[ "${{matrix.path}}" == *linux* ]]; then
+            sed -i -e "s|# VSF_USE configurations|# VSF_USE configurations\nset(VSF_USE_LINUX 1)\n    set(VSF_LINUX_USE_SIMPLE_LIBC 1)|g" project/cmake/${{matrix.target}}/CMakeLists.txt
+          fi
           git diff
 
       - name: configure cmake
