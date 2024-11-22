@@ -37,11 +37,11 @@ jobs:
         path: ${{ fromJSON(needs.cmake-projects.outputs.paths) }}
         target: ${{ fromJSON(needs.cmake-projects.outputs.targets) }}
         cc: ['11.3.Rel1']
-      exclude:
-        - target: "aic8800"
-          path: "application/component/fs/mount/eda"
-        - target: "aic8800"
-          path: "application/component/fs/mount/thread"
+        exclude:
+          - target: "aic8800"
+            path: "application/component/fs/mount/eda"
+          - target: "aic8800"
+            path: "application/component/fs/mount/thread"
 
     steps:
       - name: get latest cmake and ninja
