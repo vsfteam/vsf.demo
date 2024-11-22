@@ -58,35 +58,17 @@ static vsf_err_t __dfu_vendor_prepare(vk_usbd_dev_t *dev);
 /*============================ LOCAL VARIABLES ===============================*/
 
 describe_usbd(__user_usbd_dfu, APP_CFG_USBD_VID, APP_CFG_USBD_PID, APP_CFG_USBD_SPEED, 0x210, 0x0409, 0x0000)
-    usbd_common_desc(   __user_usbd_dfu,
-                        // str_product, str_vendor, str_serial
-                        APP_CFG_USBD_PRODUCT_STR, APP_CFG_USBD_VENDOR_STR, APP_CFG_USBD_SERIAL_STR,
-                        // class, subclass, protocol
-                        0, 0, 0,
-                        // ep0_size
-                        APP_CFG_USBD_EP0_SIZE,
-                        // total function descriptor size
-                        USB_DESC_DFU_LEN,
-                        // total function interface number
-                        USB_DFU_IFS_NUM,
-                        // attribute, max_power
-                        0, 200
-    )
-        usbd_dfu_desc(  __user_usbd_dfu,
-                        // interface_start
-                        0 * USB_DFU_IFS_NUM,
-                        // function string index(start from 0)
+    usbd_func(__user_usbd_dfu,
+              usbd_dfu_func(  __user_usbd_dfu,
+                        // function index
                         0,
-                        // dfu protocol
+                        // protocol
                         APP_CFG_USBD_DFU_PROTOCOL,
                         // dfu attributes
                         1,
-                        // detach timeout
-                        0,
                         // transfer size
                         APP_CFG_USBD_DFU_TRANSFER_SIZE
         )
-    usbd_func_desc(__user_usbd_dfu)
         usbd_func_str_desc(__user_usbd_dfu, 0, u"VSF-DFU")
         usbd_str_desc(  __user_usbd_dfu, bos, u"MSFT100!")      // last !(0x21) is the vendor_code
         usbd_bos_desc(  __user_usbd_dfu,
@@ -101,24 +83,47 @@ describe_usbd(__user_usbd_dfu, APP_CFG_USBD_VID, APP_CFG_USBD_PID, APP_CFG_USBD_
         usbd_msos10_compatid_desc(__user_usbd_dfu, 1,
             __usbd_msos10_compatid_func_desc(0, 'W', 'I', 'N', 'U', 'S', 'B')
         )
-    usbd_std_desc_table(__user_usbd_dfu)
+    )
+
+    usbd_common_desc(   __user_usbd_dfu,
+                        // str_product, str_vendor, str_serial
+                        APP_CFG_USBD_PRODUCT_STR, APP_CFG_USBD_VENDOR_STR, APP_CFG_USBD_SERIAL_STR,
+                        // class, subclass, protocol
+                        0, 0, 0,
+                        // ep0_size
+                        APP_CFG_USBD_EP0_SIZE,
+                        // total function descriptor size
+                        USB_DESC_DFU_LEN,
+                        // total function interface number
+                        USB_DFU_IFS_NUM,
+                        // attribute, max_power
+                        0, 200,
+        usbd_dfu_desc(  __user_usbd_dfu,
+                        // interface_start
+                        0 * USB_DFU_IFS_NUM,
+                        // function string index(start from 0)
+                        0,
+                        // dfu protocol
+                        APP_CFG_USBD_DFU_PROTOCOL,
+                        // dfu attributes
+                        1,
+                        // detach timeout
+                        0,
+                        // transfer size
+                        APP_CFG_USBD_DFU_TRANSFER_SIZE
+        )
+    )
+
+    usbd_std_desc_table(__user_usbd_dfu,
         usbd_func_str_desc_table(__user_usbd_dfu, 0)
         usbd_str_desc_table(__user_usbd_dfu, 0xEE, bos)
         usbd_str_desc_table(__user_usbd_dfu, 0xEE, bos, 0)
         usbd_bos_desc_table(__user_usbd_dfu)
-    usbd_func(__user_usbd_dfu)
-        usbd_dfu_func(  __user_usbd_dfu,
-                        // function index
-                        0,
-                        // interrupt in ep, bulk in ep, bulk out ep
-                        APP_CFG_USBD_DFU_PROTOCOL,
-                        // dfu attributes
-                        1,
-                        // transfer size
-                        APP_CFG_USBD_DFU_TRANSFER_SIZE
-        )
-    usbd_ifs(__user_usbd_dfu)
+    )
+
+    usbd_ifs(__user_usbd_dfu,
         usbd_dfu_ifs(__user_usbd_dfu, 0)
+    )
 end_describe_usbd(__user_usbd_dfu, VSF_USB_DC0,
     .vendor.prepare     = __dfu_vendor_prepare,
 )
