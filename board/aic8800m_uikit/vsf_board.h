@@ -26,6 +26,11 @@
 #include "vsf.h"
 
 /*============================ MACROS ========================================*/
+
+#if VSF_HAL_USE_SDIO == ENABLED
+#   define VSF_BOARD_SDMMC_DETECTED()       1
+#endif
+
 /*============================ TYPES =========================================*/
 
 typedef struct vsf_board_t {
