@@ -627,9 +627,9 @@ static fsm_rt_t __vsf_tgui_root_frame_on_appbtn_click(vsf_tgui_control_t *contro
     vk_tgui_close_root_container(gui_ptr);
     return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
 }
-static const vsf_tgui_user_evt_handler __vsf_tgui_root_frame_appbtn_handler[] = {
-    tgui_msg_handler(VSF_TGUI_EVT_POINTER_CLICK, __vsf_tgui_root_frame_on_appbtn_click)
-};
+static describe_tgui_msgmap(__vsf_tgui_root_frame_appbtn_handler,
+    tgui_msg_handler(VSF_TGUI_EVT_POINTER_CLICK, __vsf_tgui_root_frame_on_appbtn_click),
+);
 
 describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
     tgui_region(0, 0, VSF_BOARD_DISP_WIDTH, VSF_BOARD_DISP_HEIGHT),
@@ -648,10 +648,7 @@ describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
         tgui_sv_font(VSF_TGUI_FONT_DEJAVUSERIF_S12),                            \
         tgui_background((vsf_tgui_tile_t*)&res_empty_RGBA, VSF_TGUI_ALIGN_TOP), \
         tgui_text(tLabel, "Slot" #__idx "\nEmpty", false, VSF_TGUI_ALIGN_BOTTOM),\
-        .tMSGMap = {                                                            \
-            .ptItems = __vsf_tgui_root_frame_appbtn_handler,                    \
-            .chCount = dimof(__vsf_tgui_root_frame_appbtn_handler),             \
-        },                                                                      \
+        tgui_msgmap_var(__vsf_tgui_root_frame_appbtn_handler),                  \
         __VA_ARGS__                                                             \
     )
 
