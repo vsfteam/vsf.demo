@@ -121,10 +121,10 @@ describe_usbd(__user_usbd_msc, APP_CFG_USBD_VID, APP_CFG_USBD_PID, USRAPP_CFG_US
                         1, 1,
                         // bulk ep size
                         __APP_CFG_MSC_BULK_SIZE,
-                        // scsi_dev
-                        &__usrapp_mal_scsi.use_as__vk_scsi_t,
                         // stream
-                        &__user_usbd_msc_stream.use_as__vsf_stream_t
+                        &__user_usbd_msc_stream.use_as__vsf_stream_t,
+                        // scsi_dev
+                        &__usrapp_mal_scsi.use_as__vk_scsi_t
         )
     )
 
