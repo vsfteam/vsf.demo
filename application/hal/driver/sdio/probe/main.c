@@ -63,7 +63,8 @@ static bool __sdio_is_probed = false;
 
 /*============================ IMPLEMENTATION ================================*/
 
-static void __sdio_probe_irqhandler(vsf_sdio_t *sdio_ptr, vsf_sdio_probe_t *probe, vsf_sdio_irq_mask_t irq_mask, vsf_sdio_transact_status_t status, uint32_t resp[4])
+static void __sdio_probe_irqhandler(vsf_sdio_t *sdio_ptr, vsf_sdio_probe_t *probe,
+    vsf_sdio_irq_mask_t irq_mask, vsf_sdio_reqsts_t status, uint32_t resp[4])
 {
     vsf_err_t err = vsf_sdio_probe_irqhandler(sdio_ptr, probe, irq_mask, status, resp);
     switch (err) {
@@ -90,10 +91,12 @@ static void __sdio_on_timer(vsf_callback_timer_t *timer)
     __sdio_probe_irqhandler(vsf_board.sdio, &__sdio_probe, 0, 0, NULL);
 }
 
-static void __sdio_irqhandler(void *target_ptr, vsf_sdio_t *sdio_ptr, vsf_sdio_irq_mask_t irq_mask, vsf_sdio_transact_status_t status, uint32_t resp[4])
+static void __sdio_irqhandler(void *target_ptr, vsf_sdio_t *sdio_ptr,
+    vsf_sdio_irq_mask_t irq_mask, vsf_sdio_reqsts_t status, uint32_t resp[4])
 {
     if (!__sdio_is_probed) {
-        __sdio_probe_irqhandler(sdio_ptr, (vsf_sdio_probe_t *)target_ptr, irq_mask, status, resp);
+        __sdio_probe_irqhandler(sdio_ptr, (vsf_sdio_probe_t *)target_ptr,
+            irq_mask, status, resp);
     }
 }
 
