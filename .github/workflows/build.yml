@@ -38,6 +38,7 @@ jobs:
         target: ${{ fromJSON(needs.cmake-projects.outputs.targets) }}
         cc: ['11.3.Rel1']
         exclude:
+          # aic8800 does not fit the hardware requirement of component/fs/mount demos, which require vsf_board.fsop & vsf_board.fsinfo
           - target: "aic8800"
             path: "application/component/fs/mount/eda"
           - target: "aic8800"
