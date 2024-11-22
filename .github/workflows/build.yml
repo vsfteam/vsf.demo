@@ -39,6 +39,10 @@ jobs:
         cc: ['11.3.Rel1']
 
     steps:
+      - name: check
+        if: |
+          (!contains(matrix.target, "aic8800") || !contains(matrix.path, "component/fs/mount/"))
+
       - name: get latest cmake and ninja
         uses: lukka/get-cmake@latest
 
