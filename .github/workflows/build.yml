@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v2
     - id: find_jobs
       run: |
-        paths=$(find application/ | grep CMakeLists.txt | rev | cut -d'/' -f 2- | rev | jq -R . | jq -s .)
+        paths=$(find application/ | grep CMakeLists.txt | grep -v "applet" | grep -v "board" | grep -v "distbus" | rev | cut -d'/' -f 2- | rev | jq -R . | jq -s .)
         echo "paths<<EOF" >> $GITHUB_OUTPUT
         echo "$paths" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
