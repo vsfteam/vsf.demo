@@ -265,7 +265,7 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
 
 void vsf_board_init(void)
 {
-    static const vsf_io_cfg_t cfgs[] = {
+    static const vsf_gpio_port_cfg_pin_t __cfgs[] = {
 #if VSF_USE_UI == ENABLED
         // SPI for lcd, PA0(SWCLK)
         {VSF_PA0,   0x09,   0},
@@ -309,7 +309,7 @@ void vsf_board_init(void)
         {VSF_PB2,   0x01,   0},
         {VSF_PB3,   0x01,   0},
     };
-    vsf_io_config((vsf_io_cfg_t *)cfgs, dimof(cfgs));
+    vsf_hw_gpio_ports_config_pin((vsf_gpio_port_cfg_pin_t *)__cfgs, dimof(__cfgs));
 
 #ifdef __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
