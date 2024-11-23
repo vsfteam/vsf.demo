@@ -192,7 +192,6 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\common\i2c\i2c_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\i2c\multiplex_i2c.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\i2s\i2s_template.h" />
-    <ClInclude Include="..\..\vsf\source\hal\driver\common\io\io_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\pwm\pwm_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\rng\rng_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\rtc\rtc_common.h" />
@@ -230,7 +229,6 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.h" />
-    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\sdio\vsf_hal_distbus_sdio.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.h" />
@@ -249,7 +247,6 @@
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\gpio\vsf_remapped_gpio.h" />
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\i2c\vsf_remapped_i2c.h" />
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\i2s\vsf_remapped_i2s.h" />
-    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.h" />
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.h" />
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\sdio\vsf_remapped_sdio.h" />
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\spi\vsf_remapped_spi.h" />
@@ -563,7 +560,6 @@
     <ClCompile Include="..\..\vsf\source\hal\driver\common\i2c\i2c_request.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\i2c\multiplex_i2c.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\i2s\i2s_common.c" />
-    <ClCompile Include="..\..\vsf\source\hal\driver\common\io\io_common.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\pwm\pwm_common.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\rng\rng_common.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\rtc\rtc_common.c" />
@@ -579,7 +575,6 @@
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.c" />
-    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\sdio\vsf_hal_distbus_sdio.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.c" />
@@ -596,7 +591,6 @@
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\gpio\vsf_remapped_gpio.c" />
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\i2c\vsf_remapped_i2c.c" />
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\i2s\vsf_remapped_i2s.c" />
-    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\io\vsf_remapped_io.c" />
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\pwm\vsf_remapped_pwm.c" />
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\sdio\vsf_remapped_sdio.c" />
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\spi\vsf_remapped_spi.c" />
@@ -704,7 +698,6 @@
     <None Include="..\..\vsf\source\hal\driver\common\gpio\gpio_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\i2c\i2c_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\i2s\i2s_template.inc" />
-    <None Include="..\..\vsf\source\hal\driver\common\io\io_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\pwm\pwm_template.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\pwm\timer_to_pwm.inc" />
     <None Include="..\..\vsf\source\hal\driver\common\rng\rng_template.inc" />
