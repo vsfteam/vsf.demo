@@ -1,4 +1,4 @@
-name: CI build
+name: vsf.demo build
 
 on:
   push:
