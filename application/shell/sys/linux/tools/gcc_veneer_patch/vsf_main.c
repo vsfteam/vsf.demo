@@ -64,7 +64,7 @@ static int __elfpatch_main(int argc, char *argv[])
     argc = vsf_arch_argu(&argv);
 
     if (argc != 2) {
-        printf("format: %s ELF_TARGET\n", argv[1]);
+        printf("format: %s ELF_TARGET\n", argv[0]);
         return -1;
     }
 

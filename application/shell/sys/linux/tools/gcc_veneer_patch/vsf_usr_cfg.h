@@ -48,7 +48,13 @@
 #   define VSF_LINUX_CFG_LINK_FILE                      ENABLED
 #   define VSF_LINUX_USE_SOCKET                         ENABLED
 #       define VSF_LINUX_SOCKET_USE_UNIX                ENABLED
-#       define VSF_LINUX_SOCKET_USE_INET                VSF_USE_TCPIP
+#       if defined(__WIN__) || defined(__LINUX__)
+            // windows and linux uses host socket for linux socket support
+#           define VSF_LINUX_SOCKET_USE_INET            ENABLED
+#           define VSF_LINUX_SOCKET_CFG_WRAPPER         ENABLED
+#       else
+#           define VSF_LINUX_SOCKET_USE_INET            VSF_USE_TCPIP
+#       endif
 #   define VSF_LINUX_USE_PROCFS                         ENABLED
 #   define VSF_LINUX_USE_DEVFS                          ENABLED
 #       define VSF_LINUX_DEVFS_USE_RAND                 ENABLED
@@ -81,6 +87,7 @@
             "/bin/elfpatch",
 
 #define VSF_USE_SIMPLE_SPRINTF                          ENABLED
+#define VSF_USE_SIMPLE_SWPRINTF                         ENABLED
 #define VSF_USE_SIMPLE_SSCANF                           ENABLED
 
 // APP configuration
