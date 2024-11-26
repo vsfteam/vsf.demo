@@ -151,9 +151,12 @@ Uninstall and install %s again if fail to run\n", package);
 
 #   ifdef VPM_ROMFS_IS_FLASH_MAL
     printf("installing %s:", package);
+    int pos = 12;
 #   else
     printf("downloading %s:", package);
+    int pos = 13;
 #   endif
+    pos += strlen(package);
     while (remain > 0) {
         rsize = vsf_min(__VPM_BUF_SIZE, remain);
         rsize = vsf_http_client_read(http, buf, rsize);
@@ -174,6 +177,10 @@ Uninstall and install %s again if fail to run\n", package);
             write(fd_package, buf, rsize);
 #   endif
             printf("*");
+            if (++pos >= 80) {
+                pos = 0;
+                printf("\n");
+            }
         } else if (!rsize) {
             break;
         }
