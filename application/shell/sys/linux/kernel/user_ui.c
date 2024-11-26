@@ -166,13 +166,15 @@ static vsf_ui_executor_ctx_t __vsf_tgui_app_executor;
 // popup information frame
 
 declare_tgui_panel(vsf_tgui_popup_panel_t)
-typedef struct vsf_tgui_popup_frame_t {
+typedef struct vsf_tgui_popup_frame_t vsf_tgui_popup_frame_t;
+struct vsf_tgui_popup_frame_t {
     implement(vsf_tgui_frame_t)
+    void (*on_depose)(vsf_tgui_popup_frame_t *frame);
     const char *pstrTitle;
     const char *pstrInformation;
     vsf_tgui_popup_panel_t *panel;
     void *param;
-} vsf_tgui_popup_frame_t;
+};
 
 def_tgui_panel(vsf_tgui_popup_panel_t,
     tgui_contains(
@@ -185,6 +187,12 @@ end_def_tgui_panel(vsf_tgui_popup_panel_t)
 
 static fsm_rt_t __vsf_tgui_popup_frame_on_depose(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
 {
+    vsf_tgui_popup_panel_t *popup_panel = (vsf_tgui_popup_panel_t *)vk_tgui_control_get_top(control_ptr);
+    vsf_tgui_popup_frame_t *popup_frame = popup_panel->frame;
+
+    if (popup_frame->on_depose != NULL) {
+        popup_frame->on_depose(popup_frame);
+    }
     vsf_tgui_frame_exit();
     return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
 }
@@ -337,6 +345,16 @@ static void __vsf_tgui_applist_frame_opbtn_executor_on_select(vsf_ui_executor_ct
     }
 }
 
+static void __vsf_tgui_applist_frame_popup_on_depose(vsf_tgui_popup_frame_t *frame)
+{
+    vsf_tgui_applist_frame_t *applist_frame = (vsf_tgui_applist_frame_t *)frame->param;
+    if (applist_frame->info != NULL) {
+        vsf_heap_free(applist_frame->info);
+        applist_frame->info = NULL;
+    }
+    applist_frame->info_size = 0;
+}
+
 static fsm_rt_t __vsf_tgui_applist_frame_on_depose(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
 {
     tgui_applist_panel_t *applist_panel = (tgui_applist_panel_t *)vk_tgui_control_get_top(control_ptr);
@@ -365,6 +383,7 @@ static fsm_rt_t __vsf_tgui_applist_frame_on_depose(vsf_tgui_control_t *control_p
         } else {
             popup_frame = vsf_tgui_popup("uninstalling", "");
         }
+        popup_frame->on_depose = __vsf_tgui_applist_frame_popup_on_depose;
         popup_frame->param = applist_frame;
 
         applist_frame->executor.param = popup_frame;
