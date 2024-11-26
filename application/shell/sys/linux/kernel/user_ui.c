@@ -169,7 +169,6 @@ declare_tgui_panel(vsf_tgui_popup_panel_t)
 typedef struct vsf_tgui_popup_frame_t vsf_tgui_popup_frame_t;
 struct vsf_tgui_popup_frame_t {
     implement(vsf_tgui_frame_t)
-    void (*on_depose)(vsf_tgui_popup_frame_t *frame);
     const char *pstrTitle;
     const char *pstrInformation;
     vsf_tgui_popup_panel_t *panel;
@@ -187,12 +186,6 @@ end_def_tgui_panel(vsf_tgui_popup_panel_t)
 
 static fsm_rt_t __vsf_tgui_popup_frame_on_depose(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
 {
-    vsf_tgui_popup_panel_t *popup_panel = (vsf_tgui_popup_panel_t *)vk_tgui_control_get_top(control_ptr);
-    vsf_tgui_popup_frame_t *popup_frame = popup_panel->frame;
-
-    if (popup_frame->on_depose != NULL) {
-        popup_frame->on_depose(popup_frame);
-    }
     vsf_tgui_frame_exit();
     return (fsm_rt_t)VSF_TGUI_MSG_RT_DONE;
 }
@@ -345,16 +338,6 @@ static void __vsf_tgui_applist_frame_opbtn_executor_on_select(vsf_ui_executor_ct
     }
 }
 
-static void __vsf_tgui_applist_frame_popup_on_depose(vsf_tgui_popup_frame_t *frame)
-{
-    vsf_tgui_applist_frame_t *applist_frame = (vsf_tgui_applist_frame_t *)frame->param;
-    if (applist_frame->info != NULL) {
-        vsf_heap_free(applist_frame->info);
-        applist_frame->info = NULL;
-    }
-    applist_frame->info_size = 0;
-}
-
 static fsm_rt_t __vsf_tgui_applist_frame_on_depose(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
 {
     tgui_applist_panel_t *applist_panel = (tgui_applist_panel_t *)vk_tgui_control_get_top(control_ptr);
@@ -383,7 +366,6 @@ static fsm_rt_t __vsf_tgui_applist_frame_on_depose(vsf_tgui_control_t *control_p
         } else {
             popup_frame = vsf_tgui_popup("uninstalling", "");
         }
-        popup_frame->on_depose = __vsf_tgui_applist_frame_popup_on_depose;
         popup_frame->param = applist_frame;
 
         applist_frame->executor.param = popup_frame;
@@ -524,9 +506,9 @@ static void __vsf_tgui_applist_frame_executor_on_select(vsf_ui_executor_ctx_t *c
     }
 }
 
-static void __vsf_tgui_local_applist_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size, int is_first)
+static void __vsf_tgui_applist_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size, int is_first, bool is_remote)
 {
-    static const char *__title = "Local Applications";
+    const char *__title = is_remote ? "Remote Applications" : "Local Applications";
 
     vsf_tgui_applist_frame_t *applist_frame = (vsf_tgui_applist_frame_t *)frame;
     tgui_applist_panel_t *applist_panel = (tgui_applist_panel_t *)panel;
@@ -534,13 +516,15 @@ static void __vsf_tgui_local_applist_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_
 
     if (applist_frame->info != NULL) {
         vsf_heap_free(applist_frame->info);
+        applist_frame->info = NULL;
     }
+    applist_frame->info_size = 0;
 
     tgui_initalize_top_container(applist_panel_descriptor, applist_panel);
     applist_panel->frame = applist_frame;
     applist_frame->panel = applist_panel;
     applist_frame->__tile = (char *)__tiles_data;
-    applist_frame->is_remote = false;
+    applist_frame->is_remote = is_remote;
     vsf_tgui_text_set(&applist_panel->tTitle, &(const vsf_tgui_string_t){
         .pstrText = __title,
 #if VSF_TGUI_CFG_SAFE_STRING_MODE == ENABLED
@@ -554,30 +538,14 @@ static void __vsf_tgui_local_applist_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_
     }
 }
 
+static void __vsf_tgui_local_applist_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size, int is_first)
+{
+    __vsf_tgui_applist_frame_init(gui, frame, panel, panel_size, is_first, false);
+}
+
 static void __vsf_tgui_remote_applist_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size, int is_first)
 {
-    static const char *__title = "Remote Applications";
-
-    vsf_tgui_applist_frame_t *applist_frame = (vsf_tgui_applist_frame_t *)frame;
-    tgui_applist_panel_t *applist_panel = (tgui_applist_panel_t *)panel;
-    VSF_ASSERT(panel_size >= sizeof(tgui_applist_panel_t));
-
-    tgui_initalize_top_container(applist_panel_descriptor, applist_panel);
-    applist_panel->frame = applist_frame;
-    applist_frame->panel = applist_panel;
-    applist_frame->__tile = (char *)__tiles_data;
-    applist_frame->is_remote = true;
-    vsf_tgui_text_set(&applist_panel->tTitle, &(const vsf_tgui_string_t){
-        .pstrText = __title,
-#if VSF_TGUI_CFG_SAFE_STRING_MODE == ENABLED
-        .s16_size = strlen(__title),
-#endif
-    });
-    vk_tgui_set_root_container(gui, (vsf_tgui_root_container_t *)applist_panel, true);
-
-    if (!is_first) {
-        vsf_tgui_execute_in_shell(&__vsf_tgui_app_executor);
-    }
+    __vsf_tgui_applist_frame_init(gui, frame, panel, panel_size, is_first, true);
 }
 
 // root frame: application loader
