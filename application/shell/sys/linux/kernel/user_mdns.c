@@ -36,7 +36,7 @@ static void __app_mdns_add_service_from_record(app_mdns_service_record_t *record
     struct netif *netif = app_wifi_get_netif();
     record->slot = mdns_resp_add_service(netif, record->name, record->service,
         record->is_tcp ? DNSSD_PROTO_TCP : DNSSD_PROTO_UDP, record->port,
-        __app_mdns_srv_txt, record);
+        (uint32_t)-1, __app_mdns_srv_txt, record);
 }
 
 static void __app_mdns_cleanup_service(app_mdns_service_record_t *service)
@@ -221,7 +221,7 @@ void app_mdns_start(uint8_t *mac)
             mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     LOCK_TCPIP_CORE();
         mdns_resp_init();
-        mdns_resp_add_netif(netif, hostname);
+        mdns_resp_add_netif(netif, hostname, (uint32_t)-1);
     UNLOCK_TCPIP_CORE();
 #endif
 }
