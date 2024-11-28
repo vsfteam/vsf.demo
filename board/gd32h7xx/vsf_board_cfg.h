@@ -95,6 +95,8 @@
 
 #define VSF_USE_UI                                      ENABLED
 #   define VSF_DISP_USE_FB                              ENABLED
+#   define VSF_TGUI_CFG_PFB_LINENUM                     20
+#   define VSF_TGUI_CFG_DISP_COLOR                      VSF_TGUI_COLOR_ARGB_8888
 #if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
 #   define VSF_BOARD_RGBLCD_HEIGHT                      480
 #   define VSF_BOARD_RGBLCD_WIDTH                       800

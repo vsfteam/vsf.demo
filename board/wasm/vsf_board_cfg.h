@@ -94,6 +94,8 @@
 #define VSF_USE_USB_DEVICE                              VSF_HAL_USE_USBD
 #define VSF_USE_USB_HOST                                VSF_HAL_USE_USBH
 #define VSF_USE_UI                                      ENABLED
+#   define VSF_TGUI_CFG_PFB_LINENUM                     20
+#   define VSF_TGUI_CFG_DISP_COLOR                      VSF_TGUI_COLOR_ARGB_8888
 
 #define VSF_USBH_USE_HCD_WEBUSB                         ENABLED
 #define VSF_USBH_CFG_EDA_PRIORITY                       vsf_prio_0
