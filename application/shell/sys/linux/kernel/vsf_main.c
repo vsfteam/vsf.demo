@@ -304,6 +304,28 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         ,&__app_mscbot_tf_mal_scsi.use_as__vk_scsi_t
 #   endif
         )
+#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED
+        usbd_cdcncm_func(__app_usbd,
+                        // function index
+                        1,
+                        // function string
+                        u"VSF-CDCNCM0",
+                        // interface_start
+                        1 * USB_MSC_IFS_NUM,
+                        // function string index(start from 0)
+                        1,
+                        // interrupt in ep, bulk in ep, bulk out ep
+                        2, 3, 3,
+                        // bulk ep size
+                        512,
+                        // interrupt ep interval
+                        16,
+                        // i_mac
+                        8,
+                        // str_mac
+                        u"AEDF09386412"
+        )
+#endif
     )
 
     usbd_common_desc_iad(__app_usbd,
@@ -312,21 +334,80 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         // ep0_size
                         64,
                         // total function descriptor size
-                        USB_DESC_MSCBOT_IAD_LEN,
+                        USB_DESC_MSCBOT_IAD_LEN + USB_DESC_CDC_NCM_IAD_LEN * (VSF_USE_TCPIP && VSF_USE_LWIP),
                         // total function interface number
-                        USB_MSCBOT_IFS_NUM,
+                        USB_MSCBOT_IFS_NUM + USB_CDC_NCM_IFS_NUM * (VSF_USE_TCPIP && VSF_USE_LWIP),
                         // attribute, max_power
                         USB_CONFIG_ATT_WAKEUP, 100,
         usbd_mscbot_desc_iad(__app_usbd, 0)
+#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED
+        usbd_cdcncm_desc_iad(__app_usbd, 1)
+#endif
     )
 
     usbd_std_desc_table(__app_usbd,
-        usbd_func_str_desc_table(__app_usbd, 0)
+        usbd_mscbot_desc_table(__app_usbd, 0)
+#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED
+        usbd_cdcncm_desc_table(__app_usbd, 1)
+#endif
     )
     usbd_ifs(__app_usbd,
         usbd_mscbot_ifs(__app_usbd, 0)
+#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED
+        usbd_cdcncm_ifs(__app_usbd, 1)
+#endif
     )
 end_describe_usbd(__app_usbd, VSF_USB_DC0)
+
+#endif
+
+// netdrv pnp
+
+#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED
+
+#   include "lwip/opt.h"
+#   include "lwip/dhcp.h"
+#   include "lwip/netif.h"
+#   include "lwip/tcpip.h"
+
+#   include "component/3rd-party/lwip/port/lwip_netdrv_adapter.h"
+
+typedef struct lwip_netdrv_ctx_t {
+    struct netif netif;
+    struct dhcp netif_dhcp;
+} lwip_netdrv_ctx_t;
+
+void vsf_pnp_on_netdrv_prepare(vk_netdrv_t *netdrv)
+{
+    lwip_netdrv_ctx_t *netdrv_ctx = vsf_heap_malloc(sizeof(lwip_netdrv_ctx_t));
+    if (netdrv_ctx != NULL) {
+        memset(netdrv_ctx, 0, sizeof(lwip_netdrv_ctx_t));
+        lwip_netif_set_netdrv(&netdrv_ctx->netif, netdrv);
+    }
+}
+
+void vsf_pnp_on_netdrv_connected(vk_netdrv_t *netdrv)
+{
+    struct netif *netif = vk_netdrv_get_netif(netdrv);
+    lwip_netdrv_ctx_t *netdrv_ctx = container_of(netif, lwip_netdrv_ctx_t, netif);
+
+    LOCK_TCPIP_CORE();
+    dhcp_set_struct(netif, &netdrv_ctx->netif_dhcp);
+    netif_set_up(netif);
+    netif_set_default(netif);
+
+    dhcp_start(netif);
+    UNLOCK_TCPIP_CORE();
+    vsf_trace(VSF_TRACE_INFO, "dhcpc: start" VSF_TRACE_CFG_LINEEND);
+}
+
+void vsf_pnp_on_netdrv_del(vk_netdrv_t *netdrv)
+{
+    struct netif *netif = vk_netdrv_get_netif(netdrv);
+    lwip_netdrv_ctx_t *netdrv_ctx = container_of(netif, lwip_netdrv_ctx_t, netif);
+
+    vsf_heap_free(netdrv_ctx);
+}
 
 #endif
 
