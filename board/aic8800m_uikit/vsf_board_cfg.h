@@ -39,6 +39,12 @@
 #define VSF_ARCH_USE_THREAD_REG                         ENABLED
 #define VSF_SYSTIMER_FREQ                               (240UL * 1000 * 1000)
 
+#define VSF_BOARD_ARCH_STR                              "CortexM4"
+#define VSF_BOARD_ARCH_APP_FORMAT                       "romfs"
+
+// enable below for AIC8800MBWP
+#define VSF_BOARD_CFG_HEAP_IN_PSRAM                     DISABLED
+
 /*----------------------------------------------------------------------------*
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/
@@ -105,6 +111,8 @@
 /*----------------------------------------------------------------------------*
  * Components Configurations                                                  *
  *----------------------------------------------------------------------------*/
+
+#define VSF_USE_LWIP                                    ENABLED
 
 #ifndef VSF_USE_HEAP
 #   define VSF_USE_HEAP                                 ENABLED
