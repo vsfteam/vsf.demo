@@ -112,7 +112,7 @@
  * Components Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
-#define VSF_USE_LWIP                                    ENABLED
+#define VSF_USE_LWIP                                    DISABLED
 
 #ifndef VSF_USE_HEAP
 #   define VSF_USE_HEAP                                 ENABLED

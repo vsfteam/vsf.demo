@@ -98,7 +98,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #       define VSF_USBD_USE_MSC                         ENABLED
 #       define VSF_USBD_USE_CDC                         ENABLED
 #           define VSF_USBD_USE_CDCACM                  ENABLED
-#           define VSF_USBD_USE_CDCNCM                  ENABLED
+#           define VSF_USBD_USE_CDCNCM                  VSF_USE_TCPIP
 #endif
 #ifndef VSF_USE_USB_HOST
 #   define VSF_USE_USB_HOST                             ENABLED
