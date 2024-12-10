@@ -4778,6 +4778,12 @@
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\usb\common\class\CDC\vsf_usb_CDCACM.h</name>
                             </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\common\class\CDC\vsf_usb_CDCECM.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\common\class\CDC\vsf_usb_CDCNCM.h</name>
+                            </file>
                         </group>
                         <group>
                             <name>HID</name>
@@ -4846,6 +4852,15 @@
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\usb\device\class\CDC\vsf_usbd_CDCACM_desc.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\device\class\CDC\vsf_usbd_CDCNCM.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\device\class\CDC\vsf_usbd_CDCNCM.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\device\class\CDC\vsf_usbd_CDCNCM_desc.h</name>
                             </file>
                         </group>
                         <group>

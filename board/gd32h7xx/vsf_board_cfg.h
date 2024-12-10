@@ -45,9 +45,9 @@
 //  note that r9 should not be used by compiler, if elf-loader is enabled
 //  for IAR, add compiler option: --lock_regs=r9
 #define VSF_ARCH_USE_THREAD_REG                         ENABLED
-#define VSF_SYSTIMER_FREQ                               (600UL * 1000 * 1000)
 
 #define VSF_BOARD_ARCH_STR                              "CortexM7"
+#define VSF_BOARD_ARCH_APP_FORMAT                       "romfs"
 
 /*----------------------------------------------------------------------------*
  * Kernel Configurations                                                      *

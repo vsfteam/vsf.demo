@@ -49,6 +49,7 @@
 #define VSF_SYSTIMER_FREQ                               (480UL * 1000 * 1000)
 
 #define VSF_BOARD_ARCH_STR                              "CortexM7"
+#define VSF_BOARD_ARCH_APP_FORMAT                       "romfs"
 
 /*----------------------------------------------------------------------------*
  * Kernel Configurations                                                      *

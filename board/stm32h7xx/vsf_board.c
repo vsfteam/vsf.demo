@@ -177,22 +177,22 @@ void vsf_board_init_linux(void)
 
 void vsf_board_init(void)
 {
-    static const vsf_io_cfg_t __cfgs[] = {
+    static const vsf_gpio_port_cfg_pin_t __cfgs[] = {
         // USART
-        {VSF_PA9,   7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
-        {VSF_PA10,  7,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP},
+        {VSF_PA9,   7,  VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP},
+        {VSF_PA10,  7,  VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP},
 
         // SDIO
 #if VSF_HAL_USE_SDIO == ENABLED
-        {VSF_PC8,   12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
-        {VSF_PC9,   12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
-        {VSF_PC10,  12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
-        {VSF_PC11,  12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
-        {VSF_PC12,  12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
-        {VSF_PD2,   12,  VSF_IO_AF_PUSH_PULL | VSF_IO_PULL_UP | VSF_IO_SPEED_VERY_HIGH},
+        {VSF_PC8,   12,  VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP | VSF_GPIO_SPEED_VERY_HIGH},
+        {VSF_PC9,   12,  VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP | VSF_GPIO_SPEED_VERY_HIGH},
+        {VSF_PC10,  12,  VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP | VSF_GPIO_SPEED_VERY_HIGH},
+        {VSF_PC11,  12,  VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP | VSF_GPIO_SPEED_VERY_HIGH},
+        {VSF_PC12,  12,  VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP | VSF_GPIO_SPEED_VERY_HIGH},
+        {VSF_PD2,   12,  VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP | VSF_GPIO_SPEED_VERY_HIGH},
 #endif
     };
-    vsf_io_config((vsf_io_cfg_t *)__cfgs, dimof(__cfgs));
+    vsf_hw_gpio_ports_config_pin((vsf_gpio_port_cfg_pin_t *)__cfgs, dimof(__cfgs));
 
 #ifdef __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);

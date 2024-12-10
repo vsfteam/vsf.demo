@@ -62,7 +62,7 @@
                 </option>
                 <option>
                     <name>RTDescription</name>
-                    <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
+                    <state>A compact configuration of the C/C++14 runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
                 </option>
                 <option>
                     <name>OGProductVersion</name>
@@ -1250,7 +1250,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>9.40.2.67586</state>
+                    <state>9.60.2.5384</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
@@ -2378,7 +2378,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>9.40.2.67586</state>
+                    <state>9.60.2.5384</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
@@ -2668,7 +2668,7 @@
                     <state>$PROJ_DIR$\..\..\board\stm32h7xx</state>
                     <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
                     <state>$PROJ_DIR$\..\..\vsf\source</state>
-                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\vendor\Inc</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\vendor\cmsis_device_h7\Include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\simple_libc</state>
@@ -3100,7 +3100,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$\config\linker\ST\stm32h743xI.icf</state>
+                    <state>$TOOLKIT_DIR$/config/linker/ST/stm32h743xI.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -4367,6 +4367,588 @@
                         </file>
                     </group>
                 </group>
+                <file>
+                    <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxclock.c</name>
+                    <configuration>
+                        <name>vsf_template_gd32h7xx</name>
+                        <settings>
+                            <name>ICCARM</name>
+                            <data>
+                                <version>39</version>
+                                <wantNonLocal>0</wantNonLocal>
+                                <debug>1</debug>
+                                <option>
+                                    <name>CCDefines</name>
+                                    <state>__VSF__</state>
+                                    <state>__GigaDevice__</state>
+                                    <state>__GD32H759IMT6__</state>
+                                    <state>GD32H7XX</state>
+                                    <state>VSF_LINUX_USE_X11=ENABLED</state>
+                                    <state>__unix__</state>
+                                    <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                    <state>NONETWORK=1</state>
+                                    <state>HAVE_FILEIO=1</state>
+                                    <state>UNIX=1</state>
+                                    <state>LINUX=1</state>
+                                    <state>X11_RGBTXT="/root/share/X11/rgb.txt"</state>
+                                    <state>USE_ALLOCA=0</state>
+                                    <state>main=nxclock_main</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocComments</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocLine</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCListCFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMnemonics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMessages</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEnableRemarks</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagSuppress</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagRemark</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarning</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagError</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCObjPrefix</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCAllowList</name>
+                                    <version>1</version>
+                                    <state>00000000</state>
+                                </option>
+                                <option>
+                                    <name>CCDebugInfo</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IEndianMode</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptionsCheck</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptions</name>
+                                    <state>--no_unaligned_access --lock_regs=r9</state>
+                                </option>
+                                <option>
+                                    <name>CCLangConformance</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCSignedPlainChar</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCRequirePrototypes</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarnAreErr</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCompilerRuntimeInfo</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IFpuProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>OutputFile</name>
+                                    <state>$FILE_BNAME$.o</state>
+                                </option>
+                                <option>
+                                    <name>CCLibConfigHeader</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>PreInclude</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCIncludePath2</name>
+                                    <state>$PROJ_DIR$\..\..\board\gd32h7xx</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\fltk</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\simple_libc</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\libusb</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\include</state>
+                                </option>
+                                <option>
+                                    <name>CCStdIncCheck</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCodeSection</name>
+                                    <state>.text</state>
+                                </option>
+                                <option>
+                                    <name>IProcessorMode2</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevel</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategy</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevelSlave</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRopi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRwpi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndNoDynInit</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccLang</name>
+                                    <state>2</state>
+                                </option>
+                                <option>
+                                    <name>IccCDialect</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccAllowVLA</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccStaticDestr</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccCppInlineSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccCmsis</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccFloatSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptimizationNoSizeConstraints</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCNoLiteralPool</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategySlave</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutputBom</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncInput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccExceptions2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccRTTI2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCStackProtection</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPointerAutentiction</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCBranchTargetIdentification</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosRadRwpi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosSharedSlave</name>
+                                    <state>0</state>
+                                </option>
+                            </data>
+                        </settings>
+                    </configuration>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxeyes.c</name>
+                    <configuration>
+                        <name>vsf_template_gd32h7xx</name>
+                        <settings>
+                            <name>ICCARM</name>
+                            <data>
+                                <version>39</version>
+                                <wantNonLocal>0</wantNonLocal>
+                                <debug>1</debug>
+                                <option>
+                                    <name>CCDefines</name>
+                                    <state>__VSF__</state>
+                                    <state>__GigaDevice__</state>
+                                    <state>__GD32H759IMT6__</state>
+                                    <state>GD32H7XX</state>
+                                    <state>VSF_LINUX_USE_X11=ENABLED</state>
+                                    <state>__unix__</state>
+                                    <state>LFS_CONFIG=lfs_util_vsf.h</state>
+                                    <state>NONETWORK=1</state>
+                                    <state>HAVE_FILEIO=1</state>
+                                    <state>UNIX=1</state>
+                                    <state>LINUX=1</state>
+                                    <state>X11_RGBTXT="/root/share/X11/rgb.txt"</state>
+                                    <state>USE_ALLOCA=0</state>
+                                    <state>main=nxeyes_main</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocComments</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPreprocLine</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCListCFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMnemonics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListCMessages</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssFile</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCListAssSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEnableRemarks</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagSuppress</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagRemark</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarning</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCDiagError</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCObjPrefix</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCAllowList</name>
+                                    <version>1</version>
+                                    <state>00000000</state>
+                                </option>
+                                <option>
+                                    <name>CCDebugInfo</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IEndianMode</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptionsCheck</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IExtraOptions</name>
+                                    <state>--no_unaligned_access --lock_regs=r9</state>
+                                </option>
+                                <option>
+                                    <name>CCLangConformance</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCSignedPlainChar</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCRequirePrototypes</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCDiagWarnAreErr</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCompilerRuntimeInfo</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IFpuProcessor</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>OutputFile</name>
+                                    <state>$FILE_BNAME$.o</state>
+                                </option>
+                                <option>
+                                    <name>CCLibConfigHeader</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>PreInclude</name>
+                                    <state></state>
+                                </option>
+                                <option>
+                                    <name>CCIncludePath2</name>
+                                    <state>$PROJ_DIR$\..\..\board\gd32h7xx</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\GigaDevice\GD32H7XX\common\vendor\Include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\include</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\fltk</state>
+                                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\simple_libc</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include\libusb</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\port</state>
+                                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\include</state>
+                                </option>
+                                <option>
+                                    <name>CCStdIncCheck</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCCodeSection</name>
+                                    <state>.text</state>
+                                </option>
+                                <option>
+                                    <name>IProcessorMode2</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevel</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategy</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCOptLevelSlave</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRopi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndRwpi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosIndNoDynInit</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccLang</name>
+                                    <state>2</state>
+                                </option>
+                                <option>
+                                    <name>IccCDialect</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccAllowVLA</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccStaticDestr</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccCppInlineSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccCmsis</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>IccFloatSemantics</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptimizationNoSizeConstraints</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCNoLiteralPool</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCOptStrategySlave</name>
+                                    <version>0</version>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncSource</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCEncOutputBom</name>
+                                    <state>1</state>
+                                </option>
+                                <option>
+                                    <name>CCEncInput</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccExceptions2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>IccRTTI2</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCStackProtection</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPointerAutentiction</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCBranchTargetIdentification</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosRadRwpi</name>
+                                    <state>0</state>
+                                </option>
+                                <option>
+                                    <name>CCPosSharedSlave</name>
+                                    <state>0</state>
+                                </option>
+                            </data>
+                        </settings>
+                    </configuration>
+                </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxkbd.c</name>
                     <configuration>
@@ -7845,7 +8427,6 @@
                 <group>
                     <name>lwip</name>
                     <excluded>
-                        <configuration>vsf_template_aic8800</configuration>
                         <configuration>vsf_template_gd32h7xx</configuration>
                         <configuration>vsf_template_stm32h7xx</configuration>
                     </excluded>
@@ -9420,6 +10001,12 @@
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\usb\common\class\CDC\vsf_usb_CDCACM.h</name>
                             </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\common\class\CDC\vsf_usb_CDCECM.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\common\class\CDC\vsf_usb_CDCNCM.h</name>
+                            </file>
                         </group>
                         <group>
                             <name>HID</name>
@@ -9488,6 +10075,15 @@
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\usb\device\class\CDC\vsf_usbd_CDCACM_desc.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\device\class\CDC\vsf_usbd_CDCNCM.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\device\class\CDC\vsf_usbd_CDCNCM.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\usb\device\class\CDC\vsf_usbd_CDCNCM_desc.h</name>
                             </file>
                         </group>
                         <group>
@@ -12024,6 +12620,12 @@
                     <group>
                         <name>gpio</name>
                         <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\gpio\exti_gpio.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\gpio\exti_gpio.h</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\gpio\gpio_common.c</name>
                         </file>
                         <file>
@@ -13091,15 +13693,6 @@
                                 </file>
                             </group>
                             <group>
-                                <name>io</name>
-                                <file>
-                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\io\io.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\io\io.h</name>
-                                </file>
-                            </group>
-                            <group>
                                 <name>sdio</name>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\sdio\sdio.c</name>
@@ -13122,19 +13715,16 @@
                                 <group>
                                     <name>Inc</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\vendor\Inc\stm32h757xx.h</name>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\vendor\cmsis_device_h7\Include\stm32h743xx.h</name>
                                     </file>
                                     <file>
-                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\vendor\Inc\stm32h7xx.h</name>
-                                    </file>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\vendor\Inc\system_stm32h7xx.h</name>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\vendor\cmsis_device_h7\Include\system_stm32h7xx.h</name>
                                     </file>
                                 </group>
                                 <group>
                                     <name>Src</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\vendor\Src\system_stm32h7xx.c</name>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\ST\STM32H7XX\common\vendor\cmsis_device_h7\Source\Templates\system_stm32h7xx.c</name>
                                     </file>
                                 </group>
                             </group>

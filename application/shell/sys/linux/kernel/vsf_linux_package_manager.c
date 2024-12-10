@@ -1,6 +1,8 @@
 #define __VSF_ROMFS_CLASS_INHERIT__
 #define __VSF_FLASH_MAL_CLASS_INHERIT__
 
+#include <vsf.h>
+
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -140,7 +142,7 @@ static int __vpm_install_package(char *package)
         printf("failed to start http with response %d\n", http->resp_status);
         result = -1;
         goto do_exit;
-    } 
+    }
 
     remain = http->content_length;
     if (!remain) {

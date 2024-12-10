@@ -85,6 +85,8 @@
 #   define __VSF_LINUX_CLASS_INHERIT__
 #endif
 
+#include <vsf.h>
+
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/mount.h>
