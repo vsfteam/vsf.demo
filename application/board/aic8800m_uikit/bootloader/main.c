@@ -36,6 +36,9 @@
 #include "vsf.h"
 #include "vsf_board.h"
 
+// for SystemInit
+#include "system.h"
+
 /*============================ MACROS ========================================*/
 
 #ifndef USRAPP_CFG_USBD_SPEED
