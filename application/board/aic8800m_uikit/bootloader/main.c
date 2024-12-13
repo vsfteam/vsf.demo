@@ -152,7 +152,7 @@ end_describe_usbd(__user_usbd_msc, VSF_USB_DC0)
 
 /*============================ IMPLEMENTATION ================================*/
 
-static void __mscboot_flash_irqhandler(void *target, vsf_flash_irq_mask_t mask, vsf_flash_t *flash)
+static void __mscboot_flash_irqhandler(void *target, vsf_flash_t *flash, vsf_flash_irq_mask_t mask)
 {
     vsf_eda_t *eda_pending = __flash_eda_pending;
     if (eda_pending != NULL) {
