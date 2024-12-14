@@ -112,17 +112,18 @@
 // VSF_BOARD_RGBLCD_HEIGHT/VSF_BOARD_RGBLCD_WIDTH are for the screen
 // VSF_BOARD_RGBLCD_LAYWER_WIDTH/VSF_BOARD_RGBLCD_LAYWER_HEIGHT are for the fb,
 //  which can be part of the screen. If not defined, screen settings will be used.
-//#   define VSF_BOARD_RGBLCD_LAYER0_WIDTH                320
-//#   define VSF_BOARD_RGBLCD_LAYER0_HEIGHT               240
-//#   define VSF_BOARD_RGBLCD_LAYER0_COLOR                VSF_DISP_COLOR_RGB565
+#   define VSF_BOARD_RGBLCD_LAYER0_WIDTH                640
+#   define VSF_BOARD_RGBLCD_LAYER0_HEIGHT               480
+#   define VSF_BOARD_RGBLCD_LAYER0_COLOR                VSF_DISP_COLOR_RGB565
+#   define VSF_BOARD_RGBLCD_LAYER0_FBNUM                1
 // If VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T is defines, layer0 frame buffer will be put in sram.
 // VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T MUST corresponds to VSF_BOARD_RGBLCD_LAYER0_COLOR
-//#   define VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T        uint16_t
+#   define VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T        uint16_t
 
-#   define VSF_BOARD_RGBLCD_LAYER1_WIDTH                320
-#   define VSF_BOARD_RGBLCD_LAYER1_HEIGHT               240
-#   define VSF_BOARD_RGBLCD_LAYER1_COLOR                VSF_DISP_COLOR_RGB565
-#   define VSF_BOARD_RGBLCD_LAYER1_SRAM_BUFFER_T        uint16_t
+//#   define VSF_BOARD_RGBLCD_LAYER1_WIDTH                320
+//#   define VSF_BOARD_RGBLCD_LAYER1_HEIGHT               240
+//#   define VSF_BOARD_RGBLCD_LAYER1_COLOR                VSF_DISP_COLOR_RGB565
+//#   define VSF_BOARD_RGBLCD_LAYER1_SRAM_BUFFER_T        uint16_t
 #endif
 
 #define VSF_USE_AUDIO                                   ENABLED

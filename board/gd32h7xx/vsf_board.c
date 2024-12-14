@@ -50,7 +50,8 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
 
 #ifdef VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T
 static VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T __vsf_hw_rgblcd_layer0_fb
-    [2][VSF_BOARD_RGBLCD_LAYER0_WIDTH * VSF_BOARD_RGBLCD_LAYER0_HEIGHT] VSF_CAL_ALIGN(8);
+    [VSF_BOARD_RGBLCD_LAYER0_FBNUM]                                             \
+    [VSF_BOARD_RGBLCD_LAYER0_WIDTH * VSF_BOARD_RGBLCD_LAYER0_HEIGHT] VSF_CAL_ALIGN(8);
 #endif
 
 #   if      defined(VSF_BOARD_RGBLCD_LAYER1_WIDTH)                              \
@@ -131,7 +132,7 @@ vsf_board_t vsf_board = {
         .drv_param              = (void *)&vsf_board.hw_fb,
         .fb_size                = vsf_disp_get_pixel_format_bytesize(VSF_BOARD_RGBLCD_LAYER0_COLOR)
                                 * VSF_BOARD_RGBLCD_LAYER0_WIDTH * VSF_BOARD_RGBLCD_LAYER0_HEIGHT,
-        .fb_num                 = 2,        // front/bancend frame buffer
+        .fb_num                 = VSF_BOARD_RGBLCD_LAYER0_FBNUM,        // front/bancend frame buffer
         .layer_idx              = 0,
         .layer_color_type       = VSF_BOARD_RGBLCD_LAYER0_COLOR,
         .layer_default_color    = 0,
@@ -598,12 +599,6 @@ void vsf_board_init(void)
 }
 
 // WORKAROUNDS
-
-#if __IS_COMPILER_IAR__ && (defined(__VSF_CPP__) || defined(__OOC_CPP__)) && (VSF_USE_LINUX == ENABLED)
-// For IAR EWARM 9.60.2, cexit.o contains _exit and __cexit_call_dtors.
-//  If __cexit_call_dtors is not implemented, link will fail with duplicate definitations for "_exit"
-void __cexit_call_dtors(void) {}
-#endif
 
 #if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
 // if TLI is enabled, and sdram is used as frame buffer, original memcpy will use
