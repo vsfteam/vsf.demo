@@ -34,6 +34,9 @@
 #   ifndef VSF_BOARD_RGBLCD_LAYER0_COLOR
 #       define VSF_BOARD_RGBLCD_LAYER0_COLOR        VSF_BOARD_RGBLCD_COLOR
 #   endif
+#   ifndef VSF_BOARD_RGBLCD_LAYER0_FBNUM
+#       define VSF_BOARD_RGBLCD_LAYER0_FBNUM        2
+#   endif
 #endif
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
