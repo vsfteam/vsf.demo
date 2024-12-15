@@ -110,9 +110,18 @@
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zline.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zmath.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\ztriangle.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\kernel\images\demo_images.h" />
+    <ClInclude Include="..\..\application\shell\sys\linux\kernel\images\demo_images_data.h" />
     <ClInclude Include="..\..\application\shell\sys\linux\kernel\vsf_usr_cfg.h" />
     <ClInclude Include="..\..\board\win\vsf_board.h" />
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\ft2build.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftconfig.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftheader.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftmodule.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftoption.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\port\vsf_config\ftstdlib.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbase.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\tls_session\mbedtls_tls_session.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\vplt\mbedtls_vplt.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\mbedtls\port\platform_vsf.h" />
@@ -179,6 +188,7 @@
     <ClInclude Include="..\..\vsf\source\component\scsi\vsf_scsi_cfg.h" />
     <ClInclude Include="..\..\vsf\source\component\tcpip\netdrv\driver\wpcap\vsf_netdrv_wpcap.h" />
     <ClInclude Include="..\..\vsf\source\component\tcpip\netdrv\vsf_netdrv.h" />
+    <ClInclude Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.h" />
     <ClInclude Include="..\..\vsf\source\component\tcpip\socket\driver\lwip\vsf_socket_lwip.h" />
     <ClInclude Include="..\..\vsf\source\component\tcpip\socket\driver\win\vsf_socket_win.h" />
     <ClInclude Include="..\..\vsf\source\component\tcpip\socket\vsf_socket.h" />
@@ -206,13 +216,15 @@
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_text_list.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\__vk_tgui_slider.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\__vsf_tgui_controls_common.h" />
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\ext\dynamic\vsf_tgui_dynamic.h" />
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\port\view\vsf_tgui_sv_port.h" />
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\port\vsf_tgui_port.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\utilities\vsf_tgui_text.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_button.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_color.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_container.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_control.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_draw.h" />
-    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_font.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_label.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_list.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_panel.h" />
@@ -700,6 +712,14 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\SDL_yuv.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\sdl\raw\src\video\yuv2rgb\yuv_rgb.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\fltk\test\forms.cxx" />
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxclock.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=nxclock_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main=nxclock_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxeyes.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main=nxeyes_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=nxeyes_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\nanox\src\demos\nanox\nxkbd.c">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=nxkbd_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main=nxkbd_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -993,12 +1013,55 @@
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\zmath.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\applets\x11\TinyGL\src\ztriangle.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\hwtest_main.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\kernel\images\demo_images.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_httpd.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_mdns.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_qrcode.c" />
+    <ClCompile Include="..\..\application\shell\sys\linux\kernel\user_ui.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\vsf_linux_package_manager.c" />
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\vsf_main.c" />
     <ClCompile Include="..\..\board\win\vsf_board.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\autofit\autofit.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbase.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbbox.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbdf.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftbitmap.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftcid.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftdebug.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftfstype.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftgasp.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftglyph.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftgxval.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftinit.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftmm.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftotval.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftpfr.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftstroke.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftsynth.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftsystem.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\fttype1.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftwinfnt.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\bdf\bdf.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\bzip2\ftbzip2.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\cache\ftcache.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\cff\cff.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\cid\type1cid.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\gxvalid\gxvalid.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\gzip\ftgzip.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\lzw\ftlzw.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\otvalid\otvalid.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\pcf\pcf.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\pfr\pfr.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\psaux\psaux.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\pshinter\pshinter.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\psnames\psnames.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\raster\raster.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\sfnt\sfnt.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\smooth\smooth.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\truetype\truetype.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\type1\type1.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\type42\type42.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\freetype\raw\src\winfonts\winfnt.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\tls_session\mbedtls_tls_session.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\extension\vplt\mbedtls_vplt.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\mbedtls\port\platform_vsf.c" />
@@ -1131,6 +1194,7 @@
     <ClCompile Include="..\..\vsf\source\component\scsi\vsf_scsi.c" />
     <ClCompile Include="..\..\vsf\source\component\tcpip\netdrv\driver\wpcap\vsf_netdrv_wpcap.c" />
     <ClCompile Include="..\..\vsf\source\component\tcpip\netdrv\vsf_netdrv.c" />
+    <ClCompile Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.c" />
     <ClCompile Include="..\..\vsf\source\component\tcpip\socket\driver\lwip\vsf_socket_lwip.c" />
     <ClCompile Include="..\..\vsf\source\component\tcpip\socket\driver\win\vsf_socket_win.c" />
     <ClCompile Include="..\..\vsf\source\component\tcpip\socket\vsf_socket.c" />
@@ -1154,13 +1218,16 @@
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_panel.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_text_list.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\controls\__vk_tgui_slider.c" />
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\ext\dynamic\vsf_tgui_dynamic.c" />
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\font\vsf_tgui_font_port_freetype.c" />
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\view\vsf_tgui_sv_port.c" />
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\vsf_tgui_port.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\utilities\vsf_tgui_text.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_button.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_color.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_container.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_control.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_draw.c" />
-    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_font.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_label.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_list.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_panel.c" />
@@ -1461,9 +1528,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;VSF_LINUX_USE_FLTK=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;NONETWORK=1;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";VSF_LINUX_USE_SDL2=ENABLED;VSF_USER_ENTRY=SDL_main;SIGWINCH=28;APP_USE_SDLPAL=DISABLED;__STDC_WANT_SECURE_LIB__=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;VSF_LINUX_USE_FLTK=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;FT2_BUILD_LIBRARY;NONETWORK=1;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";VSF_LINUX_USE_SDL2=ENABLED;VSF_USER_ENTRY=SDL_main;SIGWINCH=28;APP_USE_SDLPAL=DISABLED;__STDC_WANT_SECURE_LIB__=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\TinyGL\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\sdl\include\SDL2;$(ProjectDir)..\..\application\shell\sys\linux\applets\sdl\sdlpal\vsf;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\TinyGL\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\sdl\include\SDL2;$(ProjectDir)..\..\application\shell\sys\linux\applets\sdl\sdlpal\vsf;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
@@ -1490,9 +1557,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;VSF_LINUX_USE_FLTK=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;NONETWORK=1;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";VSF_LINUX_USE_SDL2=ENABLED;VSF_USER_ENTRY=SDL_main;SIGWINCH=28;APP_USE_SDLPAL=DISABLED;__STDC_WANT_SECURE_LIB__=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;VSF_LINUX_USE_X11=ENABLED;VSF_LINUX_USE_FLTK=ENABLED;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__unix__;LFS_CONFIG=lfs_util_vsf.h;FT2_BUILD_LIBRARY;NONETWORK=1;__STDC__=1;HAVE_FILEIO=1;UNIX=1;LINUX=1;X11_RGBTXT="/root/share/X11/rgb.txt";VSF_LINUX_USE_SDL2=ENABLED;VSF_USER_ENTRY=SDL_main;SIGWINCH=28;APP_USE_SDLPAL=DISABLED;__STDC_WANT_SECURE_LIB__=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\TinyGL\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\sdl\include\SDL2;$(ProjectDir)..\..\application\shell\sys\linux\applets\sdl\sdlpal\vsf;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\app\distbus;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\fltk;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\port;$(ProjectDir)..\..\application\shell\sys\linux\applets\x11\TinyGL\include;$(ProjectDir)..\..\application\shell\sys\linux\applets\sdl\include\SDL2;$(ProjectDir)..\..\application\shell\sys\linux\applets\sdl\sdlpal\vsf;$(ProjectDir)..\..\application\shell\sys\linux\kernel;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\raw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
