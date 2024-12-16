@@ -84,6 +84,8 @@
 #define VSF_USBD_USE_DCD_DWCOTG                         ENABLED
 #   define VSF_USBD_CFG_SPEED                           USB_SPEED_HIGH
 
+#define VSF_BOARD_SEPERATE_USB_HOST_DEVICE
+
 // debug stream is implemented in vsf_board.c
 #if VSF_HAL_USE_DEBUG_STREAM == DISABLED && VSF_HAL_USE_USART == ENABLED
 #   define VSF_CFG_DEBUG_STREAM_TX_T                    vsf_stream_t
@@ -91,7 +93,11 @@
 #endif
 
 #define VSF_USE_USB_HOST                                DISABLED
-#define VSF_USE_USB_DEVICE                              DISABLED
+#define VSF_USE_USB_DEVICE                              ENABLED
+#   define VSF_USBH_USE_HCD_DWCOTG                      ENABLED
+#   define VSF_USBH_USE_HUB                             ENABLED
+#   define VSF_USBH_CFG_ENABLE_ROOT_HUB                 DISABLED
+#   define VSF_USBD_CFG_SPEED_HIGH
 
 #define VSF_USE_UI                                      ENABLED
 #   define VSF_DISP_USE_FB                              ENABLED
@@ -141,6 +147,20 @@
 #   define VSF_LINUX_CFG_HEAP_SIZE                      (28 * 1024 * 1024)
 #   define VSF_LINUX_CFG_HEAP_ADDR                      (0xC0000000 + 4 * 1024 * 1024)
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   9
+#endif
+
+#if     defined(VSF_BOARD_RGBLCD_LAYER0_WIDTH)                                  \
+    &&  defined(VSF_BOARD_RGBLCD_LAYER0_HEIGHT)                                 \
+    &&  defined(VSF_BOARD_RGBLCD_LAYER0_COLOR)                                  \
+    &&  defined(VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T)                          \
+    &&  defined(VSF_BOARD_RGBLCD_LAYER0_FBNUM)
+#   define VSF_BOARD_DISP_WIDTH                         VSF_BOARD_RGBLCD_LAYER0_WIDTH
+#   define VSF_BOARD_DISP_HEIGHT                        VSF_BOARD_RGBLCD_LAYER0_HEIGHT
+#   define VSF_BOARD_DISP_COLOR                         VSF_BOARD_RGBLCD_LAYER0_COLOR
+#else
+#   define VSF_BOARD_DISP_WIDTH                         VSF_BOARD_RGBLCD_WIDTH
+#   define VSF_BOARD_DISP_HEIGHT                        VSF_BOARD_RGBLCD_HEIGHT
+#   define VSF_BOARD_DISP_COLOR                         VSF_BOARD_RGBLCD_COLOR
 #endif
 
 // use layer1 as SDL display

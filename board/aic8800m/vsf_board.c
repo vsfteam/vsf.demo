@@ -177,9 +177,15 @@ void __vsf_usbh_free(void *buffer)
 #if PLF_WIFI_STACK && VSF_USE_LWIP == ENABLED
 #   if VSF_USE_LINUX == ENABLED
 
+VSF_CAL_WEAK(app_mdns_connect)
+void app_mdns_connect(void)
+{
+}
+
 VSF_CAL_WEAK(app_wifi_sta_on_connected)
 void app_wifi_sta_on_connected(void)
 {
+    app_mdns_connect();
 }
 
 VSF_CAL_WEAK(app_wifi_ap_on_started)
@@ -248,7 +254,7 @@ static int __wifi_scan_main(int argc, char *argv[])
 }
 
 #if VSF_USE_LWIP == ENABLED
-struct netif * app_wifi_get_netif(void)
+struct netif * vsf_board_get_netif(void)
 {
     return fhost_to_net_if(0);
 }

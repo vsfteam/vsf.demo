@@ -3,7 +3,7 @@
 #if VSF_USE_LWIP == ENABLED
 #   include "lwip/tcpip.h"
 
-static bool __app_wifi_connected = false;
+static bool __app_mdns_connected = false;
 
 #   if LWIP_MDNS_RESPONDER
 #       include "lwip/apps/mdns.h"
@@ -21,7 +21,7 @@ typedef struct app_mdns_service_record_t {
 } app_mdns_service_record_t;
 static vsf_dlist_t __app_mdns_service_record_list = { 0 };
 
-extern struct netif * app_wifi_get_netif(void);
+extern struct netif * vsf_board_get_netif(void);
 
 static void __app_mdns_srv_txt(struct mdns_service *service, void *txt_usrdata)
 {
@@ -33,7 +33,7 @@ static void __app_mdns_srv_txt(struct mdns_service *service, void *txt_usrdata)
 
 static void __app_mdns_add_service_from_record(app_mdns_service_record_t *record)
 {
-    struct netif *netif = app_wifi_get_netif();
+    struct netif *netif = vsf_board_get_netif();
     record->slot = mdns_resp_add_service(netif, record->name, record->service,
         record->is_tcp ? DNSSD_PROTO_TCP : DNSSD_PROTO_UDP, record->port,
         (uint32_t)-1, __app_mdns_srv_txt, record);
@@ -64,15 +64,15 @@ static void __app_mdns_cleanup_service(app_mdns_service_record_t *service)
 #   endif
 #endif
 
-void app_wifi_sta_on_connected(void)
+void app_mdns_connect(void)
 {
 #if VSF_USE_LWIP == ENABLED
     LOCK_TCPIP_CORE();
-    if (__app_wifi_connected) {
+    if (__app_mdns_connected) {
         UNLOCK_TCPIP_CORE();
         return;
     } else {
-        __app_wifi_connected = true;
+        __app_mdns_connected = true;
     }
 
 #   if LWIP_MDNS_RESPONDER
@@ -88,7 +88,7 @@ void app_mdns_rename(const char *hostname)
 {
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
     LOCK_TCPIP_CORE();
-        struct netif *netif = app_wifi_get_netif();
+        struct netif *netif = vsf_board_get_netif();
         // update lwip_mdns to the latest version if mdns_resp_rename_netif not exists
         mdns_resp_rename_netif(netif, hostname);
     UNLOCK_TCPIP_CORE();
@@ -100,7 +100,7 @@ void app_mdns_remove_service(void *service)
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
     app_mdns_service_record_t *record = service;
     LOCK_TCPIP_CORE();
-        struct netif *netif = app_wifi_get_netif();
+        struct netif *netif = vsf_board_get_netif();
         // update lwip_mdns to the latest version if mdns_resp_del_service not exists
         mdns_resp_del_service(netif, record->slot);
         vsf_dlist_remove(app_mdns_service_record_t, node, &__app_mdns_service_record_list, record);
@@ -184,7 +184,7 @@ void * app_mdns_update_service(void *record_orig, const char *name, const char *
 
     vsf_dlist_queue_enqueue(app_mdns_service_record_t, node,
                     &__app_mdns_service_record_list, record);
-    if (__app_wifi_connected) {
+    if (__app_mdns_connected) {
         __app_mdns_add_service_from_record(record);
     }
     UNLOCK_TCPIP_CORE();
@@ -204,7 +204,7 @@ __cleanup_record_and_fail:
 void app_mdns_stop(void)
 {
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
-    struct netif *netif = app_wifi_get_netif();
+    struct netif *netif = vsf_board_get_netif();
     LOCK_TCPIP_CORE();
         mdns_resp_remove_netif(netif);
     UNLOCK_TCPIP_CORE();
@@ -214,7 +214,7 @@ void app_mdns_stop(void)
 void app_mdns_start(uint8_t *mac)
 {
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
-    struct netif *netif = app_wifi_get_netif();
+    struct netif *netif = vsf_board_get_netif();
     // vsf.XXXXXXXXXXXX
     char hostname[3 + 1 + 12 + 1];
     sprintf(hostname, "vsf_%02X%02X%02X%02X%02X%02X",

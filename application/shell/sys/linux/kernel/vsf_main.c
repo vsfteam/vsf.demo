@@ -379,12 +379,26 @@ typedef struct lwip_netdrv_ctx_t {
     struct dhcp netif_dhcp;
 } lwip_netdrv_ctx_t;
 
+static lwip_netdrv_ctx_t *__first_netif = NULL;
+
+VSF_CAL_WEAK(vsf_board_get_netif)
+struct netif * vsf_board_get_netif(void)
+{
+    if (__first_netif != NULL) {
+        return &__first_netif->netif;
+    }
+    return NULL;
+}
+
 void vsf_pnp_on_netdrv_prepare(vk_netdrv_t *netdrv)
 {
     lwip_netdrv_ctx_t *netdrv_ctx = vsf_heap_malloc(sizeof(lwip_netdrv_ctx_t));
     if (netdrv_ctx != NULL) {
         memset(netdrv_ctx, 0, sizeof(lwip_netdrv_ctx_t));
         lwip_netif_set_netdrv(&netdrv_ctx->netif, netdrv);
+        if (NULL == __first_netif) {
+            __first_netif = netdrv_ctx;
+        }
     }
 }
 
@@ -1432,7 +1446,10 @@ int vsf_linux_create_fhs(void)
 #endif
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
+    // if usb host and device share the same usb hardware, in boot mode, usb device is started
+#   ifndef VSF_BOARD_SEPERATE_USB_HOST_DEVICE
     if (__usr_linux_boot) {
+#   endif
 #   if VSF_USE_USB_DEVICE == ENABLED
 #       if VSF_HAL_USE_SDIO == ENABLED
         usbd_mscbot_scsi_config(__app_usbd, 0, 1, !VSF_BOARD_SDMMC_DETECTED());
@@ -1442,8 +1459,10 @@ int vsf_linux_create_fhs(void)
         vk_usbd_init(&__app_usbd);
         vk_usbd_connect(&__app_usbd);
 #   endif
+#   ifndef VSF_BOARD_SEPERATE_USB_HOST_DEVICE
     } else
-#endif
+#   endif
+#endif      // APP_MSCBOOT_CFG_ROMFS_ADDR && VSF_FS_USE_ROMFS
     {
 #if VSF_HAL_USE_SDIO == ENABLED
         vsf_teda_start(&__sdmmc_task, &(vsf_eda_cfg_t){
