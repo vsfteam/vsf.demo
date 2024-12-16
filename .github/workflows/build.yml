@@ -75,7 +75,8 @@ jobs:
             sed -i -e "s|# VSF_USE configurations|# VSF_USE configurations\nset(VSF_USE_LINUX 1)\n    set(VSF_LINUX_USE_SIMPLE_LIBC 1)|g" project/cmake/${{matrix.target}}/CMakeLists.txt
           fi
           if [[ "${{matrix.path}}" == "application/shell/sys/linux/kernel" && "${{matrix.target}}" == 'aic8800' ]]; then
-            sed -i -e "s|# VSF_USE configurations|# VSF_USE configurations\nset(VSF_USE_LITTLEFS 1)|g" project/cmake/${{matrix.target}}/CMakeLists.txt
+            sed -i -e "s|# VSF_USE configurations|# VSF_USE configurations\nset(VSF_USE_LITTLEFS 1)\nset(VSF_USE_MBEDTLS 1)\nset(VSF_USE_LWIP 1)\n    set(VSF_LWIP_VENDOR 1)\n|g" project/cmake/${{matrix.target}}/CMakeLists.txt
+            sed -i -e "s|    __VSF_CPP__|    __VSF_CPP__\n    __unix__|g" project/cmake/${{matrix.target}}/CMakeLists.txt
           fi
           git diff
 
