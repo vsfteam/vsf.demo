@@ -143,6 +143,9 @@
 #define VSF_AUDIO_USE_AIC1000A                          ENABLED
 #define VSF_DISP_USE_MIPI_SPI_LCD                       ENABLED
 
+//lwip in opensource SDK does not support netlink
+#define VSF_LINUX_SOCKET_USE_NETLINK                    DISABLED
+
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
  *----------------------------------------------------------------------------*/
