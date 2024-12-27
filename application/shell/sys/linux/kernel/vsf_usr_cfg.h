@@ -89,9 +89,6 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_FS_USE_EXFATFS                           ENABLED
 #   define VSF_FS_USE_LITTLEFS                          VSF_USE_LITTLEFS
 #define VSF_USE_INPUT                                   ENABLED
-#ifndef VSF_USE_USB_DEVICE
-#   define VSF_USE_USB_DEVICE                           ENABLED
-#endif
 #if VSF_USE_USB_DEVICE == ENABLED
 #   define VSF_USBD_USE_MSC                             ENABLED
 #   define VSF_USBD_USE_CDC                             ENABLED
