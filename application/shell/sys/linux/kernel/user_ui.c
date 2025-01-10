@@ -211,8 +211,9 @@ describ_tgui_panel(vsf_tgui_popup_panel_t, popup_panel_descriptor,
             VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE,
             VSF_BOARD_DISP_HEIGHT - 9 * VSF_TGUI_CFG_BORDER_SIZE),
         tgui_text(tLabel, "", false, VSF_TGUI_ALIGN_MID_LEFT),
-        tgui_sv_tile_show_corner(false),
-        tgui_sv_font_color(VSF_TGUI_COLOR_BLACK),
+        tgui_v_show_corner_tile(false),
+        tgui_v_border_radius(0),
+        tgui_v_text_color(VSF_TGUI_COLOR_BLACK),
     ),
 
     tgui_button(tOK, tgui_null_parent(vsf_tgui_popup_panel_t), tInformation, tOK,
@@ -627,13 +628,24 @@ describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
         tgui_msg_handler(VSF_TGUI_EVT_ON_DEPOSE, __vsf_tgui_root_frame_on_depose),
     ),
 
+#if VSF_TGUI_SV_CFG_COLOR_HAS_ALPHA == ENABLED
+#   define __tgui_background_transparent()      tgui_v_background_color(VSF_TGUI_COLOR_TRANSPARENT),
+#else
+#   define __tgui_background_transparent()      tgui_v_background_color(VSF_TGUI_CFG_V_CONTAINER_BACKGROUND_COLOR),
+#endif
+#if VSF_TGUI_CFG_FONT_USE_FREETYPE == ENABLED
+#   define __TGUI_DEFAULT_FONT                  VSF_TGUI_FONT_DEJAVUSERIF_S12
+#elif VSF_TGUI_CFG_FONT_USE_LVGL == ENABLED
+#   define __TGUI_DEFAULT_FONT                  VSF_TGUI_FONT_LVGL_14
+#endif
 #define __app_button(__idx, __pre_idx, __next_idx, ...)                         \
     tgui_button(tAppBtn[__idx], &(tgui_null_parent(tgui_root_panel_t)->tAppPanel), tAppBtn[__pre_idx], tAppBtn[__next_idx],\
         tgui_size(64, 76),                                                      \
         tgui_margin(2, 2, 2, 2),                                                \
-        tgui_sv_tile_show_corner(false),                                        \
-        tgui_sv_background_color(VSF_TGUI_COLOR_TRANSPARENT),                   \
-        tgui_sv_font(VSF_TGUI_FONT_DEJAVUSERIF_S12),                            \
+        tgui_v_show_corner_tile(false),                                         \
+        __tgui_background_transparent()                                         \
+        tgui_v_border_radius(0),                                                \
+        tgui_v_font(__TGUI_DEFAULT_FONT),                                       \
         tgui_background((vsf_tgui_tile_t*)&res_empty_RGBA, VSF_TGUI_ALIGN_TOP), \
         tgui_text(tLabel, "Slot" #__idx "\nEmpty", false, VSF_TGUI_ALIGN_BOTTOM),\
         tgui_msgmap_var(__vsf_tgui_root_frame_appbtn_handler),                  \
@@ -643,9 +655,10 @@ describ_tgui_panel(tgui_root_panel_t, root_panel_descriptor,
     tgui_panel(tAppPanel, tgui_null_parent(tgui_root_panel_t), tAppPanel, tAppPanel,
         tgui_region(0, VSF_TGUI_CFG_BORDER_SIZE * 3,
             VSF_BOARD_DISP_WIDTH - 2 * VSF_TGUI_CFG_BORDER_SIZE, 0),
-        tgui_sv_tile_show_corner(false),
+        tgui_v_show_corner_tile(false),
+        tgui_v_border_radius(0),
         tgui_container_type(VSF_TGUI_CONTAINER_TYPE_STREAM_HORIZONTAL),
-        tgui_sv_background_color(VSF_TGUI_COLOR_TRANSPARENT),
+        __tgui_background_transparent()
 
         tgui_contains(
             __app_button(0, 0, 1),
@@ -686,6 +699,7 @@ static void __vsf_tgui_root_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame,
 
 // UI corner
 
+#if VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL == VSF_TGUI_V_TEMPLATE_SIMPLE_VIEW
 static const vsf_tgui_tile_t __controls_container_corner_tiles[CORNOR_TILE_NUM] = {
     [CORNOR_TILE_IN_TOP_LEFT] = {
         .tChild = {
@@ -762,17 +776,16 @@ const vsf_tgui_tile_t * vsf_tgui_control_v_get_corner_tile(vsf_tgui_control_t *c
 
     return NULL;
 }
+#endif
 
 // UI font
 
 #if VSF_TGUI_CFG_FONT_USE_FREETYPE == ENABLED
 
-#if VSF_TGUI_CFG_FONT_USE_FREETYPE == ENABLED
-#   include <ft2build.h>
-#   include FT_FREETYPE_H
-#endif
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
-#include "./__font.h"
+#include "./fonts/__truefont.h"
 
 static FT_FILE __ft_root_dir[] = {
     {
@@ -790,6 +803,21 @@ FT_FILE ft_root = {
     .d.child_num        = dimof(__ft_root_dir),
     .d.child_size       = sizeof(FT_FILE),
 };
+#else
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+FT_FILE ft_root = {
+    .attr               = VSF_FILE_ATTR_DIRECTORY,
+    .name               = "/",
+    .d.child            = (vk_memfs_file_t *)NULL,
+    .d.child_num        = 0,
+    .d.child_size       = sizeof(FT_FILE),
+};
+#endif
+
+#if VSF_TGUI_CFG_FONT_USE_LVGL == ENABLED
+#   include "./fonts/lv_font_14.c"
 #endif
 
 // UI main
@@ -815,7 +843,7 @@ int ui_main(int argc, char **argv)
     }
 
     vsf_tgui_fonts_init((vsf_tgui_font_t *)vsf_tgui_font_get(0), vsf_tgui_font_number(), "/");
-    vsf_tgui_sv_bind_disp(&__tgui_demo.instance, vsf_board.display_dev, &__tgui_demo.pfb, dimof(__tgui_demo.pfb));
+    vsf_tgui_v_bind_disp(&__tgui_demo.instance, vsf_board.display_dev, &__tgui_demo.pfb, dimof(__tgui_demo.pfb));
 
     __tgui_demo.input_notifier.mask =
                     (1 << VSF_INPUT_TYPE_TOUCHSCREEN)

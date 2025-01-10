@@ -874,6 +874,9 @@
     <Filter Include="vsf\component\ui\tgui\ext\dynamic">
       <UniqueIdentifier>{a59d084b-77f4-4128-b2c3-18651a809580}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\component\ui\tgui\view\scgui_view">
+      <UniqueIdentifier>{254038be-d8f6-47c3-856d-e9d25679566a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2415,6 +2418,51 @@
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\ext\dynamic\vsf_tgui_dynamic.h">
       <Filter>vsf\component\ui\tgui\ext\dynamic</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\lvgl.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\scgui.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_button.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_container.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_control.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_label.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_list.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_panel.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_port.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_text_list.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_v_template.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_v_type.h">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\template\vsf_tgui_v_list.h">
+      <Filter>vsf\component\ui\tgui\view\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\template\vsf_tgui_v_port.h">
+      <Filter>vsf\component\ui\tgui\view\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\template\vsf_tgui_v_text_list.h">
+      <Filter>vsf\component\ui\tgui\view\template</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3643,6 +3691,45 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\ext\dynamic\vsf_tgui_dynamic.c">
       <Filter>vsf\component\ui\tgui\ext\dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\scgui.c">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_button.c">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_container.c">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_control.c">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_label.c">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_list.c">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_panel.c">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_port.c">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_text_list.c">
+      <Filter>vsf\component\ui\tgui\view\scgui_view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\font\vsf_tgui_font_port_lvgl.c">
+      <Filter>vsf\component\ui\tgui\port\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\template\vsf_tgui_v_list.c">
+      <Filter>vsf\component\ui\tgui\view\template</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\template\vsf_tgui_v_port.c">
+      <Filter>vsf\component\ui\tgui\view\template</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\template\vsf_tgui_v_text_list.c">
+      <Filter>vsf\component\ui\tgui\view\template</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -123,19 +123,31 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 
 #if VSF_USE_UI == ENABLED
 #   define VSF_USE_TINY_GUI                             ENABLED
-#       define VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL      VSF_TGUI_V_TEMPLATE_SIMPLE_VIEW
-#       define VSF_TGUI_CFG_COLOR_MODE                  VSF_TGUI_COLOR_ARGB_8888
+#       define VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL      VSF_TGUI_V_TEMPLATE_SCGUI_VIEW
+// LCD_SCREEN_WIDTH & LCD_SCREEN_HEIGHT are necessary for VSF_TGUI_V_TEMPLATE_SCGUI_VIEW only
+#           define LCD_SCREEN_HEIGHT                    VSF_BOARD_DISP_HEIGHT
+#           define LCD_SCREEN_WIDTH                     VSF_BOARD_DISP_WIDTH
+#       define VSF_TGUI_CFG_COLOR_MODE                  VSF_TGUI_COLOR_RGB_565
 // define VSF_TGUI_CFG_DISP_COLOR in board layer
 //#       define VSF_TGUI_CFG_DISP_COLOR                  VSF_TGUI_COLOR_RGB_565
 #       define VSF_TGUI_CFG_SUPPORT_NAME_STRING         ENABLED
 #       define VSF_TGUI_LOG                             vsf_trace
 #           define VSF_TGUI_CFG_SV_PORT_LOG             DISABLED
 #           define VSF_TGUI_CFG_SV_DRAW_LOG             DISABLED
-#       define VSF_TGUI_CFG_FONT_USE_FREETYPE           ENABLED
+#       define VSF_TGUI_CFG_FONT_USE_FREETYPE           DISABLED
+#       define VSF_TGUI_CFG_FONT_USE_LVGL               ENABLED
+#           define VSF_TGUI_CFG_LVGL_HEADER             "component/ui/tgui/view/scgui_view/lvgl.h"
+#       if VSF_TGUI_CFG_FONT_USE_FREETYPE == ENABLED
 #           define VSF_TGUI_FONTS                                               \
                 TGUI_FT2_FONT_DEF(VSF_TGUI_FONT_DEJAVUSERIF_S16,    "DejaVuSerif.ttf",  16),\
                 TGUI_FT2_FONT_DEF(VSF_TGUI_FONT_DEJAVUSERIF_S12,    "DejaVuSerif.ttf",  12),\
                 TGUI_FT2_FONT_DEF(VSF_TGUI_FONT_DEJAVUSERIF_S8,     "DejaVuSerif.ttf",  8)
+#       elif VSF_TGUI_CFG_FONT_USE_LVGL == ENABLED
+#           define VSF_TGUI_FONTS                                               \
+                TGUI_LVGL_FONT_DEF(VSF_TGUI_FONT_LVGL_14, &lv_font_14, 18)
+#           define VSF_TGUI_LVGL_FONT_DECLARE                                   \
+                extern lv_font_t lv_font_14;
+#       endif
 
 #       define VSF_TGUI_KEY_OK                          0x0D
 #       define VSF_TGUI_KEY_CANCEL                      0x1B
