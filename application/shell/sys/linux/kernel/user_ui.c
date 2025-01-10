@@ -73,12 +73,14 @@ typedef struct {
     uint16_t bfs_buffer[VSF_TGUI_CFG_EVTQ_MAX];
 #endif
     vk_input_notifier_t input_notifier;
-#if     VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_ARGB_8888
+#if VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL == VSF_TGUI_V_TEMPLATE_SIMPLE_VIEW
+#   if      VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_ARGB_8888
     uint32_t pfb[VSF_BOARD_DISP_WIDTH * VSF_TGUI_CFG_PFB_LINENUM];
-#elif   VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_RGB_565 || VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_BGR_565
+#   elif    VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_RGB_565 || VSF_TGUI_CFG_DISP_COLOR == VSF_TGUI_COLOR_BGR_565
     uint16_t pfb[VSF_BOARD_DISP_WIDTH * VSF_TGUI_CFG_PFB_LINENUM];
-#else
-#   error TODO: add support for the specifed display color format
+#   else
+#       error TODO: add support for the specifed display color format
+#   endif
 #endif
 } vsf_tgui_demo_t;
 static VSF_CAL_NO_INIT vsf_tgui_demo_t __tgui_demo;
@@ -843,7 +845,13 @@ int ui_main(int argc, char **argv)
     }
 
     vsf_tgui_fonts_init((vsf_tgui_font_t *)vsf_tgui_font_get(0), vsf_tgui_font_number(), "/");
+#if VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL == VSF_TGUI_V_TEMPLATE_SIMPLE_VIEW
     vsf_tgui_v_bind_disp(&__tgui_demo.instance, vsf_board.display_dev, &__tgui_demo.pfb, dimof(__tgui_demo.pfb));
+#elif VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL == VSF_TGUI_V_TEMPLATE_SCGUI_VIEW
+    vsf_tgui_v_bind_disp(&__tgui_demo.instance, vsf_board.display_dev, NULL, 0);
+#else
+#   error VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL not supported
+#endif
 
     __tgui_demo.input_notifier.mask =
                     (1 << VSF_INPUT_TYPE_TOUCHSCREEN)
