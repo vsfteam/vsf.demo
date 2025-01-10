@@ -10083,6 +10083,9 @@
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\port\font\vsf_tgui_font_port_freetype.c</name>
                             </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\port\font\vsf_tgui_font_port_lvgl.c</name>
+                            </file>
                         </group>
                         <group>
                             <name>view</name>
@@ -10111,6 +10114,72 @@
                     </group>
                     <group>
                         <name>view</name>
+                        <group>
+                            <name>scgui_view</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\lvgl.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\scgui.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\scgui.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_button.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_button.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_container.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_container.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_control.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_control.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_label.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_label.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_list.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_list.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_panel.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_panel.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_port.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_port.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_text_list.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_scguiv_text_list.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_v_template.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\ui\tgui\view\scgui_view\vsf_tgui_v_type.h</name>
+                            </file>
+                        </group>
                         <group>
                             <name>simple_view</name>
                             <file>
