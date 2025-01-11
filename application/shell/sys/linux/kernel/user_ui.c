@@ -805,20 +805,10 @@ FT_FILE ft_root = {
     .d.child_num        = dimof(__ft_root_dir),
     .d.child_size       = sizeof(FT_FILE),
 };
-#else
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
-FT_FILE ft_root = {
-    .attr               = VSF_FILE_ATTR_DIRECTORY,
-    .name               = "/",
-    .d.child            = (vk_memfs_file_t *)NULL,
-    .d.child_num        = 0,
-    .d.child_size       = sizeof(FT_FILE),
-};
 #endif
 
 #if VSF_TGUI_CFG_FONT_USE_LVGL == ENABLED
+#   define __VSF_TGUI_INCLUDE_LVGL_FONT__
 #   include "./fonts/lv_font_14.c"
 #endif
 
