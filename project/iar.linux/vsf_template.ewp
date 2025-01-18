@@ -4181,7 +4181,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>vsf_template_gd32h7xx.out</state>
+                    <state>vsf_template_sf32lb52x.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -4245,7 +4245,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\target\GD32H7XX\gd32h7xx.icf</state>
+                    <state>$PROJ_DIR$\target\SF32LB52X\sf32lb52x_hcpu.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
