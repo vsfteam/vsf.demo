@@ -242,18 +242,8 @@ static void __vsf_tgui_popup_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame
     popup_frame->panel = popup_panel;
     popup_frame->__tile = (char *)__tiles_data;
     popup_panel->frame = popup_frame;
-    vsf_tgui_text_set(&popup_panel->tTitle, &(const vsf_tgui_string_t){
-        .pstrText = popup_frame->pstrTitle,
-#if VSF_TGUI_CFG_SAFE_STRING_MODE == ENABLED
-        .s16_size = strlen(popup_frame->pstrTitle),
-#endif
-    });
-    vsf_tgui_text_set(&popup_panel->tInformation.tLabel, &(const vsf_tgui_string_t){
-        .pstrText = popup_frame->pstrInformation,
-#if VSF_TGUI_CFG_SAFE_STRING_MODE == ENABLED
-        .s16_size = strlen(popup_frame->pstrInformation),
-#endif
-    });
+    vsf_tgui_text_set(&popup_panel->tTitle, popup_frame->pstrTitle);
+    vsf_tgui_text_set(&popup_panel->tInformation.tLabel, popup_frame->pstrInformation);
     vk_tgui_set_root_container(gui, (vsf_tgui_root_container_t *)popup_panel, true);
 }
 
@@ -528,12 +518,7 @@ static void __vsf_tgui_applist_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *fra
     applist_frame->panel = applist_panel;
     applist_frame->__tile = (char *)__tiles_data;
     applist_frame->is_remote = is_remote;
-    vsf_tgui_text_set(&applist_panel->tTitle, &(const vsf_tgui_string_t){
-        .pstrText = __title,
-#if VSF_TGUI_CFG_SAFE_STRING_MODE == ENABLED
-        .s16_size = strlen(__title),
-#endif
-    });
+    vsf_tgui_text_set(&applist_panel->tTitle, __title);
     vk_tgui_set_root_container(gui, (vsf_tgui_root_container_t *)applist_panel, true);
 
     if (!is_first) {
@@ -687,12 +672,7 @@ static void __vsf_tgui_root_frame_init(vsf_tgui_t *gui, vsf_tgui_frame_t *frame,
     root_panel->frame = root_frame;
     for (int i = 0; i < dimof(root_frame->app); i++) {
         if (root_frame->app[i].name != NULL) {
-            vsf_tgui_text_set(&root_panel->tAppPanel.tAppBtn[i].tLabel, &(const vsf_tgui_string_t){
-                .pstrText = root_frame->app[i].name,
-#if VSF_TGUI_CFG_SAFE_STRING_MODE == ENABLED
-                .s16_size = strlen(root_frame->app[i].name),
-#endif
-            });
+            vsf_tgui_text_set(&root_panel->tAppPanel.tAppBtn[i].tLabel, root_frame->app[i].name);
             root_panel->tAppPanel.tAppBtn[i].tBackground.ptTile = root_frame->app[i].icon;
         }
     }
