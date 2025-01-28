@@ -61,8 +61,12 @@ static VSF_BOARD_RGBLCD_LAYER0_SRAM_BUFFER_T __vsf_hw_rgblcd_layer0_fb
         &&  defined(VSF_BOARD_RGBLCD_LAYER1_HEIGHT)                             \
         &&  defined(VSF_BOARD_RGBLCD_LAYER1_COLOR)                              \
         &&  defined(VSF_BOARD_RGBLCD_LAYER1_SRAM_BUFFER_T)
+#   ifndef VSF_BOARD_RGBLCD_LAYER1_FBNUM
+#       define VSF_BOARD_RGBLCD_LAYER1_FBNUM        2
+#   endif
 static VSF_BOARD_RGBLCD_LAYER1_SRAM_BUFFER_T __vsf_hw_rgblcd_layer1_fb
-    [2][VSF_BOARD_RGBLCD_LAYER1_WIDTH * VSF_BOARD_RGBLCD_LAYER1_HEIGHT] VSF_CAL_ALIGN(8);
+    [VSF_BOARD_RGBLCD_LAYER1_FBNUM]
+    [VSF_BOARD_RGBLCD_LAYER1_WIDTH * VSF_BOARD_RGBLCD_LAYER1_HEIGHT] VSF_CAL_ALIGN(8);
 #endif
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -172,7 +176,7 @@ vsf_board_t vsf_board = {
         .drv_param              = (void *)&vsf_board.hw_fb,
         .fb_size                = vsf_disp_get_pixel_format_bytesize(VSF_BOARD_RGBLCD_LAYER1_COLOR)
                                 * VSF_BOARD_RGBLCD_LAYER1_WIDTH * VSF_BOARD_RGBLCD_LAYER1_HEIGHT,
-        .fb_num                 = 2,        // front/bancend frame buffer
+        .fb_num                 = VSF_BOARD_RGBLCD_LAYER1_FBNUM,
         .layer_idx              = 1,
         .layer_color_type       = VSF_BOARD_RGBLCD_LAYER1_COLOR,
         .layer_alpha            = 0xFF,

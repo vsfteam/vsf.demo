@@ -130,6 +130,7 @@
 //#   define VSF_BOARD_RGBLCD_LAYER1_HEIGHT               240
 //#   define VSF_BOARD_RGBLCD_LAYER1_COLOR                VSF_DISP_COLOR_RGB565
 //#   define VSF_BOARD_RGBLCD_LAYER1_SRAM_BUFFER_T        uint16_t
+//#   define VSF_BOARD_RGBLCD_LAYER1_FBNUM                1
 #endif
 
 #define VSF_USE_AUDIO                                   ENABLED
