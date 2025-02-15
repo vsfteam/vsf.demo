@@ -5,6 +5,7 @@ vsf_add_sources(
     hwtest_main.c
     user_httpd.c
     user_mdns.c
+    user_qrcode.c
     vsf_linux_package_manager.c
     vsf_main.c
 )
