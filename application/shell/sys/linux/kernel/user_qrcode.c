@@ -6,7 +6,7 @@
 
 #include "component/3rd-party/qrcode/raw/src/qrcode.h"
 
-#if VSF_USE_UI == ENABLED
+#if VSF_USE_QRCODE == ENABLED
 #   include <linux/font.h>
 
 #   define TITLE_PIXEL_HEIGHT               64

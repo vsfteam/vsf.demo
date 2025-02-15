@@ -919,7 +919,7 @@ static int __reset_main(int argc, char **argv)
 
 void app_wifi_ap_on_started(char *ssid, char *pass)
 {
-#if VSF_USE_UI == ENABLED
+#if VSF_USE_QRCODE == ENABLED
     // cmdline: qrcode "Scan to connect AP" "WIFI:S:ssid;P:pass;T:WPA/WPA2;H:vsf;"
     const char *format = "qrcode \"S:%s P:%s\" \"WIFI:S:%s;P:%s;T:WPA/WPA2;H:vsf;\"";
     char cmdline[strlen(format) + 4 * 32];  // format_size + max_size of ssid(32) and pass(32)
@@ -1295,8 +1295,6 @@ int vsf_linux_create_fhs(void)
         vk_disp_init(vsf_board.display_dev);
         vsf_thread_wfe(VSF_EVT_USER);
 
-        extern int display_qrcode_main(int argc, char **argv);
-        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/qrcode", display_qrcode_main);
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/ui", ui_main);
 #   if VSF_LINUX_USE_DEVFS == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fill_screen", __fill_screen_main);
@@ -1304,6 +1302,12 @@ int vsf_linux_create_fhs(void)
 #   endif
     }
 #endif
+
+#if VSF_USE_QRCODE == ENABLED
+    extern int display_qrcode_main(int argc, char **argv);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/qrcode", display_qrcode_main);
+#endif
+
 #if VSF_USE_INPUT == ENABLED && VSF_INPUT_CFG_REGISTRATION_MECHANISM == ENABLED && VSF_LINUX_USE_DEVFS == ENABLED
     static vk_input_notifier_t __input_notifier = {
         .mask =     (1 << VSF_INPUT_TYPE_GAMEPAD)

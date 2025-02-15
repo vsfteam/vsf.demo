@@ -121,6 +121,8 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_USE_MBEDTLS                              ENABLED
 #endif
 
+#define VSF_USE_QRCODE                                  ENABLED
+
 #if VSF_USE_UI == ENABLED
 #   define VSF_USE_TINY_GUI                             ENABLED
 #       define VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL      VSF_TGUI_V_TEMPLATE_SCGUI_VIEW
