@@ -3530,7 +3530,7 @@
                 <option>
                     <name>GBECoreSlave</name>
                     <version>34</version>
-                    <state>61</state>
+                    <state>72</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -3666,6 +3666,7 @@
                     <state>__SiFli__</state>
                     <state>__SF32LB520U36__</state>
                     <state>SOC_BF0_HCPU</state>
+                    <state>SF32LB52X</state>
                     <state>VSF_LINUX_USE_X11=DISABLED</state>
                     <state>__unix__</state>
                     <state>LFS_CONFIG=lfs_util_vsf.h</state>
@@ -3807,6 +3808,7 @@
                     <state>$PROJ_DIR$\..\..\vsf\source</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\cmsis\Include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\cmsis\sf32lb52x</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\Include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\external\CMSIS\Include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\utilities\compiler\arm\3rd-party\CMSIS\CMSIS\Core\Include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\include</state>
@@ -9526,6 +9528,21 @@
                 <configuration>vsf_template_gd32h7xx</configuration>
                 <configuration>vsf_template_stm32h7xx</configuration>
             </excluded>
+            <group>
+                <name>vendor</name>
+                <file>
+                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_gpio.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_pinmux.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_rcc.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\cmsis\sf32lb52x\bf0_pin_const.c</name>
+                </file>
+            </group>
             <file>
                 <name>$PROJ_DIR$\..\..\board\sf32lb5xx\vsf_board.c</name>
             </file>

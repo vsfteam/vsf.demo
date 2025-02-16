@@ -4964,7 +4964,7 @@
                 </option>
                 <option>
                     <name>MemFile</name>
-                    <state>$TOOLKIT_DIR$\config\debugger\GigaDevice\GD32H759xM.ddf</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>RunToEnable</name>
@@ -4996,7 +4996,7 @@
                 </option>
                 <option>
                     <name>OCDownloadVerifyAll</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OCProductVersion</name>
@@ -5032,7 +5032,7 @@
                 </option>
                 <option>
                     <name>FlashLoadersV3</name>
-                    <state>$TOOLKIT_DIR$/config/flashloader/GigaDevice/FlashGD32H7xxxM.board</state>
+                    <state>$TOOLKIT_DIR$\config\flashloader\</state>
                 </option>
                 <option>
                     <name>OCImagesSuppressCheck1</name>
@@ -5835,11 +5835,11 @@
                 </option>
                 <option>
                     <name>CCJLinkCommRadio</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCJLinkTCPIP</name>
-                    <state>aaa.bbb.ccc.ddd</state>
+                    <state>127.0.0.1:19025</state>
                 </option>
                 <option>
                     <name>CCJLinkSpeedRadioV2</name>
