@@ -49,6 +49,9 @@
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
+#define VSF_BOARD_HAS_USB_HOST                          1
+#define VSF_BOARD_HAS_USB_DEVICE                        1
+
 // Use unused interrupt as SWI
 #define VSF_DEV_SWI_NUM                                 4
 #define VSF_DEV_SWI_LIST                                WDT3_IRQn, WDT2_IRQn, WDT1_IRQn, I2CS_IRQn

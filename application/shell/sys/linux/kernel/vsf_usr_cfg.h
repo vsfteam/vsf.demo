@@ -89,26 +89,33 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_FS_USE_EXFATFS                           ENABLED
 #   define VSF_FS_USE_LITTLEFS                          VSF_USE_LITTLEFS
 #define VSF_USE_INPUT                                   ENABLED
+
+#if VSF_BOARD_HAS_USB_HOST
+#   define VSF_USE_USB_HOST                             ENABLED
+#endif
+#if VSF_BOARD_HAS_USB_DEVICE
+#   define VSF_USE_USB_DEVICE                           ENABLED
+#endif
+
 #if VSF_USE_USB_DEVICE == ENABLED
 #   define VSF_USBD_USE_MSC                             ENABLED
 #   define VSF_USBD_USE_CDC                             ENABLED
 #       define VSF_USBD_USE_CDCACM                      ENABLED
 #       define VSF_USBD_USE_CDCNCM                      ENABLED
 #endif
-#ifndef VSF_USE_USB_HOST
-#   define VSF_USE_USB_HOST                             ENABLED
-#       define VSF_USBH_USE_LIBUSB                      ENABLED
-#       define VSF_USBH_USE_CDC                         ENABLED
-#       define VSF_USBH_USE_ECM                         ENABLED
-#       define VSF_USBH_USE_HID                         ENABLED
-#       define VSF_USBH_USE_DS4                         ENABLED
-#       define VSF_USBH_USE_DS5                         ENABLED
-#       define VSF_USBH_USE_NSPRO                       ENABLED
-#       define VSF_USBH_USE_XB360                       ENABLED
-#       define VSF_USBH_USE_XB1                         ENABLED
-#       define VSF_USBH_USE_MSC                         ENABLED
-#       define VSF_USBH_USE_UAC                         ENABLED
-#       define VSF_USBH_USE_UVC                         ENABLED
+#if VSF_USE_USB_HOST == ENABLED
+#   define VSF_USBH_USE_LIBUSB                          ENABLED
+#   define VSF_USBH_USE_CDC                             ENABLED
+#   define VSF_USBH_USE_ECM                             ENABLED
+#   define VSF_USBH_USE_HID                             ENABLED
+#   define VSF_USBH_USE_DS4                             ENABLED
+#   define VSF_USBH_USE_DS5                             ENABLED
+#   define VSF_USBH_USE_NSPRO                           ENABLED
+#   define VSF_USBH_USE_XB360                           ENABLED
+#   define VSF_USBH_USE_XB1                             ENABLED
+#   define VSF_USBH_USE_MSC                             ENABLED
+#   define VSF_USBH_USE_UAC                             ENABLED
+#   define VSF_USBH_USE_UVC                             ENABLED
 #endif
 
 #ifndef VSF_USE_LWIP
