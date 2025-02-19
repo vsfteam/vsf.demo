@@ -286,7 +286,7 @@ int VSF_USER_ENTRY(void)
     } else {
         vsf_flash_capability_t cap = vsf_flash_capability(&vsf_hw_flash0);
         uint32_t *image = (uint32_t *)(cap.base_address + MSCBOOT_CFG_FW_ADDR);
-        vsf_arch_set_stack(image[0]);
+        vsf_arch_set_stack(image[0], 0);
         ((void (*)(void))(image[1]))();
     }
     return 0;
