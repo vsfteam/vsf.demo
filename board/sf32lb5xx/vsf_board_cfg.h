@@ -52,6 +52,9 @@
 #define VSF_BOARD_ARCH_STR                              "CortexM33"
 #define VSF_BOARD_ARCH_APP_FORMAT                       "romfs"
 
+// when debugging enable VSF_OS_CFG_ADD_EVTQ_TO_IDLE
+//#define VSF_OS_CFG_ADD_EVTQ_TO_IDLE                     ENABLED
+
 /*----------------------------------------------------------------------------*
  * Kernel Configurations                                                      *
  *----------------------------------------------------------------------------*/
@@ -79,6 +82,7 @@
 #endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
 #   define VSF_HEAP_SIZE                                (256 * 1024)
+#   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   4
 
 #define VSF_USBH_USE_HCD_MUSB_FDRC                      DISABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
@@ -109,7 +113,7 @@
 #   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
 #   define VSF_AUDIO_USE_DUMMY                          ENABLED
 
-#define VSF_LINUX_CFG_STACKSIZE                         (256 * 1024)
+#define VSF_LINUX_CFG_STACKSIZE                         (16 * 1024)
 #define VSF_KERNEL_CFG_THREAD_STACK_LARGE               ENABLED
 
 /*----------------------------------------------------------------------------*

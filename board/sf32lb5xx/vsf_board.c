@@ -106,25 +106,12 @@ static void __vsf_debug_stream_isrhandler(void *target, vsf_usart_t *uart,
 static void __VSF_DEBUG_STREAM_TX_INIT(void)
 {
     vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart1;
-    vsf_err_t err;
-
     vsf_stream_connect_tx(&VSF_DEBUG_STREAM_RX.use_as__vsf_stream_t);
-    err = vsf_usart_init(debug_usart, &(vsf_usart_cfg_t){
-        .mode               = VSF_USART_8_BIT_LENGTH | VSF_USART_1_STOPBIT | VSF_USART_NO_PARITY
-                            | VSF_USART_TX_ENABLE | VSF_USART_RX_ENABLE | VSF_USART_RX_FIFO_THRESHOLD_NOT_EMPTY,
-        .baudrate           = 921600,
-        .isr                = {
-            .handler_fn     = __vsf_debug_stream_isrhandler,
-            .target_ptr     = &VSF_DEBUG_STREAM_RX,
-            .prio           = vsf_arch_prio_0,
-        },
+    __vsf_hw_usart_config_isr((vsf_hw_usart_t *)debug_usart, &(vsf_usart_isr_t){
+        .handler_fn     = __vsf_debug_stream_isrhandler,
+        .target_ptr     = &VSF_DEBUG_STREAM_RX,
+        .prio           = vsf_arch_prio_0,
     });
-    if (err != VSF_ERR_NONE) {
-        VSF_ASSERT(false);
-        return;
-    }
-
-    while (fsm_rt_cpl != vsf_usart_enable(debug_usart));
     vsf_usart_irq_enable(debug_usart, VSF_USART_IRQ_MASK_RX);
 }
 
