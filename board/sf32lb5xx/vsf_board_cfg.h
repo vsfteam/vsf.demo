@@ -83,7 +83,7 @@
 #endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
 #   define VSF_HEAP_SIZE                                (256 * 1024)
-#   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   4
+#   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   8
 
 #define VSF_USBH_USE_HCD_MUSB_FDRC                      DISABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
@@ -116,6 +116,8 @@
 
 #define VSF_LINUX_CFG_STACKSIZE                         (16 * 1024)
 #define VSF_KERNEL_CFG_THREAD_STACK_LARGE               ENABLED
+#define VSF_LINUX_CFG_HEAP_SIZE                         (8 * 1024 * 1024)
+#define VSF_LINUX_CFG_HEAP_ADDR                         0x60000000
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
