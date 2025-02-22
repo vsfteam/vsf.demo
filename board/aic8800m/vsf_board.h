@@ -52,7 +52,8 @@ typedef struct vsf_board_t {
 
 /*============================ GLOBAL VARIABLES ==============================*/
 
-#if VSF_USE_USB_HOST == ENABLED || VSF_USE_USB_DEVICE == ENABLED
+#if     VSF_USE_USB_HOST == ENABLED || VSF_USE_USB_DEVICE == ENABLED            \
+    ||  VSF_HAL_USE_I2C == ENABLED || VSF_HAL_USE_SDIO == ENABLED
 extern vsf_board_t vsf_board;
 #endif
 
