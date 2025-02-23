@@ -9535,6 +9535,12 @@
                 <group>
                     <name>hal</name>
                     <file>
+                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_cortex.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_dma.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_hpaon.c</name>
                     </file>
                     <file>
@@ -9554,6 +9560,12 @@
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_rcc.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\flash_table.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\sifli_bbm.c</name>
                     </file>
                 </group>
                 <file>
