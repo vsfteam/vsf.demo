@@ -128,12 +128,15 @@
 #define APP_BOOT1_KEY_IS_DOWN                           (0)
 
 
+#define APP_MSCBOOT_CFG_FLASH                           vsf_hw_flash0
 #define APP_MSCBOOT_CFG_FLASH_ADDR                      0x12000000
 
 #define APP_MSCBOOT_CFG_FW_SIZE                         (APP_MSCBOOT_CFG_ROMFS_ADDR - APP_MSCBOOT_CFG_FW_ADDR)
 #define APP_MSCBOOT_CFG_FW_ADDR                         0x20000
 #define APP_MSCBOOT_CFG_ROMFS_SIZE                      0x200000
 #define APP_MSCBOOT_CFG_ROMFS_ADDR                      0x200000
+#define APP_MSCBOOT_CFG_ROOT_SIZE                       0x400000
+#define APP_MSCBOOT_CFG_ROOT_ADDR                       (APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_ROMFS_SIZE)
 
 #define APP_MSCBOOT_CFG_ERASE_ALIGN                     (4 * 1024)
 #define APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE                (4 * 1024)
