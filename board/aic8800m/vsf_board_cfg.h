@@ -21,12 +21,6 @@
 #ifndef __VSF_BOARD_CFG_H__
 #define __VSF_BOARD_CFG_H__
 
-/*============================ INCLUDES ======================================*/
-
-// retrieve compiler information
-#define __VSF_HEADER_ONLY_SHOW_COMPILER_INFO__
-#include "utilities/compiler/compiler.h"
-
 /*============================ MACROS ========================================*/
 
 /*----------------------------------------------------------------------------*
@@ -83,6 +77,12 @@
 /*----------------------------------------------------------------------------*
  * Kernel Configurations                                                      *
  *----------------------------------------------------------------------------*/
+
+/*============================ INCLUDES ======================================*/
+
+// retrieve compiler information
+#define __VSF_HEADER_ONLY_SHOW_COMPILER_INFO__
+#include "utilities/compiler/compiler.h"
 
 #if __IS_COMPILER_IAR__
 // for checking stack in jmpbuf
