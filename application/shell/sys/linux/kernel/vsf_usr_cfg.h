@@ -107,6 +107,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_USBH_USE_LIBUSB                          ENABLED
 #   define VSF_USBH_USE_CDC                             ENABLED
 #   define VSF_USBH_USE_ECM                             ENABLED
+#   define VSF_USBH_USE_NCM                             ENABLED
 #   define VSF_USBH_USE_HID                             ENABLED
 #   define VSF_USBH_USE_DS4                             ENABLED
 #   define VSF_USBH_USE_DS5                             ENABLED

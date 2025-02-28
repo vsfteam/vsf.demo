@@ -17465,12 +17465,24 @@
                                     <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\common\SF32LB5XX\usart\vsf_usart.h</name>
                                 </file>
                             </group>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\common\SF32LB5XX\common.c</name>
+                            </file>
                         </group>
                     </group>
                     <group>
                         <name>SF32LB52X</name>
                         <group>
                             <name>common</name>
+                            <group>
+                                <name>flash</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\SF32LB52X\common\flash\flash.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\SF32LB52X\common\flash\flash.h</name>
+                                </file>
+                            </group>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\SF32LB52X\common\common.h</name>
                             </file>

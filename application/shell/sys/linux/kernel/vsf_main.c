@@ -759,6 +759,18 @@ static int __usbh_main(int argc, char *argv[])
 #   if VSF_USBH_USE_ECM == ENABLED && VSF_USE_TCPIP == ENABLED
         static vk_usbh_class_t __usbh_ecm = { .drv = &vk_usbh_ecm_drv };
         vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ecm);
+#       if VSF_USBH_USE_LIBUSB == ENABLED
+        static vk_usbh_class_t __usbh_ecm_block_libusb = { .drv = &vk_usbh_ecm_block_libusb_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ecm_block_libusb);
+#       endif
+#   endif
+#   if VSF_USBH_USE_NCM == ENABLED && VSF_USE_TCPIP == ENABLED
+        static vk_usbh_class_t __usbh_ncm = { .drv = &vk_usbh_ncm_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ncm);
+#       if VSF_USBH_USE_LIBUSB == ENABLED
+        static vk_usbh_class_t __usbh_ncm_block_libusb = { .drv = &vk_usbh_ncm_block_libusb_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ncm_block_libusb);
+#       endif
 #   endif
 #   if VSF_USBH_USE_HID == ENABLED
         static vk_usbh_class_t __usbh_hid = { .drv = &vk_usbh_hid_drv };
