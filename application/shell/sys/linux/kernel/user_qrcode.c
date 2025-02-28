@@ -184,12 +184,13 @@ int display_qrcode_main(int argc, char **argv)
     for (uint8_t y = 0; y < qrcode.size; y++) {
         for (uint8_t x = 0; x < qrcode.size; x++) {
             if (qrcode_getModule(&qrcode, x, y)) {
-                printf("*");
+                printf("\033[47m");
             } else {
-                printf(" ");
+                printf("\033[40m");
             }
+            printf("  ");
         }
-        printf("\r\n");
+        printf("\033[40m\r\n");
     }
     printf("\r\n");
 #endif
