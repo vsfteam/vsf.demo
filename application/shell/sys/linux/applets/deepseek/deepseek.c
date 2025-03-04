@@ -3,7 +3,7 @@
 #if VSF_USE_TCPIP == ENABLED && VSF_USE_JSON == ENABLED
 #include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
 
-int __deepseek_chat_main(int argc, char *argv[])
+int deepseek_chat_main(int argc, char *argv[])
 {
     vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) +
                     sizeof(mbedtls_session_t) + 1024);
@@ -64,6 +64,9 @@ int __deepseek_chat_main(int argc, char *argv[])
         }
         printf("\n");
     }
+
+    vsf_http_client_close(http);
+    free(http);
     return 0;
 }
 #endif
