@@ -61,6 +61,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 
 // components
 
+#define VSF_USE_JSON                                    ENABLED
 #define VSF_USE_LITTLEFS                                ENABLED
 #define VSF_USE_TRACE                                   ENABLED
 #define VSF_USE_SIMPLE_STREAM                           ENABLED
