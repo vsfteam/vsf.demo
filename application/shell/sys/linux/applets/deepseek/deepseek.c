@@ -1,12 +1,17 @@
 #include <vsf.h>
 
 #if VSF_USE_TCPIP == ENABLED && VSF_USE_JSON == ENABLED
+
 #include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
+
+#ifndef DEEPSEEK_BUFFER_SIZE
+#   define DEEPSEEK_BUFFER_SIZE                 1024
+#endif
 
 int deepseek_chat_main(int argc, char *argv[])
 {
     vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) +
-                    sizeof(mbedtls_session_t) + 1024);
+                    sizeof(mbedtls_session_t) + DEEPSEEK_BUFFER_SIZE);
     mbedtls_session_t *session = (mbedtls_session_t *)&http[1];
     char *json_body = (char *)&session[1], *prompt, *response;
     int response_size;
@@ -20,11 +25,11 @@ int deepseek_chat_main(int argc, char *argv[])
     strcpy(json_body, "{\"model\":\"deepseek-chat\",\"messages\":[{\"role\":\"user\",\"content\":\"");
     prompt = &json_body[strlen(json_body)];
     response = prompt;
-    response_size = &json_body[1024] - response;
+    response_size = &json_body[DEEPSEEK_BUFFER_SIZE] - response;
 
     while (1) {
         printf("\nprompt: ");
-        fgets(prompt, 1024, stdin);
+        fgets(prompt, response_size, stdin);
         prompt[strcspn(prompt, "\n")] = '\0';
         if (!strcmp(prompt, "exit")) {
             break;
@@ -52,9 +57,10 @@ int deepseek_chat_main(int argc, char *argv[])
         }
 
         printf("\nresponse: ");
-        int rsize = vsf_http_client_read(http, (uint8_t *)response, response_size);
+        // leave one byte for \0
+        int rsize = vsf_http_client_read(http, (uint8_t *)response, response_size - 1);
         if (rsize > 0) {
-            response[rsize - 1] = '\0';
+            response[rsize] = '\0';
 
             char *content = vsf_json_get(response, "choices/0/message/content");
             if (content != NULL) {
