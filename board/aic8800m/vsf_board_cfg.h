@@ -124,8 +124,9 @@
 
 #define VSF_USBH_USE_HCD_DWCOTG                         ENABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
-//  AIC8800 need this
-#   define VSF_DWCOTG_HCD_WORKAROUND_ALIGN_BUFFER_SIZE  4096
+//  if VSF_DWCOTG_HCD_WORKAROUND_ALIGN_BUFFER_SIZE is not defined,
+//   usb_heap will be used to allocate buffer when buffer from user is not suitable for DMA.
+//#   define VSF_DWCOTG_HCD_WORKAROUND_ALIGN_BUFFER_SIZE  4096
 #   define VSF_USBH_CFG_ENABLE_ROOT_HUB                 DISABLED
 // usbh memory MUST be in 0x001A0000 - 0x001C7FFF
 #define vsf_usbh_malloc                                 __vsf_usbh_malloc
