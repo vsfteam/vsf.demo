@@ -859,6 +859,72 @@
     <Filter Include="vsf\component\ui\tgui\view\scgui_view">
       <UniqueIdentifier>{254038be-d8f6-47c3-856d-e9d25679566a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack">
+      <UniqueIdentifier>{06a7f1b2-9d57-43f4-bd9f-3595479eb232}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\extension">
+      <UniqueIdentifier>{088cb355-123c-40b5-9a2e-a21011196ba3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\extension\btstack_oo">
+      <UniqueIdentifier>{b3f925e6-6b21-4ea9-85ba-daa262490a8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\extension\btstack_oo\device">
+      <UniqueIdentifier>{b56f2cce-d8c3-4c06-90db-056402fda81f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\extension\btstack_oo\device\driver">
+      <UniqueIdentifier>{04b271b9-f49a-41df-8112-09ef8fc50d03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\extension\btstack_oo\device\driver\hid">
+      <UniqueIdentifier>{61ccc1c2-49f7-46e8-922b-103f5e212925}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\extension\btstack_oo\host">
+      <UniqueIdentifier>{e404b791-30fa-45d1-af57-298d18b632ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\extension\btstack_oo\host\driver">
+      <UniqueIdentifier>{5c7d0d9d-2bb7-4bf5-88d4-3256d9422615}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid">
+      <UniqueIdentifier>{6213e098-23c6-4f5c-a16c-e705f59e88ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\joycon">
+      <UniqueIdentifier>{e6dbc8c1-e063-46fe-93f3-d09c0ec0d802}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\ds4">
+      <UniqueIdentifier>{c1daebd0-5dd9-45cc-ba18-b1952eced79e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\firmware">
+      <UniqueIdentifier>{b039f5da-db79-4206-a1ea-1522e19a3ec5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\firmware\bcm">
+      <UniqueIdentifier>{cf2e3ec6-1e0f-433a-b22f-ef47732564e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\firmware\bcm\bcm20702">
+      <UniqueIdentifier>{79d856da-d8e9-4f8d-8dd4-0063450df11c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\port">
+      <UniqueIdentifier>{a1ba6fb9-6eef-4b85-9ba8-bb3284bc5107}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\raw">
+      <UniqueIdentifier>{f0011c62-602b-4187-925b-c389e5907199}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\raw\chipset">
+      <UniqueIdentifier>{64bee0ff-8e10-4f84-b54b-596516e05c2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\raw\chipset\bcm">
+      <UniqueIdentifier>{65550d34-5cc8-4db4-a275-fb9186c00333}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\raw\src">
+      <UniqueIdentifier>{0169af36-aefc-4e48-a93c-91a48d7a9075}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\raw\src\ble">
+      <UniqueIdentifier>{0eeb40a2-9763-41c1-b0f7-624701c7bc80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\raw\src\classic">
+      <UniqueIdentifier>{0e003387-936a-4afa-911e-0a413d09031d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\3rd-party\btstack\raw\chipset\csr">
+      <UniqueIdentifier>{dc49629e-0b73-440c-ab14-1cc9481e51d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2424,6 +2490,135 @@
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\template\vsf_tgui_v_text_list.h">
       <Filter>vsf\component\ui\tgui\view\template</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\device\driver\hid\btstack_dev_hid.h">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\device\driver\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\device\btstack_dev.h">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\device\btstack_dev_cfg.h">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\joycon\btstack_host_joycon.h">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\joycon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\btstack_host_hid_base.h">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\ds4\btstack_host_ds4.h">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\ds4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\host\btstack_host.h">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\host\btstack_host_cfg.h">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\btstack_oo.h">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\btstack_oo_cfg.h">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\port\btstack_run_loop_vsf.h">
+      <Filter>vsf\component\3rd-party\btstack\port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\chipset\bcm\btstack_chipset_bcm.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\chipset\bcm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\chipset\bcm\btstack_chipset_bcm_download_firmware.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\chipset\bcm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\ancs_client.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\att_db.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\att_db_util.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\att_dispatch.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\att_server.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\core.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\gatt_client.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\le_device_db.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\sm.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\rfcomm.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_client.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_client_rfcomm.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_server.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_util.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\spp_server.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ad_parser.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_crypto.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_linked_list.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_linked_queue.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_memory.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_memory_pool.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_ring_buffer.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_run_loop.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_tlv.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_util.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\hci.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\hci_cmd.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\l2cap.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\l2cap_signaling.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\chipset\csr\btstack_chipset_csr.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\chipset\csr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3568,6 +3763,135 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\template\vsf_tgui_v_text_list.c">
       <Filter>vsf\component\ui\tgui\view\template</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\device\driver\hid\btstack_dev_hid.c">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\device\driver\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\device\btstack_dev.c">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\joycon\btstack_host_joycon.c">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\joycon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\btstack_host_hid_base.c">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\ds4\btstack_host_ds4.c">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\host\driver\hid\ds4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\host\btstack_host.c">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo\host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\btstack_oo.c">
+      <Filter>vsf\component\3rd-party\btstack\extension\btstack_oo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\firmware\bcm\bcm20702\bt_firmware_image.c">
+      <Filter>vsf\component\3rd-party\btstack\firmware\bcm\bcm20702</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\port\btstack_run_loop_vsf.c">
+      <Filter>vsf\component\3rd-party\btstack\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\port\hci_dump_vsf.c">
+      <Filter>vsf\component\3rd-party\btstack\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\port\hci_transport_h2_vsf.c">
+      <Filter>vsf\component\3rd-party\btstack\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\port\hci_transport_h4_vsf.c">
+      <Filter>vsf\component\3rd-party\btstack\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\chipset\bcm\btstack_chipset_bcm.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\chipset\bcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\chipset\bcm\btstack_chipset_bcm_download_firmware.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\chipset\bcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\ancs_client.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\att_db.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\att_db_util.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\att_dispatch.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\att_server.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\gatt_client.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\le_device_db_memory.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\sm.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\rfcomm.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_client.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_client_rfcomm.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_server.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_util.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\spp_server.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ad_parser.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_crypto.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_linked_list.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_linked_queue.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_memory.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_memory_pool.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_ring_buffer.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_run_loop.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_tlv.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_util.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\hci.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\hci_cmd.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\l2cap.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\l2cap_signaling.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\chipset\csr\btstack_chipset_csr.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\chipset\csr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

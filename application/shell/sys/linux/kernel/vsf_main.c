@@ -104,6 +104,14 @@
 #if VSF_USE_MBEDTLS == ENABLED
 #   include "component/3rd-party/mbedtls/extension/vplt/mbedtls_vplt.h"
 #endif
+
+#if VSF_USE_BTSTACK == ENABLED
+#   include "btstack.h"
+#   include "csr/btstack_chipset_csr.h"
+#   include "bcm/btstack_chipset_bcm.h"
+#   include "component/3rd-party/btstack/port/btstack_run_loop_vsf.h"
+#endif
+
 #if     defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE)    \
     && (APP_MSCBOOT_CFG_ROOT_SIZE > 0) &&  defined(APP_MSCBOOT_CFG_ROOT_ADDR) && (VSF_FS_USE_LITTLEFS == ENABLED)
 #   include "component/3rd-party/littlefs/port/lfs_port.h"
@@ -616,6 +624,99 @@ static int __appcfg_main(int argc, char *argv[])
     return ret;
 }
 
+#if VSF_USE_BTSTACK == ENABLED
+
+VSF_CAL_WEAK(btstack_main)
+int btstack_main(int argc, char **argv)
+{
+    hci_set_inquiry_mode(INQUIRY_MODE_RSSI_AND_EIR);
+    hci_power_control(HCI_POWER_ON);
+    return 0;
+}
+
+static vsf_eda_t *__btstack_scan_eda;
+static void __btstack_scan_pkthandler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size)
+{
+    uint8_t event = hci_event_packet_get_type(packet);
+    bd_addr_t addr;
+
+    switch (event) {
+    case HCI_EVENT_EXTENDED_INQUIRY_RESPONSE: {
+            uint8_t *eir_data;
+            ad_context_t context;
+            int event_type = hci_event_packet_get_type(packet);
+            int num_reserved_fields = (event_type == HCI_EVENT_INQUIRY_RESULT) ? 2 : 1;
+            if (event_type == HCI_EVENT_EXTENDED_INQUIRY_RESPONSE) {
+                // EIR packets only contain a single inquiry response
+                eir_data = &packet[3 + (6 + 1 + num_reserved_fields + 3 + 2 + 1)];
+                for (ad_iterator_init(&context, EXTENDED_INQUIRY_RESPONSE_DATA_LEN, eir_data) ; ad_iterator_has_more(&context) ; ad_iterator_next(&context)){
+                    uint8_t data_type    = ad_iterator_get_data_type(&context);
+                    uint8_t data_size    = ad_iterator_get_data_len(&context);
+                    const uint8_t * data = ad_iterator_get_data(&context);
+                    vsf_trace_debug("eir: type %d size %d:\n", data_type, data_size);
+                    vsf_trace_buffer(VSF_TRACE_DEBUG, (void *)data, data_size);
+                }
+            }
+        }
+        break;
+    case BTSTACK_EVENT_STATE:
+        if (btstack_event_state_get_state(packet) == HCI_STATE_WORKING) {
+            vsf_trace_info("btstack started...", VSF_TRACE_CFG_LINEEND);
+        }
+        break;
+    case GAP_EVENT_INQUIRY_RESULT:
+        gap_event_inquiry_result_get_bd_addr(packet, addr);
+
+        vsf_trace_info("Device found: %s ",  bd_addr_to_str(addr));
+        vsf_trace_info("with COD: 0x%06x, ", (unsigned int)gap_event_inquiry_result_get_class_of_device(packet));
+        vsf_trace_info("pageScan %d, ",      gap_event_inquiry_result_get_page_scan_repetition_mode(packet));
+        vsf_trace_info("clock offset 0x%04x",gap_event_inquiry_result_get_clock_offset(packet));
+
+        if (gap_event_inquiry_result_get_rssi_available(packet)) {
+            vsf_trace_info(", rssi %d dBm", (int8_t) gap_event_inquiry_result_get_rssi(packet));
+        }
+        if (gap_event_inquiry_result_get_name_available(packet)) {
+            char name_buffer[240];
+            int name_len = gap_event_inquiry_result_get_name_len(packet);
+            memcpy(name_buffer, gap_event_inquiry_result_get_name(packet), name_len);
+            name_buffer[name_len] = 0;
+            vsf_trace_info(", name '%s'", name_buffer);
+        }
+        vsf_trace_info(VSF_TRACE_CFG_LINEEND);
+        break;
+    case GAP_EVENT_INQUIRY_COMPLETE:
+        VSF_ASSERT(__btstack_scan_eda != NULL);
+        vsf_eda_post_evt(__btstack_scan_eda, VSF_EVT_USER);
+        break;
+    default:
+        break;
+    }
+}
+
+int __btstack_scan_main(int argc, char **argv)
+{
+    static btstack_packet_callback_registration_t __hci_event_callback_registration;
+    if (NULL == __hci_event_callback_registration.callback) {
+        __hci_event_callback_registration.callback = &__btstack_scan_pkthandler;
+        hci_add_event_handler(&__hci_event_callback_registration);
+    }
+
+    if (HCI_STATE_WORKING == hci_get_state()) {
+        printf("Starting inquiry scan.." VSF_TRACE_CFG_LINEEND);
+        gap_inquiry_start(5);
+
+        __btstack_scan_eda = vsf_eda_get_cur();
+        VSF_ASSERT(__btstack_scan_eda != NULL);
+        vsf_thread_wfe(VSF_EVT_USER);
+        __btstack_scan_eda = NULL;
+    } else {
+        printf("bluetooth is not available.." VSF_TRACE_CFG_LINEEND);
+    }
+    return 0;
+}
+#endif
+
+
 #if VSF_USE_USB_HOST == ENABLED
 
 #   if VSF_USE_SCSI == ENABLED && VSF_USE_MAL == ENABLED && VSF_MAL_USE_SCSI_MAL == ENABLED
@@ -741,6 +842,26 @@ void vsf_usbh_uvc_on_new(void *uvc, usb_uvc_vc_interface_header_desc_t *vc_heade
 }
 #   endif
 
+#   if VSF_USBH_USE_BTHCI == ENABLED
+vsf_err_t vsf_bluetooth_h2_on_new(void *dev, vk_usbh_dev_id_t *id)
+{
+    btstack_memory_init();
+    btstack_run_loop_init(btstack_run_loop_vsf_get_instance());
+    hci_init(hci_transport_usb_instance(), dev);
+
+    if ((id->idVendor == 0x0A12) && (id->idProduct == 0x0001)) {
+        hci_set_chipset(btstack_chipset_csr_instance());
+    } else if ((id->idVendor == 0x0A5C) && (id->idProduct == 0x21E8)) {
+        hci_set_chipset(btstack_chipset_bcm_instance());
+    } else {
+        return VSF_ERR_FAIL;
+    }
+
+    btstack_main(0, NULL);
+    return VSF_ERR_NONE;
+}
+#   endif
+
 static int __usbh_main(int argc, char *argv[])
 {
     static bool __usbh_inited = false;
@@ -810,6 +931,10 @@ static int __usbh_main(int argc, char *argv[])
 #   if VSF_USBH_USE_UVC == ENABLED
         static vk_usbh_class_t __usbh_uvc = { .drv = &vk_usbh_uvc_drv };
         vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_uvc);
+#   endif
+#   if VSF_USBH_USE_BTHCI == ENABLED
+        static vk_usbh_class_t __usbh_bthci = { .drv = &vk_usbh_bthci_drv };
+        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_bthci);
 #   endif
     }
     return 0;
@@ -1493,6 +1618,9 @@ int vsf_linux_create_fhs(void)
 
 #if VSF_USE_USB_HOST == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/usbhost", __usbh_main);
+#endif
+#if VSF_USE_BTSTACK == ENABLED
+        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/btscan", __btstack_scan_main);
 #endif
     }
 

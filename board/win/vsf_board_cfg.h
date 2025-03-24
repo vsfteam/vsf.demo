@@ -107,6 +107,11 @@
 #define VSF_USBH_CFG_ENABLE_ROOT_HUB                    DISABLED
 #define VSF_USBH_USE_HUB                                DISABLED
 
+#if VSF_BOARD_HAS_USB_HOST
+// if usb host is enabled, usbh_bthci can be used for btstack
+#   define VSF_USE_BTSTACK                              ENABLED
+#endif
+
 #define VSF_LINUX_CFG_HEAP_SIZE                         (16 * 1024 * 1024)
 #define VSF_HEAP_CFG_MCB_ALIGN_BIT                      9
 
