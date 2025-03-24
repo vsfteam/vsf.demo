@@ -107,8 +107,10 @@
 
 #if VSF_USE_BTSTACK == ENABLED
 #   include "btstack.h"
-#   include "csr/btstack_chipset_csr.h"
-#   include "bcm/btstack_chipset_bcm.h"
+#   if VSF_USE_USB_HOST == ENABLED && VSF_USBH_USE_BTHCI == ENABLED
+#       include "csr/btstack_chipset_csr.h"
+#       include "bcm/btstack_chipset_bcm.h"
+#   endif
 #   include "component/3rd-party/btstack/port/btstack_run_loop_vsf.h"
 #endif
 
