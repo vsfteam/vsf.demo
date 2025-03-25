@@ -62,6 +62,17 @@ vsf_board_t vsf_board = {
     },
 #   endif
 #endif
+#if VSF_USE_UI == ENABLED
+    .dummy_display              = {
+        .param                  = {
+            .drv                = &vk_dummy_disp_drv,
+            .width              = VSF_BOARD_DISP_WIDTH,
+            .height             = VSF_BOARD_DISP_HEIGHT,
+            .color              = VSF_BOARD_DISP_COLOR,
+        },
+    },
+    .display_dev                = &vsf_board.dummy_display.use_as__vk_disp_t,
+#endif
 };
 #endif
 
@@ -155,4 +166,9 @@ void vsf_board_init(void)
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
 #endif
+
+    vsf_heap_add_memory((vsf_mem_t){
+        .buffer     = (void *)0x60000000,
+        .size       = 8 * 1024 * 1024,
+    });
 }

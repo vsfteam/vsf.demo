@@ -82,7 +82,7 @@
 #   define VSF_USE_HEAP                                 ENABLED
 #endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
-#   define VSF_HEAP_SIZE                                (256 * 1024)
+#   define VSF_HEAP_SIZE                                (4 * 1024)
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   8
 
 #define VSF_USBH_USE_HCD_MUSB_FDRC                      DISABLED
@@ -106,9 +106,13 @@
 #define VSF_USE_USB_DEVICE                              DISABLED
 #   define VSF_USBD_CFG_SPEED_FULL
 
-#define VSF_USE_UI                                      DISABLED
+#define VSF_USE_UI                                      ENABLED
 #   define VSF_TGUI_CFG_PFB_LINENUM                     20
 #   define VSF_TGUI_CFG_DISP_COLOR                      VSF_TGUI_COLOR_RGB_565
+
+#define VSF_BOARD_DISP_WIDTH                            320
+#define VSF_BOARD_DISP_HEIGHT                           240
+#define VSF_BOARD_DISP_COLOR                            VSF_DISP_COLOR_RGB565
 
 #define VSF_USE_AUDIO                                   DISABLED
 #   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
@@ -116,8 +120,6 @@
 
 #define VSF_LINUX_CFG_STACKSIZE                         (16 * 1024)
 #define VSF_KERNEL_CFG_THREAD_STACK_LARGE               ENABLED
-#define VSF_LINUX_CFG_HEAP_SIZE                         (8 * 1024 * 1024)
-#define VSF_LINUX_CFG_HEAP_ADDR                         0x60000000
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
@@ -133,9 +135,9 @@
 
 #define APP_MSCBOOT_CFG_FW_SIZE                         (APP_MSCBOOT_CFG_ROMFS_ADDR - APP_MSCBOOT_CFG_FW_ADDR)
 #define APP_MSCBOOT_CFG_FW_ADDR                         0x20000
-#define APP_MSCBOOT_CFG_ROMFS_SIZE                      0x200000
-#define APP_MSCBOOT_CFG_ROMFS_ADDR                      0x200000
-#define APP_MSCBOOT_CFG_ROOT_SIZE                       0x400000
+#define APP_MSCBOOT_CFG_ROMFS_SIZE                      0x5800000
+#define APP_MSCBOOT_CFG_ROMFS_ADDR                      0x800000
+#define APP_MSCBOOT_CFG_ROOT_SIZE                       0x2000000
 #define APP_MSCBOOT_CFG_ROOT_ADDR                       (APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_ROMFS_SIZE)
 
 #define APP_MSCBOOT_CFG_ERASE_ALIGN                     (4 * 1024)

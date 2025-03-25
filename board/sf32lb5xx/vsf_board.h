@@ -55,21 +55,9 @@ typedef struct vsf_board_t {
     uint8_t sdio_bus_width;
     uint32_t sdio_voltage;
 #endif
-#if VSF_USE_UI == ENABLED && VSF_DISP_USE_FB == ENABLED
-    vsf_hw_fb_t hw_fb;
-    vk_disp_fb_t display_fb_layer0;
+#if VSF_USE_UI == ENABLED
+    vk_dummy_disp_t dummy_display;
     vk_disp_t *display_dev;
-#   define VSF_BOARD_DISP_HAS_BACKLIGHT
-#   define VSF_BOARD_DISP_HAS_RESET
-    vsf_gpio_t *bl_port;
-    vsf_gpio_t *rst_port;
-    uint8_t bl_pin, rst_pin;
-#   if      defined(VSF_BOARD_RGBLCD_LAYER1_WIDTH)                              \
-        &&  defined(VSF_BOARD_RGBLCD_LAYER1_HEIGHT)                             \
-        &&  defined(VSF_BOARD_RGBLCD_LAYER1_COLOR)                              \
-        &&  defined(VSF_BOARD_RGBLCD_LAYER1_SRAM_BUFFER_T)
-    vk_disp_fb_t display_fb_layer1;
-#   endif
 #endif
 #if VSF_USE_AUDIO == ENABLED
     vk_audio_dev_t *audio_dev;
