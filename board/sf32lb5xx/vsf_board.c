@@ -17,8 +17,14 @@
 
 /*============================ INCLUDES ======================================*/
 
+#define __VSF_DISP_CLASS_INHERIT__
 #define __VSF_SIMPLE_STREAM_CLASS_INHERIT__
 #include "./vsf_board.h"
+
+#include "bf0_hal_cortex.h"
+#include "bf0_hal_gpio.h"
+#include "bf0_hal_pinmux.h"
+#include "bf0_hal_lcdc.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -32,6 +38,27 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
     .priority                   = APP_CFG_USBH_ARCH_PRIO,
 };
 #endif
+
+static LCDC_InitTypeDef __lcdc_init_cfg_co5300 =
+{
+    .lcd_itf = LCDC_INTF_SPI_DCX_4DATA,
+    .freq = 48000000,        //CO5300 RGB565 only support 50000000,  RGB888 support 60000000
+    .color_mode = LCDC_PIXEL_FORMAT_RGB565,//LCDC_PIXEL_FORMAT_RGB565,
+
+    .cfg = {
+        .spi = {
+            .dummy_clock = 0,
+            .syn_mode = HAL_LCDC_SYNC_DISABLE,
+            .vsyn_polarity = 1,
+            //default_vbp=2, frame rate=82, delay=115us,
+            //TODO: use us to define delay instead of cycle, delay_cycle=115*48
+            .vsyn_delay_us = 0,
+            .hsyn_num = 0,
+        },
+    },
+};
+
+static LCDC_HandleTypeDef __lcdc_co5300;
 
 /*============================ GLOBAL VARIABLES ==============================*/
 
@@ -155,8 +182,210 @@ bool vsf_app_driver_init(void)
     return true;
 }
 
+// LCD driver
+
+#define LCD_RESET_PIN           (0)
+#define LCD_BACKLIGHT_PIN       (1)
+#define TP_RESET                (9)
+#define LCD_VADD_EN             (37)
+
+#define ROW_OFFSET              (0x00)
+#define COL_OFFSET              (0x00)
+
+#define LCD_ID                  0x331100
+
+#define REG_LCD_ID              0x04
+#define REG_CASET               0x2A
+#define REG_RASET               0x2B
+#define REG_WRITE_RAM           0x2C
+#define REG_CONTINUE_WRITE_RAM  0x3C
+#define REG_WBRIGHT             0x51
+
+static void LCD_ReadMode(LCDC_HandleTypeDef *hlcdc, bool enable)
+{
+    if (enable) {
+        HAL_LCDC_SetFreq(hlcdc, 2000000); //read mode min cycle 300ns
+    } else {
+        HAL_LCDC_SetFreq(hlcdc, hlcdc->Init.freq); //Restore normal frequency
+    }
+}
+
+static uint32_t LCD_ReadData(LCDC_HandleTypeDef *hlcdc, uint16_t RegValue, uint8_t ReadSize)
+{
+    uint32_t rd_data = 0;
+
+    LCD_ReadMode(hlcdc, true);
+    HAL_LCDC_ReadU32Reg(hlcdc, ((0x03 << 24) | (RegValue << 8)), (uint8_t *)&rd_data, ReadSize);
+    LCD_ReadMode(hlcdc, false);
+    return rd_data;
+}
+
+static void LCD_WriteReg(LCDC_HandleTypeDef *hlcdc, uint16_t LCD_Reg, uint8_t *Parameters, uint32_t NbParameters)
+{
+    uint32_t cmd;
+
+    if ((REG_WRITE_RAM == LCD_Reg) || (REG_CONTINUE_WRITE_RAM == LCD_Reg)) {
+        cmd = (0x32 << 24) | (LCD_Reg << 8);
+    } else {
+        cmd = (0x02 << 24) | (LCD_Reg << 8);
+    }
+    HAL_LCDC_WriteU32Reg(hlcdc, cmd, Parameters, NbParameters);
+}
+
+void LCDC1_IRQHandler(void)
+{
+    HAL_LCDC_IRQHandler(&__lcdc_co5300);
+}
+
+static vsf_err_t __vk_disp_lcdc_refresh(vk_disp_t *pthis, vk_disp_area_t *area, void *disp_buff)
+{
+    uint8_t parameter[4];
+    uint16_t Xpos0 = area->pos.x;
+    uint16_t Ypos0 = area->pos.y;
+    uint16_t Xpos1 = Xpos0 + area->size.x - 1;
+    uint16_t Ypos1 = Ypos0 + area->size.y - 1;
+
+    HAL_LCDC_SetROIArea(&__lcdc_co5300, Xpos0, Ypos0, Xpos1, Ypos1);
+
+    Xpos0 += COL_OFFSET;
+    Xpos1 += COL_OFFSET;
+
+    Ypos0 += ROW_OFFSET;
+    Ypos1 += ROW_OFFSET;
+
+    parameter[0] = (Xpos0) >> 8;
+    parameter[1] = (Xpos0) & 0xFF;
+    parameter[2] = (Xpos1) >> 8;
+    parameter[3] = (Xpos1) & 0xFF;
+    LCD_WriteReg(&__lcdc_co5300, REG_CASET, parameter, 4);
+
+    parameter[0] = (Ypos0) >> 8;
+    parameter[1] = (Ypos0) & 0xFF;
+    parameter[2] = (Ypos1) >> 8;
+    parameter[3] = (Ypos1) & 0xFF;
+    LCD_WriteReg(&__lcdc_co5300, REG_RASET, parameter, 4);
+
+    HAL_LCDC_LayerSetData(&__lcdc_co5300, HAL_LCDC_LAYER_DEFAULT, (uint8_t *)disp_buff, Xpos0, Ypos0, Xpos1, Ypos1);
+    HAL_LCDC_SendLayerData2Reg_IT(&__lcdc_co5300, ((0x32 << 24) | (REG_WRITE_RAM << 8)), 4);
+    return VSF_ERR_NONE;
+}
+
+static void __vk_disp_lcdc_refresh_on_ready(LCDC_HandleTypeDef *lcdc)
+{
+    vk_disp_on_ready(vsf_board.display_dev);
+}
+
+const vk_disp_drv_t vk_disp_lcdc_drv = {
+    .refresh        = __vk_disp_lcdc_refresh,
+};
+
 void vsf_board_prepare_hw_for_linux(void)
 {
+    // LCDC1 - QSPI
+    HAL_PIN_Set(PAD_PA02, LCDC1_SPI_TE, PIN_NOPULL, 1);
+    HAL_PIN_Set(PAD_PA03, LCDC1_SPI_CS, PIN_NOPULL, 1);
+    HAL_PIN_Set(PAD_PA04, LCDC1_SPI_CLK, PIN_NOPULL, 1);
+    HAL_PIN_Set(PAD_PA05, LCDC1_SPI_DIO0, PIN_NOPULL, 1);
+    HAL_PIN_Set(PAD_PA06, LCDC1_SPI_DIO1, PIN_NOPULL, 1);
+    HAL_PIN_Set(PAD_PA07, LCDC1_SPI_DIO2, PIN_NOPULL, 1);
+    HAL_PIN_Set(PAD_PA08, LCDC1_SPI_DIO3, PIN_NOPULL, 1);
+
+    HAL_PIN_Set(PAD_PA09, GPIO_A9,  PIN_NOPULL, 1);    // CTP_RESET
+    HAL_PIN_Set(PAD_PA31, GPIO_A31, PIN_NOPULL, 1);    // CTP_INT
+    HAL_PIN_Set(PAD_PA30, I2C1_SCL, PIN_PULLUP, 1);
+    HAL_PIN_Set(PAD_PA33, I2C1_SDA, PIN_PULLUP, 1);
+
+    HAL_GPIO_Init(hwp_gpio1, &(GPIO_InitTypeDef){
+        .Mode = GPIO_MODE_OUTPUT,
+        .Pin = LCD_VADD_EN,
+        .Pull = GPIO_NOPULL,
+    });
+    HAL_GPIO_WritePin(hwp_gpio1, LCD_VADD_EN, (GPIO_PinState)1);
+
+    HAL_GPIO_Init(hwp_gpio1, &(GPIO_InitTypeDef){
+        .Mode = GPIO_MODE_OUTPUT,
+        .Pin = LCD_RESET_PIN,
+        .Pull = GPIO_NOPULL,
+    });
+
+    HAL_GPIO_Init(hwp_gpio1, &(GPIO_InitTypeDef){
+        .Mode = GPIO_MODE_OUTPUT,
+        .Pin = LCD_BACKLIGHT_PIN,
+        .Pull = GPIO_NOPULL,
+    });
+    HAL_GPIO_WritePin(hwp_gpio1, LCD_BACKLIGHT_PIN, (GPIO_PinState)1);
+
+    __lcdc_co5300.Instance = LCDC1;
+    __lcdc_co5300.Init = __lcdc_init_cfg_co5300;
+    __lcdc_co5300.XferCpltCallback = __vk_disp_lcdc_refresh_on_ready;
+    HAL_LCDC_Init(&__lcdc_co5300);
+
+    HAL_GPIO_WritePin(hwp_gpio1, LCD_RESET_PIN, (GPIO_PinState)1);
+    vsf_thread_delay_ms(10);
+    HAL_GPIO_WritePin(hwp_gpio1, LCD_RESET_PIN, (GPIO_PinState)0);
+    vsf_thread_delay_ms(10);
+    HAL_GPIO_WritePin(hwp_gpio1, LCD_RESET_PIN, (GPIO_PinState)1);
+    vsf_thread_delay_ms(50);
+
+    uint32_t lcd_id = LCD_ReadData(&__lcdc_co5300, REG_LCD_ID, 3);
+    if (lcd_id == LCD_ID) {
+        ((vk_disp_param_t *)(&vsf_board.display_dummy.param))->drv = &vk_disp_lcdc_drv;
+
+        LCDC_HandleTypeDef *hlcdc = &__lcdc_co5300;
+        uint8_t parameter[14];
+        parameter[0] = 0x20;
+        LCD_WriteReg(hlcdc, 0xFE, parameter, 1);
+        parameter[0] = 0x5A;
+        LCD_WriteReg(hlcdc, 0xF4, parameter, 1);
+        parameter[0] = 0x59;
+        LCD_WriteReg(hlcdc, 0xF5, parameter, 1);
+
+        parameter[0] = 0x20;
+        LCD_WriteReg(hlcdc, 0xFE, parameter, 1);
+        parameter[0] = 0xA5;
+        LCD_WriteReg(hlcdc, 0xF4, parameter, 1);
+        parameter[0] = 0xA5;
+        LCD_WriteReg(hlcdc, 0xF5, parameter, 1);
+
+        parameter[0] = 0x00;
+        LCD_WriteReg(hlcdc, 0xFE, parameter, 1);
+        parameter[0] = 0x80;
+        LCD_WriteReg(hlcdc, 0xC4, parameter, 1);
+        parameter[0] = 0x55;
+        LCD_WriteReg(hlcdc, 0x3A, parameter, 1);
+        parameter[0] = 0x00;
+        LCD_WriteReg(hlcdc, 0x35, parameter, 1);
+        parameter[0] = 0x20;
+        LCD_WriteReg(hlcdc, 0x53, parameter, 1);
+
+        parameter[0] = 0xff;
+        LCD_WriteReg(hlcdc, 0x63, parameter, 1);
+
+        parameter[0] = (COL_OFFSET >> 8) & 0xFF;
+        parameter[1] = COL_OFFSET & 0xFF;
+        parameter[2] = ((VSF_BOARD_DISP_WIDTH + COL_OFFSET - 1) >> 8) & 0xFF;
+        parameter[3] = (VSF_BOARD_DISP_WIDTH + COL_OFFSET - 1) & 0xFF;
+        LCD_WriteReg(hlcdc, 0x2A, parameter, 4);
+        parameter[0] = (ROW_OFFSET >> 8) & 0xFF;
+        parameter[1] = ROW_OFFSET & 0xFF;
+        parameter[2] = ((VSF_BOARD_DISP_HEIGHT + ROW_OFFSET - 1) >> 8) & 0xFF;
+        parameter[3] = (VSF_BOARD_DISP_HEIGHT + ROW_OFFSET - 1) & 0xFF;
+        LCD_WriteReg(hlcdc, 0x2B, parameter, 4);
+
+        LCD_WriteReg(hlcdc, 0x11, (uint8_t *)NULL, 0);
+        vsf_thread_delay_ms(120);
+        LCD_WriteReg(hlcdc, 0x29, (uint8_t *)NULL, 0);
+        vsf_thread_delay_ms(70);
+
+        uint8_t bright = 255;
+        LCD_WriteReg(hlcdc, REG_WBRIGHT, &bright, 1);
+
+        HAL_NVIC_SetPriority(LCDC1_IRQn, 6, 0);
+        HAL_NVIC_EnableIRQ(LCDC1_IRQn);
+
+        vsf_trace_debug("LCD: 0x%08X" VSF_TRACE_CFG_LINEEND, lcd_id);
+    }
+
     return;
 }
 

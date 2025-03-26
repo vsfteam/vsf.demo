@@ -110,8 +110,8 @@
 #   define VSF_TGUI_CFG_PFB_LINENUM                     20
 #   define VSF_TGUI_CFG_DISP_COLOR                      VSF_TGUI_COLOR_RGB_565
 
-#define VSF_BOARD_DISP_WIDTH                            320
-#define VSF_BOARD_DISP_HEIGHT                           240
+#define VSF_BOARD_DISP_WIDTH                            390
+#define VSF_BOARD_DISP_HEIGHT                           450
 #define VSF_BOARD_DISP_COLOR                            VSF_DISP_COLOR_RGB565
 
 #define VSF_USE_AUDIO                                   DISABLED
