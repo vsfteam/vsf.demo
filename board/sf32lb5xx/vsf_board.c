@@ -63,15 +63,15 @@ vsf_board_t vsf_board = {
 #   endif
 #endif
 #if VSF_USE_UI == ENABLED
-    .dummy_display              = {
+    .display_dummy              = {
         .param                  = {
-            .drv                = &vk_dummy_disp_drv,
+            .drv                = &vk_disp_dummy_drv,
             .width              = VSF_BOARD_DISP_WIDTH,
             .height             = VSF_BOARD_DISP_HEIGHT,
             .color              = VSF_BOARD_DISP_COLOR,
         },
     },
-    .display_dev                = &vsf_board.dummy_display.use_as__vk_disp_t,
+    .display_dev                = &vsf_board.display_dummy.use_as__vk_disp_t,
 #endif
 };
 #endif
