@@ -9541,7 +9541,13 @@
                         <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_dma.c</name>
                     </file>
                     <file>
+                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_gpio.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_hpaon.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_lcdc.c</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\hal\bf0_hal_mpi.c</name>
