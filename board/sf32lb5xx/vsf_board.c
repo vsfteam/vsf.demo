@@ -28,9 +28,32 @@
 #include "bf0_hal_lcdc.h"
 
 /*============================ MACROS ========================================*/
+
+#if VSF_BOARD_DISP_COLOR == VSF_DISP_COLOR_RGB565
+#   define LCDC_PIXEL_FORMAT        LCDC_PIXEL_FORMAT_RGB565
+#elif VSF_BOARD_DISP_COLOR == VSF_DISP_COLOR_ARGB8888
+#   define LCDC_PIXEL_FORMAT        LCDC_PIXEL_FORMAT_ARGB888
+#elif VSF_BOARD_DISP_COLOR == VSF_DISP_COLOR_RGB888
+#   define LCDC_PIXEL_FORMAT        LCDC_PIXEL_FORMAT_RGB888
+#else
+#   error add color support
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ PROTOTYPES ====================================*/
+
+typedef struct vk_disp_sf32_lcdc_t {
+    implement(vk_disp_t)
+    const uint8_t *init_seq;
+    uint16_t init_seq_len;
+
+    LCDC_HandleTypeDef handle;
+    vsf_teda_t task;
+
+    uint8_t *__init_seq_cur;
+} vk_disp_sf32_lcdc_t;
+
 /*============================ LOCAL VARIABLES ===============================*/
 
 #if VSF_USE_USB_HOST == ENABLED
@@ -40,11 +63,11 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
 };
 #endif
 
-static LCDC_InitTypeDef __lcdc_init_cfg_co5300 =
+static const LCDC_InitTypeDef __lcdc_init_cfg =
 {
     .lcd_itf = LCDC_INTF_SPI_DCX_4DATA,
     .freq = 48000000,        //CO5300 RGB565 only support 50000000,  RGB888 support 60000000
-    .color_mode = LCDC_PIXEL_FORMAT_RGB565,//LCDC_PIXEL_FORMAT_RGB565,
+    .color_mode = LCDC_PIXEL_FORMAT,
 
     .cfg = {
         .spi = {
@@ -59,8 +82,38 @@ static LCDC_InitTypeDef __lcdc_init_cfg_co5300 =
     },
 };
 
-static vsf_teda_t __lcdc_task;
-static LCDC_HandleTypeDef __lcdc_co5300;
+static const uint8_t __lcdc_init_seq_co5300[] = {
+    VSF_DISP_MIPI_LCD_WRITE(0xFE, 1, 0x20), //Pass word unlock
+    VSF_DISP_MIPI_LCD_WRITE(0xF4, 1, 0x5A),
+    VSF_DISP_MIPI_LCD_WRITE(0xF5, 1, 0x59),
+
+    VSF_DISP_MIPI_LCD_WRITE(0xFE, 1, 0x20), //Pass word lock
+    VSF_DISP_MIPI_LCD_WRITE(0xF4, 1, 0xA5),
+    VSF_DISP_MIPI_LCD_WRITE(0xF5, 1, 0xA5),
+
+    VSF_DISP_MIPI_LCD_WRITE(0xFE, 1, 0x00),
+    VSF_DISP_MIPI_LCD_WRITE(0xC4, 1, 0x80),
+    VSF_DISP_MIPI_LCD_WRITE(0x3A, 1, 0x55),
+    VSF_DISP_MIPI_LCD_WRITE(0x35, 1, 0x00),
+    VSF_DISP_MIPI_LCD_WRITE(0x53, 1, 0x20),
+
+    VSF_DISP_MIPI_LCD_WRITE(0x63, 1, 0xFF),
+    VSF_DISP_MIPI_LCD_WRITE(0x11, 0),
+    VSF_DISP_MIPI_LCD_DELAY_MS(120),
+    VSF_DISP_MIPI_LCD_WRITE(0x29, 0),
+    VSF_DISP_MIPI_LCD_DELAY_MS(70),
+    VSF_DISP_MIPI_LCD_WRITE(0x29, 0),
+};
+
+static vk_disp_sf32_lcdc_t vk_disp_sf32_lcdc = {
+    .param                      = {
+        .width                  = VSF_BOARD_DISP_WIDTH,
+        .height                 = VSF_BOARD_DISP_HEIGHT,
+        .color                  = VSF_BOARD_DISP_COLOR,
+    },
+    .init_seq                   = __lcdc_init_seq_co5300,
+    .init_seq_len               = sizeof(__lcdc_init_seq_co5300),
+};
 
 /*============================ GLOBAL VARIABLES ==============================*/
 
@@ -92,15 +145,7 @@ vsf_board_t vsf_board = {
 #   endif
 #endif
 #if VSF_USE_UI == ENABLED
-    .display_dummy              = {
-        .param                  = {
-            .drv                = &vk_disp_dummy_drv,
-            .width              = VSF_BOARD_DISP_WIDTH,
-            .height             = VSF_BOARD_DISP_HEIGHT,
-            .color              = VSF_BOARD_DISP_COLOR,
-        },
-    },
-    .display_dev                = &vsf_board.display_dummy.use_as__vk_disp_t,
+    .display_dev                = &vk_disp_sf32_lcdc.use_as__vk_disp_t,
 #endif
 };
 #endif
@@ -209,7 +254,7 @@ static void LCD_ReadMode(LCDC_HandleTypeDef *hlcdc, bool enable)
     if (enable) {
         HAL_LCDC_SetFreq(hlcdc, 2000000);
     } else {
-        HAL_LCDC_SetFreq(hlcdc, __lcdc_init_cfg_co5300.freq);
+        HAL_LCDC_SetFreq(hlcdc, __lcdc_init_cfg.freq);
     }
 }
 
@@ -237,7 +282,7 @@ static void LCD_WriteReg(LCDC_HandleTypeDef *hlcdc, uint16_t LCD_Reg, uint8_t *P
 
 void LCDC1_IRQHandler(void)
 {
-    HAL_LCDC_IRQHandler(&__lcdc_co5300);
+    HAL_LCDC_IRQHandler(&vk_disp_sf32_lcdc.handle);
 }
 
 static void __vk_lcdc_refresh_on_ready(LCDC_HandleTypeDef *lcdc)
@@ -245,9 +290,10 @@ static void __vk_lcdc_refresh_on_ready(LCDC_HandleTypeDef *lcdc)
     vk_disp_on_ready(vsf_board.display_dev);
 }
 
-static vsf_err_t __vk_disp_lcdc_refresh(vk_disp_t *pthis, vk_disp_area_t *area, void *disp_buff)
+static vsf_err_t __vk_disp_sf32_lcdc_refresh(vk_disp_t *pthis, vk_disp_area_t *area, void *disp_buff)
 {
-    LCDC_HandleTypeDef *hlcdc = &__lcdc_co5300;
+    vk_disp_sf32_lcdc_t *sf32_lcdc = (vk_disp_sf32_lcdc_t *)pthis;
+    LCDC_HandleTypeDef *hlcdc = &sf32_lcdc->handle;
     uint8_t parameter[4];
     uint16_t Xpos0 = area->pos.x;
     uint16_t Ypos0 = area->pos.y;
@@ -256,12 +302,6 @@ static vsf_err_t __vk_disp_lcdc_refresh(vk_disp_t *pthis, vk_disp_area_t *area, 
 
     HAL_LCDC_Exit_LP(hlcdc);
     HAL_LCDC_SetROIArea(hlcdc, Xpos0, Ypos0, Xpos1, Ypos1);
-
-    Xpos0 += COL_OFFSET;
-    Xpos1 += COL_OFFSET;
-
-    Ypos0 += ROW_OFFSET;
-    Ypos1 += ROW_OFFSET;
 
     parameter[0] = (Xpos0) >> 8;
     parameter[1] = (Xpos0) & 0xFF;
@@ -281,14 +321,15 @@ static vsf_err_t __vk_disp_lcdc_refresh(vk_disp_t *pthis, vk_disp_area_t *area, 
     return VSF_ERR_NONE;
 }
 
-static void __vk_disp_lcdc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
+static void __vk_disp_sf32_lcdc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
 {
     enum {
         STATE_WAIT_BEFORE_DISPLAY_ON,
         STATE_WAIT_DISPLAY_ON,
     };
-    LCDC_HandleTypeDef *hlcdc = &__lcdc_co5300;
-    uint8_t parameter[4];
+    vk_disp_sf32_lcdc_t *sf32_lcdc = container_of(eda, vk_disp_sf32_lcdc_t, task);
+    LCDC_HandleTypeDef *hlcdc = &sf32_lcdc->handle;
+    uint8_t *init_seq_cur;
 
     switch (evt) {
     case VSF_EVT_INIT:
@@ -296,99 +337,54 @@ static void __vk_disp_lcdc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
 //        HAL_LCDC_Enter_LP(hlcdc);
 //        HAL_LCDC_Init(hlcdc);
 
-        parameter[0] = 0x20;
-        LCD_WriteReg(hlcdc, 0xFE, parameter, 1);
-        parameter[0] = 0x5A;
-        LCD_WriteReg(hlcdc, 0xF4, parameter, 1);
-        parameter[0] = 0x59;
-        LCD_WriteReg(hlcdc, 0xF5, parameter, 1);
-
-        parameter[0] = 0x20;
-        LCD_WriteReg(hlcdc, 0xFE, parameter, 1);
-        parameter[0] = 0xA5;
-        LCD_WriteReg(hlcdc, 0xF4, parameter, 1);
-        parameter[0] = 0xA5;
-        LCD_WriteReg(hlcdc, 0xF5, parameter, 1);
-
-        parameter[0] = 0x00;
-        LCD_WriteReg(hlcdc, 0xFE, parameter, 1);
-        parameter[0] = 0x80;
-        LCD_WriteReg(hlcdc, 0xC4, parameter, 1);
-        parameter[0] = 0x55;
-        LCD_WriteReg(hlcdc, 0x3A, parameter, 1);
-        parameter[0] = 0x00;
-        LCD_WriteReg(hlcdc, 0x35, parameter, 1);
-        parameter[0] = 0x20;
-        LCD_WriteReg(hlcdc, 0x53, parameter, 1);
-
-        parameter[0] = 0xff;
-        LCD_WriteReg(hlcdc, 0x63, parameter, 1);
-
-        parameter[0] = (COL_OFFSET >> 8) & 0xFF;
-        parameter[1] = COL_OFFSET & 0xFF;
-        parameter[2] = ((VSF_BOARD_DISP_WIDTH + COL_OFFSET - 1) >> 8) & 0xFF;
-        parameter[3] = (VSF_BOARD_DISP_WIDTH + COL_OFFSET - 1) & 0xFF;
-        LCD_WriteReg(hlcdc, 0x2A, parameter, 4);
-        parameter[0] = (ROW_OFFSET >> 8) & 0xFF;
-        parameter[1] = ROW_OFFSET & 0xFF;
-        parameter[2] = ((VSF_BOARD_DISP_HEIGHT + ROW_OFFSET - 1) >> 8) & 0xFF;
-        parameter[3] = (VSF_BOARD_DISP_HEIGHT + ROW_OFFSET - 1) & 0xFF;
-        LCD_WriteReg(hlcdc, 0x2B, parameter, 4);
-
-        LCD_WriteReg(hlcdc, 0x11, (uint8_t *)NULL, 0);
-
-        vsf_eda_set_user_value(STATE_WAIT_BEFORE_DISPLAY_ON);
-        vsf_teda_set_timer_ms(120);
-        break;
+        sf32_lcdc->__init_seq_cur = (uint8_t *)sf32_lcdc->init_seq;
+        // fall through
     case VSF_EVT_TIMER:
-        switch (vsf_eda_get_user_value()) {
-        case STATE_WAIT_BEFORE_DISPLAY_ON:
-            LCD_WriteReg(hlcdc, 0x29, (uint8_t *)NULL, 0);
-            vsf_eda_set_user_value(STATE_WAIT_DISPLAY_ON);
-            vsf_teda_set_timer_ms(70);
-            break;
-        case STATE_WAIT_DISPLAY_ON:
-            LCD_WriteReg(hlcdc, REG_DISPLAY_ON, (uint8_t *)NULL, 0);
-            HAL_LCDC_SetBgColor(hlcdc, 0, 0, 0);
-            HAL_LCDC_LayerReset(hlcdc, HAL_LCDC_LAYER_DEFAULT);
-
-            uint8_t bright = 255;
-            LCD_WriteReg(hlcdc, REG_WBRIGHT, &bright, 1);
-
-#if VSF_BOARD_DISP_COLOR == VSF_DISP_COLOR_RGB565
-            HAL_LCDC_LayerSetFormat(hlcdc, 0, LCDC_PIXEL_FORMAT_RGB565);
-#elif VSF_BOARD_DISP_COLOR == VSF_DISP_COLOR_ARGB8888
-            HAL_LCDC_LayerSetFormat(hlcdc, 0, LCDC_PIXEL_FORMAT_ARGB888);
-#elif VSF_BOARD_DISP_COLOR == VSF_DISP_COLOR_RGB888
-            HAL_LCDC_LayerSetFormat(hlcdc, 0, LCDC_PIXEL_FORMAT_RGB888);
-#else
-#   error add color support
-#endif
-
-            HAL_NVIC_SetPriority(LCDC1_IRQn, 6, 0);
-            HAL_NVIC_EnableIRQ(LCDC1_IRQn);
-
-            vk_disp_on_ready(vsf_board.display_dev);
-            break;
+        init_seq_cur = sf32_lcdc->__init_seq_cur;
+        while ((init_seq_cur - sf32_lcdc->init_seq) < sf32_lcdc->init_seq_len) {
+            if ((0 == init_seq_cur[0]) && (init_seq_cur[1] != 0)) {
+                sf32_lcdc->__init_seq_cur += 2;
+                vsf_teda_set_timer_ms(init_seq_cur[1]);
+                return;
+            } else {
+                sf32_lcdc->__init_seq_cur += init_seq_cur[1] + 2;
+                LCD_WriteReg(hlcdc, init_seq_cur[0], &init_seq_cur[2], init_seq_cur[1]);
+            }
+            init_seq_cur = sf32_lcdc->__init_seq_cur;
         }
+
+        HAL_LCDC_SetBgColor(hlcdc, 0, 0, 0);
+        HAL_LCDC_LayerReset(hlcdc, HAL_LCDC_LAYER_DEFAULT);
+
+        uint8_t bright = 255;
+        LCD_WriteReg(hlcdc, REG_WBRIGHT, &bright, 1);
+
+        HAL_LCDC_LayerSetFormat(hlcdc, 0, LCDC_PIXEL_FORMAT);
+
+        HAL_NVIC_SetPriority(LCDC1_IRQn, 6, 0);
+        HAL_NVIC_EnableIRQ(LCDC1_IRQn);
+
+        vk_disp_on_ready(vsf_board.display_dev);
         break;
-    }
+    };
 }
 
-static vsf_err_t __vk_disp_lcdc_init(vk_disp_t *pthis)
+static vsf_err_t __vk_disp_sf32_lcdc_init(vk_disp_t *pthis)
 {
-    __lcdc_task.fn.evthandler = __vk_disp_lcdc_evthandler;
+    vk_disp_sf32_lcdc_t *sf32_lcdc = (vk_disp_sf32_lcdc_t *)pthis;
+    vsf_teda_t *teda = &sf32_lcdc->task;
+    teda->fn.evthandler = __vk_disp_sf32_lcdc_evthandler;
 #if VSF_KERNEL_CFG_EDA_SUPPORT_ON_TERMINATE == ENABLED
-    __lcdc_task.on_terminate = NULL;
+    teda->on_terminate = NULL;
 #endif
 
-    vsf_teda_init(&__lcdc_task, vsf_prio_0);
+    vsf_teda_init(teda, vsf_prio_0);
     return VSF_ERR_NONE;
 }
 
-const vk_disp_drv_t vk_disp_lcdc_drv = {
-    .init           = __vk_disp_lcdc_init,
-    .refresh        = __vk_disp_lcdc_refresh,
+const vk_disp_drv_t vk_disp_sf32_lcdc_drv = {
+    .init           = __vk_disp_sf32_lcdc_init,
+    .refresh        = __vk_disp_sf32_lcdc_refresh,
 };
 
 void vsf_board_prepare_hw_for_linux(void)
@@ -427,9 +423,9 @@ void vsf_board_prepare_hw_for_linux(void)
     });
     HAL_GPIO_WritePin(hwp_gpio1, LCD_BACKLIGHT_PIN, (GPIO_PinState)1);
 
-    LCDC_HandleTypeDef *hlcdc = &__lcdc_co5300;
+    LCDC_HandleTypeDef *hlcdc = &vk_disp_sf32_lcdc.handle;
     hlcdc->Instance = LCDC1;
-    hlcdc->Init = __lcdc_init_cfg_co5300;
+    hlcdc->Init = __lcdc_init_cfg;
     hlcdc->XferCpltCallback = __vk_lcdc_refresh_on_ready;
 
     HAL_LCDC_Enter_LP(hlcdc);
@@ -444,9 +440,10 @@ void vsf_board_prepare_hw_for_linux(void)
 
     uint32_t lcd_id = LCD_ReadData(hlcdc, REG_LCD_ID, 3);
     if (lcd_id == LCD_ID) {
-        ((vk_disp_param_t *)(&vsf_board.display_dummy.param))->drv = &vk_disp_lcdc_drv;
+        ((vk_disp_param_t *)(&vk_disp_sf32_lcdc.param))->drv = &vk_disp_sf32_lcdc_drv;
         vsf_trace_debug("LCD: 0x%08X" VSF_TRACE_CFG_LINEEND, lcd_id);
     } else {
+        ((vk_disp_param_t *)(&vk_disp_sf32_lcdc.param))->drv = &vk_disp_dummy_drv;
         HAL_LCDC_DeInit(hlcdc);
     }
 

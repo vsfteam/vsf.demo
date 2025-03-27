@@ -56,7 +56,6 @@ typedef struct vsf_board_t {
     uint32_t sdio_voltage;
 #endif
 #if VSF_USE_UI == ENABLED
-    vk_disp_dummy_t display_dummy;
     vk_disp_t *display_dev;
 #endif
 #if VSF_USE_AUDIO == ENABLED
