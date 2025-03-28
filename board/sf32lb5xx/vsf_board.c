@@ -43,10 +43,20 @@
 /*============================ TYPES =========================================*/
 /*============================ PROTOTYPES ====================================*/
 
-typedef struct vk_disp_sf32_lcdc_t {
-    implement(vk_disp_t)
+typedef struct sf32_lcdc_info_t {
+    LCDC_InitTypeDef Init;
+
     const uint8_t *init_seq;
     uint16_t init_seq_len;
+    uint16_t width;
+    uint16_t height;
+    uint16_t x_offset;
+    uint16_t y_offset;
+} sf32_lcdc_info_t;
+
+typedef struct vk_disp_sf32_lcdc_t {
+    implement(vk_disp_t)
+    const sf32_lcdc_info_t *info;
 
     LCDC_HandleTypeDef handle;
     vsf_teda_t task;
@@ -62,25 +72,6 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
     .priority                   = APP_CFG_USBH_ARCH_PRIO,
 };
 #endif
-
-static const LCDC_InitTypeDef __lcdc_init_cfg =
-{
-    .lcd_itf = LCDC_INTF_SPI_DCX_4DATA,
-    .freq = 48000000,        //CO5300 RGB565 only support 50000000,  RGB888 support 60000000
-    .color_mode = LCDC_PIXEL_FORMAT,
-
-    .cfg = {
-        .spi = {
-            .dummy_clock = 0,
-            .syn_mode = HAL_LCDC_SYNC_DISABLE,
-            .vsyn_polarity = 1,
-            //default_vbp=2, frame rate=82, delay=115us,
-            //TODO: use us to define delay instead of cycle, delay_cycle=115*48
-            .vsyn_delay_us = 0,
-            .hsyn_num = 0,
-        },
-    },
-};
 
 static const uint8_t __lcdc_init_seq_co5300[] = {
     VSF_DISP_MIPI_LCD_WRITE(0xFE, 1, 0x20), //Pass word unlock
@@ -105,14 +96,39 @@ static const uint8_t __lcdc_init_seq_co5300[] = {
     VSF_DISP_MIPI_LCD_WRITE(0x29, 0),
 };
 
-static vk_disp_sf32_lcdc_t vk_disp_sf32_lcdc = {
+static sf32_lcdc_info_t __sf32_lcdc_co5300_info = {
+    .Init                       = {
+        .lcd_itf = LCDC_INTF_SPI_DCX_4DATA,
+        .freq = 48000000,        //CO5300 RGB565 only support 50000000,  RGB888 support 60000000
+        .color_mode = LCDC_PIXEL_FORMAT,
+
+        .cfg = {
+            .spi = {
+                .dummy_clock = 0,
+                .syn_mode = HAL_LCDC_SYNC_DISABLE,
+                .vsyn_polarity = 1,
+                //default_vbp=2, frame rate=82, delay=115us,
+                //TODO: use us to define delay instead of cycle, delay_cycle=115*48
+                .vsyn_delay_us = 0,
+                .hsyn_num = 0,
+            },
+        },
+    },
+    .init_seq                   = __lcdc_init_seq_co5300,
+    .init_seq_len               = sizeof(__lcdc_init_seq_co5300),
+    .width                      = 390,
+    .height                     = 450,
+    .x_offset                   = (390 - VSF_BOARD_DISP_WIDTH) / 2,
+    .y_offset                   = (450 - VSF_BOARD_DISP_HEIGHT) / 2,
+};
+
+static vk_disp_sf32_lcdc_t __vk_disp_sf32_lcdc = {
     .param                      = {
         .width                  = VSF_BOARD_DISP_WIDTH,
         .height                 = VSF_BOARD_DISP_HEIGHT,
         .color                  = VSF_BOARD_DISP_COLOR,
     },
-    .init_seq                   = __lcdc_init_seq_co5300,
-    .init_seq_len               = sizeof(__lcdc_init_seq_co5300),
+    .info                       = &__sf32_lcdc_co5300_info,
 };
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -145,7 +161,7 @@ vsf_board_t vsf_board = {
 #   endif
 #endif
 #if VSF_USE_UI == ENABLED
-    .display_dev                = &vk_disp_sf32_lcdc.use_as__vk_disp_t,
+    .display_dev                = &__vk_disp_sf32_lcdc.use_as__vk_disp_t,
 #endif
 };
 #endif
@@ -236,9 +252,6 @@ bool vsf_app_driver_init(void)
 #define TP_RESET                (9)
 #define LCD_VADD_EN             (37)
 
-#define ROW_OFFSET              (0x00)
-#define COL_OFFSET              (0x00)
-
 #define LCD_ID                  0x331100
 
 #define REG_LCD_ID              0x04
@@ -254,7 +267,7 @@ static void LCD_ReadMode(LCDC_HandleTypeDef *hlcdc, bool enable)
     if (enable) {
         HAL_LCDC_SetFreq(hlcdc, 2000000);
     } else {
-        HAL_LCDC_SetFreq(hlcdc, __lcdc_init_cfg.freq);
+        HAL_LCDC_SetFreq(hlcdc, __sf32_lcdc_co5300_info.Init.freq);
     }
 }
 
@@ -282,7 +295,7 @@ static void LCD_WriteReg(LCDC_HandleTypeDef *hlcdc, uint16_t LCD_Reg, uint8_t *P
 
 void LCDC1_IRQHandler(void)
 {
-    HAL_LCDC_IRQHandler(&vk_disp_sf32_lcdc.handle);
+    HAL_LCDC_IRQHandler(&__vk_disp_sf32_lcdc.handle);
 }
 
 static void __vk_lcdc_refresh_on_ready(LCDC_HandleTypeDef *lcdc)
@@ -303,16 +316,16 @@ static vsf_err_t __vk_disp_sf32_lcdc_refresh(vk_disp_t *pthis, vk_disp_area_t *a
     HAL_LCDC_Exit_LP(hlcdc);
     HAL_LCDC_SetROIArea(hlcdc, Xpos0, Ypos0, Xpos1, Ypos1);
 
-    parameter[0] = (Xpos0) >> 8;
-    parameter[1] = (Xpos0) & 0xFF;
-    parameter[2] = (Xpos1) >> 8;
-    parameter[3] = (Xpos1) & 0xFF;
+    parameter[0] = (Xpos0 + sf32_lcdc->info->x_offset) >> 8;
+    parameter[1] = (Xpos0 + sf32_lcdc->info->x_offset) & 0xFF;
+    parameter[2] = (Xpos1 + sf32_lcdc->info->x_offset) >> 8;
+    parameter[3] = (Xpos1 + sf32_lcdc->info->x_offset) & 0xFF;
     LCD_WriteReg(hlcdc, REG_CASET, parameter, 4);
 
-    parameter[0] = (Ypos0) >> 8;
-    parameter[1] = (Ypos0) & 0xFF;
-    parameter[2] = (Ypos1) >> 8;
-    parameter[3] = (Ypos1) & 0xFF;
+    parameter[0] = (Ypos0 + sf32_lcdc->info->y_offset) >> 8;
+    parameter[1] = (Ypos0 + sf32_lcdc->info->y_offset) & 0xFF;
+    parameter[2] = (Ypos1 + sf32_lcdc->info->y_offset) >> 8;
+    parameter[3] = (Ypos1 + sf32_lcdc->info->y_offset) & 0xFF;
     LCD_WriteReg(hlcdc, REG_RASET, parameter, 4);
 
     HAL_LCDC_LayerSetData(hlcdc, HAL_LCDC_LAYER_DEFAULT, (uint8_t *)disp_buff, Xpos0, Ypos0, Xpos1, Ypos1);
@@ -337,11 +350,11 @@ static void __vk_disp_sf32_lcdc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
 //        HAL_LCDC_Enter_LP(hlcdc);
 //        HAL_LCDC_Init(hlcdc);
 
-        sf32_lcdc->__init_seq_cur = (uint8_t *)sf32_lcdc->init_seq;
+        sf32_lcdc->__init_seq_cur = (uint8_t *)sf32_lcdc->info->init_seq;
         // fall through
     case VSF_EVT_TIMER:
         init_seq_cur = sf32_lcdc->__init_seq_cur;
-        while ((init_seq_cur - sf32_lcdc->init_seq) < sf32_lcdc->init_seq_len) {
+        while ((init_seq_cur - sf32_lcdc->info->init_seq) < sf32_lcdc->info->init_seq_len) {
             if ((0 == init_seq_cur[0]) && (init_seq_cur[1] != 0)) {
                 sf32_lcdc->__init_seq_cur += 2;
                 vsf_teda_set_timer_ms(init_seq_cur[1]);
@@ -382,7 +395,7 @@ static vsf_err_t __vk_disp_sf32_lcdc_init(vk_disp_t *pthis)
     return VSF_ERR_NONE;
 }
 
-const vk_disp_drv_t vk_disp_sf32_lcdc_drv = {
+static const vk_disp_drv_t __vk_disp_sf32_lcdc_drv = {
     .init           = __vk_disp_sf32_lcdc_init,
     .refresh        = __vk_disp_sf32_lcdc_refresh,
 };
@@ -423,9 +436,9 @@ void vsf_board_prepare_hw_for_linux(void)
     });
     HAL_GPIO_WritePin(hwp_gpio1, LCD_BACKLIGHT_PIN, (GPIO_PinState)1);
 
-    LCDC_HandleTypeDef *hlcdc = &vk_disp_sf32_lcdc.handle;
+    LCDC_HandleTypeDef *hlcdc = &__vk_disp_sf32_lcdc.handle;
     hlcdc->Instance = LCDC1;
-    hlcdc->Init = __lcdc_init_cfg;
+    hlcdc->Init = __sf32_lcdc_co5300_info.Init;
     hlcdc->XferCpltCallback = __vk_lcdc_refresh_on_ready;
 
     HAL_LCDC_Enter_LP(hlcdc);
@@ -440,10 +453,10 @@ void vsf_board_prepare_hw_for_linux(void)
 
     uint32_t lcd_id = LCD_ReadData(hlcdc, REG_LCD_ID, 3);
     if (lcd_id == LCD_ID) {
-        ((vk_disp_param_t *)(&vk_disp_sf32_lcdc.param))->drv = &vk_disp_sf32_lcdc_drv;
+        ((vk_disp_param_t *)(&__vk_disp_sf32_lcdc.param))->drv = &__vk_disp_sf32_lcdc_drv;
         vsf_trace_debug("LCD: 0x%08X" VSF_TRACE_CFG_LINEEND, lcd_id);
     } else {
-        ((vk_disp_param_t *)(&vk_disp_sf32_lcdc.param))->drv = &vk_disp_dummy_drv;
+        ((vk_disp_param_t *)(&__vk_disp_sf32_lcdc.param))->drv = &vk_disp_dummy_drv;
         HAL_LCDC_DeInit(hlcdc);
     }
 
