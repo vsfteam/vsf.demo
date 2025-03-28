@@ -136,10 +136,18 @@
 
 #define APP_MSCBOOT_CFG_FW_SIZE                         (APP_MSCBOOT_CFG_ROMFS_ADDR - APP_MSCBOOT_CFG_FW_ADDR)
 #define APP_MSCBOOT_CFG_FW_ADDR                         0x20000
+#define APP_MSCBOOT_CFG_ROOT_ADDR                       (APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_ROMFS_SIZE)
+
+#define SF32_USE_W21Q01JVIM                             0
+#if SF32_USE_W21Q01JVIM
 #define APP_MSCBOOT_CFG_ROMFS_SIZE                      0x5800000
 #define APP_MSCBOOT_CFG_ROMFS_ADDR                      0x800000
 #define APP_MSCBOOT_CFG_ROOT_SIZE                       0x2000000
-#define APP_MSCBOOT_CFG_ROOT_ADDR                       (APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_ROMFS_SIZE)
+#else
+#define APP_MSCBOOT_CFG_ROMFS_SIZE                      0x200000
+#define APP_MSCBOOT_CFG_ROMFS_ADDR                      0x200000
+#define APP_MSCBOOT_CFG_ROOT_SIZE                       0x400000
+#endif
 
 #define APP_MSCBOOT_CFG_ERASE_ALIGN                     (4 * 1024)
 #define APP_MSCBOOT_CFG_ERASE_BLOCK_SIZE                (4 * 1024)
