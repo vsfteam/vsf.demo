@@ -74,29 +74,10 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
 #endif
 
 static const uint8_t __lcdc_init_seq_co5300[] = {
-    VSF_DISP_MIPI_LCD_WRITE(0xFE, 1, 0x20), //Pass word unlock
-    VSF_DISP_MIPI_LCD_WRITE(0xF4, 1, 0x5A),
-    VSF_DISP_MIPI_LCD_WRITE(0xF5, 1, 0x59),
-
-    VSF_DISP_MIPI_LCD_WRITE(0xFE, 1, 0x20), //Pass word lock
-    VSF_DISP_MIPI_LCD_WRITE(0xF4, 1, 0xA5),
-    VSF_DISP_MIPI_LCD_WRITE(0xF5, 1, 0xA5),
-
-    VSF_DISP_MIPI_LCD_WRITE(0xFE, 1, 0x00),
-    VSF_DISP_MIPI_LCD_WRITE(0xC4, 1, 0x80),
-    VSF_DISP_MIPI_LCD_WRITE(0x3A, 1, 0x55),
-    VSF_DISP_MIPI_LCD_WRITE(0x35, 1, 0x00),
-    VSF_DISP_MIPI_LCD_WRITE(0x53, 1, 0x20),
-
-    VSF_DISP_MIPI_LCD_WRITE(0x63, 1, 0xFF),
-    VSF_DISP_MIPI_LCD_WRITE(0x11, 0),
-    VSF_DISP_MIPI_LCD_DELAY_MS(120),
-    VSF_DISP_MIPI_LCD_WRITE(0x29, 0),
-    VSF_DISP_MIPI_LCD_DELAY_MS(70),
-    VSF_DISP_MIPI_LCD_WRITE(0x29, 0),
+    VSF_DISP_MIPI_LCD_INITSEQ(VSF_DISP_MIPI_LCD_CO5300_BASE)
 };
 
-static sf32_lcdc_info_t __sf32_lcdc_co5300_info = {
+static const sf32_lcdc_info_t __sf32_lcdc_co5300_info = {
     .Init                       = {
         .lcd_itf = LCDC_INTF_SPI_DCX_4DATA,
         .freq = 48000000,        //CO5300 RGB565 only support 50000000,  RGB888 support 60000000
@@ -254,14 +235,6 @@ bool vsf_app_driver_init(void)
 
 #define LCD_ID                  0x331100
 
-#define REG_LCD_ID              0x04
-#define REG_DISPLAY_ON          0x29
-#define REG_CASET               0x2A
-#define REG_RASET               0x2B
-#define REG_WRITE_RAM           0x2C
-#define REG_CONTINUE_WRITE_RAM  0x3C
-#define REG_WBRIGHT             0x51
-
 static void LCD_ReadMode(LCDC_HandleTypeDef *hlcdc, bool enable)
 {
     if (enable) {
@@ -285,7 +258,7 @@ static void LCD_WriteReg(LCDC_HandleTypeDef *hlcdc, uint16_t LCD_Reg, uint8_t *P
 {
     uint32_t cmd;
 
-    if ((REG_WRITE_RAM == LCD_Reg) || (REG_CONTINUE_WRITE_RAM == LCD_Reg)) {
+    if (MIPI_DCS_CMD_HEX_CODE_WRITE_MEMORY_START == LCD_Reg) {
         cmd = (0x32 << 24) | (LCD_Reg << 8);
     } else {
         cmd = (0x02 << 24) | (LCD_Reg << 8);
@@ -320,16 +293,16 @@ static vsf_err_t __vk_disp_sf32_lcdc_refresh(vk_disp_t *pthis, vk_disp_area_t *a
     parameter[1] = (Xpos0 + sf32_lcdc->info->x_offset) & 0xFF;
     parameter[2] = (Xpos1 + sf32_lcdc->info->x_offset) >> 8;
     parameter[3] = (Xpos1 + sf32_lcdc->info->x_offset) & 0xFF;
-    LCD_WriteReg(hlcdc, REG_CASET, parameter, 4);
+    LCD_WriteReg(hlcdc, MIPI_DCS_CMD_HEX_CODE_SET_COLUMN_ADDRESS, parameter, 4);
 
     parameter[0] = (Ypos0 + sf32_lcdc->info->y_offset) >> 8;
     parameter[1] = (Ypos0 + sf32_lcdc->info->y_offset) & 0xFF;
     parameter[2] = (Ypos1 + sf32_lcdc->info->y_offset) >> 8;
     parameter[3] = (Ypos1 + sf32_lcdc->info->y_offset) & 0xFF;
-    LCD_WriteReg(hlcdc, REG_RASET, parameter, 4);
+    LCD_WriteReg(hlcdc, MIPI_DCS_CMD_HEX_CODE_SET_PAGE_ADDRESS, parameter, 4);
 
     HAL_LCDC_LayerSetData(hlcdc, HAL_LCDC_LAYER_DEFAULT, (uint8_t *)disp_buff, Xpos0, Ypos0, Xpos1, Ypos1);
-    HAL_LCDC_SendLayerData2Reg_IT(hlcdc, ((0x32 << 24) | (REG_WRITE_RAM << 8)), 4);
+    HAL_LCDC_SendLayerData2Reg_IT(hlcdc, ((0x32 << 24) | (MIPI_DCS_CMD_HEX_CODE_WRITE_MEMORY_START << 8)), 4);
     HAL_LCDC_Enter_LP(hlcdc);
     return VSF_ERR_NONE;
 }
@@ -370,7 +343,7 @@ static void __vk_disp_sf32_lcdc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
         HAL_LCDC_LayerReset(hlcdc, HAL_LCDC_LAYER_DEFAULT);
 
         uint8_t bright = 255;
-        LCD_WriteReg(hlcdc, REG_WBRIGHT, &bright, 1);
+        LCD_WriteReg(hlcdc, MIPI_DCS_CMD_HEX_CODE_SET_DISPLAY_BRIGHTNESS, &bright, 1);
 
         HAL_LCDC_LayerSetFormat(hlcdc, 0, LCDC_PIXEL_FORMAT);
 
@@ -451,7 +424,7 @@ void vsf_board_prepare_hw_for_linux(void)
     HAL_GPIO_WritePin(hwp_gpio1, LCD_RESET_PIN, (GPIO_PinState)1);
     vsf_thread_delay_ms(50);
 
-    uint32_t lcd_id = LCD_ReadData(hlcdc, REG_LCD_ID, 3);
+    uint32_t lcd_id = LCD_ReadData(hlcdc, MIPI_DCS_CMD_HEX_CODE_GET_DISPLAY_ID, 3);
     if (lcd_id == LCD_ID) {
         ((vk_disp_param_t *)(&__vk_disp_sf32_lcdc.param))->drv = &__vk_disp_sf32_lcdc_drv;
         vsf_trace_debug("LCD: 0x%08X" VSF_TRACE_CFG_LINEEND, lcd_id);
