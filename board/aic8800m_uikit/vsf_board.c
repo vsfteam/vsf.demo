@@ -52,7 +52,8 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
 #if VSF_USE_UI == ENABLED
 static const uint8_t __vsf_board_lcd_initseq[] = {
     VSF_DISP_ST7789V_SPI_INITSEQ(
-        MIPI_MODE_RGB, MIPI_PIXEL_FORMAT_BITLEN(16)
+        MIPI_PIXEL_FORMAT_BITLEN(16),
+        MIPI_MODE_RGB
     ),
 };
 #endif
