@@ -59,9 +59,6 @@ typedef struct vk_disp_sf32_lcdc_t {
     const sf32_lcdc_info_t *info;
 
     LCDC_HandleTypeDef handle;
-    vsf_teda_t task;
-
-    uint8_t *__init_seq_cur;
 } vk_disp_sf32_lcdc_t;
 
 /*============================ LOCAL VARIABLES ===============================*/
@@ -307,64 +304,38 @@ static vsf_err_t __vk_disp_sf32_lcdc_refresh(vk_disp_t *pthis, vk_disp_area_t *a
     return VSF_ERR_NONE;
 }
 
-static void __vk_disp_sf32_lcdc_evthandler(vsf_eda_t *eda, vsf_evt_t evt)
-{
-    enum {
-        STATE_WAIT_BEFORE_DISPLAY_ON,
-        STATE_WAIT_DISPLAY_ON,
-    };
-    vk_disp_sf32_lcdc_t *sf32_lcdc = container_of(eda, vk_disp_sf32_lcdc_t, task);
-    LCDC_HandleTypeDef *hlcdc = &sf32_lcdc->handle;
-    uint8_t *init_seq_cur;
-
-    switch (evt) {
-    case VSF_EVT_INIT:
-        // already called in vsf_board_prepare_hw_for_linux when detecting screen
-//        HAL_LCDC_Enter_LP(hlcdc);
-//        HAL_LCDC_Init(hlcdc);
-
-        sf32_lcdc->__init_seq_cur = (uint8_t *)sf32_lcdc->info->init_seq;
-        // fall through
-    case VSF_EVT_TIMER:
-        init_seq_cur = sf32_lcdc->__init_seq_cur;
-        while ((init_seq_cur - sf32_lcdc->info->init_seq) < sf32_lcdc->info->init_seq_len) {
-            if ((0 == init_seq_cur[0]) && (init_seq_cur[1] != 0)) {
-                sf32_lcdc->__init_seq_cur += 2;
-                vsf_teda_set_timer_ms(init_seq_cur[1]);
-                return;
-            } else {
-                sf32_lcdc->__init_seq_cur += init_seq_cur[1] + 2;
-                LCD_WriteReg(hlcdc, init_seq_cur[0], &init_seq_cur[2], init_seq_cur[1]);
-            }
-            init_seq_cur = sf32_lcdc->__init_seq_cur;
-        }
-
-        HAL_LCDC_SetBgColor(hlcdc, 0, 0, 0);
-        HAL_LCDC_LayerReset(hlcdc, HAL_LCDC_LAYER_DEFAULT);
-
-        uint8_t bright = 255;
-        LCD_WriteReg(hlcdc, MIPI_DCS_CMD_HEX_CODE_SET_DISPLAY_BRIGHTNESS, &bright, 1);
-
-        HAL_LCDC_LayerSetFormat(hlcdc, 0, LCDC_PIXEL_FORMAT);
-
-        HAL_NVIC_SetPriority(LCDC1_IRQn, 6, 0);
-        HAL_NVIC_EnableIRQ(LCDC1_IRQn);
-
-        vk_disp_on_ready(vsf_board.display_dev);
-        break;
-    };
-}
-
 static vsf_err_t __vk_disp_sf32_lcdc_init(vk_disp_t *pthis)
 {
     vk_disp_sf32_lcdc_t *sf32_lcdc = (vk_disp_sf32_lcdc_t *)pthis;
-    vsf_teda_t *teda = &sf32_lcdc->task;
-    teda->fn.evthandler = __vk_disp_sf32_lcdc_evthandler;
-#if VSF_KERNEL_CFG_EDA_SUPPORT_ON_TERMINATE == ENABLED
-    teda->on_terminate = NULL;
-#endif
+    LCDC_HandleTypeDef *hlcdc = &sf32_lcdc->handle;
+    uint8_t *__init_seq_cur = (uint8_t *)sf32_lcdc->info->init_seq;
 
-    vsf_teda_init(teda, vsf_prio_0);
+// already called in vsf_board_prepare_hw_for_linux when detecting screen
+//  HAL_LCDC_Enter_LP(hlcdc);
+//  HAL_LCDC_Init(hlcdc);
+
+    while ((__init_seq_cur - sf32_lcdc->info->init_seq) < sf32_lcdc->info->init_seq_len) {
+        if ((0 == __init_seq_cur[0]) && (__init_seq_cur[1] != 0)) {
+            // should be delay_ms(__init_seq_cur[1])
+            VSF_ASSERT(false);
+        } else {
+            LCD_WriteReg(hlcdc, __init_seq_cur[0], &__init_seq_cur[2], __init_seq_cur[1]);
+            __init_seq_cur += __init_seq_cur[1] + 2;
+        }
+    }
+
+    HAL_LCDC_SetBgColor(hlcdc, 0, 0, 0);
+    HAL_LCDC_LayerReset(hlcdc, HAL_LCDC_LAYER_DEFAULT);
+
+    uint8_t bright = 255;
+    LCD_WriteReg(hlcdc, MIPI_DCS_CMD_HEX_CODE_SET_DISPLAY_BRIGHTNESS, &bright, 1);
+
+    HAL_LCDC_LayerSetFormat(hlcdc, 0, LCDC_PIXEL_FORMAT);
+
+    HAL_NVIC_SetPriority(LCDC1_IRQn, 6, 0);
+    HAL_NVIC_EnableIRQ(LCDC1_IRQn);
+
+    vk_disp_on_ready(vsf_board.display_dev);
     return VSF_ERR_NONE;
 }
 
