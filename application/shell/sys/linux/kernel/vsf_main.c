@@ -844,7 +844,7 @@ void vsf_usbh_uvc_on_new(void *uvc, usb_uvc_vc_interface_header_desc_t *vc_heade
 }
 #   endif
 
-#   if VSF_USBH_USE_BTHCI == ENABLED
+#   if VSF_USBH_USE_BTHCI == ENABLED && VSF_USE_BTSTACK == ENABLED
 vsf_err_t vsf_bluetooth_h2_on_new(void *dev, vk_usbh_dev_id_t *id)
 {
     btstack_memory_init();
@@ -934,7 +934,7 @@ static int __usbh_main(int argc, char *argv[])
         static vk_usbh_class_t __usbh_uvc = { .drv = &vk_usbh_uvc_drv };
         vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_uvc);
 #   endif
-#   if VSF_USBH_USE_BTHCI == ENABLED
+#   if VSF_USBH_USE_BTHCI == ENABLED && VSF_USE_BTSTACK == ENABLED
         static vk_usbh_class_t __usbh_bthci = { .drv = &vk_usbh_bthci_drv };
         vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_bthci);
 #   endif
