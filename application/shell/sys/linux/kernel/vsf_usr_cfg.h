@@ -39,6 +39,9 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 
 #include "vsf_board_cfg.h"
 // do not compare VSF_BOARD_USE_EXT_GAMEPAD with ENABLED here, because ENABLED maybe undefined
+#ifndef VSF_BOARD_USE_EXT_GAMEPAD
+#   define VSF_BOARD_USE_EXT_GAMEPAD                 0
+#endif
 #if VSF_BOARD_USE_EXT_GAMEPAD
 #   include "ext/gamepad/vsf_board_ext_gamepad_cfg.h"
 #endif
