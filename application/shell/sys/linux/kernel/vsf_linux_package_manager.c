@@ -323,7 +323,7 @@ static int __vpm_install_local_package(char *path)
 
     printf("installing %s:", package);
     vk_mal_init(&romfs_mal.use_as__vk_mal_t);
-    flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
+    flash_addr = (uintptr_t)image - (uintptr_t)__vpm.fsinfo->image;
     vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, cursize, buffer);
     flash_addr += cursize;
     while (remain > 0) {
@@ -348,7 +348,7 @@ static int __vpm_install_local_package(char *path)
         flash_addr = (flash_addr + __vpm.fsinfo->alignment - 1) & ~(__vpm.fsinfo->alignment - 1);
         vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header_zero), (uint8_t *)&header_zero);
 
-        flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
+        flash_addr = (uintptr_t)image - (uintptr_t)__vpm.fsinfo->image;
         vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header), (uint8_t *)&header);
     }
 
@@ -408,7 +408,7 @@ static int __vpm_uninstall_packages(char *argv[])
 
     vk_mal_init(&romfs_mal.use_as__vk_mal_t);
 
-    uint64_t flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
+    uint64_t flash_addr = (uintptr_t)image - (uintptr_t)__vpm.fsinfo->image;
     uint32_t image_size;
     printf("uninstall %s\n", image->name);
     image = vsf_romfs_chain_get_next(__vpm.fsinfo, image, false);

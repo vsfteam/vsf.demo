@@ -29,7 +29,7 @@ void vsf_app_disp_render_char(struct font_desc *font, uint8_t *disp_buff, uint8_
 {
     uint8_t font_byte_width = (font->width + 7) >> 3;
     uint8_t *data = (uint8_t *)font->data + font->height * font_byte_width * c;
-    uint32_t line_data, line_msb = 1 << (font->width - 1), pixel;
+    uint32_t line_data = 0, line_msb = 1 << (font->width - 1), pixel;
     uint8_t *disp_buff_tmp;
 
     for (uint8_t i = 0; i < font->height; i++) {
