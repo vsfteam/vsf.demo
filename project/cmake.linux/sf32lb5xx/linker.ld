@@ -107,7 +107,6 @@ SECTIONS
         __zero_table_end__ = .;
     } > FLASH
 
-    __etext = .;
     .data :
     {
         __data_start__ = .;
@@ -135,8 +134,9 @@ SECTIONS
         . = ALIGN(4);
         /* All data end */
         __data_end__ = .;
-
-    } > RAM
+    } > RAM AT > FLASH
+    /* __etext is (for backwards compatibility) the name of the .data init source pointer (...) */
+    __etext = LOADADDR(.data);
 
     .noinit (NOLOAD):
     {
