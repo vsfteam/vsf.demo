@@ -849,7 +849,10 @@ vsf_err_t vsf_bluetooth_h2_on_new(void *dev, vk_usbh_dev_id_t *id)
 {
     btstack_memory_init();
     btstack_run_loop_init(btstack_run_loop_vsf_get_instance());
+
+    extern const hci_transport_t * hci_transport_usb_instance(void);
     hci_init(hci_transport_usb_instance(), dev);
+    hci_set_link_key_db(btstack_link_key_db_memory_instance());
 
     if ((id->idVendor == 0x0A12) && (id->idProduct == 0x0001)) {
         hci_set_chipset(btstack_chipset_csr_instance());
