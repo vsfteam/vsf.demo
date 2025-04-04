@@ -223,6 +223,29 @@ bool vsf_app_driver_init(void)
     return true;
 }
 
+// flash table for W25Q01JVIM
+
+#if SF32_USE_W25Q01JVIM
+
+#   include "flash_table.h"
+
+static FLASH_RDID_TYPE_T flash_cmd_id_pool_typ2[] =
+{
+    {0xef, 0x70, 0x21, 1, 0x8000000},   //W25Q01JVIM
+    {FLASH_INVALID_ID, 0, 0, 0, 0},      //last one
+};
+
+FLASH_RDID_TYPE_T * flash_cmd_id_pool[] =
+{
+    NULL,
+    NULL,
+    &flash_cmd_id_pool_typ2[0],
+    NULL,
+    NULL,
+    NULL,
+};
+#endif
+
 // LCD driver
 
 #define LCD_RESET_PIN           (0)

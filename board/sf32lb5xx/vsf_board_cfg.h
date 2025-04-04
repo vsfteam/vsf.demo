@@ -138,8 +138,10 @@
 #define APP_MSCBOOT_CFG_FW_ADDR                         0x20000
 #define APP_MSCBOOT_CFG_ROOT_ADDR                       (APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_ROMFS_SIZE)
 
-#define SF32_USE_W21Q01JVIM                             0
-#if SF32_USE_W21Q01JVIM
+#ifndef SF32_USE_W2Q01JVIM
+#   define SF32_USE_W2Q01JVIM                           0
+#endif
+#if SF32_USE_W25Q01JVIM
 #define APP_MSCBOOT_CFG_ROMFS_SIZE                      0x5800000
 #define APP_MSCBOOT_CFG_ROMFS_ADDR                      0x800000
 #define APP_MSCBOOT_CFG_ROOT_SIZE                       0x2000000
