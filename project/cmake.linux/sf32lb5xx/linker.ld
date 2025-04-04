@@ -89,9 +89,14 @@ SECTIONS
     {
         . = ALIGN(4);
         __copy_table_start__ = .;
-        LONG (__etext)
-        LONG (__data_start__)
-        LONG ((__data_end__ - __data_start__) >> 2)
+        LONG (LOADADDR(.data))
+        LONG (ADDR(.data))
+        LONG (SIZEOF(.data))
+
+        LONG (LOADADDR(.ramfunc))
+        LONG (ADDR(.ramfunc))
+        LONG (SIZEOF(.ramfunc))
+
         __copy_table_end__ = .;
     } > FLASH
 
@@ -137,6 +142,17 @@ SECTIONS
     } > RAM AT > FLASH
     /* __etext is (for backwards compatibility) the name of the .data init source pointer (...) */
     __etext = LOADADDR(.data);
+
+    .ramfunc :
+    {
+        . = ALIGN(4);
+        __ramfunc_data_start__ = .;
+
+        *(.ramfunc*)
+
+        . = ALIGN(4);
+        __ramfunc_data_end__ = .;
+    } > RAM AT > FLASH
 
     .noinit (NOLOAD):
     {
