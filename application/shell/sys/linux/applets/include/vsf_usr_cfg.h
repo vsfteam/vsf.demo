@@ -6,25 +6,6 @@
 /*============================ INCLUDES ======================================*/
 /*============================ MACROS ========================================*/
 
-//#define __VSF_APPLET_LIB__
-#define __LINUX__
-
-// ARCH
-
-#if     defined(__CPU_ARM__)
-// no program_start from CMSIS Core
-#   define __PROGRAM_START                              _start
-#elif   defined(__CPU_RV__) || defined(__CPU_RISCV__)
-#elif   defined(__CPU_X64__)
-#   define __VSF64__
-
-#   define VSF_OS_CFG_ADD_EVTQ_TO_IDLE                  ENABLED
-#   define VSF_KERNEL_CFG_CPU_USAGE                     DISABLED
-#   define VSF_KERNEL_CFG_EDA_SUPPORT_TIMER             ENABLED
-#else
-#   error target not supported
-#endif
-
 // components
 
 #define VSF_USE_TRACE                                   ENABLED

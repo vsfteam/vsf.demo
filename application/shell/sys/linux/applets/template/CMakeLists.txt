@@ -45,7 +45,7 @@ add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
 #vsf_add_compile_definitions(
 #)
 vsf_add_include_directories(
-    .
+    ../include
 )
 vsf_add_sources(
     main.c
