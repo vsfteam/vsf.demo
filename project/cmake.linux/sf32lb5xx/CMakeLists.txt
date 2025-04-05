@@ -1,11 +1,15 @@
 cmake_minimum_required(VERSION 3.13)
 cmake_policy(SET CMP0076 NEW)
 
-#if(NOT DEFINED ENV{VSF_PATH})
+if(NOT DEFINED ENV{VSF_PATH})
     get_filename_component(__VSF_PATH ../../../vsf ABSOLUTE)
     set(ENV{VSF_PATH} ${__VSF_PATH})
-#endif()
+endif()
+get_filename_component(__PROJ_PATH ./ ABSOLUTE)
 message(STATUS "VSF_PATH: $ENV{VSF_PATH}")
+
+get_filename_component(LINUX_APPLET_PATH ../../../application/shell/sys/linux/applets ABSOLUTE)
+message(STATUS "LINUX_APPLET_PATH: ${LINUX_APPLET_PATH}")
 
 # board and application settings
 set(BOARD_PATH ../../../board/sf32lb5xx)
@@ -29,6 +33,7 @@ set(VSF_TARGET SF32LB520U36)
 # VSF_USE configurations
 set(VSF_USE_LINUX 1)
     set(VSF_LINUX_USE_SIMPLE_LIBC 1)
+    set(VSF_LINUX_USE_SDL2 1)
 set(VSF_USE_LITTLEFS 1)
 set(VSF_USE_QRCODE 1)
 
@@ -48,6 +53,17 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC
     SF32LB52X
     SOC_BF0_HCPU
 )
+if(VSF_LINUX_USE_SDL2)
+    target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC
+        VSF_LINUX_USE_SDL2=ENABLED
+        VSF_SDL2_USE_VPLT=ENABLED
+    )
+    get_filename_component(SDL2_PATH ${LINUX_APPLET_PATH}/sdl ABSOLUTE)
+    include(${SDL2_PATH}/sdl2.cmake)
+
+    # -fno-short-enums required by SDL2
+    target_compile_options(${CMAKE_PROJECT_NAME} PUBLIC -fno-short-enums)
+endif()
 
 # linker script
 target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
