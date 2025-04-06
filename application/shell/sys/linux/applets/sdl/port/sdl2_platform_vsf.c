@@ -11,6 +11,31 @@
         SDL_AtomicTryLock, SDL_AtomicLock, SDL_AtomicUnlock, SDL_AtomicCAS,     /* SDL_atomic.h */          \
         SDL_AtomicSet, SDL_AtomicGet, SDL_AtomicAdd, SDL_AtomicCASPtr,                                      \
         SDL_AtomicSetPtr, SDL_AtomicGetPtr,                                                                 \
+        SDL_malloc, SDL_calloc, SDL_realloc, SDL_free, SDL_GetMemoryFunctions,  /* SDL_stdinc.h */          \
+        SDL_SetMemoryFunctions, SDL_GetNumAllocations, SDL_getenv, SDL_setenv,                              \
+        SDL_qsort, SDL_abs, SDL_isalpha, SDL_isalnum, SDL_isblank, SDL_iscntrl,                             \
+        SDL_isdigit, SDL_isxdigit, SDL_ispunct, SDL_isspace, SDL_isupper,                                   \
+        SDL_islower, SDL_isprint, SDL_isgraph, SDL_toupper, SDL_tolower,                                    \
+        SDL_crc32, SDL_memset, SDL_memcpy, SDL_memmove, SDL_memcmp, SDL_wcslen,                             \
+        SDL_wcslcpy, SDL_wcslcat, SDL_wcsdup, SDL_wcsstr, SDL_wcscmp,                                       \
+        SDL_wcsncmp, SDL_wcscasecmp, SDL_wcsncasecmp, SDL_strlen, SDL_strlcpy,                              \
+        SDL_utf8strlcpy, SDL_strlcat, SDL_strdup, SDL_strrev, SDL_strupr,                                   \
+        SDL_strlwr, SDL_strchr, SDL_strrchr, SDL_strstr, SDL_strtokr,                                       \
+        SDL_utf8strlen, SDL_itoa, SDL_uitoa, SDL_ltoa, SDL_ultoa, SDL_lltoa,                                \
+        SDL_ulltoa, SDL_atoi, SDL_atof, SDL_strtol, SDL_strtoul, SDL_strtoll,                               \
+        SDL_strtoull, SDL_strtod, SDL_strcmp, SDL_strncmp, SDL_strcasecmp,                                  \
+        SDL_strncasecmp, SDL_sscanf, SDL_vsscanf, SDL_snprintf, SDL_vsnprintf,                              \
+        SDL_asprintf, SDL_vasprintf, SDL_acos, SDL_acosf, SDL_asin, SDL_asinf,                              \
+        SDL_atan, SDL_atanf, SDL_atan2, SDL_atan2f, SDL_ceil, SDL_ceilf,                                    \
+        SDL_copysign, SDL_copysignf, SDL_cos, SDL_cosf, SDL_exp, SDL_expf,                                  \
+        SDL_fabs, SDL_fabsf, SDL_floor, SDL_floorf, SDL_trunc, SDL_truncf,                                  \
+        SDL_fmod, SDL_fmodf, SDL_log, SDL_logf, SDL_log10, SDL_log10f, SDL_pow,                             \
+        SDL_powf, SDL_round, SDL_roundf, SDL_lround, SDL_lroundf, SDL_scalbn,                               \
+        SDL_scalbnf, SDL_sin, SDL_sinf, SDL_sqrt, SDL_sqrtf, SDL_tan, SDL_tanf,                             \
+        SDL_iconv_open, SDL_iconv_close, SDL_iconv, SDL_iconv_string,                                       \
+        SDL_SetHintWithPriority, SDL_SetHint, SDL_GetHint, SDL_GetHintBoolean,  /* SDL_hints.h */           \
+        SDL_AddHintCallback, SDL_DelHintCallback, SDL_ClearHints,                                           \
+        SDL_ShowMessageBox, SDL_ShowSimpleMessageBox,                           /* SDL_messagebox.h */      \
         SDL_GetNumAudioDrivers, SDL_GetAudioDriver, SDL_AudioInit,              /* SDL_audio.h */           \
         SDL_AudioQuit, SDL_GetCurrentAudioDriver, SDL_OpenAudio,                                            \
         SDL_GetNumAudioDevices, SDL_GetAudioDeviceName, SDL_GetAudioDeviceSpec,                             \
@@ -36,6 +61,13 @@
         SDL_GetEventFilter, SDL_AddEventWatch, SDL_DelEventWatch,                                           \
         SDL_FilterEvents, SDL_EventState, SDL_RegisterEvents,                                               \
         SDL_GetBasePath, SDL_GetPrefPath,                                       /* SDL_filesystem.h */      \
+        SDL_GetKeyboardFocus, SDL_GetKeyboardState, SDL_GetModState,            /* SDL_keyboard.h */        \
+        SDL_SetModState, SDL_GetKeyFromScancode, SDL_GetScancodeFromKey,                                    \
+        SDL_GetScancodeName, SDL_GetScancodeFromName, SDL_GetKeyName,                                       \
+        SDL_GetKeyFromName, SDL_StartTextInput, SDL_IsTextInputActive,                                      \
+        SDL_StopTextInput, SDL_ClearComposition, SDL_IsTextInputShown,                                      \
+        SDL_SetTextInputRect, SDL_HasScreenKeyboardSupport,                                                 \
+        SDL_IsScreenKeyboardShown,                                                                          \
         SDL_GameControllerAddMappingsFromRW, SDL_GameControllerAddMapping,      /* SDL_gamecontroller.h */  \
         SDL_GameControllerNumMappings, SDL_GameControllerMappingForIndex,                                   \
         SDL_GameControllerMappingForGUID, SDL_GameControllerMapping,                                        \
@@ -141,7 +173,25 @@
         SDL_GetWindowOpacity, SDL_SetWindowModalFor, SDL_SetWindowInputFocus,                               \
         SDL_SetWindowGammaRamp, SDL_GetWindowGammaRamp, SDL_SetWindowHitTest,                               \
         SDL_FlashWindow, SDL_DestroyWindow, SDL_IsScreenSaverEnabled,                                       \
-        SDL_EnableScreenSaver, SDL_DisableScreenSaver
+        SDL_EnableScreenSaver, SDL_DisableScreenSaver,                                                      \
+        SDL_CreateRGBSurface, SDL_CreateRGBSurfaceWithFormat,                   /* SDL_surface.h */         \
+        SDL_CreateRGBSurfaceFrom, SDL_CreateRGBSurfaceWithFormatFrom,                                       \
+        SDL_FreeSurface, SDL_SetSurfacePalette, SDL_LockSurface,                                            \
+        SDL_UnlockSurface, SDL_LoadBMP_RW, SDL_SaveBMP_RW, SDL_SetSurfaceRLE,                               \
+        SDL_HasSurfaceRLE, SDL_SetColorKey, SDL_HasColorKey, SDL_GetColorKey,                               \
+        SDL_SetSurfaceColorMod, SDL_GetSurfaceColorMod, SDL_SetSurfaceAlphaMod,                             \
+        SDL_GetSurfaceAlphaMod, SDL_SetSurfaceBlendMode,                                                    \
+        SDL_GetSurfaceBlendMode, SDL_SetClipRect, SDL_GetClipRect,                                          \
+        SDL_DuplicateSurface, SDL_ConvertSurface, SDL_ConvertSurfaceFormat,                                 \
+        SDL_ConvertPixels, SDL_PremultiplyAlpha, SDL_FillRect, SDL_FillRects,                               \
+        SDL_UpperBlit, SDL_LowerBlit, SDL_SoftStretch, SDL_SoftStretchLinear,                               \
+        SDL_UpperBlitScaled, SDL_LowerBlitScaled, SDL_SetYUVConversionMode,                                 \
+        SDL_GetYUVConversionMode, SDL_GetYUVConversionModeForResolution,                                    \
+        SDL_GetPixelFormatName, SDL_PixelFormatEnumToMasks,                     /* SDL_pixels.h */          \
+        SDL_MasksToPixelFormatEnum, SDL_AllocFormat, SDL_FreeFormat,                                        \
+        SDL_AllocPalette, SDL_SetPixelFormatPalette, SDL_SetPaletteColors,                                  \
+        SDL_FreePalette, SDL_MapRGB, SDL_MapRGBA, SDL_GetRGB, SDL_GetRGBA,                                  \
+        SDL_CalculateGammaRamp
 
 typedef struct vsf_sdl2_vplt_t {
     vsf_vplt_info_t info;
