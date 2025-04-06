@@ -3,14 +3,14 @@
 cmake_policy(SET CMP0079 NEW)
 
 file(GLOB CURL_SOURCES
-    raw/lib/vauth/*.c
-    raw/lib/vquit/*.c
-    raw/lib/vssh/*.c
-    raw/lib/vtls/*.c
-    raw/lib/*.c
-    raw/src/*.c
+    ${CURL_PATH}/raw/lib/vauth/*.c
+    ${CURL_PATH}/raw/lib/vquit/*.c
+    ${CURL_PATH}/raw/lib/vssh/*.c
+    ${CURL_PATH}/raw/lib/vtls/*.c
+    ${CURL_PATH}/raw/lib/*.c
+    ${CURL_PATH}/raw/src/*.c
 
-    port/curl_port_vsf.c
+    ${CURL_PATH}/port/curl_port_vsf.c
 )
 vsf_add_compile_definitions(
     ${VSF_TARGET_DEFINITIONS}
@@ -20,9 +20,9 @@ vsf_add_compile_definitions(
     HAVE_CONFIG_H
 )
 vsf_add_include_directories(
-    port
-    raw/include
-    raw/lib
+    ${CURL_PATH}/port
+    ${CURL_PATH}/raw/include
+    ${CURL_PATH}/raw/lib
 
     $ENV{VSF_PATH}/source/component/3rd-party/mbedtls/raw/include
     ${VSF_COMMON_INCLUDE_DIRECTORIES}

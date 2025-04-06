@@ -3,8 +3,7 @@
 cmake_policy(SET CMP0079 NEW)
 
 if(NOT DEFINED ENV{PIKA_PATH})
-    get_filename_component(__PIKA_PATH raw ABSOLUTE)
-    set(ENV{PIKA_PATH} ${__PIKA_PATH})
+    set(ENV{PIKA_PATH} ${PIKAPYTHON_PATH}/raw)
 endif()
 message(STATUS "PIKA_PATH: $ENV{PIKA_PATH}")
 
