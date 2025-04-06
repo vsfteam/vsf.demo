@@ -8,7 +8,7 @@ if(NOT DEFINED ENV{VSF_PATH})
 endif()
 message(STATUS "VSF_PATH: $ENV{VSF_PATH}")
 
-get_filename_component(LINUX_APPLET_PATH ../../../application/shell/sys/linux/applets ABSOLUTE)
+get_filename_component(LINUX_APPLET_PATH ../ ABSOLUTE)
 message(STATUS "LINUX_APPLET_PATH: ${LINUX_APPLET_PATH}")
 
 # target & configurations
