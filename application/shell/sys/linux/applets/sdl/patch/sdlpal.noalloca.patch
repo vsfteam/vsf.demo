@@ -1,0 +1,71 @@
+ adplug/dosbox_opls.h | 12 +++++++++---
+ adplug/emuopls.h     |  4 +++-
+ rixplay.cpp          |  4 +++-
+ 3 files changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/adplug/dosbox_opls.h b/adplug/dosbox_opls.h
+index 59472e3..e8ef188 100644
+--- a/adplug/dosbox_opls.h
++++ b/adplug/dosbox_opls.h
+@@ -96,7 +96,9 @@ public:
+ 	void Write(uint32_t reg, uint8_t val) { chip.WriteReg(reg, val); }
+ 	void Generate(short* buf, int samples)
+ 	{
+-		auto buffer = (int32_t*)alloca(samples * sizeof(int32_t));
++//		auto buffer = (int32_t*)alloca(samples * sizeof(int32_t));
++		int32_t buffer[128];
++		assert(samples <= dimof(buffer));
+ 		chip.GenerateBlock2(samples, buffer);
+ 		for (int i = 0; i < samples; i++) {
+ 			buf[i] = clip_sample(buffer[i]);
+@@ -118,14 +120,18 @@ public:
+ 	void Generate(short* buf, int samples)
+ 	{
+ 		if (chip.opl3Active) {
+-			auto buffer = (int32_t*)alloca(samples * sizeof(int32_t) * 2);
++//			auto buffer = (int32_t*)alloca(samples * sizeof(int32_t) * 2);
++			int32_t buffer[128 * 2];
++			assert(samples <= dimof(buffer) / 2);
+ 			chip.GenerateBlock3(samples, buffer);
+ 			for (int i = 0; i < samples * 2; i++) {
+ 				buf[i] = clip_sample(buffer[i]);
+ 			}
+ 		}
+ 		else {
+-			auto buffer = (int32_t*)alloca(samples * sizeof(int32_t));
++//			auto buffer = (int32_t*)alloca(samples * sizeof(int32_t));
++			int32_t buffer[128];
++			assert(samples <= dimof(buffer));
+ 			chip.GenerateBlock2(samples, buffer);
+ 			for (int i = 0, j = 0; i < samples; i++, j += 2) {
+ 				buf[j + 1] = buf[j] = clip_sample(buffer[i]);
+diff --git a/adplug/emuopls.h b/adplug/emuopls.h
+index f63bcc5..0ef3032 100644
+--- a/adplug/emuopls.h
++++ b/adplug/emuopls.h
+@@ -84,7 +84,9 @@ public:
+ 	// Assumes a 16-bit, stereo output sample buffer @ OPL3/DUAL_OPL2 mode
+ 	void update(short *buf, int samples) {
+ 		if (currType == TYPE_DUAL_OPL2) {
+-			auto lbuf = (short*)alloca(sizeof(short) * samples);
++//			auto lbuf = (short*)alloca(sizeof(short) * samples);
++			short lbuf[128];
++			assert(samples <= 128);
+ 			opl[0]->Generate(lbuf, samples);
+ 			opl[1]->Generate(buf + samples, samples);
+ 			for (int i = 0, j = 0; i < samples; i++) {
+diff --git a/rixplay.cpp b/rixplay.cpp
+index bcc1cf4..b0d65c6 100644
+--- a/rixplay.cpp
++++ b/rixplay.cpp
+@@ -208,7 +208,9 @@ RIX_FillBuffer(
+ 						int to_write = resampler_get_free_count(pRixPlayer->resampler[0]);
+ 						if (to_write)
+ 						{
+-							short *tempBuf = (short*)alloca(to_write * gConfig.iAudioChannels * sizeof(short));
++//							short *tempBuf = (short*)alloca(to_write * gConfig.iAudioChannels * sizeof(short));
++							short tempBuf[128];
++							assert(to_write * gConfig.iAudioChannels <= dimof(tempBuf));
+ 							int temp_buf_read = 0;
+ 							pRixPlayer->opl->update(tempBuf, to_write);
+ 							for (int i = 0; i < to_write * gConfig.iAudioChannels; i++)
