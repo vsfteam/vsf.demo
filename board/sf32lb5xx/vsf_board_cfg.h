@@ -78,6 +78,8 @@
  * Components Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
+#define VSF_USE_LWIP                                    ENABLED
+
 #ifndef VSF_USE_HEAP
 #   define VSF_USE_HEAP                                 ENABLED
 #endif
@@ -100,7 +102,7 @@
 #   define VSF_CFG_DEBUG_STREAM_RX_T                    vsf_mem_stream_t
 #endif
 
-#define VSF_USE_USB_HOST                                DISABLED
+#define VSF_USE_USB_HOST                                ENABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
 #   define VSF_USBH_CFG_ENABLE_ROOT_HUB                 DISABLED
 #define VSF_USE_USB_DEVICE                              DISABLED

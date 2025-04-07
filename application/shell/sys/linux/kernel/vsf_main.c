@@ -1590,6 +1590,10 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/mgba", mgba_main);
 #   endif
 #endif
+#if VSF_LINUX_USE_MICROPYTHON == ENABLED
+    extern int mpy_main(int argc, char **argv);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/mpy", mpy_main);
+#endif
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
     // if usb host and device share the same usb hardware, in boot mode, usb device is started

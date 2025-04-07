@@ -1,0 +1,78 @@
+set(LIBALSA_PATH ${ALSA_APPLET_PATH}/alsa-lib)
+file(GLOB_RECURSE ALSA_SOURCES
+    ${LIBALSA_PATH}/src/control/*.c
+    ${LIBALSA_PATH}/src/hwdep/*.c
+    ${LIBALSA_PATH}/src/mixer/*.c
+    ${LIBALSA_PATH}/src/rawmidi/*.c
+    ${LIBALSA_PATH}/src/seq/*.c
+    ${LIBALSA_PATH}/src/timer/*.c
+    ${LIBALSA_PATH}/src/topology/*.c
+    ${LIBALSA_PATH}/src/ucm/*.c
+
+    ${LIBALSA_PATH}/src/pcm/interval.c
+    ${LIBALSA_PATH}/src/pcm/mask.c
+    ${LIBALSA_PATH}/src/pcm/pcm.c
+    ${LIBALSA_PATH}/src/pcm/pcm_adpcm.c
+    ${LIBALSA_PATH}/src/pcm/pcm_alaw.c
+    ${LIBALSA_PATH}/src/pcm/pcm_asym.c
+    ${LIBALSA_PATH}/src/pcm/pcm_copy.c
+    ${LIBALSA_PATH}/src/pcm/pcm_direct.c
+    ${LIBALSA_PATH}/src/pcm/pcm_dmix.c
+    ${LIBALSA_PATH}/src/pcm/pcm_dshare.c
+    ${LIBALSA_PATH}/src/pcm/pcm_dsnoop.c
+    ${LIBALSA_PATH}/src/pcm/pcm_empty.c
+    ${LIBALSA_PATH}/src/pcm/pcm_extplug.c
+    ${LIBALSA_PATH}/src/pcm/pcm_file.c
+    ${LIBALSA_PATH}/src/pcm/pcm_generic.c
+    ${LIBALSA_PATH}/src/pcm/pcm_hooks.c
+    ${LIBALSA_PATH}/src/pcm/pcm_hw.c
+    ${LIBALSA_PATH}/src/pcm/pcm_iec958.c
+    ${LIBALSA_PATH}/src/pcm/pcm_ioplug.c
+    ${LIBALSA_PATH}/src/pcm/pcm_ladspa.c
+    ${LIBALSA_PATH}/src/pcm/pcm_lfloat.c
+    ${LIBALSA_PATH}/src/pcm/pcm_linear.c
+    ${LIBALSA_PATH}/src/pcm/pcm_meter.c
+    ${LIBALSA_PATH}/src/pcm/pcm_misc.c
+    ${LIBALSA_PATH}/src/pcm/pcm_mmap.c
+    ${LIBALSA_PATH}/src/pcm/pcm_mmap_emul.c
+    ${LIBALSA_PATH}/src/pcm/pcm_mulaw.c
+    ${LIBALSA_PATH}/src/pcm/pcm_multi.c
+    ${LIBALSA_PATH}/src/pcm/pcm_null.c
+    ${LIBALSA_PATH}/src/pcm/pcm_params.c
+    ${LIBALSA_PATH}/src/pcm/pcm_plug.c
+    ${LIBALSA_PATH}/src/pcm/pcm_plugin.c
+    ${LIBALSA_PATH}/src/pcm/pcm_rate.c
+    ${LIBALSA_PATH}/src/pcm/pcm_rate_linear.c
+    ${LIBALSA_PATH}/src/pcm/pcm_route.c
+    ${LIBALSA_PATH}/src/pcm/pcm_share.c
+    ${LIBALSA_PATH}/src/pcm/pcm_shm.c
+    ${LIBALSA_PATH}/src/pcm/pcm_simple.c
+    ${LIBALSA_PATH}/src/pcm/pcm_softvol.c
+    ${LIBALSA_PATH}/src/pcm/pcm_symbols.c
+
+    ${LIBALSA_PATH}/src/async.c
+    ${LIBALSA_PATH}/src/conf.c
+    ${LIBALSA_PATH}/src/confeval.c
+    ${LIBALSA_PATH}/src/confmisc.c
+    ${LIBALSA_PATH}/src/dlmisc.c
+    ${LIBALSA_PATH}/src/error.c
+    ${LIBALSA_PATH}/src/input.c
+    ${LIBALSA_PATH}/src/names.c
+    ${LIBALSA_PATH}/src/output.c
+    ${LIBALSA_PATH}/src/shmarea.c
+    ${LIBALSA_PATH}/src/socket.c
+    ${LIBALSA_PATH}/src/userfile.c
+)
+vsf_add_compile_definitions(
+    ${VSF_TARGET_DEFINITIONS}
+)
+vsf_add_include_directories(
+    ${VSF_COMMON_INCLUDE_DIRECTORIES}
+    ${LIBALSA_PATH}/include
+    ${ALSA_APPLET_PATH}/port
+    ${ALSA_APPLET_PATH}/port/include
+    ${ALSA_APPLET_PATH}/port/include/alsa
+)
+vsf_add_sources(
+    ${ALSA_SOURCES}
+)

@@ -64,10 +64,6 @@ typedef struct vk_disp_sf32_lcdc_t {
 /*============================ LOCAL VARIABLES ===============================*/
 
 #if VSF_USE_USB_HOST == ENABLED
-static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
-    .op                         = &VSF_USB_HC0_IP,
-    .priority                   = APP_CFG_USBH_ARCH_PRIO,
-};
 #endif
 
 static const uint8_t __lcdc_init_seq_co5300[] = {
@@ -112,12 +108,6 @@ static vk_disp_sf32_lcdc_t __vk_disp_sf32_lcdc = {
 /*============================ GLOBAL VARIABLES ==============================*/
 
 #if VSF_USE_USB_DEVICE == ENABLED
-static const vk_dwcotg_dcd_param_t __dwcotg_dcd_param = {
-    .op                         = &VSF_USB_DC0_IP,
-    .speed                      = VSF_USBD_CFG_SPEED,
-        .ulpi_en                = true,
-        .dma_en                 = false,
-};
 #endif
 
 #if VSF_USE_BOARD == ENABLED
@@ -148,7 +138,6 @@ vsf_board_t vsf_board = {
 /*============================ IMPLEMENTATION ================================*/
 
 #if VSF_USE_USB_DEVICE == ENABLED
-vsf_usb_dc_from_dwcotg_ip(0, vsf_board.dwcotg_dcd, VSF_USB_DC0)
 #endif
 
 #if     (!defined(VSF_HAL_USE_DEBUG_STREAM) || VSF_HAL_USE_DEBUG_STREAM == DISABLED)\

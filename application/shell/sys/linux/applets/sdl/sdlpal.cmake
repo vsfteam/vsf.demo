@@ -1,4 +1,4 @@
-set(SDLPAL_PATH ${SDL_PATH}/sdlpal)
+set(SDLPAL_PATH ${SDL2_APPLET_PATH}/sdlpal)
 file(GLOB_RECURSE SDLPAL_SOURCES
     ${SDLPAL_PATH}/adplug/binfile.cpp
     ${SDLPAL_PATH}/adplug/binio.cpp
@@ -74,8 +74,8 @@ vsf_add_include_directories(
     ${SDLPAL_PATH}
     ${SDLPAL_PATH}/timidity
     ${SDLPAL_PATH}/vsf
-    ${SDL_PATH}/include
-    ${SDL_PATH}/include/SDL2
+    ${SDL2_APPLET_PATH}/include
+    ${SDL2_APPLET_PATH}/include/SDL2
 )
 vsf_add_sources(
     ${SDLPAL_SOURCES}

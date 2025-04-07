@@ -1,3 +1,4 @@
+set(SDL2_PATH ${SDL2_APPLET_PATH})
 file(GLOB_RECURSE SDL2_SOURCES
     ${SDL2_PATH}/port/src/audio/vsf/SDL_vsfaudio.c
     ${SDL2_PATH}/port/src/main/vsf/SDL_vsf_main.c

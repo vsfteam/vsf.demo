@@ -18,11 +18,11 @@ set(APPLICATION_PATH ../../../application/shell/sys/linux/kernel)
 # compiler configurations
 # arm-none-eabi-gcc will not pass compiler checker of cmake, so include before project
 set(CMAKE_C_FLAGS
-    "-Ofast"
+    "-Ofast -Wno-maybe-uninitialized -Wno-unused-variable -Wno-attributes -Wno-unknown-pragmas -Wno-unused-label -Wno-discarded-qualifiers -Wno-comment -Wno-pointer-to-int-cast -Wno-unused-but-set-variable -Wno-implicit-function-declaration -Wno-parentheses -Wno-incompatible-pointer-types -Wno-tautological-compare"
     CACHE INTERNAL "C compiler common flags"
 )
 set(CMAKE_CXX_FLAGS
-    "-Ofast"
+    "-Ofast -Wno-maybe-uninitialized -Wno-unused-variable -Wno-attributes -Wno-unknown-pragmas -Wno-unused-label -Wno-discarded-qualifiers -Wno-comment -Wno-pointer-to-int-cast -Wno-unused-but-set-variable -Wno-implicit-function-declaration -Wno-parentheses -Wno-incompatible-pointer-types -Wno-tautological-compare"
     CACHE INTERNAL "C++ compiler common flags"
 )
 include($ENV{VSF_PATH}/script/cmake/compilers/gnuarmemb.cmake)
@@ -34,8 +34,13 @@ set(VSF_TARGET SF32LB520U36)
 set(VSF_USE_LINUX 1)
     set(VSF_LINUX_USE_SIMPLE_LIBC 1)
     set(VSF_LINUX_USE_SDL2 1)
+    set(VSF_LINUX_USE_MICROPYTHON 0)
+    set(VSF_LINUX_USE_ALSA 0)
 set(VSF_USE_LITTLEFS 1)
 set(VSF_USE_QRCODE 1)
+set(VSF_USE_FREETYPE 0)
+set(VSF_USE_LWIP 1)
+set(VSF_USE_MBEDTLS 1)
 
 # include vsf cmake script
 set(VSF_CONFIG_PATH ${APPLICATION_PATH})
@@ -46,23 +51,57 @@ list(APPEND VSF_TARGET_INCLUDE_DIRECTORIES
 include($ENV{VSF_PATH}/script/cmake/vsf.cmake)
 
 # application configurations
-target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC
+vsf_add_compile_definitions(
     __VSF__
     __VSF_CPP__
 
     SF32LB52X
     SOC_BF0_HCPU
 )
+
+if(VSF_USE_MBEDTLS)
+    vsf_add_compile_definitions(
+        __unix__
+    )
+endif()
+if(VSF_USE_LWIP)
+    vsf_add_include_directories(
+        ${APPLICATION_PATH}/config/lwip
+    )
+endif()
+
+if(VSF_LINUX_USE_ALSA)
+    get_filename_component(ALSA_APPLET_PATH ${LINUX_APPLET_PATH}/alsa ABSOLUTE)
+    include(${ALSA_APPLET_PATH}/alsa.cmake)
+endif()
+
 if(VSF_LINUX_USE_SDL2)
-    target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC
+    vsf_add_compile_definitions(
         VSF_LINUX_USE_SDL2=ENABLED
         VSF_SDL2_USE_VPLT=ENABLED
     )
-    get_filename_component(SDL2_PATH ${LINUX_APPLET_PATH}/sdl ABSOLUTE)
-    include(${SDL2_PATH}/sdl2.cmake)
+    get_filename_component(SDL2_APPLET_PATH ${LINUX_APPLET_PATH}/sdl ABSOLUTE)
+    include(${SDL2_APPLET_PATH}/sdl2.cmake)
+
+#    vsf_add_compile_definitions(
+#        APP_USE_SDLPAL=ENABLED
+#    )
+#    include(${SDL2_APPLET_PATH}/sdlpal.cmake)
 
     # -fno-short-enums required by SDL2
     target_compile_options(${CMAKE_PROJECT_NAME} PUBLIC -fno-short-enums)
+endif()
+
+if(VSF_LINUX_USE_MICROPYTHON)
+    vsf_add_compile_definitions(
+        VSF_LINUX_USE_MICROPYTHON=ENABLED
+        VSF_FREETYPE_USE_STDIO=ENABLED
+    )
+
+    get_filename_component(MICROPYTHON_APPLET_PATH ${LINUX_APPLET_PATH}/micropython ABSOLUTE)
+    set(MICROPYTHON_USE_PYGAME 1)
+    set(mpy_variant standard)
+    include(${MICROPYTHON_APPLET_PATH}/micropython.cmake)
 endif()
 
 # linker script
