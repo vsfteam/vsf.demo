@@ -415,7 +415,7 @@ void vsf_pnp_on_netdrv_prepare(vk_netdrv_t *netdrv)
 void vsf_pnp_on_netdrv_connected(vk_netdrv_t *netdrv)
 {
     struct netif *netif = vk_netdrv_get_netif(netdrv);
-    lwip_netdrv_ctx_t *netdrv_ctx = container_of(netif, lwip_netdrv_ctx_t, netif);
+    lwip_netdrv_ctx_t *netdrv_ctx = vsf_container_of(netif, lwip_netdrv_ctx_t, netif);
 
     LOCK_TCPIP_CORE();
     dhcp_set_struct(netif, &netdrv_ctx->netif_dhcp);
@@ -430,7 +430,7 @@ void vsf_pnp_on_netdrv_connected(vk_netdrv_t *netdrv)
 void vsf_pnp_on_netdrv_del(vk_netdrv_t *netdrv)
 {
     struct netif *netif = vk_netdrv_get_netif(netdrv);
-    lwip_netdrv_ctx_t *netdrv_ctx = container_of(netif, lwip_netdrv_ctx_t, netif);
+    lwip_netdrv_ctx_t *netdrv_ctx = vsf_container_of(netif, lwip_netdrv_ctx_t, netif);
 
     vsf_heap_free(netdrv_ctx);
 }

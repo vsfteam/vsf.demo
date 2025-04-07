@@ -57,6 +57,7 @@ vsf_add_compile_definitions(
 
     SF32LB52X
     SOC_BF0_HCPU
+    VSF_COMPATIBILITY=DISABLED
 )
 
 if(VSF_USE_MBEDTLS)
