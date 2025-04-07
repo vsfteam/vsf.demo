@@ -65,9 +65,9 @@ static void __i2c_isrhandler(void *target_ptr, vsf_i2c_t *i2c_ptr, vsf_i2c_irq_m
     } else {
         __irq_mask |= irq_mask;
         if (__irq_mask & VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE) {
-            if (__irq_mask & (VSF_I2C_IRQ_MASK_MASTER_ADDRESS_NACK | VSF_I2C_IRQ_MASK_MASTER_ERROR)) {
+            if (__irq_mask & (VSF_I2C_IRQ_MASK_MASTER_ADDRESS_NACK | VSF_I2C_IRQ_MASK_MASTER_ERR)) {
                 vsf_trace_info("__ ");
-            } else if (__irq_mask & (VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE | VSF_I2C_IRQ_MASK_MASTER_NACK_DETECT)) {
+            } else if (__irq_mask & (VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE | VSF_I2C_IRQ_MASK_MASTER_TX_NACK_DETECT)) {
                 vsf_trace_info("%02x ", __slave_addr);
             }
             if (++__slave_addr > 0x77) {
@@ -109,8 +109,8 @@ int hwtest_main(int argc, char **argv)
     });
     vsf_i2c_enable(vsf_board.i2c);
     vsf_i2c_irq_enable(vsf_board.i2c,
-            VSF_I2C_IRQ_MASK_MASTER_ADDRESS_NACK | VSF_I2C_IRQ_MASK_MASTER_ERROR
-        |   VSF_I2C_IRQ_MASK_MASTER_NACK_DETECT | VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE);
+            VSF_I2C_IRQ_MASK_MASTER_ADDRESS_NACK | VSF_I2C_IRQ_MASK_MASTER_ERR
+        |   VSF_I2C_IRQ_MASK_MASTER_TX_NACK_DETECT | VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE);
 
     vsf_trace_info("i2cdetect:" VSF_TRACE_CFG_LINEEND);
     vsf_trace_info("     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f" VSF_TRACE_CFG_LINEEND);
