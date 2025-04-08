@@ -34,13 +34,13 @@ set(VSF_TARGET SF32LB520U36)
 set(VSF_USE_LINUX 1)
     set(VSF_LINUX_USE_SIMPLE_LIBC 1)
     set(VSF_LINUX_USE_SDL2 1)
-    set(VSF_LINUX_USE_MICROPYTHON 0)
     set(VSF_LINUX_USE_ALSA 0)
 set(VSF_USE_LITTLEFS 1)
 set(VSF_USE_QRCODE 1)
 set(VSF_USE_FREETYPE 0)
 set(VSF_USE_LWIP 1)
 set(VSF_USE_MBEDTLS 1)
+set(VSF_USE_MICROPYTHON 0)
 
 # include vsf cmake script
 set(VSF_CONFIG_PATH ${APPLICATION_PATH})
@@ -93,9 +93,9 @@ if(VSF_LINUX_USE_SDL2)
     target_compile_options(${CMAKE_PROJECT_NAME} PUBLIC -fno-short-enums)
 endif()
 
-if(VSF_LINUX_USE_MICROPYTHON)
+if(VSF_USE_MICROPYTHON)
     vsf_add_compile_definitions(
-        VSF_LINUX_USE_MICROPYTHON=ENABLED
+# pygame uses freetype
         VSF_FREETYPE_USE_STDIO=ENABLED
     )
 
