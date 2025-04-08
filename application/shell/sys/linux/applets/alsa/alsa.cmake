@@ -68,10 +68,10 @@ vsf_add_compile_definitions(
 )
 vsf_add_include_directories(
     ${VSF_COMMON_INCLUDE_DIRECTORIES}
-    ${LIBALSA_PATH}/include
     ${ALSA_APPLET_PATH}/port
     ${ALSA_APPLET_PATH}/port/include
     ${ALSA_APPLET_PATH}/port/include/alsa
+    ${LIBALSA_PATH}/include
 )
 vsf_add_sources(
     ${ALSA_SOURCES}

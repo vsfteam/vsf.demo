@@ -101,6 +101,7 @@ if(VSF_LINUX_USE_MICROPYTHON)
 
     get_filename_component(MICROPYTHON_APPLET_PATH ${LINUX_APPLET_PATH}/micropython ABSOLUTE)
     set(MICROPYTHON_USE_PYGAME 1)
+        set(PYGAME_RENDER_USE_LIBCG 1)
     set(mpy_variant standard)
     include(${MICROPYTHON_APPLET_PATH}/micropython.cmake)
 endif()

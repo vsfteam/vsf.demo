@@ -109,11 +109,24 @@ if(MICROPYTHON_USE_PYGAME)
     endif()
 
     set(PYGAME_PATH ${MICROPYTHON_APPLET_PATH}/module/mpygame)
-    file(GLOB PYGAME_SOURCES
-        ${PYGAME_PATH}/libcg/src/cg.c
-        ${PYGAME_PATH}/libcg/src/xft.c
-        ${PYGAME_PATH}/renderer/libcg/mpygame_renderer_libcg.c
 
+    if(PYGAME_RENDER_USE_LIBCG)
+        file(GLOB PYGAME_RENDER_SOURCES
+            ${PYGAME_PATH}/renderer/libcg/raw/src/cg.c
+            ${PYGAME_PATH}/renderer/libcg/raw/src/xft.c
+            ${PYGAME_PATH}/renderer/libcg/mpygame_renderer_libcg.c
+        )
+        vsf_add_compile_definitions(
+            MPYGAME_RENDERER_CFG_LIBCG
+        )
+        vsf_add_include_directories(
+            ${PYGAME_PATH}/renderer/libcg/raw/src
+        )
+    else()
+        message(FATAL_ERROR "PYGAME_RENDER_USE_XXX MUST be defined to select a renderer")
+    endif()
+
+    file(GLOB PYGAME_SOURCES
         ${PYGAME_PATH}/mpygame.c
         ${PYGAME_PATH}/mpygame_color.c
         ${PYGAME_PATH}/mpygame_display.c
@@ -128,14 +141,11 @@ if(MICROPYTHON_USE_PYGAME)
         ${PYGAME_PATH}/mpygame_surface.c
         ${PYGAME_PATH}/mpygame_time.c
     )
-    vsf_add_compile_definitions(
-        MPYGAME_RENDERER_CFG_LIBCG
-    )
     vsf_add_include_directories(
-        ${PYGAME_PATH}/libcg/src
         ${PYGAME_PATH}/stb
     )
     vsf_add_sources(
         ${PYGAME_SOURCES}
+        ${PYGAME_RENDER_SOURCES}
     )
 endif()
