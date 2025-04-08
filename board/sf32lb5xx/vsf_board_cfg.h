@@ -117,7 +117,7 @@
 #define VSF_BOARD_DISP_HEIGHT                           320
 #define VSF_BOARD_DISP_COLOR                            VSF_DISP_COLOR_RGB565
 
-#define VSF_USE_AUDIO                                   DISABLED
+#define VSF_USE_AUDIO                                   ENABLED
 #   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
 #   define VSF_AUDIO_USE_DUMMY                          ENABLED
 
