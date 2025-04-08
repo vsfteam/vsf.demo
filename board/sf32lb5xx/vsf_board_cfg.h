@@ -148,8 +148,8 @@
 #define APP_MSCBOOT_CFG_ROMFS_ADDR                      0x800000
 #define APP_MSCBOOT_CFG_ROOT_SIZE                       0x2000000
 #else
-#define APP_MSCBOOT_CFG_ROMFS_SIZE                      0x200000
-#define APP_MSCBOOT_CFG_ROMFS_ADDR                      0x200000
+#define APP_MSCBOOT_CFG_ROMFS_SIZE                      0x400000
+#define APP_MSCBOOT_CFG_ROMFS_ADDR                      0x800000
 #define APP_MSCBOOT_CFG_ROOT_SIZE                       0x400000
 #endif
 
