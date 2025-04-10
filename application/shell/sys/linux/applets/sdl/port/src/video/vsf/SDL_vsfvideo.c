@@ -214,6 +214,7 @@ VSF_GetSDLColorFormat(vk_disp_color_type_t vsf_disp_color)
     switch (vsf_disp_color) {
     case VSF_DISP_COLOR_ARGB8888:       return SDL_PIXELFORMAT_ARGB8888;
     case VSF_DISP_COLOR_RGB565:         return SDL_PIXELFORMAT_RGB565;
+    case VSF_DISP_COLOR_RGB888:         return SDL_PIXELFORMAT_RGB888;
     default:    VSF_ASSERT(false);      return SDL_PIXELFORMAT_UNKNOWN;
     }
 }

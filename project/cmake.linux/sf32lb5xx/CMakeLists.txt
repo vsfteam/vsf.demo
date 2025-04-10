@@ -22,7 +22,7 @@ set(CMAKE_C_FLAGS
     CACHE INTERNAL "C compiler common flags"
 )
 set(CMAKE_CXX_FLAGS
-    "-Ofast -Wno-maybe-uninitialized -Wno-unused-variable -Wno-attributes -Wno-unknown-pragmas -Wno-unused-label -Wno-discarded-qualifiers -Wno-comment -Wno-pointer-to-int-cast -Wno-unused-but-set-variable -Wno-implicit-function-declaration -Wno-parentheses -Wno-incompatible-pointer-types -Wno-tautological-compare -Wno-dangling-pointer -Wno-pointer-sign"
+    "-Ofast"
     CACHE INTERNAL "C++ compiler common flags"
 )
 include($ENV{VSF_PATH}/script/cmake/compilers/gnuarmemb.cmake)

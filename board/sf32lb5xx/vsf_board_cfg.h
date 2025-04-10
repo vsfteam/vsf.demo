@@ -123,6 +123,7 @@
 
 #define VSF_LINUX_CFG_STACKSIZE                         (16 * 1024)
 #define VSF_KERNEL_CFG_THREAD_STACK_LARGE               ENABLED
+#define VSF_LINUX_USE_FB_ARGB8888                       ENABLED
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *

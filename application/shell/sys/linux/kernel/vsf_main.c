@@ -1430,6 +1430,25 @@ int vsf_linux_create_fhs(void)
     if (vsf_board.display_dev != NULL) {
 #   if VSF_LINUX_USE_DEVFS == ENABLED
         vsf_linux_fs_bind_disp("/dev/fb0", vsf_board.display_dev);
+#       if VSF_LINUX_USE_FB_ARGB8888 == ENABLED
+        if (vsf_board.display_dev->param.color == VSF_DISP_COLOR_ARGB8888) {
+            symlink("/dev/fb0", "/dev/fb_argb8888");
+        } else {
+            static vk_disp_cvrt_t __disp_argb8888 = {
+                .param          = {
+                    .width      = VSF_BOARD_DISP_WIDTH,
+                    .height     = VSF_BOARD_DISP_HEIGHT,
+                    .color      = VSF_DISP_COLOR_ARGB8888,
+                    .drv        = &vk_disp_cvrt_drv,
+                },
+            };
+            __disp_argb8888.disp_real = vsf_board.display_dev;
+            __disp_argb8888.pixel_buffer_size = vsf_disp_get_frame_size(__disp_argb8888.disp_real);
+            __disp_argb8888.pixel_buffer = malloc(__disp_argb8888.pixel_buffer_size);
+            VSF_ASSERT(__disp_argb8888.pixel_buffer != NULL);
+            vsf_linux_fs_bind_disp("/dev/fb_argb8888", &__disp_argb8888.use_as__vk_disp_t);
+        }
+#       endif
 #   endif
 
         vsf_board.display_dev->ui_data = vsf_eda_get_cur();
