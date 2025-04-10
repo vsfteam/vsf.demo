@@ -316,23 +316,6 @@ static vsf_err_t __vk_disp_sf32_lcdc_refresh(vk_disp_t *pthis, vk_disp_area_t *a
     return VSF_ERR_NONE;
 }
 
-static vsf_err_t __vk_disp_sf32_lcdc_set_refresh_format(vk_disp_t *pthis, vk_disp_color_type_t type)
-{
-    vk_disp_sf32_lcdc_t *sf32_lcdc = (vk_disp_sf32_lcdc_t *)pthis;
-    LCDC_HandleTypeDef *hlcdc = &sf32_lcdc->handle;
-    HAL_LCDC_PixelFormat format;
-
-    switch (type) {
-    case VSF_DISP_COLOR_RGB565:     format = LCDC_PIXEL_FORMAT_RGB565;  break;
-    case VSF_DISP_COLOR_ARGB8888:   format = LCDC_PIXEL_FORMAT_ARGB888; break;
-    case VSF_DISP_COLOR_RGB888:     format = LCDC_PIXEL_FORMAT_RGB888;  break;
-    default:
-        return VSF_ERR_NOT_SUPPORT;
-    }
-    HAL_LCDC_LayerSetFormat(hlcdc, 0, format);
-    return VSF_ERR_NONE;
-}
-
 static vsf_err_t __vk_disp_sf32_lcdc_init(vk_disp_t *pthis)
 {
     vk_disp_sf32_lcdc_t *sf32_lcdc = (vk_disp_sf32_lcdc_t *)pthis;
@@ -371,7 +354,6 @@ static vsf_err_t __vk_disp_sf32_lcdc_init(vk_disp_t *pthis)
 static const vk_disp_drv_t __vk_disp_sf32_lcdc_drv = {
     .init               = __vk_disp_sf32_lcdc_init,
     .refresh            = __vk_disp_sf32_lcdc_refresh,
-    .set_refresh_format = __vk_disp_sf32_lcdc_set_refresh_format,
 };
 
 void vsf_board_prepare_hw_for_linux(void)
