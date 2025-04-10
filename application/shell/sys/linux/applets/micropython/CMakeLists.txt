@@ -19,15 +19,23 @@ set(VSF_APPLET 1)
     set(VSF_APPLET_USE_CTYPE 0)
 set(VSF_USE_LINUX 1)
     set(VSF_LINUX_USE_SIMPLE_LIBC 1)
+set(VSF_USE_MBEDTLS 1)
+set(MICROPYTHON_USE_PYGAME 0)
+
+if(MICROPYTHON_USE_PYGAME)
+    set(VSF_LINUX_USE_ALSA 1)
+    set(VSF_USE_FREETYPE 1)
+    set(PYGAME_RENDER_USE_LIBCG 1)
+endif()
 
 # compiler configurations
 set(CMAKE_C_FLAGS
-"-Os"
-CACHE INTERNAL "C compiler common flags"
+    "-Os -Wno-cast-align -Wno-discarded-qualifiers -Wno-maybe-uninitialized -Wno-pointer-sign"
+    CACHE INTERNAL "C compiler common flags"
 )
 set(CMAKE_CXX_FLAGS
-"-Os"
-CACHE INTERNAL "C++ compiler common flags"
+    "-Os"
+    CACHE INTERNAL "C++ compiler common flags"
 )
 include($ENV{VSF_PATH}/script/cmake/compilers/gnuarmemb.cmake)
 
@@ -48,6 +56,7 @@ add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
 )
 
 # application
+get_filename_component(MICROPYTHON_APPLET_PATH ${LINUX_APPLET_PATH}/micropython ABSOLUTE)
 set(mpy_variant standard)
 get_filename_component(MICROPYTHON_PATH ${LINUX_APPLET_PATH}/micropython ABSOLUTE)
 include(${MICROPYTHON_PATH}/micropython.cmake)

@@ -86,11 +86,9 @@ vsf_add_include_directories(
 
     $ENV{VSF_PATH}/source/component/3rd-party/mbedtls/raw/include
 )
-if(NOT VSF_APPLET)
-    vsf_add_include_directories(
-        $ENV{VSF_PATH}/source/component/script/python/al/micropython/port/${mpy_variant}
-    )
-endif()
+vsf_add_include_directories(
+    $ENV{VSF_PATH}/source/component/script/python/al/micropython/port/${mpy_variant}
+)
 vsf_add_sources(
     # vsf modules/port for micropython
     $ENV{VSF_PATH}/source/component/script/python/al/vsf_python_al.c
@@ -110,6 +108,22 @@ if(MICROPYTHON_USE_PYGAME)
 
     set(PYGAME_PATH ${MICROPYTHON_APPLET_PATH}/module/mpygame)
 
+    if(VSF_APPLET)
+        vsf_add_include_directories(
+            $ENV{VSF_PATH}/source/component/3rd-party/freetype/port
+            $ENV{VSF_PATH}/source/component/3rd-party/freetype/port/vsf_config
+            ${LINUX_APPLET_PATH}/alsa/port
+            ${LINUX_APPLET_PATH}/alsa/port/include
+            ${LINUX_APPLET_PATH}/alsa/port/include/alsa
+        )
+    endif()
+
+    vsf_add_compile_definitions(
+        # pygame uses freetype
+        VSF_FREETYPE_USE_STDIO=ENABLED
+        VSF_USE_UI=ENABLED
+        VSF_USE_INPUT=ENABLED
+    )
     if(PYGAME_RENDER_USE_LIBCG)
         file(GLOB PYGAME_RENDER_SOURCES
             ${PYGAME_PATH}/renderer/libcg/raw/src/cg.c
