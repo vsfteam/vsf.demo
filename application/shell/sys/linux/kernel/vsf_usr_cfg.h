@@ -212,8 +212,8 @@ extern void vsf_tgui_frame_exit(void);
 #   define VSF_LINUX_USE_PROCFS                         ENABLED
 #   define VSF_LINUX_USE_DEVFS                          ENABLED
 #       define VSF_LINUX_DEVFS_USE_RAND                 ENABLED
-#       if VSF_USE_AUDIO == ENABLED
-#           define VSF_LINUX_DEVFS_USE_ALSA             ENABLED
+#       if VSF_USE_AUDIO == ENABLED && !defined(VSF_LINUX_DEVFS_USE_ALSA)
+#           define VSF_LINUX_DEVFS_USE_ALSA             DISABLED
 #       endif
 #   define VSF_LINUX_CFG_FD_BITMAP_SIZE                 256
 #   if VSF_USE_USB_HOST == ENABLED && VSF_USBH_USE_LIBUSB == ENABLED

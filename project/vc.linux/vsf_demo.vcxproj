@@ -63,6 +63,7 @@
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_run_loop.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_tlv.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_util.h" />
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\btstack_link_key_db_memory.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\rfcomm.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_client.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_client_rfcomm.h" />
@@ -629,6 +630,7 @@
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_run_loop.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_tlv.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\btstack_util.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\btstack_link_key_db_memory.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\rfcomm.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_client.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\sdp_client_rfcomm.c" />

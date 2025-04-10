@@ -2619,6 +2619,9 @@
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\chipset\csr\btstack_chipset_csr.h">
       <Filter>vsf\component\3rd-party\btstack\raw\chipset\csr</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\btstack_link_key_db_memory.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3892,6 +3895,9 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\chipset\csr\btstack_chipset_csr.c">
       <Filter>vsf\component\3rd-party\btstack\raw\chipset\csr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\btstack_link_key_db_memory.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
