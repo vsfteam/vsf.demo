@@ -39,7 +39,7 @@ file(GLOB MPY_SOURCES
     ${MICROPYTHON_PATH}/extmod/modjson.c
     ${MICROPYTHON_PATH}/extmod/modmachine.c
     ${MICROPYTHON_PATH}/extmod/modnetwork.c
-#    ${MICROPYTHON_PATH}/extmod/modos.c
+    ${MICROPYTHON_PATH}/extmod/modos.c
     ${MICROPYTHON_PATH}/extmod/modplatform.c
     ${MICROPYTHON_PATH}/extmod/modrandom.c
     ${MICROPYTHON_PATH}/extmod/modre.c
@@ -93,7 +93,8 @@ vsf_add_sources(
     # vsf modules/port for micropython
     $ENV{VSF_PATH}/source/component/script/python/al/vsf_python_al.c
     $ENV{VSF_PATH}/source/component/script/python/al/micropython/vsf_micropython.c
-    $ENV{VSF_PATH}/source/component/script/python/module/os/vsf_python_module_os.c
+    # use extmod/modos.c instead for linux
+#    $ENV{VSF_PATH}/source/component/script/python/module/os/vsf_python_module_os.c
 
     ${MPY_SOURCES}
 )
