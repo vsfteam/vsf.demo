@@ -101,8 +101,13 @@
 #include <ext/gamepad/vsf_board_ext_gamepad.h>
 #endif
 
-#if VSF_USE_MBEDTLS == ENABLED
-#   include "component/3rd-party/mbedtls/extension/vplt/mbedtls_vplt.h"
+#if VSF_USE_APPLET == ENABLED || VSF_LINUX_USE_APPLET == ENABLED
+#   if VSF_USE_MBEDTLS == ENABLED
+#       include "component/3rd-party/mbedtls/extension/vplt/mbedtls_vplt.h"
+#   endif
+#   if VSF_USE_FREETYPE == ENABLED
+#       include "component/3rd-party/freetype/extension/vplt/freetype_vplt.h"
+#   endif
 #endif
 
 #if VSF_USE_BTSTACK == ENABLED
@@ -1560,6 +1565,9 @@ int vsf_linux_create_fhs(void)
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&__vsf_app_vplt.info);
 #   if VSF_USE_MBEDTLS == ENABLED
     vsf_vplt_load_dyn((vsf_vplt_info_t *)&vsf_mbedtls_vplt.info);
+#   endif
+#   if VSF_USE_FREETYPE == ENABLED
+    vsf_vplt_load_dyn((vsf_vplt_info_t *)&vsf_freetype_vplt.info);
 #   endif
 #endif
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/board_init", __vsf_board_init_linux_main);
