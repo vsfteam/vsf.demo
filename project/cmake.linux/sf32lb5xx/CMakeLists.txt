@@ -94,6 +94,11 @@ if(VSF_LINUX_USE_SDL2)
 endif()
 
 if(VSF_USE_MICROPYTHON)
+    vsf_add_compile_definitions(
+        # pygame uses freetype
+        VSF_FREETYPE_USE_STDIO=ENABLED
+    )
+
     get_filename_component(MICROPYTHON_APPLET_PATH ${LINUX_APPLET_PATH}/micropython ABSOLUTE)
     set(MICROPYTHON_USE_PYGAME 1)
         set(PYGAME_RENDER_USE_LIBCG 1)
