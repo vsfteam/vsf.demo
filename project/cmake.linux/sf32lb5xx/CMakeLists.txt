@@ -31,6 +31,7 @@ project(vsf_demo C CXX ASM)
 set(VSF_TARGET SF32LB520U36)
 
 # VSF_USE configurations
+set(VSF_CPP 1)
 set(VSF_USE_LINUX 1)
     set(VSF_LINUX_USE_SIMPLE_LIBC 1)
     set(VSF_LINUX_USE_SDL2 1)
@@ -93,12 +94,14 @@ if(VSF_LINUX_USE_SDL2)
     target_compile_options(${CMAKE_PROJECT_NAME} PUBLIC -fno-short-enums)
 endif()
 
-if(VSF_USE_MICROPYTHON)
+if(VSF_USE_FREETYPE)
     vsf_add_compile_definitions(
-        # pygame uses freetype
+        # uee original stdio APIs in linux system
         VSF_FREETYPE_USE_STDIO=ENABLED
     )
+endif()
 
+if(VSF_USE_MICROPYTHON)
     get_filename_component(MICROPYTHON_APPLET_PATH ${LINUX_APPLET_PATH}/micropython ABSOLUTE)
     set(MICROPYTHON_USE_PYGAME 1)
         set(PYGAME_RENDER_USE_LIBCG 1)
