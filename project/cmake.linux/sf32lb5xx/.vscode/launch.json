@@ -11,8 +11,10 @@
             "request": "attach",
             "type": "cortex-debug",
             "servertype": "jlink",
+            "ipAddress": "127.0.0.1:19025",
             "interface": "swd",
-            "device": "Cortex-M33"
+            "device": "Cortex-M33",
+            "showDevDebugOutput": "none"
         }
     ]
 }
