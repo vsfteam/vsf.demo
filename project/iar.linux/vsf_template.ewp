@@ -258,6 +258,9 @@
                     <state>LWIP_SO_RCVBUF=1</state>
                     <state>MEMP_NUM_TCP_PCB=16</state>
                     <state>MEMP_NUM_NETCONN=16</state>
+                    <state>VSF_USE_FREETYPE=ENABLED</state>
+                    <state>FT2_BUILD_LIBRARY</state>
+                    <state>VSF_FREETYPE_USE_STDIO=ENABLED</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -389,6 +392,8 @@
                     <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\port</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\include</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\freetype\port</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\freetype\raw\include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\port</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\port\arch\ll</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\AIC\AIC8800\port\rtos</state>
@@ -3668,15 +3673,10 @@
                     <state>SOC_BF0_HCPU</state>
                     <state>BSP_USING_PSRAM1</state>
                     <state>SF32LB52X</state>
-                    <state>VSF_LINUX_USE_X11=DISABLED</state>
                     <state>__unix__</state>
-                    <state>LFS_CONFIG=lfs_util_vsf.h</state>
-                    <state>NONETWORK=1</state>
-                    <state>HAVE_FILEIO=1</state>
-                    <state>UNIX=1</state>
-                    <state>LINUX=1</state>
-                    <state>X11_RGBTXT="/root/share/X11/rgb.txt"</state>
-                    <state>USE_ALLOCA=0</state>
+                    <state>VSF_USE_FREETYPE=ENABLED</state>
+                    <state>FT2_BUILD_LIBRARY</state>
+                    <state>VSF_FREETYPE_USE_STDIO=ENABLED</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -3800,12 +3800,6 @@
                     <state>$PROJ_DIR$\..\..\board\sf32lb5xx</state>
                     <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel</state>
                     <state>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\config\lwip</state>
-                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\port</state>
-                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\include</state>
-                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11\X11-local</state>
-                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\nanox\src\nx11</state>
-                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\fltk</state>
-                    <state>$PROJ_DIR$\..\..\application\shell\sys\linux\applets\x11\TinyGL\include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\cmsis\Include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\hal\driver\SiFli\vendor\drivers\cmsis\sf32lb52x</state>
@@ -3820,6 +3814,8 @@
                     <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\littlefs\raw</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\port</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\mbedtls\raw\include</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\freetype\port</state>
+                    <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\freetype\raw\include</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\zlib\raw</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\lwip\port</state>
                     <state>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\lwip\port\vsf</state>
@@ -9972,11 +9968,21 @@
                 <group>
                     <name>freetype</name>
                     <excluded>
-                        <configuration>vsf_template_aic8800</configuration>
                         <configuration>vsf_template_gd32h7xx</configuration>
                         <configuration>vsf_template_stm32h7xx</configuration>
-                        <configuration>vsf_template_sf32lb5xx</configuration>
                     </excluded>
+                    <group>
+                        <name>extension</name>
+                        <group>
+                            <name>vplt</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\freetype\extension\vplt\freetype_vplt.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\freetype\extension\vplt\freetype_vplt.h</name>
+                            </file>
+                        </group>
+                    </group>
                     <group>
                         <name>port</name>
                         <group>
@@ -10321,6 +10327,9 @@
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftotval.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftpatent.c</name>
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\freetype\raw\src\base\ftpfr.c</name>
@@ -11707,7 +11716,6 @@
                     <name>lwip</name>
                     <excluded>
                         <configuration>vsf_template_stm32h7xx</configuration>
-                        <configuration>vsf_template_sf32lb5xx</configuration>
                     </excluded>
                     <group>
                         <name>port</name>
@@ -11764,6 +11772,9 @@
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\lwip\raw\src\api\netbuf.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\lwip\raw\src\api\netdb.c</name>
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\component\3rd-party\lwip\raw\src\api\netifapi.c</name>
