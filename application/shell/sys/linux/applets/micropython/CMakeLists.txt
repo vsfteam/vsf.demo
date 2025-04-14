@@ -30,11 +30,11 @@ endif()
 
 # compiler configurations
 set(CMAKE_C_FLAGS
-    "-Os -Wno-cast-align -Wno-discarded-qualifiers -Wno-maybe-uninitialized -Wno-pointer-sign"
+    "-Os -mfloat-abi=hard -Wno-cast-align -Wno-discarded-qualifiers -Wno-maybe-uninitialized -Wno-pointer-sign"
     CACHE INTERNAL "C compiler common flags"
 )
 set(CMAKE_CXX_FLAGS
-    "-Os"
+    "-Os -mfloat-abi=hard"
     CACHE INTERNAL "C++ compiler common flags"
 )
 include($ENV{VSF_PATH}/script/cmake/compilers/gnuarmemb.cmake)

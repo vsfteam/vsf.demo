@@ -4,7 +4,7 @@
 
 #include <vsf_board.h>
 
-#if VSF_USE_UI == ENABLED
+#if VSF_USE_UI == ENABLED && VSF_USE_TINY_GUI == ENABLED
 
 // executor
 
