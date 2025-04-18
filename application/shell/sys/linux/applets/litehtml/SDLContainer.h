@@ -47,10 +47,11 @@ public:
     virtual void get_media_features(litehtml::media_features& media) const override;
     virtual void get_language(litehtml::string& language, litehtml::string& culture) const override;
 
-    SDL_Renderer* m_renderer;
+    SDL_Renderer* get_renderer();
 
 private:
 
+    SDL_Renderer* m_renderer;
     SDL_Rect m_clip;
     SDL_Window* m_window;
     int m_width, m_height;

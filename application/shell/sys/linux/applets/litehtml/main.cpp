@@ -144,7 +144,7 @@ static int __litehtml_main(int argc, char **argv)
     doc = litehtml::document::createFromString(html_content, &container);
     height = doc->render(VSF_BOARD_DISP_WIDTH);
     doc->draw(0, 0, 0, &pos);
-    SDL_RenderPresent(container.m_renderer);
+    SDL_RenderPresent(container.get_renderer());
 
     SDL_Event evt;
     while (1) {

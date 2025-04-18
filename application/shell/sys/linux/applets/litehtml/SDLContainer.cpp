@@ -365,3 +365,8 @@ void SDLContainer::get_language(litehtml::string& language, litehtml::string& cu
 void SDLContainer::link(const std::shared_ptr<litehtml::document> &ptr, const litehtml::element::ptr& el)
 {
 }
+
+SDL_Renderer* SDLContainer::get_renderer()
+{
+    return m_renderer;
+}
