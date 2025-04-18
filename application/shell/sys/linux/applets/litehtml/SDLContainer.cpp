@@ -197,7 +197,17 @@ void SDLContainer::draw_image(litehtml::uint_ptr hdc, const litehtml::background
 
 void SDLContainer::draw_solid_fill(litehtml::uint_ptr hdc, const litehtml::background_layer& layer, const litehtml::web_color& color)
 {
-    litehtml_container_trace("%s:\n", __FUNCTION__);
+    SDL_Rect rect = {
+        .x      = layer.border_box.x,
+        .y      = layer.border_box.y,
+        .w      = layer.border_box.width,
+        .h      = layer.border_box.height,
+    };
+    Uint8 r, g, b, a;
+    SDL_GetRenderDrawColor(m_renderer, &r, &g, &b, &a);
+    SDL_SetRenderDrawColor(m_renderer, color.red, color.green, color.blue, color.alpha);
+    SDL_RenderDrawRect(m_renderer, &rect);
+    SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
 }
 
 void SDLContainer::draw_linear_gradient(litehtml::uint_ptr hdc, const litehtml::background_layer& layer, const litehtml::background_layer::linear_gradient& gradient)
@@ -318,7 +328,6 @@ void SDLContainer::get_image_size(const char* src, const char* baseurl, litehtml
 
 void SDLContainer::draw_borders(litehtml::uint_ptr hdc, const litehtml::borders& borders, const litehtml::position& draw_pos, bool root)
 {
-    litehtml_container_trace("%s:\n", __FUNCTION__);
     if (borders.top.width != 0 && borders.top.style > litehtml::border_style_hidden) {
         Uint8 r, g, b, a;
         SDL_GetRenderDrawColor(m_renderer, &r, &g, &b, &a);
