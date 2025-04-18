@@ -6,6 +6,8 @@
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 
+#include <unordered_map>
+
 class SDLContainer : public litehtml::document_container
 {
 public:
@@ -47,6 +49,7 @@ public:
     virtual void get_media_features(litehtml::media_features& media) const override;
     virtual void get_language(litehtml::string& language, litehtml::string& culture) const override;
 
+    virtual bool request_target(litehtml::string& text, const litehtml::string url, litehtml::string baseurl) = 0;
     SDL_Renderer* get_renderer();
 
 private:
@@ -56,4 +59,5 @@ private:
     SDL_Window* m_window;
     int m_width, m_height;
     std::unordered_map<std::string, TTF_Font*> m_fonts;
+    std::unordered_map<std::string, SDL_Surface*> m_images;
 };

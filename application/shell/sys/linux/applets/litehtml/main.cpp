@@ -26,7 +26,7 @@ public:
         }
     }
 
-    bool request_target(litehtml::string& text, const litehtml::string& url, litehtml::string& baseurl) {
+    bool request_target(litehtml::string& text, const litehtml::string url, litehtml::string baseurl) {
         return request_url(text, url, baseurl) || request_file(text, baseurl + '/' + url);
     }
     bool request_file(litehtml::string& text, const litehtml::string file) {
@@ -72,11 +72,13 @@ public:
                 printf("failed to start http with response %d\n", http->resp_status);
                 goto failure;
             }
-            int rsize;
-            char buffer[512 + 1];
+            int rsize, cur_pos;
+            char buffer[512 + 1], *cur_ptr;
             while ((rsize = vsf_http_client_read(http, (uint8_t*)buffer, sizeof(buffer) - 1)) > 0) {
-                buffer[rsize] = '\0';
-                text += buffer;
+                cur_pos = text.length();
+                text.resize(text.length() + rsize);
+                cur_ptr = (char *)text.c_str() + cur_pos;
+                memcpy(cur_ptr, buffer, rsize);
             }
 
         failure:

@@ -58,6 +58,18 @@ failure:
 
 SDLContainer::~SDLContainer(void)
 {
+    while (!m_fonts.empty()) {
+        auto it = m_fonts.begin();
+        TTF_CloseFont(it->second);
+        m_fonts.erase(it);
+    }
+
+    while (!m_images.empty()) {
+        auto it = m_images.begin();
+        SDL_FreeSurface(it->second);
+        m_images.erase(it);
+    }
+
     if (m_renderer != NULL) {
         SDL_DestroyRenderer(m_renderer);
         m_renderer = NULL;
@@ -161,7 +173,26 @@ void SDLContainer::draw_text(litehtml::uint_ptr hdc, const char* text, litehtml:
 
 void SDLContainer::draw_image(litehtml::uint_ptr hdc, const litehtml::background_layer& layer, const std::string& url, const std::string& base_url)
 {
-    litehtml_container_trace("%s:\n", __FUNCTION__);
+    litehtml_container_trace("%s: %s %s\n", __FUNCTION__, base_url.c_str(), url.c_str());
+
+    std::string imageKey = base_url;
+    imageKey += url;
+
+    SDL_Surface* image = m_images[imageKey];
+    if (NULL == image) {
+        vsf_trace_error("%s: no image loaded at key %s\n", __FUNCTION__, imageKey.c_str());
+        return;
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, image);
+    if (NULL == texture) {
+        vsf_trace_error("%s: fail to create texture from surface\n", __FUNCTION__);
+        return;
+    }
+    SDL_Rect src = { 0, 0, image->w, image->h };
+    SDL_Rect dst = { layer.origin_box.x, layer.origin_box.y, layer.origin_box.width, layer.origin_box.height };
+    SDL_RenderCopy(m_renderer, texture, &src, &dst);
+    SDL_DestroyTexture(texture);
 }
 
 void SDLContainer::draw_solid_fill(litehtml::uint_ptr hdc, const litehtml::background_layer& layer, const litehtml::web_color& color)
@@ -240,20 +271,46 @@ void SDLContainer::draw_list_marker(litehtml::uint_ptr hdc, const litehtml::list
 
 void SDLContainer::load_image(const char* src, const char* baseurl, bool redraw_on_ready)
 {
-    litehtml_container_trace("%s: %s %s\n", __FUNCTION__, src, baseurl);
-    __asm("nop");
+    litehtml_container_trace("%s: %s %s\n", __FUNCTION__, baseurl ? baseurl : "", src);
+
+    std::string imageKey = baseurl;
+    imageKey += src;
+
+    if (!m_images[imageKey]) {
+        litehtml::string image_buff;
+        litehtml::string url = src;
+
+        if (url.find("//", 0) == 0) {
+            url.insert(0, "https:");
+        }
+
+        if (request_target(image_buff, url, baseurl)) {
+            SDL_RWops *rw = SDL_RWFromMem((void *)image_buff.c_str(), image_buff.length());
+            m_images[imageKey] = IMG_Load_RW(rw, 0);
+        } else {
+            vsf_trace_error("%s: fail to download image at %s %s\n", __FUNCTION__, NULL == baseurl ? "" : baseurl, src);
+        }
+    }
+
+    SDL_Surface* image = m_images[imageKey];
+    if (NULL == image) {
+        vsf_trace_error("%s: fail to load image at %s %s\n", __FUNCTION__, NULL == baseurl ? "" : baseurl, src);
+    }
 }
 
 void SDLContainer::get_image_size(const char* src, const char* baseurl, litehtml::size& sz)
 {
-    litehtml_container_trace("%s: %s %s\n", __FUNCTION__, src, baseurl);
-    SDL_Surface *image = IMG_Load(src);
+    litehtml_container_trace("%s: %s %s\n", __FUNCTION__, baseurl ? baseurl : "", src);
+
+    std::string imageKey = baseurl;
+    imageKey += src;
+
+    SDL_Surface* image = m_images[imageKey];
     if (image != NULL) {
         sz.width = image->w;
         sz.height = image->h;
-
-        SDL_FreeSurface(image);
     } else {
+        vsf_trace_error("%s: no image loaded at key %s\n", __FUNCTION__, imageKey.c_str());
         sz.width = 0;
         sz.height = 0;
     }
