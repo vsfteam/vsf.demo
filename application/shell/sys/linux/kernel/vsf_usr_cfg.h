@@ -35,7 +35,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #define VSF_ASSERT(__EXPR)                                                      \
     ((__EXPR)                                                                   \
     ? (void)0                                                                   \
-    : vsf_trace_assert(NULL, __FILE__, __LINE__, __FUNCTION__))
+    : vsf_trace_assert("", __FILE__, __LINE__, __FUNCTION__))
 
 #include "vsf_board_cfg.h"
 // do not compare VSF_BOARD_USE_EXT_GAMEPAD with ENABLED here, because ENABLED maybe undefined
