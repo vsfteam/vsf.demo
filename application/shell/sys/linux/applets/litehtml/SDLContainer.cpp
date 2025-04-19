@@ -365,6 +365,7 @@ void SDLContainer::del_clip()
 
 void SDLContainer::apply_clip(litehtml::uint_ptr)
 {
+    SDL_RenderSetClipRect(m_renderer, NULL);
     for (const auto& clip_box : m_clips) {
         const SDL_Rect rect = {
             .x  = clip_box.x,
