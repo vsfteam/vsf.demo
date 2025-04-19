@@ -12,10 +12,6 @@
 
 #include "./SDLContainer.h"
 
-#if VSF_USE_MBEDTLS == ENABLED
-#   include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
-#endif
-
 static int __vsf_http_session_connect(void *param, const char *host, const char *port);
 static void __vsf_http_session_close(void *param);
 static int __vsf_http_session_write(void *param, uint8_t *buf, uint16_t len);
@@ -164,69 +160,78 @@ private:
         }
     }
     bool request_url(litehtml::string& text, const litehtml::string url, litehtml::string baseurl, litehtml::string& urlout) {
-        bool result = false;
-        make_url(url, baseurl, urlout);
-
-        vsf_http_client_t* http = (vsf_http_client_t*)malloc(sizeof(vsf_http_client_t) + sizeof(mbedtls_session_t));
-        if (NULL == http) {
-            vsf_trace_error("failed to allocate http context\n");
-            return false;
+        litehtml::string urlmut = url;
+        litehtml::string port;
+        size_t port_pos = urlmut.rfind(':');
+        if ((port_pos != std::string::npos) && (urlmut[port_pos + 1] != '/')) {
+            port = urlmut.substr(port_pos + 1);
+            urlmut = urlmut.substr(0, port_pos);
         }
+
+        bool result = false;
+        make_url(urlmut, baseurl, urlout);
+
+        vsf_http_client_t http;
+        mbedtls_session_t session = { 0 };
+        int fd = -1;
 
         size_t pos;
         std::string host, path;
-        const char *port;
         if (urlout.find("https://", 0) == 0) {
             m_is_https = true;
             pos = urlout.find('/', 8);
             host = urlout.substr(8, std::string::npos == pos ? pos : pos - 8);
             path = std::string::npos == pos ? "/" : urlout.substr(pos);
 
-            mbedtls_session_t* session = (mbedtls_session_t*)&http[1];
-            memset(session, 0, sizeof(*session));
-            http->op = &vsf_mbedtls_http_op;
-            http->param = session;
-            port = "443";
+            http.op = &vsf_mbedtls_http_op;
+            http.param = &session;
+            if (port.empty()) {
+                port = "443";
+            }
         } else {
             m_is_https = false;
             pos = urlout.find('/', 7);
             host = urlout.substr(7, std::string::npos == pos ? pos : pos - 7);
             path = std::string::npos == pos ? "/" : urlout.substr(pos);
 
-            int* fd = (int*)&http[1];
-            *fd = -1;
-            http->op = &vsf_http_op;
-            http->param = fd;
-            port = "80";
+            http.op = &vsf_http_op;
+            http.param = &fd;
+            if (port.empty()) {
+                port = "80";
+            }
         }
 
         vsf_trace_debug("%s: %s %s\n", __FUNCTION__, host.c_str(), path.c_str());
         vsf_http_client_req_t req = {
             .host = host.c_str(),
-            .port = port,
+            .port = port.c_str(),
             .verb = "GET",
             .path = (char*)path.c_str(),
         };
-        vsf_http_client_init(http);
-        if (vsf_http_client_request(http, &req) < 0) {
-            vsf_trace_error("failed to start http with response %d\n", http->resp_status);
-             goto failure;
+        vsf_http_client_init(&http);
+        if (vsf_http_client_request(&http, &req) < 0) {
+            vsf_trace_error("failed to start http with response %d\n", http.resp_status);
+            return false;
         }
+
+        if (    ((302 == http.resp_status) || (301 == http.resp_status))
+            &&  (http.redirect_path != NULL)) {
+            vsf_http_client_close(&http);
+            urlmut = http.redirect_path;
+            return request_url(text, urlmut, baseurl, urlout);
+        }
+
         int rsize, cur_pos;
         char buffer[512 + 1], *cur_ptr;
-        while ((rsize = vsf_http_client_read(http, (uint8_t*)buffer, sizeof(buffer) - 1)) > 0) {
+        while ((rsize = vsf_http_client_read(&http, (uint8_t*)buffer, sizeof(buffer) - 1)) > 0) {
             cur_pos = text.length();
             text.resize(text.length() + rsize);
             cur_ptr = (char *)text.c_str() + cur_pos;
             memcpy(cur_ptr, buffer, rsize);
         }
-        vsf_http_client_close(http);
+        vsf_http_client_close(&http);
 
-        result = true;
-    failure:
-        free(http);
-        http = NULL;
-        return result;
+        return true;
     }
 };
 
