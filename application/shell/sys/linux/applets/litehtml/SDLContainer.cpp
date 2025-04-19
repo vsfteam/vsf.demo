@@ -83,14 +83,35 @@ SDLContainer::~SDLContainer(void)
 
 litehtml::uint_ptr SDLContainer::create_font(const litehtml::font_description& descr, const litehtml::document* doc, litehtml::font_metrics* fm)
 {
-    std::string fontKey = descr.hash();
+    litehtml::font_description descr_mut = descr;
+try_again:
+    std::string fontKey = descr_mut.hash();
     TTF_Font* font;
 
     if (m_fonts[fontKey]) {
         font = m_fonts[fontKey];
     } else {
-        std::string fontPath = "/usr/share/font/truetype/" + descr.family + "-Bold.ttf";
-        font = TTF_OpenFont(fontPath.c_str(), descr.size);
+        litehtml::string font_name = get_default_font_name();
+        litehtml::string_vector fonts;
+        litehtml::split_string(descr_mut.family, fonts, ",");
+        if (!fonts.empty()) {
+            font_name = litehtml::trim(fonts[0]);
+            if (font_name.front() == '"' || font_name.front() == '\'') {
+                font_name.erase(0, 1);
+            }
+            if (font_name.back() == '"' || font_name.back() == '\'') {
+                font_name.erase(font_name.length() - 1, 1);
+            }
+        }
+
+        std::string fontPath = "/usr/share/font/truetype/" + font_name + ".ttf";
+        font = TTF_OpenFont(fontPath.c_str(), descr_mut.size);
+        if (NULL == font) {
+            vsf_trace_error("%s: fail to open %s for font %s\n", __FUNCTION__, fontPath.c_str(), descr.family.c_str());
+            vsf_trace_warning("%s: using %s instead\n", __FUNCTION__, get_default_font_name());
+            descr_mut.family = get_default_font_name();
+            goto try_again;
+        }
         m_fonts[fontKey] = font;
     }
 
@@ -100,19 +121,19 @@ litehtml::uint_ptr SDLContainer::create_font(const litehtml::font_description& d
 
     int ttfStyle = TTF_STYLE_NORMAL;
 
-    if(descr.style == font_style_italic) {
+    if(descr_mut.style == font_style_italic) {
         ttfStyle = ttfStyle | TTF_STYLE_ITALIC;
     }
 
-    if(descr.decoration_line & text_decoration_line_line_through) {
+    if(descr_mut.decoration_line & text_decoration_line_line_through) {
         ttfStyle = ttfStyle | TTF_STYLE_STRIKETHROUGH;
     }
 
-    if((descr.decoration_line & text_decoration_line_underline) != 0) {
+    if((descr_mut.decoration_line & text_decoration_line_underline) != 0) {
         ttfStyle = ttfStyle | TTF_STYLE_UNDERLINE;
     }
 
-    if(descr.weight >= 700) {
+    if(descr_mut.weight >= 700) {
         ttfStyle = ttfStyle | TTF_STYLE_BOLD;
     }
 
@@ -127,7 +148,7 @@ litehtml::uint_ptr SDLContainer::create_font(const litehtml::font_description& d
         fm->descent   = TTF_FontDescent(font);
         fm->height    = TTF_FontHeight(font);
         fm->x_height  = iWidth;
-        fm->draw_spaces = descr.style == font_style_italic || descr.decoration_line;
+        fm->draw_spaces = descr_mut.style == font_style_italic || descr_mut.decoration_line;
     }
 
     return (uint_ptr) font;
@@ -419,7 +440,7 @@ void SDLContainer::set_base_url(const char* base_url)
 
 const char* SDLContainer::get_default_font_name() const
 {
-    return "MiSans";
+    return "MiSans-Bold";
 }
 
 std::shared_ptr<litehtml::element>  SDLContainer::create_element(const char *tag_name,
