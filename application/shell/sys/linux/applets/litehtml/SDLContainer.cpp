@@ -159,6 +159,7 @@ void SDLContainer::draw_text(litehtml::uint_ptr hdc, const char* text, litehtml:
     SDL_Surface *info;
     TTF_Font* font = (TTF_Font*)hFont;
 
+    apply_clip(hdc);
     if(!(info=TTF_RenderUTF8_Blended(font, text, sdlcolor))) {
         //handle error here, perhaps print TTF_GetError at least
     } else {
@@ -184,6 +185,15 @@ void SDLContainer::draw_image(litehtml::uint_ptr hdc, const litehtml::background
         return;
     }
 
+    apply_clip(hdc);
+    const SDL_Rect rect = {
+        .x  = layer.clip_box.x,
+        .y  = layer.clip_box.y,
+        .w  = layer.clip_box.width,
+        .h  = layer.clip_box.height,
+    };
+    SDL_RenderSetClipRect(m_renderer, &rect);
+
     SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, image);
     if (NULL == texture) {
         vsf_trace_error("%s: fail to create texture from surface\n", __FUNCTION__);
@@ -205,6 +215,7 @@ void SDLContainer::draw_solid_fill(litehtml::uint_ptr hdc, const litehtml::backg
     };
     Uint8 r, g, b, a;
     SDL_GetRenderDrawColor(m_renderer, &r, &g, &b, &a);
+    apply_clip(hdc);
     SDL_SetRenderDrawColor(m_renderer, color.red, color.green, color.blue, color.alpha);
     SDL_RenderDrawRect(m_renderer, &rect);
     SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
@@ -242,6 +253,7 @@ void SDLContainer::draw_list_marker(litehtml::uint_ptr hdc, const litehtml::list
     Uint8 r, g, b, a;
     SDL_GetRenderDrawColor(m_renderer, &r, &g, &b, &a);
 
+    apply_clip(hdc);
     if (!marker.image.empty())
     {
         /*std::wstring url;
@@ -341,16 +353,27 @@ void SDLContainer::transform_text(litehtml::string& text, litehtml::text_transfo
 
 void SDLContainer::set_clip(const litehtml::position& pos, const litehtml::border_radiuses& bdr_radius)
 {
-    m_clip.x = pos.x;
-    m_clip.y = pos.y;
-    m_clip.w = pos.width;
-    m_clip.h = pos.height;
+    m_clips.push_back(pos);
 }
 
 void SDLContainer::del_clip()
 {
-    m_clip.w = 0;
-    m_clip.h = 0;
+    if (!m_clips.empty()) {
+        m_clips.pop_back();
+    }
+}
+
+void SDLContainer::apply_clip(litehtml::uint_ptr)
+{
+    for (const auto& clip_box : m_clips) {
+        const SDL_Rect rect = {
+            .x  = clip_box.x,
+            .y  = clip_box.y,
+            .w  = clip_box.width,
+            .h  = clip_box.height,
+        };
+        SDL_RenderSetClipRect(m_renderer, &rect);
+    }
 }
 
 void SDLContainer::on_anchor_click(const char* url, const litehtml::element::ptr& el) 

@@ -52,12 +52,18 @@ public:
     virtual bool request_target(litehtml::string& text, const litehtml::string url, litehtml::string baseurl) = 0;
     SDL_Renderer* get_renderer();
 
+protected:
+
+    int m_width, m_height;
+    litehtml::position::vector m_clips;
+    std::unordered_map<std::string, TTF_Font*> m_fonts;
+    std::unordered_map<std::string, SDL_Surface*> m_images;
+
 private:
 
     SDL_Renderer* m_renderer;
     SDL_Rect m_clip;
     SDL_Window* m_window;
-    int m_width, m_height;
-    std::unordered_map<std::string, TTF_Font*> m_fonts;
-    std::unordered_map<std::string, SDL_Surface*> m_images;
+
+    void apply_clip(litehtml::uint_ptr);
 };
