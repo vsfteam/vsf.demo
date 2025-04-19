@@ -102,6 +102,8 @@
 #define LOAD_PNG
 #define LOAD_GIF
 #define LOAD_SVG
+#define LOAD_BMP
+#define LOAD_JPG
 
 #ifndef VSF_SDL2_CFG_T
 #define VSF_SDL2_CFG_T

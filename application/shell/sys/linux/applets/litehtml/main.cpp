@@ -121,6 +121,7 @@ public:
 private:
     host_type m_hosttype;
     std::string m_baseurl;
+    std::string m_host;
     bool m_is_https;
 
     bool request_file(litehtml::string& text, const litehtml::string file) {
@@ -146,6 +147,12 @@ private:
             } else {
                 out = "http:" + url;
             }
+        } else if (url.find("/", 0) == 0) {
+            if (m_is_https) {
+                out = "https://" + m_host + url;
+            } else {
+                out = "http://" + m_host + url;
+            }
         } else {
             if (basepath.empty()) {
                 basepath = m_baseurl;
@@ -168,7 +175,6 @@ private:
             urlmut = urlmut.substr(0, port_pos);
         }
 
-        bool result = false;
         make_url(urlmut, baseurl, urlout);
 
         vsf_http_client_t http;
@@ -230,6 +236,10 @@ private:
             memcpy(cur_ptr, buffer, rsize);
         }
         vsf_http_client_close(&http);
+
+        if (m_host.empty()) {
+            m_host = host;
+        }
 
         return true;
     }

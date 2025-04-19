@@ -325,15 +325,15 @@ void SDLContainer::load_image(const char* src, const char* baseurl, bool redraw_
 
         if (request_target(image_buff, url, baseurl)) {
             SDL_RWops *rw = SDL_RWFromMem((void *)image_buff.c_str(), image_buff.length());
-            m_images[imageKey] = IMG_Load_RW(rw, 0);
+            SDL_Surface* image = IMG_Load_RW(rw, 0);
+            if (NULL == image) {
+                vsf_trace_error("%s: fail to load image at %s %s\n", __FUNCTION__, NULL == baseurl ? "" : baseurl, src);
+            } else {
+                m_images[imageKey] = image;
+            }
         } else {
             vsf_trace_error("%s: fail to download image at %s %s\n", __FUNCTION__, NULL == baseurl ? "" : baseurl, src);
         }
-    }
-
-    SDL_Surface* image = m_images[imageKey];
-    if (NULL == image) {
-        vsf_trace_error("%s: fail to load image at %s %s\n", __FUNCTION__, NULL == baseurl ? "" : baseurl, src);
     }
 }
 
