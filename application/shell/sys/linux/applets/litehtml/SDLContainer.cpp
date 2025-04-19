@@ -290,10 +290,6 @@ void SDLContainer::load_image(const char* src, const char* baseurl, bool redraw_
         litehtml::string image_buff;
         litehtml::string url = src;
 
-        if (url.find("//", 0) == 0) {
-            url.insert(0, "https:");
-        }
-
         if (request_target(image_buff, url, baseurl)) {
             SDL_RWops *rw = SDL_RWFromMem((void *)image_buff.c_str(), image_buff.length());
             m_images[imageKey] = IMG_Load_RW(rw, 0);

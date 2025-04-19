@@ -100,6 +100,7 @@
 
 // for sdl_image
 #define LOAD_PNG
+#define LOAD_GIF
 
 #ifndef VSF_SDL2_CFG_T
 #define VSF_SDL2_CFG_T

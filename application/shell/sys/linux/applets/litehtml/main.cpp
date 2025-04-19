@@ -3,6 +3,9 @@
 
 #include <unistd.h>
 #include <getopt.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 #include <SDL.h>
 #include <litehtml.h>
@@ -13,6 +16,71 @@
 #   include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
 #endif
 
+static int __vsf_http_session_connect(void *param, const char *host, const char *port);
+static void __vsf_http_session_close(void *param);
+static int __vsf_http_session_write(void *param, uint8_t *buf, uint16_t len);
+static int __vsf_http_session_read(void *param, uint8_t *buf, uint16_t len);
+
+const vsf_http_op_t vsf_http_op = {
+    .fn_connect     = (int (*)(void *, const char *, const char *))__vsf_http_session_connect,
+    .fn_close       = (void (*)(void *))__vsf_http_session_close,
+    .fn_write       = (int (*)(void *, uint8_t *, uint16_t))__vsf_http_session_write,
+    .fn_read        = (int (*)(void *, uint8_t *, uint16_t))__vsf_http_session_read,
+};
+
+static int __vsf_http_session_connect(void *param, const char *host, const char *port)
+{
+    int* fd = (int *)param, result = -1;
+    struct addrinfo hints, *addr_list, *cur;
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+
+    if (getaddrinfo(host, port, &hints, &addr_list) != 0) {
+        return result;
+    }
+
+    for (cur = addr_list; cur != NULL; cur = cur->ai_next) {
+        *fd = socket(cur->ai_family, cur->ai_socktype, cur->ai_protocol);
+        if (*fd < 0) {
+            continue;
+        }
+
+        if (connect(*fd, cur->ai_addr, cur->ai_addrlen) == 0) {
+            result = 0;
+            break;
+        }
+
+        close(*fd);
+    }
+
+    freeaddrinfo(addr_list);
+    return result;
+}
+
+static void __vsf_http_session_close(void *param)
+{
+    int* fd = (int *)param;
+    if (*fd >= 0) {
+        close(*fd);
+        *fd = -1;
+    }
+}
+
+static int __vsf_http_session_write(void *param, uint8_t *buf, uint16_t len)
+{
+    int* fd = (int *)param;
+    return send(*fd, buf, len, 0);
+}
+
+static int __vsf_http_session_read(void *param, uint8_t *buf, uint16_t len)
+{
+    int* fd = (int *)param;
+    return recv(*fd, buf, len, 0);
+}
+
 class VSF_Container : public SDLContainer
 {
 public:
@@ -20,19 +88,49 @@ public:
         : SDLContainer(width ,height) {}
     ~VSF_Container(void) {}
 
+    typedef enum {
+        HOST_FS,
+        HOST_HTTP,
+    } host_type;
+
     void import_css(litehtml::string& text, const litehtml::string& url, litehtml::string& baseurl) override {
-        if (!request_target(text, url, baseurl)) {
+        litehtml::string urlout;
+        if (!request_target(text, url, baseurl, urlout)) {
             vsf_trace_error("%s: can not handle %s %s\n", __FUNCTION__, baseurl.c_str(), url.c_str());
+        } else {
+            baseurl = urlout;
         }
     }
-
-    bool request_target(litehtml::string& text, const litehtml::string url, litehtml::string baseurl) {
-        return request_url(text, url, baseurl) || request_file(text, baseurl + '/' + url);
+    void set_base_url(const char* base_url) override {
+        m_baseurl = base_url;
     }
+
+    bool request_target(litehtml::string& text, const litehtml::string url, litehtml::string baseurl, litehtml::string& urlout) {
+        if (m_hosttype == HOST_HTTP) {
+            return request_url(text, url, baseurl, urlout);
+        } else if (m_hosttype == HOST_FS) {
+            return request_file(text, url);
+        } else {
+            return false;
+        }
+    }
+    bool request_target(litehtml::string& text, const litehtml::string url, litehtml::string baseurl) override {
+        litehtml::string urlout;
+        return request_target(text, url, baseurl, urlout);
+    }
+    void set_host_type(host_type type) {
+        m_hosttype = type;
+    }
+
+private:
+    host_type m_hosttype;
+    std::string m_baseurl;
+    bool m_is_https;
+
     bool request_file(litehtml::string& text, const litehtml::string file) {
         FILE* fp = fopen(file.c_str(), "r");
         if (fp == NULL) {
-            printf("Failed to open file: %s\n", file.c_str());
+            vsf_trace_error("Failed to open file: %s\n", file.c_str());
             return false;
         }
         fseek(fp, 0, SEEK_END);
@@ -43,50 +141,92 @@ public:
         fclose(fp);
         return true;
     }
-    bool request_url(litehtml::string& text, const litehtml::string url, litehtml::string baseurl) {
-        if (url.find("https://", 0) == 0) {
-            size_t pos = url.find('/', 8);
-            std::string host = url.substr(8, std::string::npos == pos ? pos : pos - 8);
-            std::string path = std::string::npos == pos ? "/" : url.substr(pos);
-
-            vsf_trace_debug("%s: %s %s\n", __FUNCTION__, host.c_str(), path.c_str());
-            vsf_http_client_t* http = (vsf_http_client_t*)malloc(sizeof(vsf_http_client_t) + sizeof(mbedtls_session_t));
-            if (NULL == http) {
-                printf("failed to allocate http context\n");
-                return true;
+    void make_url(const litehtml::string url, litehtml::string& basepath, litehtml::string& out) {
+        if ((url.find("https://", 0) == 0) || (url.find("http://", 0) == 0)) {
+            out = url;
+        } else if (url.find("//", 0) == 0) {
+            if (m_is_https) {
+                out = "https:" + url;
+            } else {
+                out = "http:" + url;
             }
+        } else {
+            if (basepath.empty()) {
+                basepath = m_baseurl;
+            }
+            if (basepath.back() != '/') {
+                size_t pos = basepath.rfind('/');
+                if (pos != std::string::npos) {
+                    basepath = basepath.substr(0, pos + 1);
+                }
+            }
+            out = basepath + url;
+        }
+    }
+    bool request_url(litehtml::string& text, const litehtml::string url, litehtml::string baseurl, litehtml::string& urlout) {
+        bool result = false;
+        make_url(url, baseurl, urlout);
+
+        vsf_http_client_t* http = (vsf_http_client_t*)malloc(sizeof(vsf_http_client_t) + sizeof(mbedtls_session_t));
+        if (NULL == http) {
+            vsf_trace_error("failed to allocate http context\n");
+            return false;
+        }
+
+        size_t pos;
+        std::string host, path;
+        const char *port;
+        if (urlout.find("https://", 0) == 0) {
+            m_is_https = true;
+            pos = urlout.find('/', 8);
+            host = urlout.substr(8, std::string::npos == pos ? pos : pos - 8);
+            path = std::string::npos == pos ? "/" : urlout.substr(pos);
 
             mbedtls_session_t* session = (mbedtls_session_t*)&http[1];
             memset(session, 0, sizeof(*session));
             http->op = &vsf_mbedtls_http_op;
             http->param = session;
-            vsf_http_client_init(http);
+            port = "443";
+        } else {
+            m_is_https = false;
+            pos = urlout.find('/', 7);
+            host = urlout.substr(7, std::string::npos == pos ? pos : pos - 7);
+            path = std::string::npos == pos ? "/" : urlout.substr(pos);
 
-            vsf_http_client_req_t req = {
-                .host = host.c_str(),
-                .port = "443",
-                .verb = "GET",
-                .path = (char*)path.c_str(),
-            };
-            if (vsf_http_client_request(http, &req) < 0) {
-                printf("failed to start http with response %d\n", http->resp_status);
-                goto failure;
-            }
-            int rsize, cur_pos;
-            char buffer[512 + 1], *cur_ptr;
-            while ((rsize = vsf_http_client_read(http, (uint8_t*)buffer, sizeof(buffer) - 1)) > 0) {
-                cur_pos = text.length();
-                text.resize(text.length() + rsize);
-                cur_ptr = (char *)text.c_str() + cur_pos;
-                memcpy(cur_ptr, buffer, rsize);
-            }
-
-        failure:
-            free(http);
-            http = NULL;
-            return true;
+            int* fd = (int*)&http[1];
+            *fd = -1;
+            http->op = &vsf_http_op;
+            http->param = fd;
+            port = "80";
         }
-        return false;
+
+        vsf_trace_debug("%s: %s %s\n", __FUNCTION__, host.c_str(), path.c_str());
+        vsf_http_client_req_t req = {
+            .host = host.c_str(),
+            .port = port,
+            .verb = "GET",
+            .path = (char*)path.c_str(),
+        };
+        vsf_http_client_init(http);
+        if (vsf_http_client_request(http, &req) < 0) {
+            vsf_trace_error("failed to start http with response %d\n", http->resp_status);
+             goto failure;
+        }
+        int rsize, cur_pos;
+        char buffer[512 + 1], *cur_ptr;
+        while ((rsize = vsf_http_client_read(http, (uint8_t*)buffer, sizeof(buffer) - 1)) > 0) {
+            cur_pos = text.length();
+            text.resize(text.length() + rsize);
+            cur_ptr = (char *)text.c_str() + cur_pos;
+            memcpy(cur_ptr, buffer, rsize);
+        }
+        vsf_http_client_close(http);
+
+        result = true;
+    failure:
+        free(http);
+        http = NULL;
+        return result;
     }
 };
 
@@ -103,15 +243,17 @@ static int __litehtml_main(int argc, char **argv)
         target = optarg;
         switch (ch) {
         case 'u':
-            if (!container.request_url(html_content, target, "")) {
-                printf("failed to request url %s\n", target.c_str());
+            container.set_host_type(VSF_Container::HOST_HTTP);
+            if (!container.request_target(html_content, target, "")) {
+                vsf_trace_error("failed to request url %s\n", target.c_str());
                 return -1;
             }
             break;
         case 'f':
         open_file:
-            if (!container.request_file(html_content, target)) {
-                printf("failed to open file %s\n", target.c_str());
+            container.set_host_type(VSF_Container::HOST_FS);
+            if (!container.request_target(html_content, target, "")) {
+                vsf_trace_error("failed to open file %s\n", target.c_str());
                 return -1;
             }
             break;
@@ -124,7 +266,7 @@ static int __litehtml_main(int argc, char **argv)
             if (access(html_path.c_str(), R_OK) != 0) {
                 html_path += "l";
                 if (access(html_path.c_str(), R_OK) != 0) {
-                    printf("Failed to open directory: %s\n", target.c_str());
+                    vsf_trace_error("Failed to open directory: %s\n", target.c_str());
                     return -1;
                 }
             }
