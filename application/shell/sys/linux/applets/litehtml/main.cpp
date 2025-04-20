@@ -12,6 +12,10 @@
 
 #include "./SDLContainer.h"
 
+#if VSF_USE_MBEDTLS == ENABLED
+#   include "component/3rd-party/mbedtls/extension/tls_session/mbedtls_tls_session.h"
+#endif
+
 static int __vsf_http_session_connect(void *param, const char *host, const char *port);
 static void __vsf_http_session_close(void *param);
 static int __vsf_http_session_write(void *param, uint8_t *buf, uint16_t len);
