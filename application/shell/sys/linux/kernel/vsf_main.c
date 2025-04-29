@@ -321,7 +321,7 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         ,&__app_mscbot_tf_mal_scsi.use_as__vk_scsi_t
 #   endif
         )
-#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED
+#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED && VSF_USBD_USE_CDCNCM == ENABLED
         usbd_cdcncm_func(__app_usbd,
                         // function index
                         1,
@@ -350,27 +350,34 @@ describe_usbd(__app_usbd, APP_CFG_USBD_VID, APP_CFG_USBD_PID, VSF_USBD_CFG_SPEED
                         u"VSF-USBD-Simplest", u"SimonQian", u"1.0.0",
                         // ep0_size
                         64,
+#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED && VSF_USBD_USE_CDCNCM == ENABLED
                         // total function descriptor size
-                        USB_DESC_MSCBOT_IAD_LEN + USB_DESC_CDC_NCM_IAD_LEN * (VSF_USE_TCPIP && VSF_USE_LWIP),
+                        USB_DESC_MSCBOT_IAD_LEN + USB_DESC_CDC_NCM_IAD_LEN,
                         // total function interface number
-                        USB_MSCBOT_IFS_NUM + USB_CDC_NCM_IFS_NUM * (VSF_USE_TCPIP && VSF_USE_LWIP),
+                        USB_MSCBOT_IFS_NUM + USB_CDC_NCM_IFS_NUM,
+#else
+                        // total function descriptor size
+                        USB_DESC_MSCBOT_IAD_LEN,
+                        // total function interface number
+                        USB_MSCBOT_IFS_NUM,
+#endif
                         // attribute, max_power
                         USB_CONFIG_ATT_WAKEUP, 100,
         usbd_mscbot_desc_iad(__app_usbd, 0)
-#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED
+#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED && VSF_USBD_USE_CDCNCM == ENABLED
         usbd_cdcncm_desc_iad(__app_usbd, 1)
 #endif
     )
 
     usbd_std_desc_table(__app_usbd,
         usbd_mscbot_desc_table(__app_usbd, 0)
-#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED
+#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED && VSF_USBD_USE_CDCNCM == ENABLED
         usbd_cdcncm_desc_table(__app_usbd, 1)
 #endif
     )
     usbd_ifs(__app_usbd,
         usbd_mscbot_ifs(__app_usbd, 0)
-#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED
+#if VSF_USE_TCPIP == ENABLED && VSF_USE_LWIP == ENABLED && VSF_USBD_USE_CDCNCM == ENABLED
         usbd_cdcncm_ifs(__app_usbd, 1)
 #endif
     )
