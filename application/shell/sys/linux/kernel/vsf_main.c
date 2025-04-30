@@ -447,6 +447,48 @@ void vsf_pnp_on_netdrv_del(vk_netdrv_t *netdrv)
     vsf_heap_free(netdrv_ctx);
 }
 
+VSF_CAL_WEAK(app_mdns_connect)
+void app_mdns_connect(void)
+{
+}
+
+VSF_CAL_WEAK(app_mdns_start)
+void app_mdns_start(uint8_t *mac)
+{
+}
+
+VSF_CAL_WEAK(app_mdns_stop)
+void app_mdns_stop(void)
+{
+}
+
+void app_wifi_sta_on_reconnect(void)
+{
+    app_mdns_stop();
+}
+
+void app_wifi_sta_on_connected(void)
+{
+    struct netif *netif = vsf_board_get_netif();
+    app_mdns_start(netif->hwaddr);
+    app_mdns_connect();
+}
+
+void app_wifi_ap_on_started(char *ssid, char *pass)
+{
+#if VSF_USE_QRCODE == ENABLED
+    // cmdline: qrcode "Scan to connect AP" "WIFI:S:ssid;P:pass;T:WPA/WPA2;H:vsf;"
+    const char *format = "qrcode \"S:%s P:%s\" \"WIFI:S:%s;P:%s;T:WPA/WPA2;H:vsf;\"";
+    char cmdline[strlen(format) + 4 * 32];  // format_size + max_size of ssid(32) and pass(32)
+    sprintf(cmdline, format, ssid, pass, ssid, pass);
+    system(cmdline);
+#endif
+
+    struct netif *netif = vsf_board_get_netif();
+    app_mdns_start(netif->hwaddr);
+    app_mdns_connect();
+}
+
 #endif
 
 // linux
@@ -1069,28 +1111,6 @@ static int __reset_main(int argc, char **argv)
 {
     vsf_arch_reset();
     return 0;
-}
-
-VSF_CAL_WEAK(app_mdns_connect)
-void app_mdns_connect(void)
-{
-}
-
-void app_wifi_sta_on_connected(void)
-{
-    app_mdns_connect();
-}
-
-void app_wifi_ap_on_started(char *ssid, char *pass)
-{
-#if VSF_USE_QRCODE == ENABLED
-    // cmdline: qrcode "Scan to connect AP" "WIFI:S:ssid;P:pass;T:WPA/WPA2;H:vsf;"
-    const char *format = "qrcode \"S:%s P:%s\" \"WIFI:S:%s;P:%s;T:WPA/WPA2;H:vsf;\"";
-    char cmdline[strlen(format) + 4 * 32];  // format_size + max_size of ssid(32) and pass(32)
-    sprintf(cmdline, format, ssid, pass, ssid, pass);
-    system(cmdline);
-#endif
-    app_mdns_connect();
 }
 
 // application vpls
