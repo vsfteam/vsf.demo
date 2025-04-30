@@ -234,7 +234,6 @@
                     <state>__VSF__</state>
                     <state>__AIC__</state>
                     <state>__AIC8800__</state>
-                    <state>__unix__</state>
                     <state>WEBTERMINAL_CFG_EMBED_XTERMJS=DISABLED</state>
                     <state>LFS_CONFIG=lfs_util_vsf.h</state>
                     <state>CFG_AIC8800</state>
@@ -1422,7 +1421,6 @@
                     <state>GD32H7XX</state>
                     <state>FT2_BUILD_LIBRARY</state>
                     <state>VSF_LINUX_USE_X11=DISABLED</state>
-                    <state>__unix__</state>
                     <state>LFS_CONFIG=lfs_util_vsf.h</state>
                     <state>NONETWORK=1</state>
                     <state>HAVE_FILEIO=1</state>
@@ -2556,7 +2554,6 @@
                     <state>__ST__</state>
                     <state>__STM32H743VI__</state>
                     <state>STM32H743xx</state>
-                    <state>__unix__</state>
                     <state>LFS_CONFIG=lfs_util_vsf.h</state>
                 </option>
                 <option>
@@ -3673,7 +3670,6 @@
                     <state>SOC_BF0_HCPU</state>
                     <state>BSP_USING_PSRAM1</state>
                     <state>SF32LB52X</state>
-                    <state>__unix__</state>
                     <state>VSF_USE_FREETYPE=ENABLED</state>
                     <state>FT2_BUILD_LIBRARY</state>
                     <state>VSF_FREETYPE_USE_STDIO=ENABLED</state>
