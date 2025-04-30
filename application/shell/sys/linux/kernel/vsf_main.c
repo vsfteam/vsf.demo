@@ -1071,6 +1071,16 @@ static int __reset_main(int argc, char **argv)
     return 0;
 }
 
+VSF_CAL_WEAK(app_mdns_connect)
+void app_mdns_connect(void)
+{
+}
+
+void app_wifi_sta_on_connected(void)
+{
+    app_mdns_connect();
+}
+
 void app_wifi_ap_on_started(char *ssid, char *pass)
 {
 #if VSF_USE_QRCODE == ENABLED
@@ -1080,6 +1090,7 @@ void app_wifi_ap_on_started(char *ssid, char *pass)
     sprintf(cmdline, format, ssid, pass, ssid, pass);
     system(cmdline);
 #endif
+    app_mdns_connect();
 }
 
 // application vpls
