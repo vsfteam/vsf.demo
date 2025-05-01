@@ -95,6 +95,9 @@
 #   include <sys/ioctl.h>
 #   include <linux/fb.h>
 #endif
+#if VSF_USE_USB_HOST == ENABLED && VSF_USBH_USE_LIBUSB == ENABLED && VSF_LINUX_USE_LIBUSB == ENABLED
+#   include <libusb.h>
+#endif
 
 #include <vsf_board.h>
 #if VSF_BOARD_USE_EXT_GAMEPAD == ENABLED
@@ -1692,6 +1695,9 @@ int vsf_linux_create_fhs(void)
 
 #if VSF_USE_USB_HOST == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/usbhost", __usbh_main);
+#   if VSF_USBH_USE_LIBUSB == ENABLED && VSF_LINUX_USE_LIBUSB == ENABLED
+        vsf_linux_libusb_startup();
+#   endif
 #endif
 #if VSF_USE_BTSTACK == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/btscan", __btstack_scan_main);
