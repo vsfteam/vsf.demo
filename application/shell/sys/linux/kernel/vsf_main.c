@@ -926,77 +926,142 @@ vsf_err_t vsf_bluetooth_h2_on_new(void *dev, vk_usbh_dev_id_t *id)
 
 static int __usbh_main(int argc, char *argv[])
 {
+    enum {
+        USBH_INIT_LIBUSB, USBH_INIT_HUB, USBH_INIT_ECM, USBH_INIT_NCM,
+        USBH_INIT_HID, USBH_INIT_DS4, USBH_INIT_DS5, USBH_INIT_NSPRO,
+        USBH_INIT_XB360, USBH_INIT_XB1, USBH_INIT_MSC, USBH_INIT_UAC,
+        USBH_INIT_UVC, USBH_INIT_BTHCI
+    };
+    typedef struct {
+        const char *name;
+        uint32_t mask;
+    } usbh_init_drv_t;
+    static const usbh_init_drv_t __usbh_init_drv[] = {
+        {"all",         0xFFFFFFFF},
+        {"libusb",      1 << USBH_INIT_LIBUSB},
+        {"hub",         1 << USBH_INIT_HUB},
+        {"ecm",         1 << USBH_INIT_ECM},
+        {"ncm",         1 << USBH_INIT_NCM},
+        {"hid",         1 << USBH_INIT_HID},
+        {"ds4",         1 << USBH_INIT_DS4},
+        {"ds5",         1 << USBH_INIT_DS5},
+        {"nspro",       1 << USBH_INIT_NSPRO},
+        {"xb360",       1 << USBH_INIT_XB360},
+        {"xb1",         1 << USBH_INIT_XB1},
+        {"msc",         1 << USBH_INIT_MSC},
+        {"uac",         1 << USBH_INIT_UAC},
+        {"uvc",         1 << USBH_INIT_UVC},
+        {"bthci",       1 << USBH_INIT_BTHCI},
+    };
+
     static bool __usbh_inited = false;
     if (!__usbh_inited) {
         __usbh_inited = true;
         vk_usbh_init(&vsf_board.usbh_dev);
 
+        uint32_t mask = 1 == argc ? 0xFFFFFFFF : 0;
+        for (int i = 1; i < argc; i++) {
+            for (int j = 0; j < dimof(__usbh_init_drv); j++) {
+                if (!strcmp(argv[i], __usbh_init_drv[j].name)) {
+                    mask |= __usbh_init_drv[j].mask;
+                }
+            }
+        }
+
 #   if VSF_USBH_USE_LIBUSB == ENABLED
-        static vk_usbh_class_t __usbh_libusb = { .drv = &vk_usbh_libusb_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_libusb);
+        if (mask & (1 << USBH_INIT_LIBUSB)) {
+            static vk_usbh_class_t __usbh_libusb = { .drv = &vk_usbh_libusb_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_libusb);
+        }
 #   endif
 #   if VSF_USBH_USE_HUB == ENABLED
-        static vk_usbh_class_t __usbh_hub = { .drv = &vk_usbh_hub_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_hub);
+        if (mask & (1 << USBH_INIT_HUB)) {
+            static vk_usbh_class_t __usbh_hub = { .drv = &vk_usbh_hub_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_hub);
+        }
 #   endif
 #   if VSF_USBH_USE_ECM == ENABLED && VSF_USE_TCPIP == ENABLED
-        static vk_usbh_class_t __usbh_ecm = { .drv = &vk_usbh_ecm_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ecm);
+        if (mask & (1 << USBH_INIT_ECM)) {
+            static vk_usbh_class_t __usbh_ecm = { .drv = &vk_usbh_ecm_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ecm);
 #       if VSF_USBH_USE_LIBUSB == ENABLED
-        static vk_usbh_class_t __usbh_ecm_block_libusb = { .drv = &vk_usbh_ecm_block_libusb_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ecm_block_libusb);
+            static vk_usbh_class_t __usbh_ecm_block_libusb = { .drv = &vk_usbh_ecm_block_libusb_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ecm_block_libusb);
 #       endif
+        }
 #   endif
 #   if VSF_USBH_USE_NCM == ENABLED && VSF_USE_TCPIP == ENABLED
-        static vk_usbh_class_t __usbh_ncm = { .drv = &vk_usbh_ncm_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ncm);
+        if (mask & (1 << USBH_INIT_NCM)) {
+            static vk_usbh_class_t __usbh_ncm = { .drv = &vk_usbh_ncm_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ncm);
 #       if VSF_USBH_USE_LIBUSB == ENABLED
-        static vk_usbh_class_t __usbh_ncm_block_libusb = { .drv = &vk_usbh_ncm_block_libusb_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ncm_block_libusb);
+            static vk_usbh_class_t __usbh_ncm_block_libusb = { .drv = &vk_usbh_ncm_block_libusb_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ncm_block_libusb);
 #       endif
+        }
 #   endif
 #   if VSF_USBH_USE_HID == ENABLED
-        static vk_usbh_class_t __usbh_hid = { .drv = &vk_usbh_hid_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_hid);
+        if (mask & (1 << USBH_INIT_HID)) {
+            static vk_usbh_class_t __usbh_hid = { .drv = &vk_usbh_hid_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_hid);
+        }
 #   endif
 #   if VSF_USBH_USE_DS4 == ENABLED
-        static vk_usbh_class_t __usbh_ds4 = { .drv = &vk_usbh_ds4_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ds4);
+        if (mask & (1 << USBH_INIT_DS4)) {
+            static vk_usbh_class_t __usbh_ds4 = { .drv = &vk_usbh_ds4_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ds4);
+        }
 #   endif
 #   if VSF_USBH_USE_DS5 == ENABLED
-//        static vk_usbh_class_t __usbh_ds5 = { .drv = &vk_usbh_ds5_drv };
-//        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ds5);
+        if (mask & (1 << USBH_INIT_DS5)) {
+//            static vk_usbh_class_t __usbh_ds5 = { .drv = &vk_usbh_ds5_drv };
+//            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_ds5);
+        }
 #   endif
 #   if VSF_USBH_USE_NSPRO == ENABLED
-        static vk_usbh_class_t __usbh_nspro = { .drv = &vk_usbh_nspro_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_nspro);
+        if (mask & (1 << USBH_INIT_NSPRO)) {
+            static vk_usbh_class_t __usbh_nspro = { .drv = &vk_usbh_nspro_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_nspro);
+        }
 #   endif
 #   if VSF_USBH_USE_XB360 == ENABLED
-        static vk_usbh_class_t __usbh_xb360 = { .drv = &vk_usbh_xb360_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_xb360);
+        if (mask & (1 << USBH_INIT_XB360)) {
+            static vk_usbh_class_t __usbh_xb360 = { .drv = &vk_usbh_xb360_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_xb360);
+        }
 #   endif
 #   if VSF_USBH_USE_XB1 == ENABLED
-        static vk_usbh_class_t __usbh_xb1 = { .drv = &vk_usbh_xb1_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_xb1);
+        if (mask & (1 << USBH_INIT_XB1)) {
+            static vk_usbh_class_t __usbh_xb1 = { .drv = &vk_usbh_xb1_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_xb1);
+        }
 #   endif
 #   if VSF_USBH_USE_MSC == ENABLED
-        static vk_usbh_class_t __usbh_msc = { .drv = &vk_usbh_msc_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_msc);
+        if (mask & (1 << USBH_INIT_MSC)) {
+            static vk_usbh_class_t __usbh_msc = { .drv = &vk_usbh_msc_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_msc);
 #       if VSF_USE_SCSI == ENABLED && VSF_USE_MAL == ENABLED && VSF_MAL_USE_SCSI_MAL == ENABLED
-        mkdirs("/mnt/scsi", 0);
+            mkdirs("/mnt/scsi", 0);
 #       endif
+        }
 #   endif
 #   if VSF_USBH_USE_UAC == ENABLED
-        static vk_usbh_class_t __usbh_uac = { .drv = &vk_usbh_uac_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_uac);
+        if (mask & (1 << USBH_INIT_UAC)) {
+            static vk_usbh_class_t __usbh_uac = { .drv = &vk_usbh_uac_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_uac);
+        }
 #   endif
 #   if VSF_USBH_USE_UVC == ENABLED
-        static vk_usbh_class_t __usbh_uvc = { .drv = &vk_usbh_uvc_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_uvc);
+        if (mask & (1 << USBH_INIT_UVC)) {
+            static vk_usbh_class_t __usbh_uvc = { .drv = &vk_usbh_uvc_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_uvc);
+        }
 #   endif
 #   if VSF_USBH_USE_BTHCI == ENABLED && VSF_USE_BTSTACK == ENABLED
-        static vk_usbh_class_t __usbh_bthci = { .drv = &vk_usbh_bthci_drv };
-        vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_bthci);
+        if (mask & (1 << USBH_INIT_BTHCI)) {
+            static vk_usbh_class_t __usbh_bthci = { .drv = &vk_usbh_bthci_drv };
+            vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_bthci);
+        }
 #   endif
     }
     return 0;
