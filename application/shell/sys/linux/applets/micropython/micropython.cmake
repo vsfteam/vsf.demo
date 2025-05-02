@@ -68,6 +68,7 @@ vsf_add_compile_definitions(
     MICROPY_PY_THREAD=1
     MICROPY_PY_THREAD_GIL=0
     MICROPY_PY_SSL=1
+    MICROPY_PY_RANDOM=1
     MICROPY_SSL_MBEDTLS=1
 
     # alloca support
