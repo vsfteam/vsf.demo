@@ -113,7 +113,7 @@
 #   endif
 #endif
 
-#if VSF_USE_BTSTACK == ENABLED
+#if VSF_USE_BTSTACK == ENABLED && APP_USE_BTSTACK == ENABLED
 #   include "btstack.h"
 #   if VSF_USE_USB_HOST == ENABLED && VSF_USBH_USE_BTHCI == ENABLED
 #       include "csr/btstack_chipset_csr.h"
@@ -683,7 +683,7 @@ static int __appcfg_main(int argc, char *argv[])
     return ret;
 }
 
-#if VSF_USE_BTSTACK == ENABLED
+#if VSF_USE_BTSTACK == ENABLED && APP_USE_BTSTACK == ENABLED
 
 VSF_CAL_WEAK(btstack_main)
 int btstack_main(int argc, char **argv)
@@ -901,7 +901,7 @@ void vsf_usbh_uvc_on_new(void *uvc, usb_uvc_vc_interface_header_desc_t *vc_heade
 }
 #   endif
 
-#   if VSF_USBH_USE_BTHCI == ENABLED && VSF_USE_BTSTACK == ENABLED
+#   if VSF_USBH_USE_BTHCI == ENABLED && VSF_USE_BTSTACK == ENABLED && APP_USE_BTSTACK == ENABLED
 vsf_err_t vsf_bluetooth_h2_on_new(void *dev, vk_usbh_dev_id_t *id)
 {
     btstack_memory_init();
@@ -1057,7 +1057,7 @@ static int __usbh_main(int argc, char *argv[])
             vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_uvc);
         }
 #   endif
-#   if VSF_USBH_USE_BTHCI == ENABLED && VSF_USE_BTSTACK == ENABLED
+#   if VSF_USBH_USE_BTHCI == ENABLED && VSF_USE_BTSTACK == ENABLED && APP_USE_BTSTACK == ENABLED
         if (mask & (1 << USBH_INIT_BTHCI)) {
             static vk_usbh_class_t __usbh_bthci = { .drv = &vk_usbh_bthci_drv };
             vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_bthci);
@@ -1764,7 +1764,7 @@ int vsf_linux_create_fhs(void)
         vsf_linux_libusb_startup();
 #   endif
 #endif
-#if VSF_USE_BTSTACK == ENABLED
+#if VSF_USE_BTSTACK == ENABLED && APP_USE_BTSTACK == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/btscan", __btstack_scan_main);
 #endif
     }
