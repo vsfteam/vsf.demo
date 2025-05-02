@@ -113,13 +113,15 @@
 #   endif
 #endif
 
-#if VSF_USE_BTSTACK == ENABLED && APP_USE_BTSTACK == ENABLED
+#if VSF_USE_BTSTACK == ENABLED
 #   include "btstack.h"
-#   if VSF_USE_USB_HOST == ENABLED && VSF_USBH_USE_BTHCI == ENABLED
-#       include "csr/btstack_chipset_csr.h"
-#       include "bcm/btstack_chipset_bcm.h"
+#   if APP_USE_BTSTACK == ENABLED
+#       if VSF_USE_USB_HOST == ENABLED && VSF_USBH_USE_BTHCI == ENABLED
+#           include "csr/btstack_chipset_csr.h"
+#           include "bcm/btstack_chipset_bcm.h"
+#       endif
+#       include "component/3rd-party/btstack/port/btstack_run_loop_vsf.h"
 #   endif
-#   include "component/3rd-party/btstack/port/btstack_run_loop_vsf.h"
 #endif
 
 #if     defined(APP_MSCBOOT_CFG_FLASH) && defined(APP_MSCBOOT_CFG_ROOT_SIZE)    \
@@ -683,7 +685,24 @@ static int __appcfg_main(int argc, char *argv[])
     return ret;
 }
 
-#if VSF_USE_BTSTACK == ENABLED && APP_USE_BTSTACK == ENABLED
+#if VSF_USE_BTSTACK == ENABLED
+
+const btstack_run_loop_t * app_btstack_get_run_loop(void)
+{
+    return vsf_board.btstack.run_loop_instance;
+}
+
+const hci_transport_t * app_btstack_get_hci_transport(void)
+{
+    return vsf_board.btstack.hci_instance;
+}
+
+const btstack_chipset_t * app_btstack_get_chipset(void)
+{
+    return vsf_board.btstack.chipset_instance;
+}
+
+#   if APP_USE_BTSTACK == ENABLED
 
 VSF_CAL_WEAK(btstack_main)
 int btstack_main(int argc, char **argv)
@@ -773,6 +792,7 @@ int __btstack_scan_main(int argc, char **argv)
     }
     return 0;
 }
+#   endif
 #endif
 
 
@@ -1192,6 +1212,11 @@ typedef struct vsf_app_vplt_t {
     VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_mdns_update_txt);
     VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_config_read);
     VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_config_write);
+#if VSF_USE_BTSTACK == ENABLED
+    VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_btstack_get_run_loop);
+    VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_btstack_get_hci_transport);
+    VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_btstack_get_chipset);
+#endif
 } vsf_app_vplt_t;
 
 static __VSF_VPLT_DECORATOR__ vsf_app_vplt_t __vsf_app_vplt = {
@@ -1202,6 +1227,11 @@ static __VSF_VPLT_DECORATOR__ vsf_app_vplt_t __vsf_app_vplt = {
     VSF_APPLET_VPLT_ENTRY_FUNC(app_mdns_update_txt),
     VSF_APPLET_VPLT_ENTRY_FUNC(app_config_read),
     VSF_APPLET_VPLT_ENTRY_FUNC(app_config_write),
+#if VSF_USE_BTSTACK == ENABLED
+    VSF_APPLET_VPLT_ENTRY_FUNC(app_btstack_get_run_loop),
+    VSF_APPLET_VPLT_ENTRY_FUNC(app_btstack_get_hci_transport),
+    VSF_APPLET_VPLT_ENTRY_FUNC(app_btstack_get_chipset),
+#endif
 };
 #endif
 
