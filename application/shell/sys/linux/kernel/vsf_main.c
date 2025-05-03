@@ -573,7 +573,9 @@ int app_config_read(const char *cfgname, char *cfgvalue, int valuelen)
     if (end != NULL) {
         *end = '\0';
     }
-    strncpy(cfgvalue, value, valuelen);
+    if ((cfgvalue != NULL) && (valuelen > 0)) {
+        strncpy(cfgvalue, value, valuelen);
+    }
     result = 0;
 
 not_found:
@@ -1556,6 +1558,11 @@ int vsf_linux_create_fhs(void)
 #else
 #   warning where should be ${HOME}?
 #endif
+
+    if (!app_config_read("boot_mode", NULL, 0)) {
+        app_config_write("boot_mode", NULL);
+        __usr_linux_boot = true;
+    }
 
     // 1. hardware driver
     vsf_board_prepare_hw_for_linux();
