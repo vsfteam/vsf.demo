@@ -40,5 +40,6 @@ vsf_add_include_directories(
     ${VSF_BTSTACK_PATH}/src
     ${VSF_BTSTACK_PATH}/3rd-party/bluedroid/encoder/include
     ${VSF_BTSTACK_PATH}/3rd-party/bluedroid/decoder/include
+    ${VSF_BTSTACK_PATH}/3rd-party/yxml
     ./
 )
