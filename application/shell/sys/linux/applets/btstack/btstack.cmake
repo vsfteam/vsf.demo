@@ -38,5 +38,7 @@ vsf_add_compile_definitions(
 vsf_add_include_directories(
     ${VSF_COMMON_INCLUDE_DIRECTORIES}
     ${VSF_BTSTACK_PATH}/src
+    ${VSF_BTSTACK_PATH}/3rd-party/bluedroid/encoder/include
+    ${VSF_BTSTACK_PATH}/3rd-party/bluedroid/decoder/include
     ./
 )
