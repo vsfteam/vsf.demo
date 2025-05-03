@@ -1559,10 +1559,12 @@ int vsf_linux_create_fhs(void)
 #   warning where should be ${HOME}?
 #endif
 
+#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
     if (!app_config_read("boot_mode", NULL, 0)) {
         app_config_write("boot_mode", NULL);
         __usr_linux_boot = true;
     }
+#endif
 
     // 1. hardware driver
     vsf_board_prepare_hw_for_linux();
