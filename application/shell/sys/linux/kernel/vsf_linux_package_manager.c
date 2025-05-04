@@ -132,6 +132,7 @@ static int __vpm_install_package(char *package)
     strcat((char *)buf, package_name);
 #   endif
 
+    int pos;
     result = vsf_http_client_request(http, &(vsf_http_client_req_t){
         .host       = host,
         .port       = REPO_HOST_PORT,
@@ -140,6 +141,7 @@ static int __vpm_install_package(char *package)
     });
     if ((result < 0) || (http->resp_status != 200)) {
         printf("failed to start http with response %d\n", http->resp_status);
+    failure:
         result = -1;
         goto do_exit;
     }
@@ -153,10 +155,10 @@ Uninstall and install %s again if fail to run\n", package);
 
 #   ifdef VPM_ROMFS_IS_FLASH_MAL
     printf("installing %s:", package);
-    int pos = 12;
+    pos = 12;
 #   else
     printf("downloading %s:", package);
-    int pos = 13;
+    pos = 13;
 #   endif
     pos += strlen(package);
     while (remain > 0) {
@@ -172,6 +174,11 @@ Uninstall and install %s again if fail to run\n", package);
             if (0 == header.size) {
                 header = *(vk_romfs_header_t *)buf;
                 memset(buf, 0xFF, sizeof(header));
+            }
+            if (flash_addr >= romfs_mal.host_mal->size) {
+            not_enough_flash:
+                printf("not enough flash to install %s\n", package);
+                goto failure;
             }
             vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, rsize, buf);
             flash_addr += rsize;
@@ -192,9 +199,15 @@ Uninstall and install %s again if fail to run\n", package);
         if (header.size != 0) {
             vk_romfs_header_t header_zero = { 0 };
             flash_addr = (flash_addr + __vpm.fsinfo->alignment - 1) & ~(__vpm.fsinfo->alignment - 1);
+            if (flash_addr >= romfs_mal.host_mal->size) {
+                goto not_enough_flash;
+            }
             vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header_zero), (uint8_t *)&header_zero);
 
             flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
+            if (flash_addr >= romfs_mal.host_mal->size) {
+                goto not_enough_flash;
+            }
             vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header), (uint8_t *)&header);
         }
 
