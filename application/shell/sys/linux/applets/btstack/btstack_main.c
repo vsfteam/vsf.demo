@@ -1,12 +1,14 @@
 #include <unistd.h>
-
 #include <btstack.h>
+
+// implement btstack_main if not in applet
+#ifndef __VSF_APPLET__
+#   define main         btstack_main
+#endif
 
 extern const btstack_run_loop_t * app_btstack_get_run_loop(void);
 extern const hci_transport_t * app_btstack_get_hci_transport(void);
 extern const btstack_chipset_t * app_btstack_get_chipset(void);
-
-static bool __btstack_exit = false;
 
 int main(int argc, char *argv[])
 {

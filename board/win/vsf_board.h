@@ -24,6 +24,9 @@
 /*============================ INCLUDES ======================================*/
 
 #include "vsf.h"
+#if VSF_USE_BTSTACK == ENABLED
+#   include "btstack.h"
+#endif
 
 #if VSF_USE_DISTBUS == ENABLED && VSF_HAL_USE_DISTBUS == ENABLED && defined(VSF_BOARD_CFG_DISTBUS_USART)
 #   define __APP_USE_DISTBUS                    ENABLED
@@ -69,6 +72,13 @@ typedef struct vsf_board_t {
     const vk_fs_op_t *fsop;
     void * fsinfo;
     vk_winfs_info_t winfs_info;
+#endif
+#if VSF_USE_BTSTACK == ENABLED
+    struct {
+        const btstack_run_loop_t *run_loop_instance;
+        const hci_transport_t *hci_transport_instance;
+        const btstack_chipset_t *chipset_instance;
+    } btstack;
 #endif
 } vsf_board_t;
 

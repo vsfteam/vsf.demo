@@ -134,11 +134,6 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_USE_MBEDTLS                              ENABLED
 #endif
 
-#if VSF_USE_BTSTACK == ENABLED
-// enable APP_USE_BTSTACK to use embedded btstack applications
-#   define APP_USE_BTSTACK                              DISABLED
-#endif
-
 #define VSF_USE_QRCODE                                  ENABLED
 
 #if VSF_USE_UI == ENABLED

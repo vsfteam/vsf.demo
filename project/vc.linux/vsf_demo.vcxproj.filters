@@ -2529,9 +2529,6 @@
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\chipset\bcm\btstack_chipset_bcm_download_firmware.h">
       <Filter>vsf\component\3rd-party\btstack\raw\chipset\bcm</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\ancs_client.h">
-      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\att_db.h">
       <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
     </ClInclude>
@@ -2621,6 +2618,12 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\btstack_link_key_db_memory.h">
       <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\hci_dump.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\hci_event_builder.h">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3809,9 +3812,6 @@
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\chipset\bcm\btstack_chipset_bcm_download_firmware.c">
       <Filter>vsf\component\3rd-party\btstack\raw\chipset\bcm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\ancs_client.c">
-      <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\ble\att_db.c">
       <Filter>vsf\component\3rd-party\btstack\raw\src\ble</Filter>
     </ClCompile>
@@ -3898,6 +3898,12 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\classic\btstack_link_key_db_memory.c">
       <Filter>vsf\component\3rd-party\btstack\raw\src\classic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\hci_dump.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\hci_event_builder.c">
+      <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
