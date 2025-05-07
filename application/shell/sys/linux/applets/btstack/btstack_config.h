@@ -11,6 +11,8 @@
 //#define ENABLE_LOG_ERROR
 //#define ENABLE_LOG_DEBUG
 
+#define ENABLE_PRINTF_HEXDUMP
+
 // ENABLE_L2CAP_ENHANCED_RETRANSMISSION_MODE will be confilict with btstack_host_hid etc.
 //#define ENABLE_L2CAP_ENHANCED_RETRANSMISSION_MODE
 

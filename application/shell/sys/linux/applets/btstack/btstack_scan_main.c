@@ -1,7 +1,6 @@
 #include <vsf.h>
 #include <btstack.h>
 
-static vsf_eda_t *__btstack_scan_eda;
 static void __btstack_scan_pkthandler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size)
 {
     uint8_t event = hci_event_packet_get_type(packet);
@@ -56,8 +55,7 @@ static void __btstack_scan_pkthandler(uint8_t packet_type, uint16_t channel, uin
         break;
     case GAP_EVENT_INQUIRY_COMPLETE:
         vsf_trace_info("Inquiry scan done.." VSF_TRACE_CFG_LINEEND);
-        VSF_ASSERT(__btstack_scan_eda != NULL);
-        vsf_eda_post_evt(__btstack_scan_eda, VSF_EVT_USER);
+        btstack_run_loop_trigger_exit();
         break;
     default:
         break;
@@ -74,10 +72,7 @@ int btstack_scan_main(int argc, char **argv)
     };
     hci_add_event_handler(&__hci_event_callback_registration);
 
-    __btstack_scan_eda = vsf_eda_get_cur();
-    VSF_ASSERT(__btstack_scan_eda != NULL);
-    vsf_thread_wfe(VSF_EVT_USER);
-    __btstack_scan_eda = NULL;
+    btstack_run_loop_execute();
 
     hci_remove_event_handler(&__hci_event_callback_registration);
     hci_power_control(HCI_POWER_OFF);

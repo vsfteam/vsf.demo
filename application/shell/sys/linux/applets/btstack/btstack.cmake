@@ -44,3 +44,17 @@ vsf_add_include_directories(
     ${VSF_BTSTACK_PATH}/3rd-party/yxml
     ./
 )
+
+if(VSF_USE_LINUX)
+    vsf_add_sources(
+        ${VSF_BTSTACK_PATH}/platform/posix/btstack_run_loop_posix.c
+        ${VSF_BTSTACK_PATH}/platform/posix/btstack_uart_posix.c
+        ${VSF_BTSTACK_PATH}/platform/posix/hci_dump_posix_stdout.c
+
+        ${VSF_BTSTACK_PATH}/src/hci_transport_h4.c
+    )
+
+    vsf_add_include_directories(
+        ${VSF_BTSTACK_PATH}/platform/posix
+    )
+endif()

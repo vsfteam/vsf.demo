@@ -697,6 +697,11 @@ const hci_transport_t * app_btstack_get_hci_transport(void)
     return vsf_board.btstack.hci_transport_instance;
 }
 
+void * app_btstack_get_hci_transport_config(void)
+{
+    return vsf_board.btstack.hci_transport_config;
+}
+
 const btstack_chipset_t * app_btstack_get_chipset(void)
 {
     return vsf_board.btstack.chipset_instance;
@@ -707,7 +712,7 @@ int btstack_main(int argc, char **argv)
 {
     btstack_memory_init();
     btstack_run_loop_init(app_btstack_get_run_loop());
-    hci_init(app_btstack_get_hci_transport(), NULL);
+    hci_init(app_btstack_get_hci_transport(), app_btstack_get_hci_transport_config());
     hci_set_chipset(app_btstack_get_chipset());
     hci_set_link_key_db(btstack_link_key_db_memory_instance());
 
@@ -1130,6 +1135,7 @@ typedef struct vsf_app_vplt_t {
 #if VSF_USE_BTSTACK == ENABLED
     VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_btstack_get_run_loop);
     VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_btstack_get_hci_transport);
+    VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_btstack_get_hci_transport_config);
     VSF_APPLET_VPLT_ENTRY_FUNC_DEF(app_btstack_get_chipset);
 #endif
 } vsf_app_vplt_t;
@@ -1145,6 +1151,7 @@ static __VSF_VPLT_DECORATOR__ vsf_app_vplt_t __vsf_app_vplt = {
 #if VSF_USE_BTSTACK == ENABLED
     VSF_APPLET_VPLT_ENTRY_FUNC(app_btstack_get_run_loop),
     VSF_APPLET_VPLT_ENTRY_FUNC(app_btstack_get_hci_transport),
+    VSF_APPLET_VPLT_ENTRY_FUNC(app_btstack_get_hci_transport_config),
     VSF_APPLET_VPLT_ENTRY_FUNC(app_btstack_get_chipset),
 #endif
 };
@@ -1718,6 +1725,13 @@ int vsf_linux_create_fhs(void)
 #endif
 #if VSF_USE_BTSTACK == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/btstack", btstack_main);
+#   ifdef VSF_LINUX_BTHCI_PATH
+        static vsf_linux_bthci_t __vsf_linux_bthci;
+        __vsf_linux_bthci.hci_transport_instance    = app_btstack_get_hci_transport();
+        __vsf_linux_bthci.hci_transport_config      = app_btstack_get_hci_transport_config();
+        __vsf_linux_bthci.chipset_instance          = app_btstack_get_chipset();
+        vsf_linux_fs_bind_bthci(VSF_LINUX_BTHCI_PATH, &__vsf_linux_bthci);
+#   endif
 #endif
     }
 

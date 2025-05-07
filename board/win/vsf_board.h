@@ -78,6 +78,7 @@ typedef struct vsf_board_t {
         const btstack_run_loop_t *run_loop_instance;
         const hci_transport_t *hci_transport_instance;
         const btstack_chipset_t *chipset_instance;
+        void *hci_transport_config;
     } btstack;
 #endif
 } vsf_board_t;
