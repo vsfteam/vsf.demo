@@ -1117,6 +1117,9 @@ int webterminal_main(int argc, char **argv)
 
 static int __reset_main(int argc, char **argv)
 {
+    if ((argc == 2) && !strcmp(argv[1], "boot")) {
+        app_config_write("boot_mode", "on");
+    }
     vsf_arch_reset();
     return 0;
 }
@@ -1483,6 +1486,7 @@ int vsf_linux_create_fhs(void)
     if (!app_config_read("boot_mode", NULL, 0)) {
         app_config_write("boot_mode", NULL);
         __usr_linux_boot = true;
+        vsf_trace_info("linux: switch to boot mode" VSF_TRACE_CFG_LINEEND);
     }
 #endif
 
