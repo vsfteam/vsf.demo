@@ -1734,7 +1734,7 @@ int vsf_linux_create_fhs(void)
         __vsf_linux_bthci.hci_transport_instance    = app_btstack_get_hci_transport();
         __vsf_linux_bthci.hci_transport_config      = app_btstack_get_hci_transport_config();
         __vsf_linux_bthci.chipset_instance          = app_btstack_get_chipset();
-        vsf_linux_fs_bind_bthci(VSF_LINUX_BTHCI_PATH, &__vsf_linux_bthci);
+        vsf_linux_fs_bind_bthci(VSF_LINUX_BTHCI_PATH_PREFIX "0", &__vsf_linux_bthci);
 #   endif
 #endif
     }

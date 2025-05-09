@@ -235,9 +235,6 @@ extern void vsf_tgui_frame_exit(void);
 //  we recommend to add wrapper for dedicated Windows APIs in coresponding header.
 //#       define VSF_LINUX_CFG_WRAPPER                    ENABLED
 #   endif
-#   if VSF_USE_BTSTACK == ENABLED
-#       define VSF_LINUX_BTHCI_PATH                     "/dev/ttyhci0"
-#   endif
 
 #ifndef __CPU_WEBASSEMBLY__
 #   define VSF_USE_SIMPLE_SPRINTF                       ENABLED
