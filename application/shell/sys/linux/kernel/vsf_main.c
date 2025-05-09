@@ -1729,13 +1729,12 @@ int vsf_linux_create_fhs(void)
 #endif
 #if VSF_USE_BTSTACK == ENABLED
         vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/btstack", btstack_main);
-#   ifdef VSF_LINUX_BTHCI_PATH
+
         static vsf_linux_bthci_t __vsf_linux_bthci;
         __vsf_linux_bthci.hci_transport_instance    = app_btstack_get_hci_transport();
         __vsf_linux_bthci.hci_transport_config      = app_btstack_get_hci_transport_config();
         __vsf_linux_bthci.chipset_instance          = app_btstack_get_chipset();
         vsf_linux_fs_bind_bthci(VSF_LINUX_BTHCI_PATH_PREFIX "0", &__vsf_linux_bthci);
-#   endif
 #endif
     }
 
