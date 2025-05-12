@@ -15,6 +15,7 @@
 #   define DISP_COLOR_BLACK                 0x00000000
 #   define DISP_COLOR_WHITE                 0xFFFFFFFF
 
+#   if VSF_USE_UI == ENABLED
 vsf_linux_font_vplt_t * vsf_app_load_linux_font(void)
 {
     vsf_linux_font_vplt_t *font_vplt = vsf_vplt_link(NULL, "linux_font");
@@ -24,6 +25,7 @@ vsf_linux_font_vplt_t * vsf_app_load_linux_font(void)
     }
     return font_vplt;
 }
+#   endif
 
 void vsf_app_disp_render_char(struct font_desc *font, uint8_t *disp_buff, uint8_t pixel_bytesize, uint16_t pitch, char c)
 {
