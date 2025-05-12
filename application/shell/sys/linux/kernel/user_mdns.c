@@ -4,6 +4,7 @@
 #   include "lwip/tcpip.h"
 
 static bool __app_mdns_connected = false;
+static bool __app_mdns_started = false;
 
 #   if LWIP_MDNS_RESPONDER
 #       include "lwip/apps/mdns.h"
@@ -214,14 +215,18 @@ void app_mdns_stop(void)
 void app_mdns_start(uint8_t *mac)
 {
 #if VSF_USE_LWIP == ENABLED && LWIP_MDNS_RESPONDER
-    struct netif *netif = vsf_board_get_netif();
-    // vsf.XXXXXXXXXXXX
-    char hostname[3 + 1 + 12 + 1];
-    sprintf(hostname, "vsf_%02X%02X%02X%02X%02X%02X",
-            mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    LOCK_TCPIP_CORE();
-        mdns_resp_init();
-        mdns_resp_add_netif(netif, hostname, (uint32_t)-1);
-    UNLOCK_TCPIP_CORE();
+    if (!__app_mdns_started) {
+        __app_mdns_started = true;
+
+        struct netif *netif = vsf_board_get_netif();
+        // vsf.XXXXXXXXXXXX
+        char hostname[3 + 1 + 12 + 1];
+        sprintf(hostname, "vsf_%02X%02X%02X%02X%02X%02X",
+                mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+        LOCK_TCPIP_CORE();
+            mdns_resp_init();
+            mdns_resp_add_netif(netif, hostname, (uint32_t)-1);
+        UNLOCK_TCPIP_CORE();
+    }
 #endif
 }
