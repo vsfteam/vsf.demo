@@ -1,0 +1,22 @@
+ driver-libusb/stub_tx.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/driver-libusb/stub_tx.c b/driver-libusb/stub_tx.c
+index 1ea8969..576f7cd 100644
+--- a/driver-libusb/stub_tx.c
++++ b/driver-libusb/stub_tx.c
+@@ -345,11 +345,11 @@ static int stub_send_ret_unlink(struct stub_device *sdev)
+ 
+ static void poll_events_and_complete(struct stub_device *sdev)
+ {
+-	struct timeval tv = {0, 0};
++//	struct timeval tv = {0, 0};
+ 	int ret;
+ 
+-//	ret = libusb_handle_events(stub_libusb_ctx); //TODO redo, performance hit here
+-	ret = libusb_handle_events_timeout(stub_libusb_ctx, &tv);
++	ret = libusb_handle_events(stub_libusb_ctx); //TODO redo, performance hit here
++//	ret = libusb_handle_events_timeout(stub_libusb_ctx, &tv);
+ 	if (ret != 0 && ret != LIBUSB_ERROR_TIMEOUT)
+ 		usbip_event_add(&sdev->ud, SDEV_EVENT_ERROR_SUBMIT);
+ }

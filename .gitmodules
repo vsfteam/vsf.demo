@@ -37,3 +37,6 @@
 [submodule "application/shell/sys/linux/applets/sdl/mgba"]
 	path = application/shell/sys/linux/applets/sdl/mgba
 	url = ../../vsf-linux/mgba
+[submodule "application/shell/sys/linux/applets/usbipd/raw"]
+	path = application/shell/sys/linux/applets/usbipd/raw
+	url = ../../raydudu/usbipd-libusb
