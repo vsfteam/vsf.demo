@@ -775,6 +775,21 @@
     <Filter Include="vsf\component\mal\driver\flash_mal">
       <UniqueIdentifier>{23ccfee8-18d7-4fa6-be6b-35ba7a195efb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\component\ui\tgui\ext">
+      <UniqueIdentifier>{49de2193-06dd-4fba-89c9-d62143e0a721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\ui\tgui\ext\dynamic">
+      <UniqueIdentifier>{f268b3db-f324-4602-93c6-806e350cf1d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\ui\tgui\port">
+      <UniqueIdentifier>{0de7bbc1-a6db-43aa-a727-fe8859fb5aa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\ui\tgui\port\font">
+      <UniqueIdentifier>{b4de7f08-d969-4613-a70c-624aa9b8180f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\ui\tgui\port\view">
+      <UniqueIdentifier>{61fa8fd9-5ebe-4b57-9113-4d2bb7699b3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -1279,9 +1294,6 @@
       <Filter>vsf\component\ui\tgui\view\simple_view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_draw.h">
-      <Filter>vsf\component\ui\tgui\view\simple_view</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_font.h">
       <Filter>vsf\component\ui\tgui\view\simple_view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_label.h">
@@ -2016,6 +2028,15 @@
     <ClInclude Include="..\..\vsf\source\component\mal\driver\flash_mal\vsf_flash_mal.h">
       <Filter>vsf\component\mal\driver\flash_mal</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\ext\dynamic\vsf_tgui_dynamic.h">
+      <Filter>vsf\component\ui\tgui\ext\dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\port\view\vsf_tgui_sv_port.h">
+      <Filter>vsf\component\ui\tgui\port\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\tgui\port\vsf_tgui_port.h">
+      <Filter>vsf\component\ui\tgui\port</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -2474,9 +2495,6 @@
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\vsf_tgui_input.c">
       <Filter>vsf\component\ui\tgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vsf\source\component\ui\tgui\view\simple_view\vsf_tgui_sv_font.c">
-      <Filter>vsf\component\ui\tgui\view\simple_view</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\usb\host\class\DL1x5\vsf_usbh_dl1x5.c">
       <Filter>vsf\component\usb\host\class\DL1x5</Filter>
     </ClCompile>
@@ -2764,6 +2782,21 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\mal\driver\flash_mal\vsf_flash_mal.c">
       <Filter>vsf\component\mal\driver\flash_mal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\ext\dynamic\vsf_tgui_dynamic.c">
+      <Filter>vsf\component\ui\tgui\ext\dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\font\vsf_tgui_font_port_freetype.c">
+      <Filter>vsf\component\ui\tgui\port\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\font\vsf_tgui_font_port_lvgl.c">
+      <Filter>vsf\component\ui\tgui\port\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\view\vsf_tgui_sv_port.c">
+      <Filter>vsf\component\ui\tgui\port\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\tgui\port\vsf_tgui_port.c">
+      <Filter>vsf\component\ui\tgui\port</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
