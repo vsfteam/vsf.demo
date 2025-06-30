@@ -9,6 +9,14 @@
 // implement btstack_main if not in applet
 #ifndef __VSF_APPLET__
 #   define main         btstack_main
+#else
+VSF_CAL_WEAK(btstack_main)
+int btstack_main(int argc, char **argv)
+{
+    vsf_trace_warning("please add btstack default application\n");
+    hci_power_control(HCI_POWER_OFF);
+    return 0;
+}
 #endif
 
 int main(int argc, char *argv[])
@@ -19,7 +27,13 @@ int main(int argc, char *argv[])
         extern int btstack_scan_main(int, char**);
         entry = btstack_scan_main;
     } else if (!strcmp(argv[0], "btstack")) {
+#ifndef __VSF_APPLET__
         printf("do not call %s directly\n", argv[0]);
+#else
+        // normal btstack application entry
+        extern int btstack_main(int, char**);
+        entry = btstack_main;
+#endif
     } else {
         printf("not supported btstack command: %s\n", argv[0]);
         return -1;
