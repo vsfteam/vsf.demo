@@ -18,6 +18,7 @@
 // linux
 
 #define VSF_USE_LINUX                                   ENABLED
+#   define VSF_LINUX_USE_DEVFS                          ENABLED
 #   define VSF_LINUX_LIBC_USE_ENVIRON                   ENABLED
 #   define VSF_LINUX_USE_SIMPLE_LIBC                    ENABLED
 #   define VSF_LINUX_USE_LIBUSB                         VSF_USE_USB_HOST
