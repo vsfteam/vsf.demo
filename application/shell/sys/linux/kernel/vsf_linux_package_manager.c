@@ -103,7 +103,7 @@ static int __vpm_install_package(char *package)
     vk_romfs_header_t header = { 0 };
     vk_mal_init(&romfs_mal.use_as__vk_mal_t);
 
-    uint64_t flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
+    uint64_t flash_addr = (uint64_t)(uintptr_t)image - (uint64_t)(uintptr_t)__vpm.fsinfo->image;
     strcpy((char *)buf, path);
     strcat((char *)buf, VSF_BOARD_ARCH_STR "/" VSF_BOARD_ARCH_APP_FORMAT "/");
     strcat((char *)buf, package);
@@ -204,7 +204,7 @@ Uninstall and install %s again if fail to run\n", package);
             }
             vk_mal_write(&romfs_mal.use_as__vk_mal_t, flash_addr, sizeof(header_zero), (uint8_t *)&header_zero);
 
-            flash_addr = (uint64_t)image - (uint64_t)__vpm.fsinfo->image;
+            flash_addr = (uint64_t)(uintptr_t)image - (uint64_t)(uintptr_t)__vpm.fsinfo->image;
             if (flash_addr >= romfs_mal.host_mal->size) {
                 goto not_enough_flash;
             }
