@@ -1527,14 +1527,18 @@ int vsf_linux_create_fhs(void)
 
         vsf_board.display_dev->ui_data = vsf_eda_get_cur();
         vsf_board.display_dev->ui_on_ready = __vk_disp_on_inited;
-        vk_disp_init(vsf_board.display_dev);
-        vsf_thread_wfe(VSF_EVT_USER);
+        if (vk_disp_init(vsf_board.display_dev) != VSF_ERR_NONE) {
+            printf("Fail to initialize display.\n");
+            VSF_ASSERT(false);
+        } else {
+            vsf_thread_wfe(VSF_EVT_USER);
 
-        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/ui", ui_main);
+            vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/ui", ui_main);
 #   if VSF_LINUX_USE_DEVFS == ENABLED
-        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fill_screen", __fill_screen_main);
-        vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/write_screen", __write_screen_main);
+            vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/fill_screen", __fill_screen_main);
+            vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/write_screen", __write_screen_main);
 #   endif
+        }
     }
 #endif
 
