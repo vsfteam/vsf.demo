@@ -171,7 +171,9 @@
 
 #endif
 
-#define APP_CONFIG_FILE                             "~/appcfg"
+#if defined(APP_MSCBOOT_CFG_ROOT_ADDR)
+#   define APP_CONFIG_FILE                             "~/appcfg"
+#endif
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
@@ -524,6 +526,7 @@ void vsf_linux_install_package_manager(
 {
 }
 
+#if defined(APP_MSCBOOT_CFG_ROOT_ADDR)
 static char * __app_config_read(FILE *f)
 {
     fseek(f, 0, SEEK_END);
@@ -685,6 +688,16 @@ static int __appcfg_main(int argc, char *argv[])
     }
     return ret;
 }
+#else
+int app_config_read(const char *cfgname, char *cfgvalue, int valuelen)
+{
+    return -1;
+}
+int app_config_write(const char *cfgname, char *cfgvalue)
+{
+    return -1;
+}
+#endif
 
 #if VSF_USE_BTSTACK == ENABLED
 const btstack_run_loop_t * app_btstack_get_run_loop(void)
