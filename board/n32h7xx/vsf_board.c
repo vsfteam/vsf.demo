@@ -164,17 +164,6 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
 #include "hal/driver/common/debug_stream/debug_stream_tx_blocked.inc"
 #endif
 
-// __RCC_DELAY_US copy from n32h76x_78x_rcc module
-#define __RCC_DELAY_US(usec)                                                    \
-    do{                                                                         \
-        uint32_t delay_end;                                                     \
-        CPU_DELAY_INTI();                                                       \
-        /* Delay*/                                                              \
-        delay_end = DWT_CYCCNT + (usec * (600000000/1000000));                  \
-        while(DWT_CYCCNT < delay_end){};                                        \
-        CPU_DELAY_DISABLE();                                                    \
-    } while (0)
-
 // implement strong vsf_app_driver_init to overwrite weak one in hal
 bool vsf_app_driver_init(void)
 {
@@ -186,7 +175,6 @@ bool vsf_app_driver_init(void)
     vsf_hw_clk_config(&VSF_HW_CLK_SYSBUS, NULL, 2, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_AXISYS, NULL, 2, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_AXIHYP, NULL, 2, 0);
-    __RCC_DELAY_US(1);
 
     vsf_hw_clk_config(&VSF_HW_CLK_APB1, NULL, 2, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_APB2, NULL, 2, 0);
@@ -195,18 +183,12 @@ bool vsf_app_driver_init(void)
 
     vsf_hw_clk_enable(&VSF_HW_CLK_HSI);
     vsf_hw_clk_config(&VSF_HW_CLK_PLL1, &VSF_HW_CLK_HSI, 0, 0);
-    vsf_hw_pll_config(&VSF_HW_CLK_PLL1, 600000000);
-    __RCC_DELAY_US(1);
+    // 900M is the max OC clock
+    vsf_hw_pll_config(&VSF_HW_CLK_PLL1, 900000000);
 
     vsf_hw_clk_config(&VSF_HW_CLK_PLL1A, NULL, 1, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_SYS, &VSF_HW_CLK_PLL1A, 1, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_CPU, &VSF_HW_CLK_SYS, 0, 0);
-
-    // OC 1.25G
-    //  1. VSF_HW_CLK_SYS MUST be first configured as <= 900M(currently using 600M)
-    //  2. configure PLL1 to 1.25G
-    //  3. stable
-    vsf_hw_pll_config(&VSF_HW_CLK_PLL1, 1250000000);
 
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOA);
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOB);
