@@ -202,6 +202,12 @@ bool vsf_app_driver_init(void)
     vsf_hw_clk_config(&VSF_HW_CLK_SYS, &VSF_HW_CLK_PLL1A, 1, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_CPU, &VSF_HW_CLK_SYS, 0, 0);
 
+    // OC 1.25G
+    //  1. VSF_HW_CLK_SYS MUST be first configured as <= 900M(currently using 600M)
+    //  2. configure PLL1 to 1.25G
+    //  3. stable
+    vsf_hw_pll_config(&VSF_HW_CLK_PLL1, 1250000000);
+
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOA);
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOB);
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOC);
