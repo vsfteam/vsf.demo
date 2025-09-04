@@ -20673,6 +20673,12 @@
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\startup_n32h76x.c</name>
                             </file>
                         </group>
+                        <group>
+                            <name>N32H765IIB7EC</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\N32H765IIB7EC\device.h</name>
+                            </file>
+                        </group>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\__device.h</name>
                         </file>
