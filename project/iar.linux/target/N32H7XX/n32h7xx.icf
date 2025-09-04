@@ -1,0 +1,88 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\linker\Nation\IcfEditor\N32H7xx.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__ = 0x15000000;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_FLASH_start__  = 0x15000000;
+define symbol __ICFEDIT_region_FLASH_end__    = 0x153DFFFF;
+define symbol __ICFEDIT_region_NORPSR_start__ = 0x0;
+define symbol __ICFEDIT_region_NORPSR_end__   = 0x0;
+define symbol __ICFEDIT_region_NAND_start__   = 0x0;
+define symbol __ICFEDIT_region_NAND_end__     = 0x0;
+define symbol __ICFEDIT_region_OSPI0_start__  = 0x0;
+define symbol __ICFEDIT_region_OSPI0_end__    = 0x0;
+define symbol __ICFEDIT_region_OSPI1_start__  = 0x0;
+define symbol __ICFEDIT_region_OSPI1_end__    = 0x0;
+define symbol __ICFEDIT_region_ITCMR_start__  = 0x0;
+define symbol __ICFEDIT_region_ITCMR_end__    = 0x0;
+define symbol __ICFEDIT_region_DTCMR0_start__ = 0x0;
+define symbol __ICFEDIT_region_DTCMR0_end__   = 0x0;
+define symbol __ICFEDIT_region_DTCMR1_start__ = 0x0;
+define symbol __ICFEDIT_region_DTCMR1_end__   = 0x0;
+define symbol __ICFEDIT_region_AXISR_start__  = 0x24000000;
+define symbol __ICFEDIT_region_AXISR_end__    = 0x2411FFFF;
+define symbol __ICFEDIT_region_SRAM0_start__  = 0x30000000;
+define symbol __ICFEDIT_region_SRAM0_end__    = 0x3001FFFF;
+define symbol __ICFEDIT_region_SRAM1_start__  = 0x30020000;
+define symbol __ICFEDIT_region_SRAM1_end__    = 0x3003FFFF;
+define symbol __ICFEDIT_region_SRAM2_start__  = 0x30040000;
+define symbol __ICFEDIT_region_SRAM2_end__    = 0x30047FFF;
+define symbol __ICFEDIT_region_SRAM3_start__  = 0x30048000;
+define symbol __ICFEDIT_region_SRAM3_end__    = 0x3004FFFF;
+define symbol __ICFEDIT_region_SRAM4_start__  = 0x30050000;
+define symbol __ICFEDIT_region_SRAM4_end__    = 0x30057FFF;
+define symbol __ICFEDIT_region_BKPSR_start__  = 0x38000000;
+define symbol __ICFEDIT_region_BKPSR_end__    = 0x38000FFF;
+define symbol __ICFEDIT_region_SDR0_start__   = 0x0;
+define symbol __ICFEDIT_region_SDR0_end__     = 0x0;
+define symbol __ICFEDIT_region_SDR1_start__   = 0x0;
+define symbol __ICFEDIT_region_SDR1_end__     = 0x0;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_cstack__     = 0x2000;
+define symbol __ICFEDIT_size_proc_stack__ = 0x0;
+define symbol __ICFEDIT_size_heap__       = 0x2000;
+/**** End of ICF editor section. ###ICF###*/
+
+define memory mem with size = 4G;
+define region FLASH_region  =   mem:[from __ICFEDIT_region_FLASH_start__  to __ICFEDIT_region_FLASH_end__ ];
+define region NORPSR_region =   mem:[from __ICFEDIT_region_NORPSR_start__ to __ICFEDIT_region_NORPSR_end__];
+define region NAND_region   =   mem:[from __ICFEDIT_region_NAND_start__   to __ICFEDIT_region_NAND_end__  ];
+define region OSPI_region   =   mem:[from __ICFEDIT_region_OSPI0_start__  to __ICFEDIT_region_OSPI0_end__ ]
+                              | mem:[from __ICFEDIT_region_OSPI1_start__  to __ICFEDIT_region_OSPI1_end__ ];
+define region ITCMR_region  =   mem:[from __ICFEDIT_region_ITCMR_start__  to __ICFEDIT_region_ITCMR_end__ ];
+define region DTCMR_region  =   mem:[from __ICFEDIT_region_DTCMR0_start__ to __ICFEDIT_region_DTCMR0_end__]
+                              | mem:[from __ICFEDIT_region_DTCMR1_start__ to __ICFEDIT_region_DTCMR1_end__];
+define region AXISR_region  =   mem:[from __ICFEDIT_region_AXISR_start__  to __ICFEDIT_region_AXISR_end__ ];
+define region SRAM_region   =   mem:[from __ICFEDIT_region_SRAM0_start__  to __ICFEDIT_region_SRAM0_end__ ]
+                              | mem:[from __ICFEDIT_region_SRAM1_start__  to __ICFEDIT_region_SRAM1_end__ ]
+                              | mem:[from __ICFEDIT_region_SRAM2_start__  to __ICFEDIT_region_SRAM2_end__ ]
+                              | mem:[from __ICFEDIT_region_SRAM3_start__  to __ICFEDIT_region_SRAM3_end__ ]
+                              | mem:[from __ICFEDIT_region_SRAM4_start__  to __ICFEDIT_region_SRAM4_end__ ];
+define region BKPSR_region  =   mem:[from __ICFEDIT_region_BKPSR_start__  to __ICFEDIT_region_BKPSR_end__ ];
+define region SDR_region    =   mem:[from __ICFEDIT_region_SDR0_start__   to __ICFEDIT_region_SDR0_end__  ]
+                              | mem:[from __ICFEDIT_region_SDR1_start__   to __ICFEDIT_region_SDR1_end__  ];
+
+define block CSTACK     with alignment = 8, size = __ICFEDIT_size_cstack__     { };
+define block PROC_STACK with alignment = 8, size = __ICFEDIT_size_proc_stack__ { };
+define block HEAP       with alignment = 8, size = __ICFEDIT_size_heap__       { };
+
+initialize by copy { readwrite };
+if (isdefinedsymbol(__USE_DLIB_PERTHREAD))
+{
+  // Required in a multi-threaded application
+  initialize by copy with packing = none { section __DLIB_PERTHREAD };
+}
+
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
+
+place in FLASH_region  { readonly };
+place in OSPI_region   { readonly section application_specific_ro };
+//place in NORPSR_region { };
+//place in NAND_region { };
+place in ITCMR_region  { section .itcm_ram, section .textrw };
+place in DTCMR_region  { section .dtcm_ram };
+place in AXISR_region  { readwrite, block CSTACK, block PROC_STACK, block HEAP };
+place in SRAM_region   { section .sram };
+place in BKPSR_region  { section .backup_sram };
+place in SDR_region    { readwrite section application_specific_rw };

@@ -101,6 +101,7 @@
 #   define VSF_USBH_CFG_ENABLE_ROOT_HUB                 DISABLED
 #   define VSF_USBD_CFG_SPEED_HIGH
 
+#define VSF_USE_LWIP                                    ENABLED
 #define VSF_USE_UI                                      DISABLED
 
 #define VSF_USE_AUDIO                                   DISABLED
