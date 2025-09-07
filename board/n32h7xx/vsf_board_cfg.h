@@ -29,7 +29,6 @@
 
 #define VSF_HAL_USE_I2C                                 DISABLED
 #define VSF_HAL_USE_SDIO                                DISABLED
-#define VSF_HAL_USE_GPIO                                DISABLED
 
 /*============================ INCLUDES ======================================*/
 

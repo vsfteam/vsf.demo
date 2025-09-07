@@ -155,7 +155,7 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
     }
 }
 
-// Because debug stream for RP2040 is not used,
+// Because debug stream for N32H7 is not used,
 //  VSF_HAL_USE_DEBUG_STREAM is not defined in header files.
 // But debug_stream_tx_blocked.inc will need VSF_HAL_USE_DEBUG_STREAM,
 //  so define VSF_HAL_USE_DEBUG_STREAM here.
@@ -202,13 +202,6 @@ bool vsf_app_driver_init(void)
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOJ);
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOK);
     vsf_hw_peripheral_enable(VSF_HW_EN_AFIO);
-
-    // TODO: GPIO should be initialized in vsf_board_init
-    GPIOA->AFH &= ~0xFF0;
-    GPIOA->AFH |= 0x570;
-    GPIOA->POTYPE &= ~0x60;
-    GPIOA->PMODE &= ~0x3C0000;
-    GPIOA->PMODE |= 0x280000;
     return true;
 }
 
@@ -219,14 +212,12 @@ void vsf_board_prepare_hw_for_linux(void)
 
 void vsf_board_init(void)
 {
-#if 0
     static const vsf_gpio_port_cfg_pins_t __cfgs[] = {
         // USART: PA9/PA10
         {VSF_PORTA, (1 << 9), VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP, 7},
         {VSF_PORTA, (1 << 10), VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP, 5},
     };
     vsf_hw_gpio_ports_config_pins((vsf_gpio_port_cfg_pins_t *)__cfgs, dimof(__cfgs));
-#endif
 
 #ifdef __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);
