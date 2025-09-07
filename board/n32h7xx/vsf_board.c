@@ -218,7 +218,11 @@ void vsf_board_init(void)
         // USART: PA9/PA10
         {VSF_PORTA, (1 << 9), VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP, 7},
         {VSF_PORTA, (1 << 10), VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP, 5},
-        // USB1: 
+        // USB1: PA11(DM)/PA12(DP)
+        {VSF_PORTA, (1 << 11) | (1 << 12), VSF_GPIO_AF_PUSH_PULL, 10},
+        // USB2: PB14(DM)/PB15(DP)
+//        {VSF_PORTB, (1 << 14), VSF_GPIO_AF_PUSH_PULL, 12},
+//        {VSF_PORTB, (1 << 15), VSF_GPIO_AF_PUSH_PULL, 11},
     };
     vsf_hw_gpio_ports_config_pins((vsf_gpio_port_cfg_pins_t *)__cfgs, dimof(__cfgs));
 
