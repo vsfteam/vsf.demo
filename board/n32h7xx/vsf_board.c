@@ -181,15 +181,17 @@ bool vsf_app_driver_init(void)
     vsf_hw_clk_config(&VSF_HW_CLK_APB5, NULL, 2, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_APB6, NULL, 2, 0);
 
-    vsf_hw_clk_enable(&VSF_HW_CLK_HSI);
-    vsf_hw_clk_config(&VSF_HW_CLK_PLL1, &VSF_HW_CLK_HSI, 0, 0);
+    vsf_hw_clk_enable(&VSF_HW_CLK_HSE);
+    vsf_hw_clk_config(&VSF_HW_CLK_PLL1, &VSF_HW_CLK_HSE, 0, 0);
     // 900M is the max OC clock
     vsf_hw_pll_config(&VSF_HW_CLK_PLL1, 900000000);
 
     vsf_hw_clk_config(&VSF_HW_CLK_PLL1A, NULL, 1, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_SYS, &VSF_HW_CLK_PLL1A, 1, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_CPU, &VSF_HW_CLK_SYS, 0, 0);
+    vsf_hw_clk_config(&VSF_HW_CLK_USBREF, NULL, 1, 0);
 
+    vsf_hw_peripheral_enable(VSF_HW_EN_PWR);
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOA);
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOB);
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOC);
@@ -216,6 +218,7 @@ void vsf_board_init(void)
         // USART: PA9/PA10
         {VSF_PORTA, (1 << 9), VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP, 7},
         {VSF_PORTA, (1 << 10), VSF_GPIO_AF_PUSH_PULL | VSF_GPIO_PULL_UP, 5},
+        // USB1: 
     };
     vsf_hw_gpio_ports_config_pins((vsf_gpio_port_cfg_pins_t *)__cfgs, dimof(__cfgs));
 

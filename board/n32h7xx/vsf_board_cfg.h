@@ -78,11 +78,11 @@
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
 #   define VSF_HEAP_SIZE                                (256 * 1024)
 
-#define VSF_USBH_USE_HCD_DWCOTG                         DISABLED
+#define VSF_USBH_USE_HCD_DWCOTG                         ENABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
 #   define VSF_USBH_CFG_ENABLE_ROOT_HUB                 DISABLED
 
-#define VSF_USBD_USE_DCD_DWCOTG                         DISABLED
+#define VSF_USBD_USE_DCD_DWCOTG                         ENABLED
 #   define VSF_USBD_CFG_SPEED                           USB_SPEED_HIGH
 
 #define VSF_BOARD_SEPERATE_USB_HOST_DEVICE
@@ -93,9 +93,9 @@
 #   define VSF_CFG_DEBUG_STREAM_RX_T                    vsf_mem_stream_t
 #endif
 
-#define VSF_USE_USB_HOST                                DISABLED
-#define VSF_USE_USB_DEVICE                              DISABLED
-#   define VSF_USBH_USE_HCD_DWCOTG                      DISABLED
+#define VSF_USE_USB_HOST                                ENABLED
+#define VSF_USE_USB_DEVICE                              ENABLED
+#   define VSF_USBH_USE_HCD_DWCOTG                      ENABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
 #   define VSF_USBH_CFG_ENABLE_ROOT_HUB                 DISABLED
 #   define VSF_USBD_CFG_SPEED_HIGH

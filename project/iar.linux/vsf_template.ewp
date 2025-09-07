@@ -20661,6 +20661,39 @@
                                 </file>
                             </group>
                             <group>
+                                <name>usb</name>
+                                <group>
+                                    <name>dc</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\usb\dc\usbd.c</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\usb\dc\usbd.h</name>
+                                    </file>
+                                </group>
+                                <group>
+                                    <name>hc</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\usb\hc\usbh.c</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\usb\hc\usbh.h</name>
+                                    </file>
+                                </group>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\usb\usb.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\usb\usb.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\usb\usb_common.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\usb\usb_lv0.c</name>
+                                </file>
+                            </group>
+                            <group>
                                 <name>vendor</name>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\vendor\n32h76x_78x.h</name>
