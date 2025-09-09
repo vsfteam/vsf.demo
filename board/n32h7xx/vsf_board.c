@@ -41,7 +41,6 @@ static const vk_dwcotg_hcd_param_t __dwcotg_hcd_param = {
 static const vk_dwcotg_dcd_param_t __dwcotg_dcd_param = {
     .op                         = &VSF_USB_DC0_IP,
     .speed                      = VSF_USBD_CFG_SPEED,
-        .ulpi_en                = true,
         .dma_en                 = false,
 };
 #endif
@@ -189,7 +188,9 @@ bool vsf_app_driver_init(void)
     vsf_hw_clk_config(&VSF_HW_CLK_PLL1A, NULL, 1, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_SYS, &VSF_HW_CLK_PLL1A, 1, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_CPU, &VSF_HW_CLK_SYS, 0, 0);
+#if VSF_USE_USB_HOST == ENABLED || VSF_USE_USB_DEVICE == ENABLED
     vsf_hw_clk_config(&VSF_HW_CLK_USBREF, NULL, 1, 0);
+#endif
 
     vsf_hw_peripheral_enable(VSF_HW_EN_PWR);
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOA);

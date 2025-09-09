@@ -83,7 +83,6 @@
 #   define VSF_USBH_CFG_ENABLE_ROOT_HUB                 DISABLED
 
 #define VSF_USBD_USE_DCD_DWCOTG                         ENABLED
-#   define VSF_USBD_CFG_SPEED                           USB_SPEED_HIGH
 
 #define VSF_BOARD_SEPERATE_USB_HOST_DEVICE
 
@@ -98,7 +97,14 @@
 #   define VSF_USBH_USE_HCD_DWCOTG                      ENABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
 #   define VSF_USBH_CFG_ENABLE_ROOT_HUB                 DISABLED
-#   define VSF_USBD_CFG_SPEED_HIGH
+// Default VSF_USBD_CFG_HW_PRIORITY is VSF_ARCH_PRIO_0, if MCU cache is not enabled, USB irq will timeout
+//  so set to VSF_ARCH_PRIO_1
+#   define VSF_USBD_CFG_HW_PRIORITY                     VSF_ARCH_PRIO_1
+#   define VSF_USBD_CFG_SPEED                           USB_SPEED_HIGH
+// define VSF_USBD_CFG_SPEED_HIGH if VSF_USBD_CFG_SPEED is USB_SPEED_HIGH
+#       define VSF_USBD_CFG_SPEED_HIGH
+// define VSF_USBD_CFG_SPEED_FULL if VSF_USBD_CFG_SPEED is USB_SPEED_FULL
+//#       define VSF_USBD_CFG_SPEED_FULL
 
 #define VSF_USE_LWIP                                    ENABLED
 #define VSF_USE_UI                                      DISABLED
