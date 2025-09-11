@@ -27,9 +27,6 @@
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
-#define VSF_HAL_USE_I2C                                 DISABLED
-#define VSF_HAL_USE_SDIO                                DISABLED
-
 /*============================ INCLUDES ======================================*/
 
 // retrieve compiler information

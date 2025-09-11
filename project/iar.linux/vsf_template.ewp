@@ -20652,6 +20652,33 @@
                                 </file>
                             </group>
                             <group>
+                                <name>i2c</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\i2c\i2c.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\i2c\i2c.h</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>sdio</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\sdio\sdio.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\sdio\sdio.h</name>
+                                </file>
+                            </group>
+                            <group>
+                                <name>spi</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\spi\spi.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\spi\spi.h</name>
+                                </file>
+                            </group>
+                            <group>
                                 <name>usart</name>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\usart\usart.c</name>

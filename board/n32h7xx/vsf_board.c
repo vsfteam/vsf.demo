@@ -48,7 +48,7 @@ static const vk_dwcotg_dcd_param_t __dwcotg_dcd_param = {
 #if VSF_USE_BOARD == ENABLED
 vsf_board_t vsf_board = {
 #if VSF_HAL_USE_I2C == ENABLED
-    .i2c                        = (vsf_i2c_t *)&vsf_hw_i2c0,
+    .i2c                        = (vsf_i2c_t *)&vsf_hw_i2c1,
 #endif
 #if VSF_USE_USB_HOST == ENABLED
     .usbh_dev                   = {
@@ -62,7 +62,7 @@ vsf_board_t vsf_board = {
     },
 #endif
 #if VSF_HAL_USE_SDIO == ENABLED
-    .sdio                       = (vsf_sdio_t *)&vsf_hw_sdio0,
+    .sdio                       = (vsf_sdio_t *)&vsf_hw_sdio1,
     .sdio_bus_width             = 4,
     .sdio_voltage               = SD_OCR_VDD_32_33 | SD_OCR_VDD_33_34,
 #endif
