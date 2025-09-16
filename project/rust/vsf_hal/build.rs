@@ -75,9 +75,7 @@ fn main() {
     let mut builder = bindgen::Builder::default()
                     .header("".to_string() + &path + "source/hal/driver/driver.h")
                     .blocklist_item("__.*")
-                    .default_enum_style(bindgen::EnumVariation::Rust {
-                        non_exhaustive: false,
-                    })
+                    .default_enum_style(bindgen::EnumVariation::ModuleConsts)
                     .clang_arg("-D".to_string() + "__" + &vendor + "__")
                     .clang_arg("-D".to_string() + "__" + &model + "__")
                     .clang_arg("-I".to_string() + &path + "source/shell/hal/rust-embedded-hal/inc")
@@ -111,6 +109,7 @@ fn enable_peripherial(lines: &Vec<&str>, name: &str) {
     let mask_option = extract_const_integer(lines, &mask_str);
     if let Some(mask) = mask_option {
         println!("cargo:warning={name}_mask: 0x{mask:X}");
+        println!("cargo:rustc-cfg=vsf_{name}_enabled");
 
         for index in 0..32 {
             if mask & (1 << index) != 0 {
@@ -122,6 +121,7 @@ fn enable_peripherial(lines: &Vec<&str>, name: &str) {
         let count_option = extract_const_integer(lines, &count_str);
         if let Some(mut count) = count_option {
             println!("cargo:warning={name}_count: {count}");
+            println!("cargo:rustc-cfg=vsf_{name}_enabled");
 
             let mut index = 0;
             while count != 0 {
