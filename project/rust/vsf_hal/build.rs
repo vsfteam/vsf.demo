@@ -9,6 +9,8 @@ const TOML_TARGET_VENDOR_NODE: &str = "vendor";
 const TOML_TARGET_MODEL_NODE: &str = "model";
 const TOML_TARGET_FLAGS_NODE: &str = "flags";
 
+const PERIPHERIALS: [&'static str; 2] = ["gpio", "usart"];
+
 fn main() {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
     let manifest_path = Path::new(&manifest_dir).join("Cargo.toml");
@@ -86,5 +88,75 @@ fn main() {
     }
 
     let bindings = builder.generate().expect("Failed to generate rust bindings");
-    bindings.write_to_file(Path::new(&manifest_dir).join("vsf_hal.rs")).expect("Fail to write result to rust file");
+
+    let pathbuf = Path::new(&manifest_dir).join("vsf_hal.rs");
+    bindings.write_to_file(&pathbuf).unwrap();
+
+    let bindings_content = fs::read_to_string(&pathbuf).unwrap();
+    let bindings_lines = bindings_content.lines().collect();
+
+    for peripherial in PERIPHERIALS {
+        enable_peripherial(&bindings_lines, peripherial);
+    }
+}
+
+fn enable_peripherial(lines: &Vec<&str>, name: &str) {
+    let mut prefix_str = "VSF_HW_".to_string();
+    prefix_str.push_str(&String::from(name).to_uppercase());
+    let mut mask_str = String::from(&prefix_str);
+    mask_str.push_str("_MASK");
+    let mut count_str = String::from(&prefix_str);
+    count_str.push_str("_COUNT");
+
+    let mask_option = extract_const_integer(lines, &mask_str);
+    if let Some(mask) = mask_option {
+        println!("cargo:warning={name}_mask: 0x{mask:X}");
+
+        for index in 0..32 {
+            if mask & (1 << index) != 0 {
+                println!("cargo:warning={name}: enable {name}{index}");
+                println!("cargo:rustc-cfg=vsf_{name}{index}_enabled");
+            }
+        }
+    } else {
+        let count_option = extract_const_integer(lines, &count_str);
+        if let Some(mut count) = count_option {
+            println!("cargo:warning={name}_count: {count}");
+
+            let mut index = 0;
+            while count != 0 {
+                println!("cargo:warning={name}: enable {name}{index}");
+                println!("cargo:rustc-cfg=vsf_{name}{index}_enabled");
+                index += 1;
+                count -= 1;
+            }
+        }
+    }
+}
+
+fn extract_const_integer(lines: &Vec<&str>, name: &str) -> Option<i32> {
+    let mut result: Option<i32> = None;
+
+    for line in lines {
+        if let Some((cur_name, cur_value)) = extract_constant_value(line) {
+            if name == cur_name {
+                let value = String::from(cur_value).parse::<i32>().unwrap();
+                result = Some(value);
+                break;
+            }
+        }
+    }
+    result
+}
+
+fn extract_constant_value(line: &str) -> Option<(&str, &str)> {
+    let parts: Vec<&str> = line.split_whitespace().collect();
+    // pub const CONST_NAME: TYPE = CONST_VALUE;
+    if parts.len() >= 6 && parts[0] == "pub" && parts[1] == "const" {
+        let name = parts[2].trim_end_matches(':');
+        let value = parts[5].trim_end_matches(';');
+        Some((name, value))
+    } else {
+        None
+    }
 }
