@@ -54,16 +54,16 @@
  *   vsf/source/shell/sys/linux/lib/3rd-party/fnmatch
  *   vsf/source/shell/sys/linux/lib/3rd-party/glob
  *   vsf/source/shell/sys/linux/lib/3rd-party/regex excluding engine.c
- *   ./*.c
+ *   ./.*.c
  *   optional:
  *    for root directory in embedded hardware, littlefs is used
- *     vsf/source/component/3rd-party/littlefs/port/*
- *     vsf/source/component/3rd-party/littlefs/raw/*
+ *     vsf/source/component/3rd-party/littlefs/port/.*
+ *     vsf/source/component/3rd-party/littlefs/raw/.*
  *    for package manager, need VSF_USE_TCPIP from vsf_board
  *     ./vsf_linux_package_manager.c
- *     vsf/source/component/3rd-party/mbedtls/raw/library/* if VSF_USE_MBEDTLS is enabled
- *     vsf/source/component/3rd-party/mbedtls/port/* if VSF_USE_MBEDTLS is enabled
- *     vsf/source/component/3rd-party/mbedtls/extension/tls_session_client/* if VSF_USE_MBEDTLS is enabled
+ *     vsf/source/component/3rd-party/mbedtls/raw/library/.* if VSF_USE_MBEDTLS is enabled
+ *     vsf/source/component/3rd-party/mbedtls/port/.* if VSF_USE_MBEDTLS is enabled
+ *     vsf/source/component/3rd-party/mbedtls/extension/tls_session_client/.* if VSF_USE_MBEDTLS is enabled
  *
  * Linker:
  *   If bootloader is used, set image base to the APP address
