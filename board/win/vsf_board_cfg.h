@@ -28,13 +28,6 @@
  * Board Configurations                                                       *
  *----------------------------------------------------------------------------*/
 
-// define VSF_BOARD_CFG_DISTBUS_USART to N to use the COMN as distbus transport
-// if not defined, hal_distbus will not be used
-// This is useful if you want to connect to a external board running distbus_hal
-//   slave, and the hardware resources on the board can be conntrolled by
-//   hal_distbus host.
-//#define VSF_BOARD_CFG_DISTBUS_USART                     1
-
 /*----------------------------------------------------------------------------*
  * Architecture Configurations                                                *
  *----------------------------------------------------------------------------*/
@@ -43,13 +36,6 @@
 #define VSF_OS_CFG_ADD_EVTQ_TO_IDLE                     ENABLED
 // cpu usage is not supported in windows/linux/macos
 #define VSF_KERNEL_CFG_CPU_USAGE                        DISABLED
-
-#ifdef VSF_BOARD_CFG_DISTBUS_USART
-#   define VSF_WIN_USART_CFG_TX_BLOCK                   ENABLED
-// do not use win_usart as hw_usart if VSF_BOARD_CFG_DISTBUS_USART is enabled,
-//  because hw_usart will be hal_distbus_usart
-#   define VSF_WIN_USART_CFG_USE_AS_HW_USART            DISABLED
-#endif
 
 #define VSF_BOARD_ARCH_STR                              "x86_64"
 #define VSF_BOARD_ARCH_APP_FORMAT                       "pe"
@@ -62,8 +48,6 @@
 #define VSF_HAL_USE_I2C                                 DISABLED
 #define VSF_HAL_USE_SDIO                                DISABLED
 
-#define VSF_HAL_USE_GPIO                                ENABLED
-#define VSF_HAL_USE_USART                               ENABLED
 #define VSF_HAL_USE_DEBUG_STREAM                        ENABLED
 #   define VSF_DEBUG_STREAM_CFG_HW_PRIORITY             vsf_arch_prio_0
 #define VSF_HAL_USE_DISTBUS                             ENABLED
@@ -95,8 +79,6 @@
 #define VSF_FS_USE_WINFS                                ENABLED
 #define VSF_USE_HEAP                                    ENABLED
 #define VSF_USE_DISTBUS                                 ENABLED
-// acutally VSF_DISTBUS_TRANSPORT_USE_STREAM is not in vsf, but in application/app/distbus
-#   define VSF_DISTBUS_TRANSPORT_USE_STREAM             ENABLED
 
 #define VSF_BOARD_HAS_USB_HOST                          1
 #define VSF_USBH_USE_HCD_WINUSB                         ENABLED

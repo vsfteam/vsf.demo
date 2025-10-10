@@ -697,6 +697,10 @@ int app_config_write(const char *cfgname, char *cfgvalue)
 {
     return -1;
 }
+static int __appcfg_main(int argc, char *argv[])
+{
+    return -1;
+}
 #endif
 
 #if VSF_USE_BTSTACK == ENABLED

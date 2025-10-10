@@ -20733,6 +20733,12 @@
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\common.h</name>
                             </file>
                             <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\device_af.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\device_irq.h</name>
+                            </file>
+                            <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Nations\N32H76X_78X\common\driver.c</name>
                             </file>
                             <file>

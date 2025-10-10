@@ -679,18 +679,6 @@
     <Filter Include="vsf\hal\driver\vsf\distbus\usbh">
       <UniqueIdentifier>{184c25a7-5502-43fb-ad98-67b387d9de4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="application\distbus">
-      <UniqueIdentifier>{ec53dbef-475f-45c7-8c3e-2986d0c12ba8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\distbus\transport">
-      <UniqueIdentifier>{163b4e73-0768-4f6f-b321-218490fc5fd0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\distbus\transport\stream">
-      <UniqueIdentifier>{6753dbcd-23cf-4052-acc1-599f6d3fe0a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="application\distbus\transport\usbd_cdcacm">
-      <UniqueIdentifier>{2a45d5c4-b591-4df6-af94-b0609325060f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="vsf\hal\utilities">
       <UniqueIdentifier>{8d181241-266f-4833-aa3a-2a5204687583}</UniqueIdentifier>
     </Filter>
@@ -924,6 +912,12 @@
     </Filter>
     <Filter Include="vsf\component\3rd-party\btstack\raw\chipset\csr">
       <UniqueIdentifier>{dc49629e-0b73-440c-ab14-1cc9481e51d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\service\distbus\transport">
+      <UniqueIdentifier>{13da2a3e-8394-46ff-8cc6-445aa7912815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\service\distbus\transport\stream">
+      <UniqueIdentifier>{db50be28-adc9-47e2-97b9-c65006d42d10}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2061,24 +2055,6 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.h">
       <Filter>vsf\hal\driver\vsf\distbus\usbh</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport.h">
-      <Filter>application\distbus\transport</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\app\distbus\transport\vsf_distbus_transport_cfg.h">
-      <Filter>application\distbus\transport</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\app\distbus\transport\stream\vsf_distbus_transport_stream.h">
-      <Filter>application\distbus\transport\stream</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\app\distbus\transport\stream\vsf_distbus_transport_stream_cfg.h">
-      <Filter>application\distbus\transport\stream</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm.h">
-      <Filter>application\distbus\transport\usbd_cdcacm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm_cfg.h">
-      <Filter>application\distbus\transport\usbd_cdcacm</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\utilities\stream\usart\vsf_usart_stream.h">
       <Filter>vsf\hal\utilities\stream\usart</Filter>
     </ClInclude>
@@ -2624,6 +2600,9 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\hci_event_builder.h">
       <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\service\distbus\transport\stream\vsf_distbus_transport_stream.h">
+      <Filter>vsf\service\distbus\transport\stream</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3278,12 +3257,6 @@
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.c">
       <Filter>vsf\hal\driver\vsf\distbus\usbh</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\application\app\distbus\transport\stream\vsf_distbus_transport_stream.c">
-      <Filter>application\distbus\transport\stream</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\application\app\distbus\transport\usbd_cdcacm\vsf_distbus_transport_usbd_cdcacm.c">
-      <Filter>application\distbus\transport\usbd_cdcacm</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\utilities\stream\usart\vsf_usart_stream.c">
       <Filter>vsf\hal\utilities\stream\usart</Filter>
     </ClCompile>
@@ -3904,6 +3877,9 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\raw\src\hci_event_builder.c">
       <Filter>vsf\component\3rd-party\btstack\raw\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\service\distbus\transport\stream\vsf_distbus_transport_stream.c">
+      <Filter>vsf\service\distbus\transport\stream</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
