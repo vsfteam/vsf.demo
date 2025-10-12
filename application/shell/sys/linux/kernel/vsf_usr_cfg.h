@@ -96,11 +96,12 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 
 #if VSF_BOARD_HAS_USB_HOST
 #   define VSF_USE_USB_HOST                             ENABLED
-// if usb host is enabled, usbh_bthci can be used for btstack
-#   define VSF_USE_BTSTACK                              ENABLED
 #endif
 #if VSF_BOARD_HAS_USB_DEVICE
 #   define VSF_USE_USB_DEVICE                           ENABLED
+#endif
+#if VSF_BOARD_HAS_BLUETOOTH
+#   define VSF_USE_BTSTACK                              ENABLED
 #endif
 
 #if VSF_USE_USB_DEVICE == ENABLED
