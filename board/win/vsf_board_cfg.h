@@ -45,8 +45,6 @@
  *----------------------------------------------------------------------------*/
 
 #define VSF_HAL_USE_FLASH                               DISABLED
-#define VSF_HAL_USE_I2C                                 DISABLED
-#define VSF_HAL_USE_SDIO                                DISABLED
 
 #define VSF_HAL_USE_DEBUG_STREAM                        ENABLED
 #   define VSF_DEBUG_STREAM_CFG_HW_PRIORITY             vsf_arch_prio_0
