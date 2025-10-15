@@ -1,4 +1,9 @@
 vsf_add_include_directories(
     ./
 )
-add_subdirectory(transport/usbd_cdcacm)
+vsf_add_sources(
+    main.c
+)
+
+add_subdirectory(hal)
+add_subdirectory(transport)

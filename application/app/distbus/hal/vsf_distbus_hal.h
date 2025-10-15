@@ -26,7 +26,6 @@
 
 #if VSF_USE_DISTBUS == ENABLED
 
-#include "./io/vsf_distbus_hal_io.h"
 #include "./gpio/vsf_distbus_hal_gpio.h"
 #include "./i2c/vsf_distbus_hal_i2c.h"
 #include "./spi/vsf_distbus_hal_spi.h"

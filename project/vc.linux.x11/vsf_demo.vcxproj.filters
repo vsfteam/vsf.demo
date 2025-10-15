@@ -1015,6 +1015,12 @@
     <Filter Include="application\images">
       <UniqueIdentifier>{8b5e5a2f-2c8b-418e-a97d-a220e4cf6d13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\hal\utilities\remap\rtc">
+      <UniqueIdentifier>{fec5aaa1-1eef-4d56-97a6-75d39c215025}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\rng">
+      <UniqueIdentifier>{0f829c19-1962-4cb7-b828-df8ae4c00fdf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2813,6 +2819,12 @@
     </ClInclude>
     <ClInclude Include="..\..\application\shell\sys\linux\kernel\images\demo_images_data.h">
       <Filter>application\images</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\rtc\vsf_remapped_rtc.h">
+      <Filter>vsf\hal\utilities\remap\rtc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\rng\vsf_remapped_rng.h">
+      <Filter>vsf\hal\utilities\remap\rng</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4990,6 +5002,12 @@
     </ClCompile>
     <ClCompile Include="..\..\application\shell\sys\linux\kernel\images\demo_images.c">
       <Filter>application\images</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\rtc\vsf_remapped_rtc.c">
+      <Filter>vsf\hal\utilities\remap\rtc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\rng\vsf_remapped_rng.c">
+      <Filter>vsf\hal\utilities\remap\rng</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

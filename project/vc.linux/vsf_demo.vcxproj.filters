@@ -919,6 +919,12 @@
     <Filter Include="vsf\service\distbus\transport\stream">
       <UniqueIdentifier>{db50be28-adc9-47e2-97b9-c65006d42d10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\hal\utilities\remap\rtc">
+      <UniqueIdentifier>{55b08970-8e50-492d-8bc6-09fbde111d13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\rng">
+      <UniqueIdentifier>{f0bc8286-6537-4684-a1b3-42bdf2db5746}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2604,6 +2610,12 @@
     <ClInclude Include="..\..\vsf\source\service\distbus\transport\stream\vsf_distbus_transport_stream.h">
       <Filter>vsf\service\distbus\transport\stream</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\rtc\vsf_remapped_rtc.h">
+      <Filter>vsf\hal\utilities\remap\rtc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\rng\vsf_remapped_rng.h">
+      <Filter>vsf\hal\utilities\remap\rng</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3880,6 +3892,12 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\service\distbus\transport\stream\vsf_distbus_transport_stream.c">
       <Filter>vsf\service\distbus\transport\stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\rtc\vsf_remapped_rtc.c">
+      <Filter>vsf\hal\utilities\remap\rtc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\rng\vsf_remapped_rng.c">
+      <Filter>vsf\hal\utilities\remap\rng</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

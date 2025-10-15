@@ -53,6 +53,40 @@ static const vsf_distbus_service_info_t __vsf_distbus_hal_gpio_service_info = {
 
 /*============================ IMPLEMENTATION ================================*/
 
+static vsf_gpio_mode_t __vsf_hal_distbus_gpio_mode(uint32_t mode)
+{
+    vsf_gpio_mode_t gpio_mode = 0;
+    uint32_t tmp;
+
+    tmp = mode & VSF_HAL_DISTBUS_ENUM(VSF_GPIO_MODE_MASK);
+    switch (tmp) {
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_INPUT):                      gpio_mode |= VSF_GPIO_INPUT;                    break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_ANALOG):                     gpio_mode |= VSF_GPIO_ANALOG;                   break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_OUTPUT_PUSH_PULL):           gpio_mode |= VSF_GPIO_OUTPUT_PUSH_PULL;         break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_OUTPUT_OPEN_DRAIN):          gpio_mode |= VSF_GPIO_OUTPUT_OPEN_DRAIN;        break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_EXTI):                       gpio_mode |= VSF_GPIO_EXTI;                     break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_AF):                         gpio_mode |= VSF_GPIO_AF;                       break;
+    }
+
+    tmp = mode & VSF_HAL_DISTBUS_ENUM(VSF_GPIO_PULL_UP_DOWN_MASK);
+    switch (tmp) {
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_NO_PULL_UP_DOWN):            gpio_mode |= VSF_GPIO_NO_PULL_UP_DOWN;          break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_PULL_UP):                    gpio_mode |= VSF_GPIO_PULL_UP;                  break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_PULL_DOWN):                  gpio_mode |= VSF_GPIO_PULL_DOWN;                break;
+    }
+
+    tmp = mode & VSF_HAL_DISTBUS_ENUM(VSF_GPIO_EXTI_MODE_MASK);
+    switch (tmp) {
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_EXTI_MODE_NONE):             gpio_mode |= VSF_GPIO_EXTI_MODE_NONE;           break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_EXTI_MODE_LOW_LEVEL):        gpio_mode |= VSF_GPIO_EXTI_MODE_LOW_LEVEL;      break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_EXTI_MODE_HIGH_LEVEL):       gpio_mode |= VSF_GPIO_EXTI_MODE_HIGH_LEVEL;     break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_EXTI_MODE_RISING):           gpio_mode |= VSF_GPIO_EXTI_MODE_RISING;         break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_EXTI_MODE_FALLING):          gpio_mode |= VSF_GPIO_EXTI_MODE_FALLING;        break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_GPIO_EXTI_MODE_RISING_FALLING):   gpio_mode |= VSF_GPIO_EXTI_MODE_RISING_FALLING; break;
+    }
+    return gpio_mode;
+}
+
 static bool __vsf_distbus_hal_gpio_service_msghandler(vsf_distbus_t *distbus,
                         vsf_distbus_service_t *service, vsf_distbus_msg_t *msg)
 {
@@ -62,7 +96,7 @@ static bool __vsf_distbus_hal_gpio_service_msghandler(vsf_distbus_t *distbus,
 
     union {
         void *ptr;
-        vsf_hal_distbus_gpio_config_pin_t *config_pin;
+        vsf_hal_distbus_gpio_port_config_pins_t *port_config_pins;
         vsf_hal_distbus_gpio_set_direction_t *set_direction;
         vsf_hal_distbus_gpio_write_t *write;
         vsf_hal_distbus_gpio_pin_mask_t *set;
@@ -74,11 +108,17 @@ static bool __vsf_distbus_hal_gpio_service_msghandler(vsf_distbus_t *distbus,
     u_arg.ptr = (uint8_t *)&msg->header + sizeof(msg->header);
 
     switch (msg->header.addr) {
-    case VSF_HAL_DISTBUS_GPIO_CMD_CONFIG_PIN:
-        VSF_ASSERT(datalen == sizeof(*u_arg.config_pin));
-        u_arg.config_pin->pin_mask = le32_to_cpu(u_arg.config_pin->pin_mask);
-        vsf_gpio_config_pin(gpio->target, u_arg.config_pin->pin_mask,
-            vsf_hal_distbus_io_feature_to_generic_io_feature(u_arg.config_pin->feature));
+    case VSF_HAL_DISTBUS_GPIO_CMD_PORT_CONFIG_PINS:
+        VSF_ASSERT(datalen == sizeof(*u_arg.port_config_pins));
+        u_arg.port_config_pins->pin_mask = le32_to_cpu(u_arg.port_config_pins->pin_mask);
+        {
+            vsf_gpio_cfg_t cfg = {
+                .mode                   = __vsf_hal_distbus_gpio_mode(le32_to_cpu(u_arg.port_config_pins->mode)),
+                .alternate_function     = le16_to_cpu(u_arg.port_config_pins->alternate_function),
+            };
+            vsf_gpio_port_config_pins(gpio->target, u_arg.port_config_pins->pin_mask,
+                                        &cfg);
+        }
         break;
     case VSF_HAL_DISTBUS_GPIO_CMD_SET_DIRECTION:
         VSF_ASSERT(datalen == sizeof(*u_arg.set_direction));
@@ -131,13 +171,12 @@ uint32_t vsf_distbus_hal_gpio_declare(vsf_distbus_hal_gpio_t *gpio, uint8_t *ptr
         vsf_gpio_capability_t cap = vsf_gpio_capability(gpio->target);
         gpio->value = vsf_gpio_read(gpio->target);
         vsf_hal_distbus_gpio_info_t info = {
-            .support_config_pin         = cap.is_support_config_pin,
-            .support_output_and_set     = cap.is_support_output_and_set,
-            .support_output_and_clear   = cap.is_support_output_and_clear,
+            .support_output_and_set     = cap.support_output_and_set,
+            .support_output_and_clear   = cap.support_output_and_clear,
             .pin_count                  = cap.pin_count,
-            .pin_mask                   = cpu_to_le32(cap.avail_pin_mask),
+            .pin_mask                   = cpu_to_le32(cap.pin_mask),
 
-            .direction                  = cpu_to_le32(vsf_gpio_get_direction(gpio->target, cap.avail_pin_mask)),
+            .direction                  = cpu_to_le32(vsf_gpio_get_direction(gpio->target, cap.pin_mask)),
             .value                      = cpu_to_le32(gpio->value),
         };
         memcpy(ptr, &info, sizeof(vsf_hal_distbus_gpio_info_t));

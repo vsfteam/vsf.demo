@@ -28,6 +28,11 @@
  * Board Configurations                                                       *
  *----------------------------------------------------------------------------*/
 
+#if !defined(__Emulation__) || !defined(__EMULATION_DISTBUS__) || !defined(__VSF_HOSTOS_BYPASS__)
+#   define VSF_HAL_USE_I2C                              DISABLED
+#   define VSF_HAL_USE_SDIO                             DISABLED
+#endif
+
 /*----------------------------------------------------------------------------*
  * Architecture Configurations                                                *
  *----------------------------------------------------------------------------*/

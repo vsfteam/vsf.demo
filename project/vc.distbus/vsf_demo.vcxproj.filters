@@ -790,6 +790,12 @@
     <Filter Include="vsf\hal\driver\Emulation\distbus">
       <UniqueIdentifier>{621ff5a3-a7f4-4b22-91c4-50a6d9601cd6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\hal\utilities\remap\rng">
+      <UniqueIdentifier>{f56ab81e-e248-4563-b054-0e31f24a1270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\utilities\remap\rtc">
+      <UniqueIdentifier>{c208dda9-9ed2-44f8-b13b-6fd494482428}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2040,6 +2046,12 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\Emulation\distbus\device_af.h">
       <Filter>vsf\hal\driver\Emulation\distbus</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\rng\vsf_remapped_rng.h">
+      <Filter>vsf\hal\utilities\remap\rng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\utilities\remap\rtc\vsf_remapped_rtc.h">
+      <Filter>vsf\hal\utilities\remap\rtc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -2800,6 +2812,12 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\driver\Emulation\distbus\driver.c">
       <Filter>vsf\hal\driver\Emulation\distbus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\rng\vsf_remapped_rng.c">
+      <Filter>vsf\hal\utilities\remap\rng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\utilities\remap\rtc\vsf_remapped_rtc.c">
+      <Filter>vsf\hal\utilities\remap\rtc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -53,6 +53,149 @@ static const vsf_distbus_service_info_t __vsf_distbus_hal_usart_service_info = {
 
 /*============================ IMPLEMENTATION ================================*/
 
+static vsf_usart_mode_t __vsf_hal_distbus_usart_mode(uint32_t mode)
+{
+    vsf_usart_mode_t usart_mode = 0;
+    uint32_t tmp;
+
+    tmp = VSF_HAL_DISTBUS_ENUM(VSF_USART_STOPBIT_MASK);
+    switch (tmp) {
+#ifdef VSF_USART_0_5_STOPBIT
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_0_5_STOPBIT):       usart_mode |= VSF_USART_0_5_STOPBIT;        break;
+#endif
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_1_STOPBIT):         usart_mode |= VSF_USART_1_STOPBIT;          break;
+#ifdef VSF_USART_1_5_STOPBIT
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_1_5_STOPBIT):       usart_mode |= VSF_USART_1_5_STOPBIT;        break;
+#endif
+#ifdef VSF_USART_2_STOPBIT
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_2_STOPBIT):         usart_mode |= VSF_USART_2_STOPBIT;          break;
+#endif
+    }
+
+    tmp = VSF_HAL_DISTBUS_ENUM(VSF_USART_PARITY_MASK);
+    switch (tmp) {
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_NO_PARITY):         usart_mode |= VSF_USART_NO_PARITY;          break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_EVEN_PARITY):       usart_mode |= VSF_USART_EVEN_PARITY;        break;
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_ODD_PARITY):        usart_mode |= VSF_USART_ODD_PARITY;         break;
+#ifdef VSF_USART_FORCE_0_PARITY
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_FORCE_0_PARITY):    usart_mode |= VSF_USART_FORCE_0_PARITY;     break;
+#endif
+#ifdef VSF_USART_FORCE_1_PARITY
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_FORCE_1_PARITY):    usart_mode |= VSF_USART_FORCE_1_PARITY;     break;
+#endif
+    }
+
+    tmp = VSF_HAL_DISTBUS_ENUM(VSF_USART_BIT_LENGTH_MASK);
+    switch (tmp) {
+#ifdef VSF_USART_5_BIT_LENGTH
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_5_BIT_LENGTH):      usart_mode |= VSF_USART_5_BIT_LENGTH;       break;
+#endif
+#ifdef VSF_USART_6_BIT_LENGTH
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_6_BIT_LENGTH):      usart_mode |= VSF_USART_6_BIT_LENGTH;       break;
+#endif
+#ifdef VSF_USART_7_BIT_LENGTH
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_7_BIT_LENGTH):      usart_mode |= VSF_USART_7_BIT_LENGTH;       break;
+#endif
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_8_BIT_LENGTH):      usart_mode |= VSF_USART_8_BIT_LENGTH;       break;
+#ifdef VSF_USART_9_BIT_LENGTH
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_9_BIT_LENGTH):      usart_mode |= VSF_USART_9_BIT_LENGTH;       break;
+#endif
+#ifdef VSF_USART_10_BIT_LENGTH
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_10_BIT_LENGTH):     usart_mode |= VSF_USART_10_BIT_LENGTH;      break;
+#endif
+    }
+
+    tmp = VSF_HAL_DISTBUS_ENUM(VSF_USART_HWCONTROL_MASK);
+    switch (tmp) {
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_NO_HWCONTROL):      usart_mode |= VSF_USART_NO_HWCONTROL;      break;
+#ifdef VSF_USART_RTS_HWCONTROL
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_RTS_HWCONTROL):     usart_mode |= VSF_USART_RTS_HWCONTROL;     break;
+#endif
+#ifdef VSF_USART_CTS_HWCONTROL
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_CTS_HWCONTROL):     usart_mode |= VSF_USART_CTS_HWCONTROL;     break;
+#endif
+#ifdef VSF_USART_RTS_CTS_HWCONTROL
+    case VSF_HAL_DISTBUS_ENUM(VSF_USART_RTS_CTS_HWCONTROL): usart_mode |= VSF_USART_RTS_CTS_HWCONTROL; break;
+#endif
+    }
+
+#ifdef VSF_USART_HALF_DUPLEX_ENABLE
+    if (mode & VSF_HAL_DISTBUS_ENUM(VSF_USART_HALF_DUPLEX_ENABLE)) {
+        usart_mode |= VSF_USART_HALF_DUPLEX_ENABLE;
+    }
+#endif
+    if (mode & VSF_HAL_DISTBUS_ENUM(VSF_USART_HALF_DUPLEX_DISABLE)) {
+        usart_mode |= VSF_USART_HALF_DUPLEX_DISABLE;
+    }
+
+#ifdef VSF_USART_SYNC_CLOCK_ENABLE
+    if (mode & VSF_HAL_DISTBUS_ENUM(VSF_USART_SYNC_CLOCK_ENABLE)) {
+        usart_mode |= VSF_USART_SYNC_CLOCK_ENABLE;
+    }
+#endif
+    if (mode & VSF_HAL_DISTBUS_ENUM(VSF_USART_SYNC_CLOCK_DISABLE)) {
+        usart_mode |= VSF_USART_SYNC_CLOCK_DISABLE;
+    }
+
+    if (mode & VSF_HAL_DISTBUS_ENUM(VSF_USART_TX_ENABLE)) {
+        usart_mode |= VSF_USART_TX_ENABLE;
+    }
+    if (mode & VSF_HAL_DISTBUS_ENUM(VSF_USART_RX_ENABLE)) {
+        usart_mode |= VSF_USART_RX_ENABLE;
+    }
+#ifdef VSF_USART_TX_DISABLE
+    if (mode & VSF_HAL_DISTBUS_ENUM(VSF_USART_TX_DISABLE)) {
+        usart_mode |= VSF_USART_TX_DISABLE;
+    }
+#endif
+#ifdef VSF_USART_RX_DISABLE
+    if (mode & VSF_HAL_DISTBUS_ENUM(VSF_USART_RX_DISABLE)) {
+        usart_mode |= VSF_USART_RX_DISABLE;
+    }
+#endif
+    
+    return usart_mode;
+}
+
+static vsf_usart_irq_mask_t __vsf_hal_distbus_usart_irq_mask(uint32_t irq_mask)
+{
+    vsf_usart_irq_mask_t usart_irq_mask = 0;
+
+    if (irq_mask & VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_TX_CPL)) {
+        usart_irq_mask |= VSF_USART_IRQ_MASK_TX_CPL;
+    }
+    if (irq_mask & VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_RX_CPL)) {
+        usart_irq_mask |= VSF_USART_IRQ_MASK_RX_CPL;
+    }
+    if (irq_mask & VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_TX)) {
+        usart_irq_mask |= VSF_USART_IRQ_MASK_TX;
+    }
+    if (irq_mask & VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_RX)) {
+        usart_irq_mask |= VSF_USART_IRQ_MASK_RX;
+    }
+#ifdef VSF_USART_IRQ_MASK_RX_TIMEOUT
+    if (irq_mask & VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_RX_TIMEOUT)) {
+        usart_irq_mask |= VSF_USART_IRQ_MASK_RX_TIMEOUT;
+    }
+#endif
+#ifdef VSF_USART_IRQ_MASK_CTS
+    if (irq_mask & VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_CTS)) {
+        usart_irq_mask |= VSF_USART_IRQ_MASK_CTS;
+    }
+#endif
+#ifdef VSF_USART_IRQ_MASK_TX_IDLE
+    if (irq_mask & VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_TX_IDLE)) {
+        usart_irq_mask |= VSF_USART_IRQ_MASK_TX_IDLE;
+    }
+#endif
+#ifdef VSF_USART_IRQ_MASK_RX_IDLE
+    if (irq_mask & VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_RX_IDLE)) {
+        usart_irq_mask |= VSF_USART_IRQ_MASK_RX_IDLE;
+    }
+#endif
+    return usart_irq_mask;
+}
+
 static void __vsf_distbus_hal_usart_isrhandler(void *target, vsf_usart_t *generic_usart, vsf_usart_irq_mask_t irq_mask)
 {
     vsf_distbus_hal_usart_t *usart = target;
@@ -76,7 +219,40 @@ static void __vsf_distbus_hal_usart_isrhandler(void *target, vsf_usart_t *generi
     msg = vsf_distbus_alloc_msg(usart->distbus, sizeof(*param), (uint8_t **)&param);
     VSF_ASSERT(msg != NULL);
 
-    param->irq_mask = cpu_to_le32(irq_mask);
+    uint32_t distbus_hal_usart_irq_mask = 0;
+    if (irq_mask & VSF_USART_IRQ_MASK_TX_CPL) {
+        distbus_hal_usart_irq_mask |= VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_TX_CPL);
+    }
+    if (irq_mask & VSF_USART_IRQ_MASK_RX_CPL) {
+        distbus_hal_usart_irq_mask |= VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_RX_CPL);
+    }
+    if (irq_mask & VSF_USART_IRQ_MASK_TX) {
+        distbus_hal_usart_irq_mask |= VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_TX);
+    }
+    if (irq_mask & VSF_USART_IRQ_MASK_RX) {
+        distbus_hal_usart_irq_mask |= VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_RX);
+    }
+#ifdef VSF_USART_IRQ_MASK_RX_TIMEOUT
+    if (irq_mask & VSF_USART_IRQ_MASK_RX_TIMEOUT) {
+        distbus_hal_usart_irq_mask |= VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_RX_TIMEOUT);
+    }
+#endif
+#ifdef VSF_USART_IRQ_MASK_CTS
+    if (irq_mask & VSF_USART_IRQ_MASK_CTS) {
+        distbus_hal_usart_irq_mask |= VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_CTS);
+    }
+#endif
+#ifdef VSF_USART_IRQ_MASK_TX_IDLE
+    if (irq_mask & VSF_USART_IRQ_MASK_TX_IDLE) {
+        distbus_hal_usart_irq_mask |= VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_TX_IDLE);
+    }
+#endif
+#ifdef VSF_USART_IRQ_MASK_RX_IDLE
+    if (irq_mask & VSF_USART_IRQ_MASK_RX_IDLE) {
+        distbus_hal_usart_irq_mask |= VSF_HAL_DISTBUS_ENUM(VSF_USART_IRQ_MASK_RX_IDLE);
+    }
+#endif
+    param->irq_mask = cpu_to_le32(distbus_hal_usart_irq_mask);
     msg->header.addr = VSF_HAL_DISTBUS_USART_CMD_ISR;
     vsf_distbus_send_msg(usart->distbus, &usart->service, msg);
 }
@@ -100,7 +276,7 @@ static bool __vsf_distbus_hal_usart_service_msghandler(vsf_distbus_t *distbus,
         VSF_ASSERT(datalen == sizeof(*u_arg.init));
         u_arg.init->mode = le32_to_cpu(u_arg.init->mode);
         vsf_usart_init(usart->target, &(vsf_usart_cfg_t){
-            .mode           = vsf_hal_distbus_usart_mode_to_generic_usart_mode(u_arg.init->mode),
+            .mode           = __vsf_hal_distbus_usart_mode(u_arg.init->mode),
             .baudrate       = le32_to_cpu(u_arg.init->baudrate),
             .rx_timeout     = le32_to_cpu(u_arg.init->rx_timeout),
             .isr            = {
@@ -119,13 +295,13 @@ static bool __vsf_distbus_hal_usart_service_msghandler(vsf_distbus_t *distbus,
         break;
     case VSF_HAL_DISTBUS_USART_CMD_IRQ_ENABLE:
         VSF_ASSERT(datalen == sizeof(*u_arg.irq));
-        u_arg.irq->irq_mask = le32_to_cpu(u_arg.irq->irq_mask);
+        u_arg.irq->irq_mask = __vsf_hal_distbus_usart_irq_mask(le32_to_cpu(u_arg.irq->irq_mask));
         usart->irq_mask |= u_arg.irq->irq_mask;
         vsf_usart_irq_enable(usart->target, u_arg.irq->irq_mask);
         break;
     case VSF_HAL_DISTBUS_USART_CMD_IRQ_DISABLE:
         VSF_ASSERT(datalen == sizeof(*u_arg.irq));
-        u_arg.irq->irq_mask = le32_to_cpu(u_arg.irq->irq_mask) & ~VSF_USART_IRQ_MASK_RX;
+        u_arg.irq->irq_mask = __vsf_hal_distbus_usart_irq_mask(le32_to_cpu(u_arg.irq->irq_mask)) & ~VSF_USART_IRQ_MASK_RX;
         usart->irq_mask &= ~u_arg.irq->irq_mask;
         vsf_usart_irq_disable(usart->target, u_arg.irq->irq_mask);
         break;
