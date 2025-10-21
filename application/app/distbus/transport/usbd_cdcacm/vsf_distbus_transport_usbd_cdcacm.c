@@ -37,7 +37,7 @@
 /*============================ MACROS ========================================*/
 
 // __APP_CFG_CDC_BULK_SIZE is for internal usage
-#if VSF_USBD_CFG_SPEED == USB_DC_SPEED_HIGH
+#ifdef VSF_USBD_CFG_SPEED_HIGH
 #   define __APP_CFG_CDC_BULK_SIZE          512
 #else
 #   define __APP_CFG_CDC_BULK_SIZE          64
@@ -125,6 +125,12 @@ bool vsf_distbus_transport_usbd_cdcacm_recv(void *transport, uint8_t *buffer, ui
 {
     vsf_distbus_transport_usbd_cdcacm_t *transport_usbd_cdcacm = transport;
     return vsf_distbus_transport_stream_recv(&transport_usbd_cdcacm->use_as__vsf_distbus_transport_stream_t, buffer, size, p, on_recv);
+}
+
+bool vsf_distbus_transport_usbd_cdcacm_is_sending(void *transport)
+{
+    vsf_distbus_transport_usbd_cdcacm_t *transport_usbd_cdcacm = transport;
+    return vsf_distbus_transport_stream_is_sending(&transport_usbd_cdcacm->use_as__vsf_distbus_transport_stream_t);
 }
 
 #endif      // VSF_DISTBUS_TRANSPORT_USE_USBD_CDCACM

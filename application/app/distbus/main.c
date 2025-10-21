@@ -34,6 +34,8 @@
 
 /*============================ INCLUDES ======================================*/
 
+#define __VSF_DISTBUS_CLASS_INHERIT__
+
 #include "vsf.h"
 #include "vsf_board.h"
 
@@ -109,6 +111,7 @@ static __user_distbus_t __user_distbus = {
                 .init           = vsf_distbus_transport_init,
                 .send           = vsf_distbus_transport_send,
                 .recv           = vsf_distbus_transport_recv,
+                .is_sending     = vsf_distbus_transport_is_sending,
             },
             .on_error           = __user_distbus_on_error,
         },
@@ -164,7 +167,11 @@ static void __user_distbus_connection_check_on_timer(vsf_callback_timer_t *timer
 {
     __user_distbus_t *user_distbus = vsf_container_of(timer, __user_distbus_t, timer);
     if (!user_distbus->hal.remote_connected) {
-        __user_distbus_on_connected(&user_distbus->distbus);
+        if (!vsf_distbus_is_sending(&user_distbus->distbus)) {
+            __user_distbus_on_connected(&user_distbus->distbus);
+        } else {
+            vsf_callback_timer_add_ms(&user_distbus->timer, 1000);
+        }
     } else {
 #define APP_DISTBUS_HAL_POLL(__TYPE)                                            \
         for (uint8_t i = 0; i < dimof(__user_distbus.__TYPE); i++) {            \
@@ -179,7 +186,7 @@ static void __user_distbus_connection_check_on_timer(vsf_callback_timer_t *timer
         APP_DISTBUS_HAL_POLL(usart)
 #endif
 
-        vsf_callback_timer_add_ms(&user_distbus->timer, 1);
+        vsf_callback_timer_add_ms(&user_distbus->timer, 10);
     }
 }
 

@@ -57,6 +57,7 @@ vsf_class(vsf_distbus_transport_usbd_cdcacm_t) {
 extern bool vsf_distbus_transport_usbd_cdcacm_init(void *transport, void *p, void (*on_inited)(void *p));
 extern bool vsf_distbus_transport_usbd_cdcacm_send(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_sent)(void *p));
 extern bool vsf_distbus_transport_usbd_cdcacm_recv(void *transport, uint8_t *buffer, uint_fast32_t size, void *p, void (*on_recv)(void *p));
+extern bool vsf_distbus_transport_usbd_cdcacm_is_sending(void *transport);
 
 #ifdef __cplusplus
 }

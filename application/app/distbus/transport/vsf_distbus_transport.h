@@ -28,12 +28,14 @@ typedef vsf_distbus_transport_usbd_cdcacm_t     vsf_distbus_transport_t;
 #   define vsf_distbus_transport_init           vsf_distbus_transport_usbd_cdcacm_init
 #   define vsf_distbus_transport_send           vsf_distbus_transport_usbd_cdcacm_send
 #   define vsf_distbus_transport_recv           vsf_distbus_transport_usbd_cdcacm_recv
+#   define vsf_distbus_transport_is_sending     vsf_distbus_transport_usbd_cdcacm_is_sending
 #elif   VSF_DISTBUS_TRANSPORT_USE_STREAM == ENABLED
 #   include "./stream/vsf_distbus_transport_stream.h"
 typedef vsf_distbus_transport_stream_t          vsf_distbus_transport_t;
 #   define vsf_distbus_transport_init           vsf_distbus_transport_stream_init
 #   define vsf_distbus_transport_send           vsf_distbus_transport_stream_send
 #   define vsf_distbus_transport_recv           vsf_distbus_transport_stream_recv
+#   define vsf_distbus_transport_is_sending     vsf_distbus_transport_stream_is_sending
 #else
 #   error please select transport
 #endif
