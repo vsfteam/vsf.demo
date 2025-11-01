@@ -175,7 +175,9 @@ bool vsf_app_driver_init(void)
     vsf_hw_clk_config(&VSF_HW_CLK_PLLP, NULL, 4, 0);
     vsf_hw_clk_enable(&VSF_HW_CLK_PLL);
 
-    vsf_hw_clk_config(&VSF_HW_CLK_SYS, &VSF_HW_CLK_PLLP, 1, 0);
+    // update flash latency before update system clock
+    vsf_hw_update_flash_latency(216 * 1000 * 1000);
+    vsf_hw_clk_config(&VSF_HW_CLK_SYS, &VSF_HW_CLK_PLLP, 0, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_AHB, NULL, 1, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_APB1, NULL, 1, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_APB2, NULL, 2, 0);
@@ -186,6 +188,8 @@ bool vsf_app_driver_init(void)
     vsf_hw_clk_config(&VSF_HW_CLK_OTGFS1, &VSF_HW_CLK_PLLU, 0, 0);
 
     system_core_clock_update();
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOA);
+    vsf_hw_peripheral_enable(VSF_HW_EN_GPIOB);
     return true;
 }
 
