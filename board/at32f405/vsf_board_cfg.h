@@ -119,8 +119,8 @@
 #   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
 #   define VSF_AUDIO_USE_DUMMY                          ENABLED
 
-#define VSF_LINUX_CFG_STACKSIZE                         (8 * 1024)
-#define VSF_KERNEL_CFG_THREAD_STACK_LARGE               ENABLED
+#define VSF_LINUX_CFG_STACKSIZE                         (4 * 1024)
+#define VSF_KERNEL_CFG_THREAD_STACK_LARGE               DISABLED
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
