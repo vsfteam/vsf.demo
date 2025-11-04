@@ -27,6 +27,8 @@
  * Hal Driver Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
+#define VSF_HAL_USE_SDIO                                DISABLED
+
 /*============================ INCLUDES ======================================*/
 
 // retrieve compiler information
@@ -50,8 +52,6 @@
 /*----------------------------------------------------------------------------*
  * HAL Configurations                                                         *
  *----------------------------------------------------------------------------*/
-
-#define VSF_HAL_USE_SDIO                                DISABLED
 
 /*----------------------------------------------------------------------------*
  * Kernel Configurations                                                      *
@@ -79,8 +79,10 @@
 #   define VSF_USE_HEAP                                 ENABLED
 #endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
-#   define VSF_HEAP_SIZE                                (32 * 1024)
+#   define VSF_HEAP_SIZE                                (64 * 1024)
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   8
+
+#   define VSF_USE_LOADER                               DISABLED
 
 #define VSF_USBH_USE_HCD_DWCOTG                         ENABLED
 #   define VSF_USBH_USE_HUB                             ENABLED
@@ -110,7 +112,7 @@
 // define VSF_USBD_CFG_SPEED_FULL if VSF_USBD_CFG_SPEED is USB_SPEED_FULL
 //#       define VSF_USBD_CFG_SPEED_FULL
 
-#define VSF_USE_LWIP                                    ENABLED
+#define VSF_USE_LWIP                                    DISABLED
 #define VSF_USE_UI                                      DISABLED
 
 #define VSF_USE_AUDIO                                   DISABLED
@@ -135,9 +137,9 @@
 
 #define APP_MSCBOOT_CFG_BOOTLOADER_SIZE                 0
 #define APP_MSCBOOT_CFG_BOOTLOADER_ADDR                 0
-#define APP_MSCBOOT_CFG_FW_SIZE                         (128 * 1024)
+#define APP_MSCBOOT_CFG_FW_SIZE                         (208 * 1024)
 #define APP_MSCBOOT_CFG_FW_ADDR                         (APP_MSCBOOT_CFG_BOOTLOADER_ADDR + APP_MSCBOOT_CFG_BOOTLOADER_SIZE)
-#define APP_MSCBOOT_CFG_ROMFS_SIZE                      (64 * 1024)
+#define APP_MSCBOOT_CFG_ROMFS_SIZE                      (32 * 1024)
 #define APP_MSCBOOT_CFG_ROMFS_ADDR                      (APP_MSCBOOT_CFG_FW_ADDR + APP_MSCBOOT_CFG_FW_SIZE)
 #define APP_MSCBOOT_CFG_ROOT_SIZE                       (16 * 1024)
 #define APP_MSCBOOT_CFG_ROOT_ADDR                       (APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_ROMFS_SIZE)

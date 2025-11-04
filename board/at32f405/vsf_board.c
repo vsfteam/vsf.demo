@@ -112,7 +112,7 @@ static void __vsf_debug_stream_isrhandler(void *target, vsf_usart_t *uart,
 
 static void __VSF_DEBUG_STREAM_TX_INIT(void)
 {
-    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart1;
+    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart2;
     vsf_err_t err;
 
     vsf_stream_connect_tx(&VSF_DEBUG_STREAM_RX.use_as__vsf_stream_t);
@@ -137,7 +137,7 @@ static void __VSF_DEBUG_STREAM_TX_INIT(void)
 
 static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size)
 {
-    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart1;
+    vsf_usart_t *debug_usart = (vsf_usart_t *)&vsf_hw_usart2;
     uint_fast16_t cur_size;
 
     while (size > 0) {
@@ -200,10 +200,11 @@ void vsf_board_prepare_hw_for_linux(void)
 
 void vsf_board_init(void)
 {
-// TODO
-//    static const vsf_gpio_port_cfg_pins_t __cfgs[] = {
-//    };
-//    vsf_hw_gpio_ports_config_pins((vsf_gpio_port_cfg_pins_t *)__cfgs, dimof(__cfgs));
+    static const vsf_gpio_port_cfg_pins_t __cfgs[] = {
+        VSF_PORTA, 1 << 2, 0, VSF_HW_AF_USART2_TX_P0_2,
+        VSF_PORTA, 1 << 3, 0, VSF_HW_AF_USART2_RX_P0_3,
+    };
+    vsf_hw_gpio_ports_config_pins((vsf_gpio_port_cfg_pins_t *)__cfgs, dimof(__cfgs));
 
 #ifdef __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);
