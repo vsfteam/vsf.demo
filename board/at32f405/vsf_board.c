@@ -192,6 +192,8 @@ bool vsf_app_driver_init(void)
     vsf_hw_clk_config(&VSF_HW_CLK_PLLU, NULL, 18, 0);
     vsf_hw_clk_enable(&VSF_HW_CLK_PLLU);
     vsf_hw_clk_config(&VSF_HW_CLK_OTGFS1, &VSF_HW_CLK_PLLU, 0, 0);
+    // HSI: 48M, necessary for USBOTG0
+    vsf_hw_clk_config(&VSF_HW_CLK_HSI, &VSF_HW_CLK_HSI48, 0, 0);
 
     system_core_clock_update();
     vsf_hw_peripheral_enable(VSF_HW_EN_GPIOA);
