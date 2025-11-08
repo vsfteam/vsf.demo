@@ -67,7 +67,7 @@ static void __i2c_isrhandler(void *target_ptr, vsf_i2c_t *i2c_ptr, vsf_i2c_irq_m
         if (__irq_mask & VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE) {
             if (__irq_mask & VSF_I2C_IRQ_MASK_MASTER_ERR) {
                 vsf_trace_info("__ ");
-            } else if (__irq_mask & (VSF_I2C_IRQ_MASK_MASTER_TRANSFER_COMPLETE | VSF_I2C_IRQ_MASK_MASTER_TX_NACK_DETECT)) {
+            } else {
                 vsf_trace_info("%02x ", __slave_addr);
             }
             if (++__slave_addr > 0x77) {

@@ -79,7 +79,7 @@
 #   define VSF_USE_HEAP                                 ENABLED
 #endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
-#   define VSF_HEAP_SIZE                                (64 * 1024)
+#   define VSF_HEAP_SIZE                                (80 * 1024)
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   8
 
 #   define VSF_USE_LOADER                               DISABLED
