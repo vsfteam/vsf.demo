@@ -48,7 +48,10 @@ static const vk_dwcotg_dcd_param_t __dwcotg_dcd_param = {
 #if VSF_USE_BOARD == ENABLED
 vsf_board_t vsf_board = {
 #if VSF_HAL_USE_I2C == ENABLED
-    .i2c                        = (vsf_i2c_t *)&vsf_hw_i2c1,
+    .i2c                        = (vsf_i2c_t *)&vsf_hw_i2c2,
+#endif
+#if VSF_HAL_USE_SPI == ENABLED
+    .spi                        = (vsf_spi_t *)&vsf_hw_spi1,
 #endif
 #if VSF_USE_USB_HOST == ENABLED
     .usbh_dev                   = {
@@ -178,9 +181,12 @@ bool vsf_app_driver_init(void)
     // update flash latency before update system clock
     vsf_hw_update_flash_latency(216 * 1000 * 1000);
     vsf_hw_clk_config(&VSF_HW_CLK_SYS, &VSF_HW_CLK_PLLP, 0, 0);
+    // AHB: 216M
     vsf_hw_clk_config(&VSF_HW_CLK_AHB, NULL, 1, 0);
-    vsf_hw_clk_config(&VSF_HW_CLK_APB1, NULL, 1, 0);
-    vsf_hw_clk_config(&VSF_HW_CLK_APB2, NULL, 2, 0);
+    // APB1: 216M / 2 = 108M
+    vsf_hw_clk_config(&VSF_HW_CLK_APB1, NULL, 2, 0);
+    // APB2: 216M
+    vsf_hw_clk_config(&VSF_HW_CLK_APB2, NULL, 1, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_SCLK, &VSF_HW_CLK_PLLP, 0, 0);
     // PLLU: PLL / 18 = 48M
     vsf_hw_clk_config(&VSF_HW_CLK_PLLU, NULL, 18, 0);
@@ -201,8 +207,17 @@ void vsf_board_prepare_hw_for_linux(void)
 void vsf_board_init(void)
 {
     static const vsf_gpio_port_cfg_pins_t __cfgs[] = {
+        // usart
         VSF_PORTA, 1 << 2, 0, VSF_HW_AF_USART2_TX_P0_2,
         VSF_PORTA, 1 << 3, 0, VSF_HW_AF_USART2_RX_P0_3,
+        // i2c
+        VSF_PORTA, 1 << 0, 0, VSF_HW_AF_I2C2_SCL_P0_0,
+        VSF_PORTA, 1 << 1, 0, VSF_HW_AF_I2C2_SDA_P0_1,
+        // spi
+        VSF_PORTA, 1 << 4, 0, VSF_HW_AF_SPI1_CS_P0_4,
+        VSF_PORTA, 1 << 5, 0, VSF_HW_AF_SPI1_SCK_P0_5,
+        VSF_PORTA, 1 << 6, 0, VSF_HW_AF_SPI1_MISO_P0_6,
+        VSF_PORTA, 1 << 7, 0, VSF_HW_AF_SPI1_MOSI_P0_7,
     };
     vsf_hw_gpio_ports_config_pins((vsf_gpio_port_cfg_pins_t *)__cfgs, dimof(__cfgs));
 

@@ -39,6 +39,9 @@ typedef struct vsf_board_t {
 #if VSF_HAL_USE_I2C == ENABLED
     vsf_i2c_t *i2c;
 #endif
+#if VSF_HAL_USE_SPI == ENABLED
+    vsf_spi_t *spi;
+#endif
 #if VSF_USE_USB_HOST == ENABLED
     vk_usbh_t usbh_dev;
 #endif
