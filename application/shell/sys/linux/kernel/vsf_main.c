@@ -99,6 +99,8 @@
 #   include <libusb.h>
 #endif
 
+#include <linux/usb.h>
+
 #include <vsf_board.h>
 #if VSF_BOARD_USE_EXT_GAMEPAD == ENABLED
 #include <ext/gamepad/vsf_board_ext_gamepad.h>
@@ -915,6 +917,10 @@ static int __usbh_main(int argc, char *argv[])
     if (!__usbh_inited) {
         __usbh_inited = true;
         vk_usbh_init(&vsf_board.usbh_dev);
+
+        vsf_linux_usb_init(&vsf_board.usbh_dev);
+        // TODO: call module_usb_driver_init for linux usb drivrs declared by module_usb_driver(xxxx)
+//        module_usb_driver_init(xxxx);
 
         uint32_t mask = 1 == argc ? 0xFFFFFFFF : 0;
         for (int i = 1; i < argc; i++) {
