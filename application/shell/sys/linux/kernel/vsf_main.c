@@ -919,8 +919,6 @@ static int __usbh_main(int argc, char *argv[])
         vk_usbh_init(&vsf_board.usbh_dev);
 
         vsf_linux_usb_init(&vsf_board.usbh_dev);
-        // TODO: call module_usb_driver_init for linux usb drivrs declared by module_usb_driver(xxxx)
-//        module_usb_driver_init(xxxx);
 
         uint32_t mask = 1 == argc ? 0xFFFFFFFF : 0;
         for (int i = 1; i < argc; i++) {
@@ -937,6 +935,10 @@ static int __usbh_main(int argc, char *argv[])
             vk_usbh_register_class(&vsf_board.usbh_dev, &__usbh_libusb);
         }
 #   endif
+
+        // TODO: call module_usb_driver_init for linux usb drivrs declared by module_usb_driver(xxxx)
+//        module_usb_driver_init(xxxx);
+
 #   if VSF_USBH_USE_HUB == ENABLED
         if (mask & (1 << USBH_INIT_HUB)) {
             static vk_usbh_class_t __usbh_hub = { .drv = &vk_usbh_hub_drv };
