@@ -70,6 +70,14 @@ typedef struct {
 } vsf_tgui_demo_t;
 static VSF_CAL_NO_INIT vsf_tgui_demo_t __tgui_demo;
 
+// Common select
+
+int vsf_tgui_executor_select_stdout(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
+{
+    FD_SET(ctx->__stdout_pipe[0], rfds);
+    return ctx->__stdout_pipe[0];
+}
+
 // UI frame
 
 static uint32_t __vsf_tgui_panel_buffer[4096 / 4];
@@ -144,32 +152,9 @@ unsigned char * vsf_tgui_tile_get_pixelmap(const vsf_tgui_tile_t *tile_ptr)
 
 // UI description
 
-#ifndef VSF_TGUI_CFG_BORDER_SIZE
-#   define VSF_TGUI_CFG_BORDER_SIZE         16
-#endif
-
-static vsf_ui_executor_ctx_t __vsf_tgui_app_executor;
+vsf_ui_executor_ctx_t __vsf_tgui_app_executor;
 
 // popup information frame
-
-declare_tgui_panel(vsf_tgui_popup_panel_t)
-typedef struct vsf_tgui_popup_frame_t vsf_tgui_popup_frame_t;
-struct vsf_tgui_popup_frame_t {
-    implement(vsf_tgui_frame_t)
-    const char *pstrTitle;
-    const char *pstrInformation;
-    vsf_tgui_popup_panel_t *panel;
-    void *param;
-};
-
-def_tgui_panel(vsf_tgui_popup_panel_t,
-    tgui_contains(
-        vsf_tgui_label_t tInformation;
-        vsf_tgui_button_t tOK;
-    )
-)
-vsf_tgui_popup_frame_t *frame;
-end_def_tgui_panel(vsf_tgui_popup_panel_t)
 
 static fsm_rt_t __vsf_tgui_popup_frame_on_depose(vsf_tgui_control_t *control_ptr, vsf_msgt_msg_t *msg)
 {
@@ -272,12 +257,6 @@ def_tgui_panel(tgui_applist_panel_t,
 vsf_tgui_applist_frame_t *frame;
 end_def_tgui_panel(tgui_applist_panel_t)
 
-static int __vsf_tgui_applist_frame_opbtn_executor_select(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
-{
-    FD_SET(ctx->__stdout_pipe[0], rfds);
-    return ctx->__stdout_pipe[0];
-}
-
 static void __vsf_tgui_applist_frame_opbtn_executor_on_select(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
 {
     vsf_tgui_popup_frame_t *popup_frame = (vsf_tgui_popup_frame_t *)ctx->param;
@@ -357,7 +336,7 @@ static fsm_rt_t __vsf_tgui_applist_frame_on_depose(vsf_tgui_control_t *control_p
         applist_frame->executor.cmd = applist_frame->args[0];
         applist_frame->executor.args = applist_frame->args;
         applist_frame->executor.on_select = __vsf_tgui_applist_frame_opbtn_executor_on_select;
-        applist_frame->executor.fn_select = __vsf_tgui_applist_frame_opbtn_executor_select;
+        applist_frame->executor.fn_select = vsf_tgui_executor_select_stdout;
         vsf_tgui_execute_in_shell(&applist_frame->executor);
     } else {
         vsf_tgui_frame_exit();
@@ -418,12 +397,6 @@ describ_tgui_panel(tgui_applist_panel_t, applist_panel_descriptor,
         )
     ),
 );
-
-static int __vsf_tgui_applist_frame_executor_select(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
-{
-    FD_SET(ctx->__stdout_pipe[0], rfds);
-    return ctx->__stdout_pipe[0];
-}
 
 static void __vsf_tgui_applist_frame_executor_on_select(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds)
 {
@@ -768,8 +741,10 @@ FT_FILE ft_root = {
 // UI main
 
 VSF_CAL_WEAK(vsf_tgui_install_apps)
-void vsf_tgui_install_apps(vsf_tgui_app_t *apps, int app_num)
-{}
+int vsf_tgui_install_apps(vsf_tgui_app_t *apps, int app_num)
+{
+    return 0;
+}
 
 int ui_main(int argc, char **argv)
 {
@@ -823,7 +798,7 @@ int ui_main(int argc, char **argv)
     root_frame->app[0].frame_size = sizeof(vsf_tgui_applist_frame_t);
     root_frame->app[0].frame_init = __vsf_tgui_local_applist_frame_init;
     root_frame->app[0].on_select = __vsf_tgui_applist_frame_executor_on_select;
-    root_frame->app[0].fn_select = __vsf_tgui_applist_frame_executor_select;
+    root_frame->app[0].fn_select = vsf_tgui_executor_select_stdout;
     root_frame->app[1].name = "Remote\nApps";
     root_frame->app[1].cmd = "vpm";
     static const char *__vpm_list_remmote_args[] = {
@@ -834,7 +809,7 @@ int ui_main(int argc, char **argv)
     root_frame->app[1].frame_size = sizeof(vsf_tgui_applist_frame_t);
     root_frame->app[1].frame_init = __vsf_tgui_remote_applist_frame_init;
     root_frame->app[1].on_select = __vsf_tgui_applist_frame_executor_on_select;
-    root_frame->app[1].fn_select = __vsf_tgui_applist_frame_executor_select;
+    root_frame->app[1].fn_select = vsf_tgui_executor_select_stdout;
     vsf_tgui_install_apps(&root_frame->app[2], dimof(root_frame->app) - 2);
     vsf_tgui_frame_init(&root_frame->use_as__vsf_tgui_frame_t);
 
