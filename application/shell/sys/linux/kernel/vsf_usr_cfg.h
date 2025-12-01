@@ -184,18 +184,6 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 
 #       define VSF_KERNEL_CFG_EDA_SUPPORT_TASK          ENABLED
 #       define VSF_KERNEL_CFG_EDA_SUPPORT_PT            ENABLED
-
-typedef struct vsf_tgui_frame_t vsf_tgui_frame_t;
-typedef struct vsf_tgui_t vsf_tgui_t;
-typedef void (*vsf_tgui_frame_init_t)(vsf_tgui_t *gui, vsf_tgui_frame_t *frame, void *panel, int panel_size, int is_first);
-struct vsf_tgui_frame_t {
-    vsf_tgui_frame_t *__next;
-    char *__tile;
-    vsf_tgui_frame_init_t __fn_init;
-};
-extern vsf_tgui_frame_t * vsf_tgui_frame_new(int frame_size, vsf_tgui_frame_init_t fn_init);
-extern void vsf_tgui_frame_init(vsf_tgui_frame_t *frame);
-extern void vsf_tgui_frame_exit(void);
 #   endif
 #endif
 

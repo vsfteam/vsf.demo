@@ -1,5 +1,6 @@
 #define __VSF_LINUX_FS_CLASS_INHERIT__
-#include <unistd.h>
+
+#include "./user_ui.h"
 #include <sys/eventfd.h>
 
 #include <vsf_board.h>
@@ -7,22 +8,6 @@
 #if VSF_USE_UI == ENABLED && VSF_USE_TINY_GUI == ENABLED
 
 // executor
-
-typedef struct vsf_ui_executor_ctx_t vsf_ui_executor_ctx_t;
-struct vsf_ui_executor_ctx_t {
-    vsf_dlist_node_t __node;
-
-    char *cmd;
-    char **args;
-    int (*fn_select)(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds);
-    // if NULL == rfds, it means on_exit
-    void (*on_select)(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds);
-    void *param;
-
-    bool __exited;
-    int __pid;
-    int __stdout_pipe[2], __stdin_pipe[2], __stderr_pipe[2];
-};
 
 static VSF_CAL_NO_INIT vsf_dlist_t __vsf_ui_executor_queue_pending;
 static VSF_CAL_NO_INIT vsf_dlist_t __vsf_ui_executor_queue;
@@ -538,18 +523,6 @@ static void __vsf_tgui_remote_applist_frame_init(vsf_tgui_t *gui, vsf_tgui_frame
 
 // root frame: application loader
 
-typedef struct vsf_tgui_app_t {
-    char *name;
-    char *cmd;
-    char **args;
-    vsf_tgui_tile_t *icon;
-
-    int frame_size;
-    vsf_tgui_frame_init_t frame_init;
-    int (*fn_select)(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds);
-    void (*on_select)(vsf_ui_executor_ctx_t *ctx, fd_set *rfds, fd_set *wfds);
-} vsf_tgui_app_t;
-
 typedef struct vsf_tgui_root_frame_t {
     implement(vsf_tgui_frame_t)
     vsf_tgui_app_t app[9];
@@ -794,6 +767,10 @@ FT_FILE ft_root = {
 
 // UI main
 
+VSF_CAL_WEAK(vsf_tgui_install_apps)
+void vsf_tgui_install_apps(vsf_tgui_app_t *apps, int app_num)
+{}
+
 int ui_main(int argc, char **argv)
 {
     static const vsf_tgui_cfg_t __cfg = {
@@ -858,6 +835,7 @@ int ui_main(int argc, char **argv)
     root_frame->app[1].frame_init = __vsf_tgui_remote_applist_frame_init;
     root_frame->app[1].on_select = __vsf_tgui_applist_frame_executor_on_select;
     root_frame->app[1].fn_select = __vsf_tgui_applist_frame_executor_select;
+    vsf_tgui_install_apps(&root_frame->app[2], dimof(root_frame->app) - 2);
     vsf_tgui_frame_init(&root_frame->use_as__vsf_tgui_frame_t);
 
     int executor_exit_notifier = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
