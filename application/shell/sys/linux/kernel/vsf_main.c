@@ -134,9 +134,13 @@
 #   include "SDL_config_vsf.h"
 #endif
 
+#if VSF_USE_MBEDTLS == ENABLED
+#   include <linux/crypto.h>
+#endif
+
 /*============================ MACROS ========================================*/
 
-#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
+#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED && VSF_USBD_CFG_AUTOSETUP == ENABLED
 
 #if     defined(VSF_USBD_CFG_SPEED_HIGH)
 #   define __APP_CFG_MSC_BULK_SIZE                  512
@@ -167,10 +171,6 @@
 #   error not supported
 #endif
 
-#if VSF_USBD_CFG_AUTOSETUP != ENABLED
-#   error VSF_USBD_CFG_AUTOSETUP is needed for this demo
-#endif
-
 #endif
 
 #if defined(APP_MSCBOOT_CFG_ROOT_ADDR)
@@ -185,7 +185,7 @@
 
 #if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED
 
-#   if VSF_USE_USB_DEVICE == ENABLED
+#   if VSF_USE_USB_DEVICE == ENABLED && VSF_USBD_CFG_AUTOSETUP == ENABLED
 static vk_fakefat32_file_t __usr_fakefat32_root[2] = {
     {
         .name               = "mscboot",
@@ -267,7 +267,7 @@ static vsf_mutex_t *__sdmmc_fs_mutex;
 
 /*============================ IMPLEMENTATION ================================*/
 
-#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED
+#if defined(APP_MSCBOOT_CFG_ROMFS_ADDR) && VSF_FS_USE_ROMFS == ENABLED && VSF_USE_USB_DEVICE == ENABLED && VSF_USBD_CFG_AUTOSETUP == ENABLED
 
 // msc update for romfs
 
@@ -1474,7 +1474,11 @@ static int __sdlpal_main(int argc, char *argv[])
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
+    workqueue_init_early();
     vsf_linux_vfs_init();
+#if VSF_USE_MBEDTLS == ENABLED
+    vsf_linux_crypto_init();
+#endif
 
     // 0.5. root fs, some other initialization may depend on ${HOME}, so initialize /root first
 #if VSF_HAL_USE_FLASH == ENABLED && defined(APP_MSCBOOT_CFG_FLASH)
@@ -1725,7 +1729,7 @@ int vsf_linux_create_fhs(void)
 #   ifndef VSF_BOARD_SEPERATE_USB_HOST_DEVICE
     if (__usr_linux_boot) {
 #   endif
-#   if VSF_USE_USB_DEVICE == ENABLED
+#   if VSF_USE_USB_DEVICE == ENABLED && VSF_USBD_CFG_AUTOSETUP == ENABLED
 #       if VSF_HAL_USE_SDIO == ENABLED
         usbd_mscbot_scsi_config(__app_usbd, 0, 1, !VSF_BOARD_SDMMC_DETECTED());
 #       endif
