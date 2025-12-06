@@ -1,11 +1,11 @@
+#include <vsf_board.h>
+
+#if VSF_USE_UI == ENABLED && VSF_USE_TINY_GUI == ENABLED
+
 #define __VSF_LINUX_FS_CLASS_INHERIT__
 
 #include "./user_ui.h"
 #include <sys/eventfd.h>
-
-#include <vsf_board.h>
-
-#if VSF_USE_UI == ENABLED && VSF_USE_TINY_GUI == ENABLED
 
 // executor
 
