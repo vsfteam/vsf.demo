@@ -43,6 +43,9 @@ jobs:
             path: "application/component/fs/mount/eda"
           - target: "aic8800"
             path: "application/component/fs/mount/thread"
+          # aic8800 does not fit the hardware requirement of component/usb/usblyzer demo, which require 2 USBs with one host and one device
+          - target: "aic8800"
+            path: "application/component/usb/usblyzer"
         include:
           - target: "aic8800"
             path: "application/board/aic8800m_uikit/bootloader"
