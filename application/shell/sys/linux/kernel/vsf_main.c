@@ -99,7 +99,9 @@
 #   include <libusb.h>
 #endif
 
-#include <linux/usb.h>
+#if VSF_BOARD_HAS_USB_HOST
+#   include <linux/usb.h>
+#endif
 
 #include <vsf_board.h>
 #if VSF_BOARD_USE_EXT_GAMEPAD == ENABLED
