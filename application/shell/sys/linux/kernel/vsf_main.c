@@ -95,11 +95,10 @@
 #   include <sys/ioctl.h>
 #   include <linux/fb.h>
 #endif
-#if VSF_USE_USB_HOST == ENABLED && VSF_USBH_USE_LIBUSB == ENABLED && VSF_LINUX_USE_LIBUSB == ENABLED
-#   include <libusb.h>
-#endif
-
-#if VSF_BOARD_HAS_USB_HOST
+#if VSF_USE_USB_HOST == ENABLED
+#   if VSF_USBH_USE_LIBUSB == ENABLED && VSF_LINUX_USE_LIBUSB == ENABLED
+#       include <libusb.h>
+#   endif
 #   include <linux/usb.h>
 #endif
 
