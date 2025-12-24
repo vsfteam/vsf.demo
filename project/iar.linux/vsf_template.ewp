@@ -26383,6 +26383,12 @@
                                 </file>
                             </group>
                             <group>
+                                <name>crypto</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\kernel\core\crypto\vsf_linux_core_crypto.c</name>
+                                </file>
+                            </group>
+                            <group>
                                 <name>hid</name>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\vsf\source\shell\sys\linux\kernel\core\hid\vsf_linux_core_hid.c</name>
