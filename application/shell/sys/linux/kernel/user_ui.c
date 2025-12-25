@@ -767,6 +767,9 @@ int ui_main(int argc, char **argv)
     }
 
     vsf_tgui_fonts_init((vsf_tgui_font_t *)vsf_tgui_font_get(0), vsf_tgui_font_number(), "/");
+
+    // vsf_tgui_v_bind_disp will call vk_disp_init, should call vk_disp_fini before
+    vk_disp_fini(vsf_board.display_dev);
 #if VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL == VSF_TGUI_V_TEMPLATE_SIMPLE_VIEW
     vsf_tgui_v_bind_disp(&__tgui_demo.instance, vsf_board.display_dev, &__tgui_demo.pfb, dimof(__tgui_demo.pfb));
 #elif VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL == VSF_TGUI_V_TEMPLATE_SCGUI_VIEW
@@ -775,6 +778,7 @@ int ui_main(int argc, char **argv)
 #   error VSF_TGUI_CFG_RENDERING_TEMPLATE_SEL not supported
 #endif
 
+    __tgui_demo.input_notifier.dev = NULL;
     __tgui_demo.input_notifier.mask =
                     (1 << VSF_INPUT_TYPE_TOUCHSCREEN)
                 |   (1 << VSF_INPUT_TYPE_KEYBOARD)

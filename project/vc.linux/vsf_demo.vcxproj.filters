@@ -925,6 +925,9 @@
     <Filter Include="vsf\hal\utilities\remap\rng">
       <UniqueIdentifier>{f0bc8286-6537-4684-a1b3-42bdf2db5746}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\shell\sys\linux\kernel\core\crypto">
+      <UniqueIdentifier>{d78d8250-7e1d-4d1c-92ac-6f0fe1dd1cfa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -3898,6 +3901,9 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\utilities\remap\rng\vsf_remapped_rng.c">
       <Filter>vsf\hal\utilities\remap\rng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\crypto\vsf_linux_core_crypto.c">
+      <Filter>vsf\shell\sys\linux\kernel\core\crypto</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

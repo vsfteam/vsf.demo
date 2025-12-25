@@ -963,6 +963,7 @@
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\app\ntp\vsf_linux_ntp.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\app\telnetd\vsf_linux_telnetd.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\80211\vsf_linux_core_80211.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\crypto\vsf_linux_core_crypto.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\hid\vsf_linux_core_hid.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\input\vsf_linux_core_input.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\led\vsf_linux_core_led.c" />
