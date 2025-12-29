@@ -101,6 +101,7 @@
 #   endif
 #   include <linux/usb.h>
 #endif
+#include <linux/workqueue.h>
 
 #include <vsf_board.h>
 #if VSF_BOARD_USE_EXT_GAMEPAD == ENABLED
