@@ -8540,7 +8540,7 @@
                 </option>
                 <option>
                     <name>CMSISDAPDoLogfile</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CMSISDAPLogFile</name>
@@ -8681,7 +8681,7 @@
                 </option>
                 <option>
                     <name>CCCMSISDAPUsbSerialNo</name>
-                    <state></state>
+                    <state>AT-Link-EZ CMSIS-DAP:EDAD21B010C0765905978507</state>
                 </option>
                 <option>
                     <name>CCCMSISDAPUsbSerialNoSelect</name>
