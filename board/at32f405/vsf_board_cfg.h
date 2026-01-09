@@ -79,7 +79,7 @@
 #   define VSF_USE_HEAP                                 ENABLED
 #endif
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
-#   define VSF_HEAP_SIZE                                (80 * 1024)
+#   define VSF_HEAP_SIZE                                (70 * 1024)
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   8
 
 #   define VSF_USE_LOADER                               DISABLED
@@ -143,6 +143,35 @@
 #define APP_MSCBOOT_CFG_ROMFS_ADDR                      (APP_MSCBOOT_CFG_FW_ADDR + APP_MSCBOOT_CFG_FW_SIZE)
 #define APP_MSCBOOT_CFG_ROOT_SIZE                       (16 * 1024)
 #define APP_MSCBOOT_CFG_ROOT_ADDR                       (APP_MSCBOOT_CFG_ROMFS_ADDR + APP_MSCBOOT_CFG_ROMFS_SIZE)
+
+#define APP_USE_HAL_DEMO                                ENABLED
+//#define APP_USE_HAL_DMA_DEMO                            ENABLED
+//#define APP_USE_HAL_SPI_DEMO                            ENABLED
+//#define APP_USE_HAL_WDT_DEMO                            ENABLED
+
+/*----------------------------------------------------------------------------*
+ * Test Framework Configurations                                             *
+ *----------------------------------------------------------------------------*/
+
+#define VSF_USE_TEST                                    ENABLED
+#if VSF_USE_TEST == ENABLED
+#   define VSF_HAL_USE_WDT                                 ENABLED
+#   if VSF_HAL_USE_WDT == ENABLED
+#       define VSF_TEST_CFG_USE_APPCFG_DATA_SYNC            ENABLED
+#       define VSF_TEST_CFG_USE_STDIO_DATA_SYNC             ENABLED
+#       define VSF_TEST_CFG_USE_FILE_DATA_SYNC              ENABLED
+#       define VSF_TEST_CFG_HAL_WDT                         ENABLED
+#       define VSF_TEST_CFG_HAL_WDT_DEVICE                  vsf_hw_wdt0
+#       define VSF_TEST_CFG_HAL_WDT_MODE                    (VSF_WDT_MODE_RESET_CPU | VSF_WDT_MODE_NO_EARLY_WAKEUP)
+#   endif
+
+    extern void vsf_test_board_assert(const char *file_name, unsigned int line, const char *function_name, const char *condition);
+#undef VSF_ASSERT
+#define VSF_ASSERT(__EXPR)                                                      \
+    ((__EXPR)                                                                   \
+    ? (void)0                                                                   \
+        : vsf_test_board_assert(__FILE__, __LINE__, __FUNCTION__, #__EXPR))
+#endif
 
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/

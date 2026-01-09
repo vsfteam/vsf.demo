@@ -19,8 +19,19 @@
 
 #define __VSF_SIMPLE_STREAM_CLASS_INHERIT__
 #include "./vsf_board.h"
-
 #include "hal/driver/vendor_driver.h"
+
+#if VSF_USE_LINUX == ENABLED
+#   include "shell/sys/linux/vsf_linux.h"
+#endif
+
+#if VSF_USE_TEST == ENABLED
+#   include "component/test/vsf_test/vsf_test.h"
+#   if VSF_HAL_USE_WDT == ENABLED
+#       include "hal/driver/common/template/vsf_template_wdt.h"
+#   endif
+#   include "../test/vsf_test/spi/test_spi.h"
+#endif
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -201,10 +212,76 @@ bool vsf_app_driver_init(void)
     return true;
 }
 
+#if VSF_USE_TEST == ENABLED
+int vsf_test_main(int argc, char *argv[])
+{
+    bool restart_on_done = false;
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--restart") == 0 || strcmp(argv[i], "-r") == 0) {
+            restart_on_done = true;
+        }
+    }
+
+    vsf_test_cfg_t test_cfg = {
+        .wdt = {
+            .internal = {
+                .init = vsf_test_hal_wdt_init,
+                .feed = vsf_test_hal_wdt_feed,
+            },
+        },
+        .reboot = {
+            .internal = vsf_arch_reset,
+        },
+        .data = {
+            .init = vsf_test_file_data_init,
+            .sync = vsf_test_file_data_sync,
+        },
+        .restart_on_done = restart_on_done,
+    };
+
+    vsf_test_init(&test_cfg);
+
+#if VSF_HAL_USE_SPI == ENABLED
+    vsf_test_spi_cfg_t spi_cfg = {
+        .spi_instance = vsf_board.spi,
+    };
+    vsf_test_spi_init(&spi_cfg);
+#endif
+
+    vsf_test_run_tests();
+
+    return 0;
+}
+
+void vsf_test_board_assert(const char *file_name, unsigned int line,
+                               const char *function_name,
+                               const char *condition)
+{
+    __vsf_test_longjmp(1, file_name, line, function_name, condition);
+}
+#endif
+
+#if VSF_USE_LINUX == ENABLED
 void vsf_board_prepare_hw_for_linux(void)
 {
+#if APP_USE_HAL_SPI_DEMO == ENABLED
+    extern int spi_main(int argc, char *argv[]);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/spi-test", spi_main);
+#endif
+#if APP_USE_HAL_WDT_DEMO == ENABLED
+    extern int wdt_main(int argc, char *argv[]);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/wdt-test", wdt_main);
+#endif
+#if APP_USE_HAL_DMA_DEMO == ENABLED
+    extern int dma_main(int argc, char *argv[]);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/dma-test", dma_main);
+#endif
+#if VSF_USE_TEST == ENABLED
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/vsf-test", vsf_test_main);
+#endif
     return;
 }
+#endif
 
 void vsf_board_init(void)
 {
@@ -222,6 +299,13 @@ void vsf_board_init(void)
         VSF_PORTA, 1 << 7, 0, VSF_HW_AF_SPI1_MOSI_P0_7,
     };
     vsf_hw_gpio_ports_config_pins((vsf_gpio_port_cfg_pins_t *)__cfgs, dimof(__cfgs));
+
+    vsf_dma_cfg_t cfg = {
+        .prio = vsf_arch_prio_1,
+    };
+
+    vsf_hw_dma_init(&vsf_hw_dma1, &cfg);
+    vsf_hw_dma_init(&vsf_hw_dma2, &cfg);
 
 #ifdef __VSF_BOARD_USE_UART_AS_DEBUG_STREAM
     VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);

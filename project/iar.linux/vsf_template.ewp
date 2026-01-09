@@ -6006,7 +6006,7 @@
                 <option>
                     <name>CCAllowList</name>
                     <version>1</version>
-                    <state>00000000</state>
+                    <state>11111110</state>
                 </option>
                 <option>
                     <name>CCDebugInfo</name>
@@ -6108,7 +6108,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>1</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -6117,7 +6117,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>1</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>CCPosIndRopi</name>
@@ -15794,7 +15794,13 @@
             </group>
         </group>
         <file>
+            <name>$PROJ_DIR$\..\..\..\vsf\example\template\demo\hal_demo\dma_demo.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\hwtest_main.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\vsf\example\template\demo\hal_demo\spi_demo.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\user_httpd.c</name>
@@ -15816,6 +15822,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\application\shell\sys\linux\kernel\vsf_usr_cfg.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\vsf\example\template\demo\hal_demo\wdt_demo.c</name>
         </file>
     </group>
     <group>
@@ -19663,6 +19672,45 @@
                 <file>
                     <name>$PROJ_DIR$\..\..\vsf\source\component\tcpip\vsf_tcpip_cfg.h</name>
                 </file>
+            </group>
+            <group>
+                <name>test</name>
+                <group>
+                    <name>vsf_test</name>
+                    <group>
+                        <name>port</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\test\vsf_test\port\vsf_test_port_appcfg.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\test\vsf_test\port\vsf_test_port_appcfg.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\test\vsf_test\port\vsf_test_port_file.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\test\vsf_test\port\vsf_test_port_file.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\test\vsf_test\port\vsf_test_port_hal.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\test\vsf_test\port\vsf_test_port_hal.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\test\vsf_test\port\vsf_test_port_stdio.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\component\test\vsf_test\port\vsf_test_port_stdio.h</name>
+                        </file>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\vsf\source\component\test\vsf_test\vsf_test.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\vsf\source\component\test\vsf_test\vsf_test.h</name>
+                    </file>
+                </group>
             </group>
             <group>
                 <name>ui</name>
@@ -23577,6 +23625,18 @@
                                     <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Artery\AT32F402_405\common\usb\usb_lv0.c</name>
                                 </file>
                             </group>
+                            <group>
+                                <name>wdt</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Artery\AT32F402_405\common\wdt\wdt.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Artery\AT32F402_405\common\wdt\wdt.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Artery\AT32F402_405\common\wdt\wwdt.c</name>
+                                </file>
+                            </group>
                             <file>
                                 <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\Artery\AT32F402_405\common\at32f402_405_conf.h</name>
                             </file>
@@ -23623,6 +23683,15 @@
                     </group>
                     <group>
                         <name>debug_stream</name>
+                    </group>
+                    <group>
+                        <name>dma</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\dma\dma_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\dma\dma_template.h</name>
+                        </file>
                     </group>
                     <group>
                         <name>flash</name>
@@ -23844,6 +23913,15 @@
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\usart\vsf_drv_usart_poll_util.h</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>wdt</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\wdt\wdt_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\wdt\wdt_template.h</name>
                         </file>
                     </group>
                     <file>
@@ -26587,6 +26665,66 @@
             <file>
                 <name>$PROJ_DIR$\..\..\vsf\source\shell\vsf_shell_wrapper.h</name>
             </file>
+        </group>
+        <group>
+            <name>test</name>
+            <group>
+                <name>vsf_test</name>
+                <group>
+                    <name>spi</name>
+                    <group>
+                        <name>functional</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\functional\test_spi_cs.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\functional\test_spi_ctrl.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\functional\test_spi_enable_disable.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\functional\test_spi_fifo.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\functional\test_spi_irq.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\functional\test_spi_status.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\functional\test_spi_transfer.c</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>integration</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\integration\test_spi_loopback.c</name>
+                        </file>
+                    </group>
+                    <group>
+                        <name>unit</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\unit\test_spi_capability.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\unit\test_spi_config.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\unit\test_spi_init.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\unit\test_spi_mode.c</name>
+                        </file>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\test_spi.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\vsf\test\vsf_test\spi\test_spi.h</name>
+                    </file>
+                </group>
+            </group>
         </group>
         <group>
             <name>utilities</name>
