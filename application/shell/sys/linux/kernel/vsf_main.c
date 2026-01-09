@@ -1645,6 +1645,25 @@ int vsf_linux_create_fhs(void)
             printf("busybox found in /usr/bin, but sh not found\n");
         }
 
+#if VSF_LINUX_USE_SOCKET == ENABLED && VSF_LINUX_SOCKET_USE_INET == ENABLED
+#   if VSF_LINUX_SOCKET_USE_NETLINK == ENABLED
+        if (access("/usr/bin/ifconfig", X_OK) < 0) {
+            extern int __vsf_linux_ifconfig_main(int argc, char **argv);
+            vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/ifconfig", __vsf_linux_ifconfig_main);
+        }
+#   endif
+#   if VSF_LINUX_SOCKET_USE_ROUTE == ENABLED
+        if (access("/usr/bin/ip", X_OK) < 0) {
+            extern int __vsf_linux_ip_main(int argc, char **argv);
+            vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/ip", __vsf_linux_ip_main);
+        }
+        if (access("/usr/bin/route", X_OK) < 0) {
+            extern int __vsf_linux_route_main(int argc, char **argv);
+            vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/route", __vsf_linux_route_main);
+        }
+#   endif
+#endif
+
         mkdir("/etc", 0);
         if (symlink("/usr/etc/inittab", "/etc/inittab") < 0) {
             printf("fail to symlink inittab to /etc\n");
