@@ -14,20 +14,34 @@ message(STATUS "LINUX_APPLET_PATH: ${LINUX_APPLET_PATH}")
 # target & configurations
 set(VSF_TARGET CortexM4)
 set(VSF_APPLET 1)
+#   use ".bc" to generate bitcode file, use ".elf" to generate elf file
+    set(VSF_APPLET_SUFFIX ".bc")
     set(VSF_APPLET_USE_GETOPT 1)
 set(VSF_USE_LINUX 1)
     set(VSF_LINUX_USE_SIMPLE_LIBC 1)
 
 # compiler configurations
-set(CMAKE_C_FLAGS
-    "-Os -mfloat-abi=softfp -Wno-unused-variable -Wno-unused-label -Wno-return-type -Wno-cast-align"
-    CACHE INTERNAL "C compiler common flags"
-)
-set(CMAKE_CXX_FLAGS
-    "-Os -mfloat-abi=softfp"
-    CACHE INTERNAL "C++ compiler common flags"
-)
-include($ENV{VSF_PATH}/script/cmake/compilers/gnuarmemb.cmake)
+if(VSF_APPLET_SUFFIX STREQUAL ".bc")
+    set(CMAKE_C_FLAGS
+        "-O3"
+        CACHE INTERNAL "C compiler common flags"
+    )
+    set(CMAKE_CXX_FLAGS
+        "-O3"
+        CACHE INTERNAL "C++ compiler common flags"
+    )
+    include($ENV{VSF_PATH}/script/cmake/compilers/llvm.cmake)
+else()
+    set(CMAKE_C_FLAGS
+        "-Os -mfloat-abi=softfp -Wno-unused-variable -Wno-unused-label -Wno-return-type -Wno-cast-align"
+        CACHE INTERNAL "C compiler common flags"
+    )
+    set(CMAKE_CXX_FLAGS
+        "-Os -mfloat-abi=softfp"
+        CACHE INTERNAL "C++ compiler common flags"
+    )
+    include($ENV{VSF_PATH}/script/cmake/compilers/gnuarmemb.cmake)
+endif()
 
 # project and vsf.cmake
 project(usbipd C CXX ASM)
@@ -37,13 +51,16 @@ vsf_add_include_directories(
 )
 
 # linker
-target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
-    LINKER:-T${LINUX_APPLET_PATH}/linker.ld
-    LINKER:-Map=output.map
-)
-add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_SIZE} $<TARGET_FILE:${CMAKE_PROJECT_NAME}>
-)
+if(VSF_APPLET_SUFFIX STREQUAL ".bc")
+else()
+    target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
+        LINKER:-T${LINUX_APPLET_PATH}/linker.ld
+        LINKER:-Map=output.map
+    )
+    add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_SIZE} $<TARGET_FILE:${CMAKE_PROJECT_NAME}>
+    )
+endif()
 
 # application
 get_filename_component(USBIPD_APPLET_PATH ${LINUX_APPLET_PATH}/usbipd ABSOLUTE)
