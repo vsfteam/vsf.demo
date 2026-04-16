@@ -149,30 +149,6 @@
 //#define APP_USE_HAL_SPI_DEMO                            ENABLED
 //#define APP_USE_HAL_WDT_DEMO                            ENABLED
 
-/*----------------------------------------------------------------------------*
- * Test Framework Configurations                                             *
- *----------------------------------------------------------------------------*/
-
-#define VSF_USE_TEST                                    ENABLED
-#if VSF_USE_TEST == ENABLED
-#   define VSF_HAL_USE_WDT                                 ENABLED
-#   if VSF_HAL_USE_WDT == ENABLED
-#       define VSF_TEST_CFG_USE_APPCFG_DATA_SYNC            ENABLED
-#       define VSF_TEST_CFG_USE_STDIO_DATA_SYNC             ENABLED
-#       define VSF_TEST_CFG_USE_FILE_DATA_SYNC              ENABLED
-#       define VSF_TEST_CFG_HAL_WDT                         ENABLED
-#       define VSF_TEST_CFG_HAL_WDT_DEVICE                  vsf_hw_wdt0
-#       define VSF_TEST_CFG_HAL_WDT_MODE                    (VSF_WDT_MODE_RESET_CPU | VSF_WDT_MODE_NO_EARLY_WAKEUP)
-#   endif
-
-    extern void vsf_test_board_assert(const char *file_name, unsigned int line, const char *function_name, const char *condition);
-#undef VSF_ASSERT
-#define VSF_ASSERT(__EXPR)                                                      \
-    ((__EXPR)                                                                   \
-    ? (void)0                                                                   \
-        : vsf_test_board_assert(__FILE__, __LINE__, __FUNCTION__, #__EXPR))
-#endif
-
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
