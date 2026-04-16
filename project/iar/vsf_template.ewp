@@ -8408,6 +8408,15 @@
                         <name>debug_stream</name>
                     </group>
                     <group>
+                        <name>dma</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\dma\dma_common.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\dma\dma_template.h</name>
+                        </file>
+                    </group>
+                    <group>
                         <name>flash</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\vsf\source\hal\driver\common\flash\flash_common.c</name>
