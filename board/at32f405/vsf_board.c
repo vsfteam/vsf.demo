@@ -179,7 +179,12 @@ bool vsf_app_driver_init(void)
     vsf_hw_pll_config(&VSF_HW_CLK_PLL, &VSF_HW_CLK_HEXT, 72, 1, 0);
     // PLLP: PLL / 4 = 216M
     vsf_hw_clk_config(&VSF_HW_CLK_PLLP, NULL, 4, 0);
+    // PLLU: PLL / 18 = 48M
+    vsf_hw_clk_config(&VSF_HW_CLK_PLLU, NULL, 18, 0);
+
+    // enable PLL and then enable PLLU, PLLU depends on PLL so enable PLL first
     vsf_hw_clk_enable(&VSF_HW_CLK_PLL);
+    vsf_hw_clk_enable(&VSF_HW_CLK_PLLU);
 
     // update flash latency before update system clock
     vsf_hw_update_flash_latency(216 * 1000 * 1000);
@@ -191,9 +196,7 @@ bool vsf_app_driver_init(void)
     // APB2: 216M
     vsf_hw_clk_config(&VSF_HW_CLK_APB2, NULL, 1, 0);
     vsf_hw_clk_config(&VSF_HW_CLK_SCLK, &VSF_HW_CLK_PLLP, 0, 0);
-    // PLLU: PLL / 18 = 48M
-    vsf_hw_clk_config(&VSF_HW_CLK_PLLU, NULL, 18, 0);
-    vsf_hw_clk_enable(&VSF_HW_CLK_PLLU);
+    // OTGFS1 using clock from PLLU
     vsf_hw_clk_config(&VSF_HW_CLK_OTGFS1, &VSF_HW_CLK_PLLU, 0, 0);
     // HSI: 48M, necessary for USBOTG0
     vsf_hw_clk_config(&VSF_HW_CLK_HSI, &VSF_HW_CLK_HSI48, 0, 0);
