@@ -68,7 +68,6 @@ void vsf_app_disp_render_string(struct font_desc *font, uint8_t *disp_buff, uint
         disp_buff += font->width * pixel_bytesize;
     }
 }
-#endif
 
 #if VSF_USE_UI == ENABLED
 static void __vsf_app_qrcode_disp_on_ready(vk_disp_t *disp)
@@ -199,3 +198,5 @@ int display_qrcode_main(int argc, char **argv)
 
     return 0;
 }
+
+#endif  // VSF_USE_QRCODE == ENABLED
