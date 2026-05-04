@@ -70,6 +70,9 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_MAL_USE_FAKEFAT32_MAL                    ENABLED
 #   define VSF_MAL_USE_SCSI_MAL                         ENABLED
 #   define VSF_MAL_USE_FLASH_MAL                        ENABLED
+#   define VSF_MAL_USE_MEM_MAL                          ENABLED
+#   define VSF_MAL_USE_MIM_MAL                          ENABLED
+#   define VSF_MAL_USE_FILE_MAL                         ENABLED
 #define VSF_USE_FS                                      ENABLED
 #   define VSF_FS_USE_ROMFS                             ENABLED
 #   define VSF_FS_USE_MEMFS                             ENABLED
@@ -125,7 +128,71 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_USE_MBEDTLS                              ENABLED
 #endif
 
+#define VSF_USE_FREERTOS                                ENABLED
+#   define VSF_FREERTOS_CFG_USE_SEMPHR                  ENABLED
+#   define VSF_FREERTOS_CFG_USE_EVENT_GROUPS            ENABLED
+#   define VSF_FREERTOS_CFG_USE_NOTIFY                  ENABLED
+#   define VSF_FREERTOS_CFG_USE_TIMERS                  ENABLED
+#   define VSF_FREERTOS_CFG_USE_STREAM_BUFFER           ENABLED
+
 #define VSF_USE_ESPIDF                                  ENABLED
+#   define VSF_ESPIDF_CFG_USE_PARTITION                 ENABLED
+#   define VSF_ESPIDF_CFG_USE_NVS                       ENABLED
+#   define VSF_ESPIDF_CFG_USE_ESP_FLASH                 ENABLED
+#   define VSF_ESPIDF_CFG_USE_VFS                       ENABLED
+#   define VSF_ESPIDF_CFG_USE_LITTLEFS                  ENABLED
+#   define VSF_ESPIDF_CFG_USE_FATFS                     ENABLED
+
+#define VSF_USE_LINUX                                   ENABLED
+#   ifndef VSF_LINUX_CFG_STACKSIZE
+#       define VSF_LINUX_CFG_STACKSIZE                  8192
+#   endif
+#   define VSF_USE_POSIX                                ENABLED
+#   define VSF_LINUX_USE_SIMPLE_LIBC                    ENABLED
+#   define VSF_LINUX_USE_BUSYBOX                        DISABLED
+#   define VSF_LINUX_CFG_LINK_FILE                      DISABLED
+#   define VSF_LINUX_USE_SOCKET                         ENABLED
+#       define VSF_LINUX_SOCKET_USE_UNIX                ENABLED
+#       if defined(__WIN__) || defined(__LINUX__)
+            // windows and linux uses host socket for linux socket support
+#           define VSF_LINUX_SOCKET_USE_INET            ENABLED
+#           define VSF_LINUX_SOCKET_CFG_WRAPPER         ENABLED
+#       else
+#           define VSF_LINUX_SOCKET_USE_INET            VSF_USE_TCPIP
+#       endif
+#   define VSF_LINUX_USE_PROCFS                         DISABLED
+#   define VSF_LINUX_USE_DEVFS                          DISABLED
+#       define VSF_LINUX_DEVFS_USE_RAND                 DISABLED
+#       if VSF_USE_AUDIO == ENABLED && !defined(VSF_LINUX_DEVFS_USE_ALSA)
+#           define VSF_LINUX_DEVFS_USE_ALSA             DISABLED
+#       endif
+#   define VSF_LINUX_CFG_FD_BITMAP_SIZE                 256
+#   if VSF_USE_USB_HOST == ENABLED && VSF_USBH_USE_LIBUSB == ENABLED
+#       define VSF_LINUX_USE_LIBUSB                     DISABLED
+#   else
+#       define VSF_LINUX_USE_LIBUSB                     DISABLED
+#   endif
+#   define VSF_LINUX_CFG_PLS_NUM                        16
+#   define VSF_LINUX_CFG_TLS_NUM                        64
+#   if VSF_USE_LOADER == ENABLED
+#       define VSF_LINUX_USE_APPLET                     DISABLED
+#   endif
+#   define VSF_LINUX_USE_SCRIPT                         DISABLED
+#   define VSF_LINUX_CFG_INIT_SCRIPT_FILE               "/root/.profile"
+#   define VSF_LINUX_CFG_PATH                           "/bin:/usr/bin"
+#   ifdef __WIN__
+// DO NOT enable VSF_LINUX_CFG_WRAPPER if possible.
+//  Instead of enable VSF_LINUX_CFG_WRAPPER for windows if there are conflicts,
+//  we recommend to add wrapper for dedicated Windows APIs in coresponding header.
+//#       define VSF_LINUX_CFG_WRAPPER                    ENABLED
+#   endif
+
+#ifndef __CPU_WEBASSEMBLY__
+#   define VSF_USE_SIMPLE_SPRINTF                       ENABLED
+#   define VSF_USE_SIMPLE_SWPRINTF                      ENABLED
+#       define VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT         ENABLED
+#   define VSF_USE_SIMPLE_SSCANF                        ENABLED
+#endif
 
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/

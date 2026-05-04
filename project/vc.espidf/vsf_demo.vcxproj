@@ -404,8 +404,39 @@
     <ClInclude Include="..\..\vsf\source\shell\media\sdl2\include\SDL2\SDL_version.h" />
     <ClInclude Include="..\..\vsf\source\shell\media\sdl2\vsf_sdl2_cfg.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_err.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_event.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_event_base.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_heap_caps.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_log.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_partition.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\nvs.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\nvs_flash.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_flash.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_ringbuf.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_system.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_timer.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_vfs.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_vfs_fat.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_littlefs.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\driver\gpio.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\driver\gptimer.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\driver\uart.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\driver\i2c_types.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\driver\i2c_master.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\vsf_espidf.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\vsf_espidf_cfg.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\FreeRTOS.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\portable.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\portmacro.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\queue.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\task.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\freertos\FreeRTOS.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\freertos\portable.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\freertos\portmacro.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\freertos\queue.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\freertos\task.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\vsf_freertos.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\vsf_freertos_cfg.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\app\httpd\urihandler\file\__vsf_linux_urihandler_file.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\app\httpd\urihandler\websocket\__vsf_linux_urihandler_websocket.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\app\httpd\vsf_linux_httpd.h" />
@@ -745,6 +776,10 @@
     <ClCompile Include="..\..\vsf\source\component\debugger\segger\segger_rtt_stream.c" />
     <ClCompile Include="..\..\vsf\source\component\fs\driver\fatfs\vsf_fatfs.c" />
     <ClCompile Include="..\..\vsf\source\component\fs\driver\malfs\vsf_malfs.c" />
+    <ClCompile Include="..\..\vsf\source\component\fs\driver\littlefs\vsf_littlefs.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\littlefs\port\lfs_port.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\littlefs\raw\lfs.c" />
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\littlefs\raw\lfs_util.c" />
     <ClCompile Include="..\..\vsf\source\component\fs\driver\memfs\vsf_memfs.c" />
     <ClCompile Include="..\..\vsf\source\component\fs\driver\romfs\vsf_romfs.c" />
     <ClCompile Include="..\..\vsf\source\component\fs\driver\winfs\vsf_winfs.c" />
@@ -964,7 +999,36 @@
     <ClCompile Include="..\..\vsf\source\shell\media\sdl2\vsf_sdl2_event.c" />
     <ClCompile Include="..\..\vsf\source\shell\media\sdl2\vsf_sdl2_pixelformat.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_err_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_event_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_heap_caps_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_log_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_partition_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\nvs_flash_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_flash_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_vfs_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_littlefs_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_vfs_fat_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_ringbuf_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_system_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_timer_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\driver_gptimer_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\driver_gpio_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\driver_uart_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\driver_i2c_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\driver_spi_master_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\driver_ledc_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\driver_adc_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\vsf_espidf.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_heap_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_queue_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_task_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_semphr_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_event_groups_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_notify_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_timers_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_stream_buffer_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_critical_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\vsf_freertos.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\app\httpd\vsf_linux_httpd.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\app\ntp\vsf_linux_ntp.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\app\telnetd\vsf_linux_telnetd.c" />
@@ -1142,7 +1206,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;LFS_CONFIG=lfs_util_vsf.h;FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\shell\sys\espidf\kernel;$(ProjectDir)..\..\application\shell\sys\espidf\kernel\config;$(ProjectDir)..\..\application\shell\sys\espidf\kernel\config\btstack;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\espidf\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\src;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\chipset;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\bluedroid\encoder\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\bluedroid\decoder\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\yxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\shell\sys\espidf\kernel;$(ProjectDir)..\..\application\shell\sys\espidf\kernel\config;$(ProjectDir)..\..\application\shell\sys\espidf\kernel\config\btstack;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\espidf\include;$(ProjectDir)..\..\vsf\source\shell\sys\freertos\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\arch\win;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\src;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\chipset;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\bluedroid\encoder\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\bluedroid\decoder\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\yxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
@@ -1170,7 +1234,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;LFS_CONFIG=lfs_util_vsf.h;FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\shell\sys\espidf\kernel;$(ProjectDir)..\..\application\shell\sys\espidf\kernel\config;$(ProjectDir)..\..\application\shell\sys\espidf\kernel\config\btstack;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\espidf\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\src;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\chipset;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\bluedroid\encoder\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\bluedroid\decoder\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\yxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application\shell\sys\espidf\kernel;$(ProjectDir)..\..\application\shell\sys\espidf\kernel\config;$(ProjectDir)..\..\application\shell\sys\espidf\kernel\config\btstack;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\espidf\include;$(ProjectDir)..\..\vsf\source\shell\sys\freertos\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\arch\win;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\littlefs\raw;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\mbedtls\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\port;$(ProjectDir)..\..\vsf\source\component\3rd-party\freetype\raw\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\src;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\chipset;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\bluedroid\encoder\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\bluedroid\decoder\include;$(ProjectDir)..\..\vsf\source\component\3rd-party\btstack\raw\3rd-party\yxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>

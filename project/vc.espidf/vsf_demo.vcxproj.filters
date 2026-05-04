@@ -925,6 +925,18 @@
     <Filter Include="vsf\shell\sys\espidf\port">
       <UniqueIdentifier>{7d40265b-b602-4a88-90f9-d086c7113b99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\shell\sys\freertos">
+      <UniqueIdentifier>{3e7c08d1-7f22-4b6a-9d74-2a01a0a06b11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\shell\sys\freertos\include">
+      <UniqueIdentifier>{3e7c08d1-7f22-4b6a-9d74-2a01a0a06b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\shell\sys\freertos\include\freertos">
+      <UniqueIdentifier>{3e7c08d1-7f22-4b6a-9d74-2a01a0a06b13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\shell\sys\freertos\port">
+      <UniqueIdentifier>{3e7c08d1-7f22-4b6a-9d74-2a01a0a06b14}</UniqueIdentifier>
+    </Filter>
     <Filter Include="application\config">
       <UniqueIdentifier>{0ddb816b-0049-4398-b004-d1dce0a536f8}</UniqueIdentifier>
     </Filter>
@@ -2628,6 +2640,84 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_err.h">
       <Filter>vsf\shell\sys\espidf\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_event.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_event_base.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_heap_caps.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_log.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_partition.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\nvs.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\nvs_flash.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+<ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_flash.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_vfs.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_vfs_fat.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_littlefs.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_ringbuf.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_system.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\esp_timer.h">
+      <Filter>vsf\shell\sys\espidf\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\vsf_freertos.h">
+      <Filter>vsf\shell\sys\freertos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\vsf_freertos_cfg.h">
+      <Filter>vsf\shell\sys\freertos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\FreeRTOS.h">
+      <Filter>vsf\shell\sys\freertos\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\portable.h">
+      <Filter>vsf\shell\sys\freertos\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\portmacro.h">
+      <Filter>vsf\shell\sys\freertos\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\queue.h">
+      <Filter>vsf\shell\sys\freertos\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\task.h">
+      <Filter>vsf\shell\sys\freertos\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\freertos\FreeRTOS.h">
+      <Filter>vsf\shell\sys\freertos\include\freertos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\freertos\portable.h">
+      <Filter>vsf\shell\sys\freertos\include\freertos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\freertos\portmacro.h">
+      <Filter>vsf\shell\sys\freertos\include\freertos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\freertos\queue.h">
+      <Filter>vsf\shell\sys\freertos\include\freertos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\freertos\task.h">
+      <Filter>vsf\shell\sys\freertos\include\freertos</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\application\shell\sys\espidf\kernel\config\mbedtls\config.h">
       <Filter>application\config\mbedtls</Filter>
     </ClInclude>
@@ -2815,6 +2905,18 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\fs\driver\malfs\vsf_malfs.c">
       <Filter>vsf\component\fs\driver\malfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\fs\driver\littlefs\vsf_littlefs.c">
+      <Filter>vsf\component\fs\driver\littlefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\littlefs\port\lfs_port.c">
+      <Filter>vsf\component\3rd-party\littlefs\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\littlefs\raw\lfs.c">
+      <Filter>vsf\component\3rd-party\littlefs\raw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\3rd-party\littlefs\raw\lfs_util.c">
+      <Filter>vsf\component\3rd-party\littlefs\raw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\mal\driver\mim_mal\vsf_mim_mal.c">
       <Filter>vsf\component\mal\driver\mim_mal</Filter>
@@ -3904,6 +4006,72 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_err_port.c">
       <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_event_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_heap_caps_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_log_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_partition_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\nvs_flash_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+<ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_flash_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_vfs_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_littlefs_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_vfs_fat_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_ringbuf_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_system_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_timer_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\vsf_freertos.c">
+      <Filter>vsf\shell\sys\freertos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_heap_port.c">
+      <Filter>vsf\shell\sys\freertos\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_queue_port.c">
+      <Filter>vsf\shell\sys\freertos\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_task_port.c">
+      <Filter>vsf\shell\sys\freertos\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_semphr_port.c">
+      <Filter>vsf\shell\sys\freertos\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_event_groups_port.c">
+      <Filter>vsf\shell\sys\freertos\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_notify_port.c">
+      <Filter>vsf\shell\sys\freertos\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_timers_port.c">
+      <Filter>vsf\shell\sys\freertos\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_stream_buffer_port.c">
+      <Filter>vsf\shell\sys\freertos\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_critical_port.c">
+      <Filter>vsf\shell\sys\freertos\port</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
