@@ -32,6 +32,23 @@
 #ifndef LWIP_LWIPOPTS_H
 #define LWIP_LWIPOPTS_H
 
+/* Host builds: VSF simple_libc / Windows CRT both define ssize_t via
+ * sys/types.h, but <limits.h> does not expose SSIZE_MAX on MSVC. Without
+ * this, lwip/arch.h falls back to 'typedef int ssize_t', which clashes
+ * with the earlier long/long-long typedef. Tell lwIP to skip its own
+ * typedef by pre-defining SSIZE_MAX and LWIP_NO_UNISTD_H. */
+#ifdef __WIN__
+#   include <limits.h>
+#   ifndef SSIZE_MAX
+#       ifdef _WIN64
+#           define SSIZE_MAX    _I64_MAX
+#       else
+#           define SSIZE_MAX    INT_MAX
+#       endif
+#   endif
+#   define LWIP_NO_UNISTD_H     1
+#endif
+
 #ifdef LWIP_OPTTEST_FILE
 #include "lwipopts_test.h"
 #else /* LWIP_OPTTEST_FILE */
@@ -39,10 +56,10 @@
 #include "vsf_cfg.h"
 
 #define LWIP_TIMEVAL_PRIVATE        0
-#if     (defined(__WIN__) && defined(__VSF_X86_WIN_SINGLE_PRIORITY))              \
-    ||  defined(__LINUX__)
-#   define TCPIP_THREAD_PRIO       vsf_prio_0
-#endif
+/* VSF evtq is indexed by priority; lwIP's default TCPIP_THREAD_PRIO=1 would
+ * exceed VSF_OS_CFG_PRIORITY_NUM on single-priority builds. Pin it to
+ * vsf_prio_0 so it is always a valid evtq index. */
+#define TCPIP_THREAD_PRIO          vsf_prio_0
 
 #define TCPIP_THREAD_STACKSIZE     (32 * 1024)
 #define TCPIP_MBOX_SIZE            16

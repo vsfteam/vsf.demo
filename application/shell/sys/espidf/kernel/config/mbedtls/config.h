@@ -31,7 +31,7 @@
 #undef _MSC_VER
 #undef _WIN32
 // __unix__/unix is required by net_socket
-//#define __unix__
+#define __unix__
 #define MBEDTLS_NO_PLATFORM_ENTROPY
 #endif
 
@@ -3089,7 +3089,7 @@
  *
  * This module provides networking routines.
  */
-//#define MBEDTLS_NET_C
+#define MBEDTLS_NET_C
 
 /**
  * \def MBEDTLS_OID_C

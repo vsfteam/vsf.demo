@@ -12,6 +12,14 @@ int deepseek_chat_main(int argc, char *argv[])
 {
     vsf_http_client_t *http = (vsf_http_client_t *)malloc(sizeof(vsf_http_client_t) +
                     sizeof(mbedtls_session_t) + DEEPSEEK_BUFFER_SIZE);
+    if (NULL == http) {
+        printf("failed to allocate http context\n");
+        return -1;
+    }
+    // vsf_http_client_init contract: the handle must be zero-initialised
+    // before the first init(), so that buffer / buffer_size / _buffer_owned
+    // are all in the "use defaults" state.
+    memset(http, 0, sizeof(*http));
     mbedtls_session_t *session = (mbedtls_session_t *)&http[1];
     char *json_body = (char *)&session[1], *prompt, *response;
     int response_size;
@@ -39,7 +47,10 @@ int deepseek_chat_main(int argc, char *argv[])
         memset(session, 0, sizeof(*session));
         http->op = &vsf_mbedtls_http_op;
         http->param = session;
-        vsf_http_client_init(http);
+        if (vsf_http_client_init(http) != VSF_ERR_NONE) {
+            printf("failed to init http client\n");
+            break;
+        }
 
         int result = vsf_http_client_request(http, &(vsf_http_client_req_t){
             .host       = "api.deepseek.com",
@@ -72,6 +83,7 @@ int deepseek_chat_main(int argc, char *argv[])
     }
 
     vsf_http_client_close(http);
+    vsf_http_client_fini(http);
     free(http);
     return 0;
 }

@@ -87,11 +87,18 @@ static int __vpm_install_package(char *package)
         printf("failed to allocate http context\n");
         return -1;
     }
+    // zero-initialise the handle to satisfy vsf_http_client_init() contract
+    // (buffer / buffer_size / _buffer_owned must start as 0 / NULL / false).
+    memset(http, 0, sizeof(*http));
     mbedtls_session_t *session = (mbedtls_session_t *)&http[1];
     memset(session, 0, sizeof(*session));
     http->op = &vsf_mbedtls_http_op;
     http->param = session;
-    vsf_http_client_init(http);
+    if (vsf_http_client_init(http) != VSF_ERR_NONE) {
+        printf("failed to init http client\n");
+        free(http);
+        return -1;
+    }
 
     int result = 0, rsize, remain;
     uint32_t checksum = 0, totalsize = 0;
@@ -112,6 +119,7 @@ static int __vpm_install_package(char *package)
     int fd_root = open(__vpm.package_path, 0);
     if (fd_root < 0) {
         printf("failed to open %s to download package\n", __vpm.package_path);
+        vsf_http_client_fini(http);
         free(http);
         return -1;
     }
@@ -123,6 +131,7 @@ static int __vpm_install_package(char *package)
     close(fd_root);
     if (fd_package < 0) {
         printf("failed to create %s\n", package_name);
+        vsf_http_client_fini(http);
         free(http);
         return -1;
     }
@@ -229,6 +238,7 @@ Uninstall and install %s again if fail to run\n", package);
 
 do_exit:
     vsf_http_client_close(http);
+    vsf_http_client_fini(http);
     free(http);
 
 #   ifdef VPM_ROMFS_IS_FLASH_MAL
@@ -486,11 +496,17 @@ static int __vpm_list_remote_packages(void)
         printf("failed to allocate http context\n");
         return -1;
     }
+    // zero-initialise the handle to satisfy vsf_http_client_init() contract.
+    memset(http, 0, sizeof(*http));
     mbedtls_session_t *session = (mbedtls_session_t *)&http[1];
     memset(session, 0, sizeof(*session));
     http->op = &vsf_mbedtls_http_op;
     http->param = session;
-    vsf_http_client_init(http);
+    if (vsf_http_client_init(http) != VSF_ERR_NONE) {
+        printf("failed to init http client\n");
+        free(http);
+        return -1;
+    }
 
     uint8_t *buf = (uint8_t *)&session[1];
     char *host = (char *)buf + __VPM_BUF_SIZE, *path;
@@ -530,6 +546,7 @@ static int __vpm_list_remote_packages(void)
 
 do_exit:
     vsf_http_client_close(http);
+    vsf_http_client_fini(http);
     free(http);
     return result;
 #else

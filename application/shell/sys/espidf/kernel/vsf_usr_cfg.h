@@ -118,14 +118,28 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_USBH_USE_BTHCI                           ENABLED
 #endif
 
+// Force-enable lwIP on host (Windows/Linux) for esp_netif + wpcap demo.
+// The original condition only enables lwIP when USB-CDC-NCM is active,
+// which is not the case for the vc.espidf project.
 #ifndef VSF_USE_LWIP
-#   define VSF_USE_LWIP                                 (VSF_USE_USB_DEVICE == ENABLED)\
+#   if defined(__WIN__) || defined(__LINUX__)
+#       define VSF_USE_LWIP                             ENABLED
+#   else
+#       define VSF_USE_LWIP                             (VSF_USE_USB_DEVICE == ENABLED)\
                                                     &&  (VSF_USBD_USE_CDC == ENABLED)\
                                                     &&  (VSF_USBD_USE_CDCNCM == ENABLED)
+#   endif
 #endif
 #if VSF_USE_LWIP == ENABLED || defined(__WIN__)
 #   define VSF_USE_TCPIP                                ENABLED
 #   define VSF_USE_MBEDTLS                              ENABLED
+#endif
+
+// Host netdrv backend: use Npcap/WinPcap on Windows.
+#if defined(__WIN__) && (VSF_USE_TCPIP == ENABLED)
+#   define VSF_NETDRV_USE_WPCAP                         ENABLED
+// wpcap netlink IRQ-thread priority; not defined by the driver itself.
+#   define VSF_NETDRV_WPCAP_CFG_HW_PRIORITY             vsf_arch_prio_0
 #endif
 
 #define VSF_USE_FREERTOS                                ENABLED
@@ -142,10 +156,16 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_ESPIDF_CFG_USE_VFS                       ENABLED
 #   define VSF_ESPIDF_CFG_USE_LITTLEFS                  ENABLED
 #   define VSF_ESPIDF_CFG_USE_FATFS                     ENABLED
+#   if VSF_USE_LWIP == ENABLED && VSF_USE_TCPIP == ENABLED
+#       define VSF_ESPIDF_CFG_USE_NETIF                 ENABLED
+#   endif
+#   if VSF_USE_TCPIP == ENABLED && VSF_USE_MBEDTLS == ENABLED
+#       define VSF_ESPIDF_CFG_USE_HTTP_CLIENT            ENABLED
+#   endif
 
 #define VSF_USE_LINUX                                   ENABLED
 #   ifndef VSF_LINUX_CFG_STACKSIZE
-#       define VSF_LINUX_CFG_STACKSIZE                  8192
+#       define VSF_LINUX_CFG_STACKSIZE                  32768
 #   endif
 #   define VSF_USE_POSIX                                ENABLED
 #   define VSF_LINUX_USE_SIMPLE_LIBC                    ENABLED
@@ -157,6 +177,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
             // windows and linux uses host socket for linux socket support
 #           define VSF_LINUX_SOCKET_USE_INET            ENABLED
 #           define VSF_LINUX_SOCKET_CFG_WRAPPER         ENABLED
+#           define VSF_LINUX_SOCKET_USE_NETLINK         DISABLED
 #       else
 #           define VSF_LINUX_SOCKET_USE_INET            VSF_USE_TCPIP
 #       endif
