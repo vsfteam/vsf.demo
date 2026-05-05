@@ -23,6 +23,7 @@
     <ClInclude Include="..\..\application\shell\sys\espidf\kernel\config\lwip\lwipopts.h" />
     <ClInclude Include="..\..\application\shell\sys\espidf\kernel\config\mbedtls\config.h" />
     <ClInclude Include="..\..\application\shell\sys\espidf\kernel\vsf_usr_cfg.h" />
+    <ClInclude Include="..\..\application\shell\sys\espidf\kernel\vsf_app.h" />
     <ClInclude Include="..\..\board\win\vsf_board.h" />
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\btstack_oo.h" />
@@ -626,9 +627,10 @@
     <ClInclude Include="..\..\vsf\source\vsf_cfg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_http_client_demo.c" />
+    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_netif_demo.c" />
     <ClCompile Include="..\..\application\shell\sys\espidf\kernel\vsf_main.c" />
-    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\vsf_netif_demo.c" />
-    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\vsf_http_client_demo.c" />
+    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_espidf_test.c" />
     <ClCompile Include="..\..\board\win\vsf_board.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\btstack_oo.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\device\btstack_dev.c" />

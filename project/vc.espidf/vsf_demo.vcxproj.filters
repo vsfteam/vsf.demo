@@ -994,6 +994,9 @@
     <Filter Include="vsf\shell\sys\espidf\include\driver">
       <UniqueIdentifier>{6cd64925-f300-45cd-8072-aef8a41f60f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="application\test">
+      <UniqueIdentifier>{ff2f5e1a-2f7d-4585-9e2f-6796ca37de86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2811,6 +2814,9 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\driver\spi_master.h">
       <Filter>vsf\shell\sys\espidf\include\driver</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\application\shell\sys\espidf\kernel\vsf_app.h">
+      <Filter>application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -4304,11 +4310,14 @@
     <ClCompile Include="..\..\vsf\source\component\3rd-party\lwip\raw\src\core\udp.c">
       <Filter>vsf\component\3rd-party\lwip\raw\src\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\vsf_http_client_demo.c">
-      <Filter>application</Filter>
+    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_espidf_test.c">
+      <Filter>application\test</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\vsf_netif_demo.c">
-      <Filter>application</Filter>
+    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_http_client_demo.c">
+      <Filter>application\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_netif_demo.c">
+      <Filter>application\test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
