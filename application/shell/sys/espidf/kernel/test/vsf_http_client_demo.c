@@ -16,30 +16,29 @@
  ****************************************************************************/
 
 /*
- * esp_http_client smoke demo for the vc.espidf host build.
+ * esp_http_client smoke demo. Pure ESP-IDF public API + POSIX pthread.
  *
  * Flow:
- *   netif_demo obtains DHCP IP via wpcap + lwIP
- *   -> vsf_http_client_demo_start() spawns a pthread
- *   -> pthread issues a plain HTTP GET against a public endpoint
- *   -> body and status are traced; connection is torn down
+ *   vsf_http_client_demo_start() spawns a worker pthread
+ *   -> worker sleeps briefly to give the netif a window to acquire DHCP
+ *   -> issues a plain HTTP GET against a public endpoint
+ *   -> events are logged via ESP_LOGx; connection is torn down
  *
- * The demo is intentionally HTTP-only (no TLS); HTTPS requires a CA store
- * which is out of scope for the first smoke run.
+ * The demo is intentionally HTTP-only (no TLS); HTTPS requires a CA
+ * store which is out of scope for the first smoke run.
  */
 
-#include "./vsf_usr_cfg.h"
+#include "../vsf_usr_cfg.h"
 
 #if     VSF_USE_ESPIDF == ENABLED                                              \
     &&  VSF_ESPIDF_CFG_USE_HTTP_CLIENT == ENABLED
-
-#include "vsf.h"
 
 #include <pthread.h>
 #include <unistd.h>
 
 #include "esp_err.h"
 #include "esp_http_client.h"
+#include "esp_log.h"
 
 /*============================ MACROS ========================================*/
 
@@ -57,7 +56,8 @@
 
 /*============================ LOCAL VARIABLES ===============================*/
 
-static volatile int __http_demo_running = 0;
+static const char          *TAG = "http-demo";
+static volatile int         __http_demo_running = 0;
 
 /*============================ IMPLEMENTATION ================================*/
 
@@ -65,40 +65,37 @@ static esp_err_t __http_demo_event_handler(esp_http_client_event_t *evt)
 {
     switch (evt->event_id) {
     case HTTP_EVENT_ON_CONNECTED:
-        vsf_trace_info("http-demo: CONNECTED" VSF_TRACE_CFG_LINEEND);
+        ESP_LOGI(TAG, "CONNECTED");
         break;
     case HTTP_EVENT_HEADERS_SENT:
-        vsf_trace_info("http-demo: HEADERS_SENT" VSF_TRACE_CFG_LINEEND);
+        ESP_LOGI(TAG, "HEADERS_SENT");
         break;
     case HTTP_EVENT_ON_HEADER:
         if (evt->header_key && evt->header_value) {
-            vsf_trace_info("http-demo: HDR %s: %s" VSF_TRACE_CFG_LINEEND,
-                           evt->header_key, evt->header_value);
+            ESP_LOGI(TAG, "HDR %s: %s", evt->header_key, evt->header_value);
         }
         break;
     case HTTP_EVENT_ON_STATUS_CODE:
-        vsf_trace_info("http-demo: STATUS %d" VSF_TRACE_CFG_LINEEND,
-                       evt->data_len);
+        ESP_LOGI(TAG, "STATUS %d", evt->data_len);
         break;
     case HTTP_EVENT_ON_DATA:
-        vsf_trace_info("http-demo: DATA len=%d" VSF_TRACE_CFG_LINEEND,
-                       evt->data_len);
+        ESP_LOGI(TAG, "DATA len=%d", evt->data_len);
         if (evt->data && evt->data_len > 0) {
             int n = evt->data_len > 128 ? 128 : evt->data_len;
-            vsf_trace_buffer(VSF_TRACE_INFO, evt->data, n);
+            ESP_LOGI(TAG, "%.*s", n, (const char *)evt->data);
         }
         break;
     case HTTP_EVENT_ON_FINISH:
-        vsf_trace_info("http-demo: FINISH" VSF_TRACE_CFG_LINEEND);
+        ESP_LOGI(TAG, "FINISH");
         break;
     case HTTP_EVENT_DISCONNECTED:
-        vsf_trace_info("http-demo: DISCONNECTED" VSF_TRACE_CFG_LINEEND);
+        ESP_LOGI(TAG, "DISCONNECTED");
         break;
     case HTTP_EVENT_REDIRECT:
-        vsf_trace_info("http-demo: REDIRECT" VSF_TRACE_CFG_LINEEND);
+        ESP_LOGI(TAG, "REDIRECT");
         break;
     case HTTP_EVENT_ERROR:
-        vsf_trace_error("http-demo: ERROR" VSF_TRACE_CFG_LINEEND);
+        ESP_LOGE(TAG, "ERROR");
         break;
     default:
         break;
@@ -115,12 +112,11 @@ static void __http_demo_run(void)
     cfg.timeout_ms      = VSF_HTTP_CLIENT_DEMO_TIMEOUT_MS;
     cfg.transport_type  = HTTP_TRANSPORT_OVER_TCP;
 
-    vsf_trace_info("http-demo: GET %s" VSF_TRACE_CFG_LINEEND, cfg.url);
+    ESP_LOGI(TAG, "GET %s", cfg.url);
 
     esp_http_client_handle_t client = esp_http_client_init(&cfg);
     if (client == NULL) {
-        vsf_trace_error("http-demo: esp_http_client_init failed"
-                        VSF_TRACE_CFG_LINEEND);
+        ESP_LOGE(TAG, "esp_http_client_init failed");
         return;
     }
 
@@ -128,12 +124,10 @@ static void __http_demo_run(void)
     if (err == ESP_OK) {
         int     status = esp_http_client_get_status_code(client);
         int64_t clen   = esp_http_client_get_content_length(client);
-        vsf_trace_info("http-demo: perform ok status=%d content_length=%lld"
-                       VSF_TRACE_CFG_LINEEND,
-                       status, (long long)clen);
+        ESP_LOGI(TAG, "perform ok status=%d content_length=%lld",
+                 status, (long long)clen);
     } else {
-        vsf_trace_error("http-demo: perform failed err=%d"
-                        VSF_TRACE_CFG_LINEEND, (int)err);
+        ESP_LOGE(TAG, "perform failed err=%d", (int)err);
     }
 
     esp_http_client_cleanup(client);
@@ -142,7 +136,7 @@ static void __http_demo_run(void)
 static void *__http_demo_thread(void *arg)
 {
     (void)arg;
-    /* Give netif_demo a window to finish DHCP before we try to resolve
+    /* Give the netif a window to finish DHCP before we try to resolve
      * and connect. A production consumer would subscribe to IP_EVENT
      * got_ip and dispatch into its own worker; here we just sleep to
      * keep the smoke demo tiny. */
@@ -168,8 +162,7 @@ void vsf_http_client_demo_start(void)
     pthread_attr_destroy(&attr);
 
     if (r != 0) {
-        vsf_trace_error("http-demo: pthread_create failed: %d"
-                        VSF_TRACE_CFG_LINEEND, r);
+        ESP_LOGE(TAG, "pthread_create failed: %d", r);
         __http_demo_running = 0;
         return;
     }

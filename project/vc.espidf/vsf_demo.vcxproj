@@ -23,7 +23,6 @@
     <ClInclude Include="..\..\application\shell\sys\espidf\kernel\config\lwip\lwipopts.h" />
     <ClInclude Include="..\..\application\shell\sys\espidf\kernel\config\mbedtls\config.h" />
     <ClInclude Include="..\..\application\shell\sys\espidf\kernel\vsf_usr_cfg.h" />
-    <ClInclude Include="..\..\application\shell\sys\espidf\kernel\vsf_app.h" />
     <ClInclude Include="..\..\board\win\vsf_board.h" />
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h" />
     <ClInclude Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\btstack_oo.h" />

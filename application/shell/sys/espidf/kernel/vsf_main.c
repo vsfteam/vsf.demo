@@ -41,6 +41,22 @@
 #include "shell/sys/espidf/vsf_espidf.h"
 #include "shell/sys/freertos/vsf_freertos.h"
 
+#if     VSF_USE_ESPIDF == ENABLED                                              \
+    &&  VSF_ESPIDF_CFG_USE_NETIF == ENABLED
+#   include "esp_netif.h"
+#   if VSF_NETDRV_USE_WPCAP == ENABLED
+#       define __VSF_NETDRV_CLASS_INHERIT_NETLINK__
+#       include "component/tcpip/vsf_tcpip.h"
+#       include "component/tcpip/netdrv/driver/wpcap/vsf_netdrv_wpcap.h"
+#   endif
+
+// lwIP's arch/cc.h sets LWIP_PROVIDE_ERRNO, which asks lwIP to supply its
+// own 'int errno' symbol. api/sockets.c is excluded from this build (the
+// host uses hostsock for AF_INET), so anchor storage here in the
+// environment TU to satisfy the link.
+int errno;
+#endif
+
 /*============================ IMPLEMENTATION ================================*/
 
 VSF_CAL_WEAK(app_main)
@@ -152,6 +168,12 @@ int vsf_linux_create_fhs(void)
         },
     };
     static const uint16_t __root_entries_count = dimof(__root_entries);
+
+    static vk_netdrv_wpcap_t __env_wpcap_netdrv = { 0 };
+    vk_netdrv_set_netlink_op((vk_netdrv_t *)&__env_wpcap_netdrv, &vk_netdrv_wpcap_netlink_op, NULL);
+
+    extern void vsf_netif_demo_set_handle(esp_netif_iodriver_handle handle);
+    vsf_netif_demo_set_handle((esp_netif_iodriver_handle)vsf_netdrv_new_netif_glue(&__env_wpcap_netdrv.use_as__vk_netdrv_t));
 #else
 #   warning where should be ${HOME}?
 #endif

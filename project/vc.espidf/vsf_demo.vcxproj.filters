@@ -2814,9 +2814,6 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\driver\spi_master.h">
       <Filter>vsf\shell\sys\espidf\include\driver</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\application\shell\sys\espidf\kernel\vsf_app.h">
-      <Filter>application</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">

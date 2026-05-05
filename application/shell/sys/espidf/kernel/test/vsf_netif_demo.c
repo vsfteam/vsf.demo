@@ -16,26 +16,18 @@
  ****************************************************************************/
 
 /*
- * Minimal esp_netif + wpcap smoke demo for the host (Windows) build.
+ * esp_netif IP event consumer demo.
  *
- * Wiring:
- *   esp_event_loop_create_default (already done by vsf_espidf_init, idempotent)
- *   -> register IP_EVENT handler
- *   -> wpcap netdrv: set_netlink_op(&vk_netdrv_wpcap_netlink_op)
- *   -> esp_netif_new(ETH default) -> esp_netif_attach_netdrv(wpcap)
- *   -> esp_netif_action_start() -> DHCP client kicks in -> IP_EVENT_ETH_GOT_IP
- *
- * The handler prints the acquired IPv4 so the smoke test can be validated
- * purely by inspecting trace output.
+ * The environment layer (vsf_main.c) is responsible for creating and
+ * starting the default netif (wpcap/lwIP on the Windows host). This
+ * demo only shows how application code subscribes to IP_EVENT and
+ * reacts to DHCP GOT_IP / LOST_IP, using strictly ESP-IDF public API.
  */
 
-#include "./vsf_usr_cfg.h"
+#include "../vsf_usr_cfg.h"
 
 #if     VSF_USE_ESPIDF == ENABLED                                              \
-    &&  VSF_ESPIDF_CFG_USE_NETIF == ENABLED                                    \
-    &&  VSF_NETDRV_USE_WPCAP == ENABLED
-
-#include "vsf.h"
+    &&  VSF_ESPIDF_CFG_USE_NETIF == ENABLED
 
 #include "esp_err.h"
 #include "esp_event.h"
@@ -43,22 +35,14 @@
 #include "esp_netif.h"
 #include "esp_netif_defaults.h"
 #include "esp_netif_types.h"
-
-#define __VSF_NETDRV_CLASS_INHERIT_NETLINK__
-#include "component/tcpip/vsf_tcpip.h"
-#include "component/tcpip/netdrv/driver/wpcap/vsf_netdrv_wpcap.h"
+#include "esp_log.h"
 
 /*============================ LOCAL VARIABLES ===============================*/
 
-static vk_netdrv_wpcap_t        __wpcap_netdrv;
-static esp_netif_t             *__demo_netif = NULL;
+static const char *TAG = "netif-demo";
 
-/* lwIP's arch/cc.h in this port sets LWIP_PROVIDE_ERRNO, which asks lwIP to
- * supply its own 'int errno' symbol. Normally api/sockets.c would define it;
- * we exclude sockets.c from the build (host uses hostsock for AF_INET), so
- * anchor the storage here to satisfy the link. */
-int errno;
-
+static esp_netif_t *__demo_netif = NULL;
+static esp_netif_iodriver_handle __demo_driver_handle = NULL;
 
 /*============================ IMPLEMENTATION ================================*/
 
@@ -73,53 +57,48 @@ static void __netif_demo_ip_handler(void *arg, esp_event_base_t base,
         uint32_t ip = ev->ip_info.ip.addr;
         uint32_t nm = ev->ip_info.netmask.addr;
         uint32_t gw = ev->ip_info.gw.addr;
-        vsf_trace_info("netif-demo: GOT_IP %u.%u.%u.%u / %u.%u.%u.%u"
-                       " gw %u.%u.%u.%u"VSF_TRACE_CFG_LINEEND,
-                       (unsigned)((ip >>  0) & 0xff),
-                       (unsigned)((ip >>  8) & 0xff),
-                       (unsigned)((ip >> 16) & 0xff),
-                       (unsigned)((ip >> 24) & 0xff),
-                       (unsigned)((nm >>  0) & 0xff),
-                       (unsigned)((nm >>  8) & 0xff),
-                       (unsigned)((nm >> 16) & 0xff),
-                       (unsigned)((nm >> 24) & 0xff),
-                       (unsigned)((gw >>  0) & 0xff),
-                       (unsigned)((gw >>  8) & 0xff),
-                       (unsigned)((gw >> 16) & 0xff),
-                       (unsigned)((gw >> 24) & 0xff));
+        ESP_LOGI(TAG, "GOT_IP %u.%u.%u.%u / %u.%u.%u.%u gw %u.%u.%u.%u",
+                 (unsigned)((ip >>  0) & 0xff),
+                 (unsigned)((ip >>  8) & 0xff),
+                 (unsigned)((ip >> 16) & 0xff),
+                 (unsigned)((ip >> 24) & 0xff),
+                 (unsigned)((nm >>  0) & 0xff),
+                 (unsigned)((nm >>  8) & 0xff),
+                 (unsigned)((nm >> 16) & 0xff),
+                 (unsigned)((nm >> 24) & 0xff),
+                 (unsigned)((gw >>  0) & 0xff),
+                 (unsigned)((gw >>  8) & 0xff),
+                 (unsigned)((gw >> 16) & 0xff),
+                 (unsigned)((gw >> 24) & 0xff));
     } else if (event_id == IP_EVENT_ETH_LOST_IP
             || event_id == IP_EVENT_STA_LOST_IP) {
-        vsf_trace_info("netif-demo: LOST_IP"VSF_TRACE_CFG_LINEEND);
+        ESP_LOGI(TAG, "LOST_IP");
     }
+}
+
+void vsf_netif_demo_set_handle(esp_netif_iodriver_handle handle)
+{
+    __demo_driver_handle = handle;
 }
 
 void vsf_netif_demo_start(void)
 {
-    vsf_trace_info("netif-demo: start() entered"VSF_TRACE_CFG_LINEEND);
-    if (__demo_netif != NULL) {
-        return;                         /* idempotent */
+    ESP_LOGI(TAG, "start() entered");
+    if ((NULL == __demo_driver_handle) || (__demo_netif != NULL)) {
+        return;
     }
 
-    /* The default event loop is created by vsf_espidf_init(); this call
-     * short-circuits to ESP_ERR_INVALID_STATE on second invocation and is
-     * therefore safe to drop in defensively. */
-    vsf_trace_info("netif-demo: before event_loop_create_default"VSF_TRACE_CFG_LINEEND);
+    // The default event loop is created by vsf_espidf_init(); a second
+    // call short-circuits to ESP_ERR_INVALID_STATE and is therefore safe
+    // to drop in defensively.
     (void)esp_event_loop_create_default();
-    vsf_trace_info("netif-demo: after event_loop_create_default"VSF_TRACE_CFG_LINEEND);
 
     esp_err_t er = esp_event_handler_register(IP_EVENT, ESP_EVENT_ANY_ID,
                                               __netif_demo_ip_handler, NULL);
     if (er != ESP_OK) {
-        vsf_trace_error("netif-demo: handler_register failed: %d"
-                        VSF_TRACE_CFG_LINEEND, (int)er);
+        ESP_LOGE(TAG, "handler_register failed: %d", (int)er);
         return;
     }
-
-    /* Bind the wpcap netlink op; NULL name lets the driver's own
-     * pcap_findalldevs_ex loop pick the first live interface. */
-    __wpcap_netdrv.name = NULL;
-    vk_netdrv_set_netlink_op((vk_netdrv_t *)&__wpcap_netdrv,
-                             &vk_netdrv_wpcap_netlink_op, NULL);
 
     esp_netif_inherent_config_t eth_base = ESP_NETIF_INHERENT_DEFAULT_ETH();
     esp_netif_config_t cfg = {
@@ -129,15 +108,13 @@ void vsf_netif_demo_start(void)
     };
     __demo_netif = esp_netif_new(&cfg);
     if (__demo_netif == NULL) {
-        vsf_trace_error("netif-demo: esp_netif_new failed"
-                        VSF_TRACE_CFG_LINEEND);
+        ESP_LOGE(TAG, "esp_netif_new failed");
         return;
     }
 
-    er = esp_netif_attach_netdrv(__demo_netif, (struct vk_netdrv *)&__wpcap_netdrv);
+    er = esp_netif_attach(__demo_netif, __demo_driver_handle);
     if (er != ESP_OK) {
-        vsf_trace_error("netif-demo: attach_netdrv failed: %d"
-                        VSF_TRACE_CFG_LINEEND, (int)er);
+        ESP_LOGE(TAG, "esp_netif_attach failed with %d", er);
         esp_netif_destroy(__demo_netif);
         __demo_netif = NULL;
         return;
@@ -145,16 +122,14 @@ void vsf_netif_demo_start(void)
 
     er = esp_netif_action_start(__demo_netif, NULL, 0, NULL);
     if (er != ESP_OK) {
-        vsf_trace_error("netif-demo: action_start failed: %d"
-                        VSF_TRACE_CFG_LINEEND, (int)er);
+        ESP_LOGE(TAG, "esp_netif_action_start failed with %d", er);
         esp_netif_destroy(__demo_netif);
         __demo_netif = NULL;
         return;
     }
 
-    vsf_trace_info("netif-demo: started, waiting for DHCP..."
-                   VSF_TRACE_CFG_LINEEND);
+    ESP_LOGI(TAG, "handler registered, awaiting IP events");
 }
 
-#endif      /* VSF_USE_ESPIDF && VSF_ESPIDF_CFG_USE_NETIF && VSF_NETDRV_USE_WPCAP */
+#endif      /* VSF_USE_ESPIDF && VSF_ESPIDF_CFG_USE_NETIF */
 /* EOF */

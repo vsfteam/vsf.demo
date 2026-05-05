@@ -16,19 +16,19 @@
  ****************************************************************************/
 
 /*
- * espidf test-suite application for the vc.espidf host build.
+ * ESP-IDF shim-layer test suite.
  *
- * This translation unit is one concrete implementation of the app
- * interface declared in ../vsf_app.h. It owns:
- *   - __part_root_setup(): a file_mal-backed synthetic flash hosted in
- *     ./root/nvs_flash.bin on the Windows host, used by esp_partition /
- *     esp_flash / nvs / vfs_littlefs / vfs_fat tests.
- *   - __test_*(): per-module coverage for the ESP-IDF shim layer.
- *   - __espidf_test_entry(): the pthread that drives the test runner
- *     and (optionally) kicks off the esp_http_client smoke demo.
- *   - vsf_app_setup_espidf_cfg() / vsf_app_main(): hooks consumed by
- *     vsf_main.c so swapping applications requires only a different
- *     implementation of this same pair of entry points.
+ * This translation unit is pure ESP-IDF-only code: it exercises the
+ * public ESP-IDF APIs (esp_err / esp_log / esp_system / esp_timer /
+ * esp_ringbuf / esp_heap_caps / esp_event / esp_partition / esp_nvs /
+ * esp_flash / esp_vfs_littlefs / esp_vfs_fat) and the FreeRTOS shim.
+ *
+ * It assumes the runtime environment -- linux shim bring-up, root
+ * filesystem mount, synthetic flash / partition table, network and
+ * DHCP -- has already been prepared by the environment provider
+ * (vsf_main.c). The only public entry point exported here is
+ * app_main(), which is invoked from a pthread spawned by the
+ * environment provider.
  *
  * Dependency:
  *   Submodule:
@@ -36,19 +36,12 @@
  *       source/component/3rd-party/btstack/raw if VSF_USE_BTSTACK is enabled
  *       source/component/3rd-party/mbedtls/raw if VSF_USE_MBEDTLS is enabled
  *       source/component/3rd-party/PLOOC/raw
- *     optional:
- *      for root directory in embedded hardware, littlefs is used
- *       source/component/3rd-party/littlefs/raw
  */
 
 /*============================ INCLUDES ======================================*/
 
 #include <unistd.h>
 #include <fcntl.h>
-#include <pthread.h>
-
-#include "shell/sys/espidf/vsf_espidf.h"
-#include "shell/sys/freertos/vsf_freertos.h"
 
 #include "esp_err.h"
 #include "esp_log.h"
@@ -61,10 +54,6 @@
 #include "esp_vfs.h"
 #include "esp_vfs_fat.h"
 #include "esp_littlefs.h"
-
-#include "component/mal/vsf_mal.h"
-#include "component/mal/driver/file_mal/vsf_file_mal.h"
-#include "component/fs/driver/winfs/vsf_winfs.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -86,10 +75,10 @@
         __test_total++;                                                     \
         if (__cond) {                                                       \
             __test_pass++;                                                  \
-            vsf_trace_info("  [PASS] " #__cond VSF_TRACE_CFG_LINEEND);     \
+            printf("  [PASS] " #__cond "\n");     \
         } else {                                                            \
-            vsf_trace_error("  [FAIL] " #__cond " @%s:%d"                 \
-                            VSF_TRACE_CFG_LINEEND, __FILE__, __LINE__);     \
+            printf("  [FAIL] " #__cond " @%s:%d"                 \
+                            "\n", __FILE__, __LINE__);     \
         }                                                                   \
     } while (0)
 
@@ -102,18 +91,16 @@
 static int __test_total;
 static int __test_pass;
 
-// The tests run inside a vsf_thread so that VSF_USER_ENTRY can return and
-// the main idle loop (which services prio_0 evtq on x86/win boards where
-// VSF_OS_CFG_ADD_EVTQ_TO_IDLE is ENABLED) keeps dispatching kernel events
-// including expired callback_timers. vsf_thread_delay_ms yields cleanly to
-// the scheduler so on_timer hooks actually fire.
-#define __wait_ms(__ms)                 vsf_thread_delay_ms(__ms)
+// Test body runs on a FreeRTOS (shim) task spawned from app_main, so a
+// vTaskDelay yields cleanly to the scheduler and lets expired timers /
+// pending events fire between TEST_EXPECT steps.
+#define __wait_ms(__ms)                 vTaskDelay(pdMS_TO_TICKS(__ms))
 
 /*============================ IMPLEMENTATION ================================*/
 
 static void __test_esp_err(void)
 {
-    vsf_trace_info("[esp_err] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_err] begin" "\n");
 
     // esp_err_to_name() on known codes
     TEST_EXPECT(strcmp(esp_err_to_name(ESP_OK),              "ESP_OK")              == 0);
@@ -153,10 +140,10 @@ static void __test_esp_err(void)
     // without aborting (so tests after it still run).
     esp_err_t rc = ESP_ERROR_CHECK_WITHOUT_ABORT(ESP_ERR_TIMEOUT);
     TEST_EXPECT(rc == ESP_ERR_TIMEOUT);
-    // Note: ESP_ERROR_CHECK(x) is intentionally NOT exercised here, because
-    // it traps via VSF_ASSERT on failure and would terminate the test run.
+    // Note: ESP_ERROR_CHECK(x) is intentionally NOT exercised here,
+    // because on failure its internal trap terminates the whole run.
 
-    vsf_trace_info("[esp_err] end" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_err] end" "\n");
 }
 
 // --- esp_log -------------------------------------------------------------
@@ -174,7 +161,7 @@ static int __log_hook_vprintf(const char *fmt, va_list ap)
 
 static void __test_esp_log(void)
 {
-    vsf_trace_info("[esp_log] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_log] begin" "\n");
 
     // Default level is INFO; register a tag and flip levels around.
     esp_log_level_set("TAG", ESP_LOG_WARN);
@@ -215,35 +202,33 @@ static void __test_esp_log(void)
     uint32_t t1 = esp_log_timestamp();
     TEST_EXPECT(t1 >= t0);
 
-    // One round of real output via the vsf_trace backend, visual only.
+    // One round of real output via the esp_log backend, visual only.
     ESP_LOGI("demo", "esp_log integration line, t=%lu ms",
              (unsigned long)esp_log_timestamp());
 
-    vsf_trace_info("[esp_log] end" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_log] end" "\n");
 }
 
 // --- esp_system ----------------------------------------------------------
 
 static void __test_esp_system(void)
 {
-    vsf_trace_info("[esp_system] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_system] begin" "\n");
 
     // Reset reason before any esp_restart() call.
     TEST_EXPECT(esp_reset_reason() == ESP_RST_POWERON);
 
-    // IDF version string is composed from VSF_ESPIDF_CFG_VERSION_*.
+    // IDF version string is provided by the environment.
     const char *ver = esp_get_idf_version();
     TEST_EXPECT(ver != NULL);
     TEST_EXPECT(ver[0] == 'v');
-    TEST_EXPECT(strstr(ver, "-vsf") != NULL);
+    TEST_EXPECT(strlen(ver) > 1);
 
-    // chip_info reports VSF host, single core, no wireless features.
+    // chip_info must populate a well-formed record.
     esp_chip_info_t info;
     memset(&info, 0xAA, sizeof(info));
     esp_chip_info(&info);
-    TEST_EXPECT(info.model == CHIP_VSF_HOST);
-    TEST_EXPECT(info.cores == 1);
-    TEST_EXPECT(info.features == 0);
+    TEST_EXPECT(info.cores >= 1);
 
     // PRNG: two successive draws should differ (xorshift32 cannot return 0
     // and cannot stagnate on a non-zero seed).
@@ -268,7 +253,7 @@ static void __test_esp_system(void)
     uint32_t free_min = esp_get_minimum_free_heap_size();
     TEST_EXPECT(free_min <= free_now);
 
-    vsf_trace_info("[esp_system] end" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_system] end" "\n");
 }
 
 // --- esp_timer -----------------------------------------------------------
@@ -290,7 +275,7 @@ static void __timer_periodic_cb(void *arg)
 
 static void __test_esp_timer(void)
 {
-    vsf_trace_info("[esp_timer] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_timer] begin" "\n");
 
     // init is idempotent.
     TEST_EXPECT(esp_timer_init() == ESP_OK);
@@ -339,16 +324,16 @@ static void __test_esp_timer(void)
     TEST_EXPECT(esp_timer_stop(h2) == ESP_ERR_INVALID_STATE);
     TEST_EXPECT(esp_timer_delete(h2) == ESP_OK);
 
-    vsf_trace_info("[esp_timer] periodic hits=%d" VSF_TRACE_CFG_LINEEND,
+    printf("[esp_timer] periodic hits=%d" "\n",
                    __timer_periodic_hits);
-    vsf_trace_info("[esp_timer] end" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_timer] end" "\n");
 }
 
 // --- esp_ringbuf ---------------------------------------------------------
 
 static void __test_esp_ringbuf(void)
 {
-    vsf_trace_info("[esp_ringbuf] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_ringbuf] begin" "\n");
 
     RingbufHandle_t rb = xRingbufferCreate(16, RINGBUF_TYPE_BYTEBUF);
     TEST_EXPECT(rb != NULL);
@@ -404,7 +389,7 @@ static void __test_esp_ringbuf(void)
     TEST_EXPECT(p == NULL);
 
     vRingbufferDelete(rb);
-    vsf_trace_info("[esp_ringbuf] end" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_ringbuf] end" "\n");
 }
 
 // --- FreeRTOS shim -------------------------------------------------------
@@ -422,7 +407,7 @@ static void __frt_worker(void *arg)
 
 static void __test_esp_heap_caps(void)
 {
-    vsf_trace_info("[heap_caps] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[heap_caps] begin" "\n");
 
     // Basic malloc/free round trip on DEFAULT caps.
     void *p = heap_caps_malloc(128, MALLOC_CAP_DEFAULT);
@@ -510,12 +495,12 @@ static void __test_esp_heap_caps(void)
     TEST_EXPECT(heap_caps_check_integrity_all(false) == true);
     TEST_EXPECT(heap_caps_check_integrity(MALLOC_CAP_INVALID, false) == false);
 
-    vsf_trace_info("[heap_caps] end" VSF_TRACE_CFG_LINEEND);
+    printf("[heap_caps] end" "\n");
 }
 
 static void __test_freertos(void)
 {
-    vsf_trace_info("[freertos] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos] begin" "\n");
 
     // pdMS_TO_TICKS is identity in this shim (1 tick == 1 ms).
     TEST_EXPECT(pdMS_TO_TICKS(0)   == 0);
@@ -531,7 +516,7 @@ static void __test_freertos(void)
     // taskYIELD compiles and returns cleanly.
     taskYIELD();
 
-    // Calling task handle is non-NULL inside a vsf_thread.
+    // Calling task handle must be non-NULL inside a FreeRTOS task.
     TaskHandle_t self = xTaskGetCurrentTaskHandle();
     TEST_EXPECT(self != NULL);
 
@@ -548,12 +533,12 @@ static void __test_freertos(void)
     // Invalid args return pdFAIL.
     TEST_EXPECT(xTaskCreate(NULL, "bad", 4096, NULL, 0, NULL) == pdFAIL);
 
-    vsf_trace_info("[freertos] end" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos] end" "\n");
 }
 
 static void __test_freertos_queue(void)
 {
-    vsf_trace_info("[freertos_queue] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_queue] begin" "\n");
 
     // Invalid args on create.
     TEST_EXPECT(xQueueCreate(0, sizeof(uint32_t)) == NULL);
@@ -622,12 +607,11 @@ static void __test_freertos_queue(void)
 
     // ISR API smoke test: only parameter-validation paths are exercised
     // here because xQueueSendFromISR / xQueueReceiveFromISR are required
-    // by the FreeRTOS contract to be called from a real ISR context. The
-    // underlying vsf_eda_queue_send_isr / recv_isr posts an event to the
-    // VSF kernel task to complete the producer->task hand-off, so calling
-    // them on a task is a semantic misuse (not a supported scenario).
-    // Actual data-path coverage for the ISR variants belongs in a test
-    // that fires a real interrupt source.
+    // by the FreeRTOS contract to be called from a real ISR context. On
+    // this host build those entries defer the transfer to a task-side
+    // handler, so calling them on a task is a semantic misuse (not a
+    // supported scenario). Actual data-path coverage for the ISR
+    // variants belongs in a test that fires a real interrupt source.
     BaseType_t woken = pdFALSE;
     TEST_EXPECT(xQueueSendFromISR(NULL, &p_in, &woken) == pdFAIL);
     TEST_EXPECT(woken == pdFALSE);
@@ -646,7 +630,7 @@ static void __test_freertos_queue(void)
     vQueueDelete(q2);
     vQueueDelete(q);
 
-    vsf_trace_info("[freertos_queue] end" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_queue] end" "\n");
 }
 
 // --- FreeRTOS shim: semaphores / mutex ---------------------------------
@@ -665,7 +649,7 @@ static void __frt_sem_producer(void *arg)
 
 static void __test_freertos_semphr(void)
 {
-    vsf_trace_info("[freertos_semphr] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_semphr] begin" "\n");
 
     // Binary sem starts empty: non-blocking take times out.
     SemaphoreHandle_t b = xSemaphoreCreateBinary();
@@ -722,7 +706,7 @@ static void __test_freertos_semphr(void)
     TEST_EXPECT(xSemaphoreGive(NULL) == pdFAIL);
     vSemaphoreDelete(NULL);
 
-    vsf_trace_info("[freertos_semphr] end" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_semphr] end" "\n");
 }
 
 // --- FreeRTOS shim: event groups ---------------------------------------
@@ -737,7 +721,7 @@ static void __frt_eg_setter(void *arg)
 
 static void __test_freertos_event_groups(void)
 {
-    vsf_trace_info("[freertos_event_groups] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_event_groups] begin" "\n");
 
     EventGroupHandle_t eg = xEventGroupCreate();
     TEST_EXPECT(eg != NULL);
@@ -780,7 +764,7 @@ static void __test_freertos_event_groups(void)
     TEST_EXPECT(xEventGroupGetBits(NULL) == 0);
     vEventGroupDelete(NULL);
 
-    vsf_trace_info("[freertos_event_groups] end" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_event_groups] end" "\n");
 }
 
 // --- FreeRTOS shim: task notifications ---------------------------------
@@ -813,7 +797,7 @@ static void __frt_notify_wait_worker(void *arg)
 
 static void __test_freertos_notify(void)
 {
-    vsf_trace_info("[freertos_notify] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_notify] begin" "\n");
 
     // --- xTaskNotifyGive / ulTaskNotifyTake ---
     __frt_notify_target         = NULL;
@@ -881,7 +865,7 @@ static void __test_freertos_notify(void)
     TEST_EXPECT(xTaskNotify(NULL, 0, eSetBits) == pdFAIL);
     TEST_EXPECT(xTaskNotifyGive(NULL) == pdFAIL);
 
-    vsf_trace_info("[freertos_notify] end" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_notify] end" "\n");
 }
 
 // --- FreeRTOS timers ---------------------------------------------------
@@ -920,7 +904,7 @@ static void __frt_tmr_period_cb(TimerHandle_t xTimer)
 
 static void __test_freertos_timers(void)
 {
-    vsf_trace_info("[freertos_timers] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_timers] begin" "\n");
 
     // --- One-shot timer: fires exactly once ---
     __frt_tmr_one_shot_hits = 0;
@@ -1010,7 +994,7 @@ static void __test_freertos_timers(void)
     TEST_EXPECT(pvTimerGetTimerID(NULL) == NULL);
     TEST_EXPECT(xTimerGetPeriod(NULL)   == 0);
 
-    vsf_trace_info("[freertos_timers] end" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_timers] end" "\n");
 }
 
 // --- FreeRTOS stream_buffer + message_buffer -------------------------
@@ -1043,7 +1027,7 @@ static void __frt_mb_producer(void *arg)
 
 static void __test_freertos_stream_buffer(void)
 {
-    vsf_trace_info("[freertos_stream_buffer] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_stream_buffer] begin" "\n");
 
     // --- Basic single-task non-blocking send/receive ---
     StreamBufferHandle_t sb = xStreamBufferCreate(32, 1);
@@ -1112,12 +1096,12 @@ static void __test_freertos_stream_buffer(void)
     TEST_EXPECT(xStreamBufferReceive(NULL, rx, 1, 0) == 0);
     TEST_EXPECT(xStreamBufferIsEmpty(NULL) == pdTRUE);
 
-    vsf_trace_info("[freertos_stream_buffer] end" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_stream_buffer] end" "\n");
 }
 
 static void __test_freertos_message_buffer(void)
 {
-    vsf_trace_info("[freertos_message_buffer] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_message_buffer] begin" "\n");
 
     // --- Message framing ---
     MessageBufferHandle_t mb = xMessageBufferCreate(64);
@@ -1175,14 +1159,14 @@ static void __test_freertos_message_buffer(void)
     TEST_EXPECT(xMessageBufferCreate(4) == NULL);
     TEST_EXPECT(xMessageBufferSend(NULL, "x", 1, 0) == 0);
 
-    vsf_trace_info("[freertos_message_buffer] end" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_message_buffer] end" "\n");
 }
 
 // --- critical section / scheduler control -----------------------------
 
 static void __test_freertos_critical(void)
 {
-    vsf_trace_info("[freertos_critical] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_critical] begin" "\n");
 
     // --- taskENTER_CRITICAL / taskEXIT_CRITICAL, balanced ---
     // The shared counter increment is trivially atomic on a single-
@@ -1271,15 +1255,20 @@ static void __test_freertos_critical(void)
     // Unbalanced Resume on a clean counter is tolerated (returns pdFALSE).
     TEST_EXPECT(xTaskResumeAll() == pdFALSE);
 
-    vsf_trace_info("[freertos_critical] end" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_critical] end" "\n");
 }
 
 // --- static (zero-heap) variants --------------------------------------
 
 // Stack buffer for xTaskCreateStatic. Must be aligned to the arch page
-// size (4096 on win/linux) and sized >= page + guardian. StackType_t is
-// uint8_t in this shim, so the array length is also the byte count.
-VSF_CAL_ALIGN(4096) static StackType_t __frt_static_task_stack[8192];
+// size (4096 on win/linux) and sized >= page + guardian. The byte count
+// equals the array length in this build.
+#if defined(_MSC_VER)
+#   define __TEST_STACK_ALIGN(__n)  __declspec(align(__n))
+#else
+#   define __TEST_STACK_ALIGN(__n)  __attribute__((aligned(__n)))
+#endif
+__TEST_STACK_ALIGN(4096) static StackType_t __frt_static_task_stack[8192];
 static StaticTask_t                     __frt_static_task_tcb;
 static volatile int                     __frt_static_worker_hits;
 
@@ -1290,7 +1279,7 @@ static void __frt_static_worker(void *arg)
         __frt_static_worker_hits++;
         vTaskDelay(pdMS_TO_TICKS(2));
     }
-    // Fall through to __freertos_task_wrapper -> vsf_thread_exit.
+    // Fall through to the task wrapper, which terminates the task cleanly.
 }
 
 static volatile int __frt_static_timer_hits;
@@ -1302,7 +1291,7 @@ static void __frt_static_timer_cb(TimerHandle_t t)
 
 static void __test_freertos_static(void)
 {
-    vsf_trace_info("[freertos_static] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_static] begin" "\n");
 
     // --- Static binary semaphore ---
     StaticSemaphore_t      sem_storage;
@@ -1448,7 +1437,7 @@ static void __test_freertos_static(void)
                                   __frt_static_task_stack,
                                   &__frt_static_task_tcb) == NULL);
 
-    vsf_trace_info("[freertos_static] end" VSF_TRACE_CFG_LINEEND);
+    printf("[freertos_static] end" "\n");
 }
 
 // --- esp_event ---------------------------------------------------------
@@ -1497,10 +1486,10 @@ static void __evt_handler_instance(void *arg, esp_event_base_t base,
 
 static void __test_esp_event(void)
 {
-    vsf_trace_info("[esp_event] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_event] begin" "\n");
 
-    // Default loop was already created by vsf_espidf_init(); a second
-    // create must report INVALID_STATE.
+    // Default loop was already created by the environment during
+    // startup; a second create must report INVALID_STATE.
     TEST_EXPECT(esp_event_loop_create_default() == ESP_ERR_INVALID_STATE);
 
     // Register wildcard-id handler for TEST_EVENTS.
@@ -1578,14 +1567,14 @@ static void __test_esp_event(void)
     TEST_EXPECT(esp_event_handler_unregister(TEST_EVENTS, ESP_EVENT_ANY_ID,
                                              __evt_handler_any) == ESP_OK);
 
-    vsf_trace_info("[esp_event] end" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_event] end" "\n");
 }
 
 // --- esp_partition ----------------------------------------------------
 
 static void __test_esp_partition(void)
 {
-    vsf_trace_info("[esp_partition] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_partition] begin" "\n");
 
     // --- Discovery ----------------------------------------------------
     // find_first with exact label must return the matching entry.
@@ -1670,10 +1659,10 @@ static void __test_esp_partition(void)
         TEST_EXPECT(esp_partition_write(storage, storage->size,
                                         tx, 4) == ESP_ERR_INVALID_SIZE);
 
-        // erase_range on a file_mal-backed root now works end-to-end:
-        // the mim_mal slice inherits ERASABLE from the root and routes
-        // through __vk_file_mal_erase, which streams 0xFF across the
-        // range. Verify both the return code and the resulting bytes.
+        // erase_range must clear the range and the subsequent read
+        // must return all-0xFF across the erased window. Whether the
+        // underlying storage physically erases or emulates a fill is an
+        // environment-provider detail the test does not care about.
         TEST_EXPECT(esp_partition_erase_range(storage, 0, storage->size)
                     == ESP_OK);
         uint8_t eb[16];
@@ -1694,28 +1683,19 @@ static void __test_esp_partition(void)
     }
 
     // --- mmap -------------------------------------------------------
-    // Capability-aware: mmap succeeds only when the root mal exposes
-    // VSF_MAL_LOCAL_BUFFER (meaning the backing store is directly
-    // addressable). file_mal does not have this -- the backing store
-    // lives in a Windows file, so mmap returns ESP_ERR_NOT_SUPPORTED.
+    // Whether mmap is supported depends on how the environment backs
+    // the partition. On this host build the backing storage does not
+    // expose a memory-mapped view, so the shim must surface
+    // ESP_ERR_NOT_SUPPORTED rather than fabricate a buffer.
     if (storage != NULL) {
         const void *mm = NULL;
         esp_partition_mmap_handle_t hnd = 0;
         esp_err_t rc = esp_partition_mmap(storage, 128, 64,
                                           ESP_PARTITION_MMAP_DATA,
                                           &mm, &hnd);
-        bool root_has_local_buf =
-            (__part_root_mal.feature & VSF_MAL_LOCAL_BUFFER) != 0;
-        if (root_has_local_buf) {
-            TEST_EXPECT(rc == ESP_OK);
-            if (rc == ESP_OK) {
-                TEST_EXPECT(mm != NULL);
-                esp_partition_munmap(hnd);
-            }
-        } else {
-            // file_mal path: mmap is not feasible.
-            TEST_EXPECT(rc == ESP_ERR_NOT_SUPPORTED);
-        }
+        TEST_EXPECT(rc == ESP_ERR_NOT_SUPPORTED);
+        (void)mm;
+        (void)hnd;
     }
 
     // --- Dynamic registration --------------------------------------
@@ -1775,7 +1755,7 @@ static void __test_esp_partition(void)
                                                 NULL)
                 == ESP_ERR_INVALID_ARG);
 
-    vsf_trace_info("[esp_partition] end" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_partition] end" "\n");
 }
 
 // --- esp_nvs ---------------------------------------------------------------
@@ -1785,7 +1765,7 @@ static void __test_esp_partition(void)
 
 static void __test_esp_nvs(void)
 {
-    vsf_trace_info("[esp_nvs] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_nvs] begin" "\n");
 
     // 1. Init the default "nvs" partition (already in the static table).
     TEST_EXPECT(nvs_flash_init() == ESP_OK);
@@ -1856,7 +1836,7 @@ static void __test_esp_nvs(void)
     // 9. Close handle.
     nvs_close(h);
 
-    // 10. Persistence round-trip: deinit → re-init → re-read.
+    // 10. Persistence round-trip: deinit �?re-init �?re-read.
     TEST_EXPECT(nvs_flash_deinit() == ESP_OK);
     TEST_EXPECT(nvs_flash_init()   == ESP_OK);
     nvs_handle_t h2 = 0;
@@ -1917,7 +1897,7 @@ static void __test_esp_nvs(void)
     // 14. Stats.
     nvs_stats_t stats;
     TEST_EXPECT(nvs_get_stats(NVS_DEFAULT_PART_NAME, &stats) == ESP_OK);
-    // ns_a and ns_b each have 1 entry → 2 used, 2 namespaces.
+    // ns_a and ns_b each have 1 entry �?2 used, 2 namespaces.
     TEST_EXPECT(stats.used_entries == 2);
     TEST_EXPECT(stats.namespace_count == 2);
 
@@ -1946,7 +1926,7 @@ static void __test_esp_nvs(void)
     // Double deinit is an error.
     TEST_EXPECT(nvs_flash_deinit() == ESP_ERR_NVS_NOT_INITIALIZED);
 
-    vsf_trace_info("[esp_nvs] end" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_nvs] end" "\n");
 }
 
 // --- esp_flash -------------------------------------------------------------
@@ -1955,22 +1935,25 @@ static void __test_esp_nvs(void)
 
 static void __test_esp_flash(void)
 {
-    vsf_trace_info("[esp_flash] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_flash] begin" "\n");
 
-    // --- Default chip must be wired up by vsf_espidf_init() -----------
-    // vsf_espidf_esp_flash_init() runs inside vsf_espidf_init() and binds
-    // esp_flash_default_chip to the same root_mal the partition sub-system
-    // uses. If this fires NULL something upstream is wrong.
+    // --- Default chip must be wired up by the environment ------------
+    // The environment provider is expected to install
+    // esp_flash_default_chip before app_main runs. A NULL here means
+    // the environment did not complete flash bring-up.
     TEST_EXPECT(esp_flash_default_chip != NULL);
     if (esp_flash_default_chip == NULL) {
-        vsf_trace_info("[esp_flash] end" VSF_TRACE_CFG_LINEEND);
+        printf("[esp_flash] end" "\n");
         return;
     }
 
     // --- Size reporting ----------------------------------------------
+    // The exact chip size is decided by the environment provider
+    // (vsf_main.c). Here we only assert runtime consistency: the
+    // reported size is non-zero and physical size matches it.
     uint32_t chip_size = 0;
     TEST_EXPECT(esp_flash_get_size(NULL, &chip_size) == ESP_OK);
-    TEST_EXPECT(chip_size == __PART_ROOT_SIZE);
+    TEST_EXPECT(chip_size > 0);
     uint32_t phys_size = 0;
     TEST_EXPECT(esp_flash_get_physical_size(NULL, &phys_size) == ESP_OK);
     TEST_EXPECT(phys_size == chip_size);
@@ -2038,10 +2021,9 @@ static void __test_esp_flash(void)
     TEST_EXPECT(esp_flash_write(NULL, NULL, test_off, 4)
                 == ESP_ERR_INVALID_ARG);
 
-    // --- Erase: vk_file_mal now implements erase as a 0xFF fill, so
-    // the shim lets the call through and the underlying file storage
-    // actually gets cleared. Verify the region turned into 0xFF and
-    // then restore the saved bytes so later tests stay stable.
+    // --- Erase: erase_region must clear the range to 0xFF. The test
+    // verifies the erased bytes and then restores the saved contents
+    // so later sub-tests keep observing a stable image.
     TEST_EXPECT(esp_flash_erase_region(NULL, test_off, 0x100) == ESP_OK);
     {
         uint8_t ebuf[16];
@@ -2068,13 +2050,13 @@ static void __test_esp_flash(void)
                                              0, &attached) == ESP_OK);
     TEST_EXPECT(esp_flash_deinit_os_functions(esp_flash_default_chip) == ESP_OK);
 
-    vsf_trace_info("[esp_flash] end" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_flash] end" "\n");
 }
 
 // --- esp_vfs_littlefs / esp_vfs_fat ----------------------------------
 //
-// The lfs volume runs end-to-end on the dedicated "lfs" partition: the
-// file_mal backing store now implements an erase entry (0xFF fill) so
+// The lfs volume runs end-to-end on the dedicated "lfs" partition:
+// the environment provides an erasable backing store so
 // format-on-mount, open/read/write and persistence across an
 // unregister/re-register cycle all work through the POSIX VFS.
 //
@@ -2087,7 +2069,7 @@ static void __test_esp_flash(void)
 // image.
 static void __test_esp_vfs_littlefs(void)
 {
-    vsf_trace_info("[esp_vfs_littlefs] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_vfs_littlefs] begin" "\n");
 
     // --- Argument validation (no mount attempted) -----------------
     TEST_EXPECT(esp_vfs_littlefs_register(NULL) == ESP_ERR_INVALID_ARG);
@@ -2122,14 +2104,14 @@ static void __test_esp_vfs_littlefs(void)
     // --- Explicit format on a blank volume ------------------------
     // The lfs partition may carry data from a previous run; an
     // explicit format resets it so the rest of the test starts from a
-    // known state. The underlying vk_mal_erase drains the range to
-    // 0xFF first (file_mal erase emulation), then lfs_format lays
-    // down the superblocks.
+    // known state. esp_littlefs_format is expected to clear the
+    // partition and lay down fresh superblocks.
     TEST_EXPECT(esp_littlefs_format("lfs") == ESP_OK);
 
-    // The VSF linux shim's mount() requires the target directory to
-    // exist (open(target, 0) is the first step). Mirror the /root
-    // handling in __part_root_setup() and pre-create /lfs here.
+    // esp_vfs_littlefs_register mounts via the underlying VFS which,
+    // on POSIX-style hosts, requires the target directory to exist.
+    // Pre-create /lfs here to mirror what the environment does for
+    // /root, independent of how mount is implemented downstream.
     (void)mkdir("/lfs", 0);
 
     // --- Real register + mount -----------------------------------
@@ -2203,12 +2185,12 @@ static void __test_esp_vfs_littlefs(void)
     TEST_EXPECT(esp_vfs_littlefs_unregister("lfs") == ESP_OK);
     TEST_EXPECT(!esp_littlefs_mounted("lfs"));
 
-    vsf_trace_info("[esp_vfs_littlefs] end" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_vfs_littlefs] end" "\n");
 }
 
 static void __test_esp_vfs_fat(void)
 {
-    vsf_trace_info("[esp_vfs_fat] begin" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_vfs_fat] begin" "\n");
 
     esp_vfs_fat_mount_config_t mcfg = { 0 };
     wl_handle_t wl = WL_INVALID_HANDLE;
@@ -2247,13 +2229,12 @@ static void __test_esp_vfs_fat(void)
     TEST_EXPECT(esp_vfs_register("/vfs", NULL, NULL) == ESP_ERR_NOT_SUPPORTED);
     TEST_EXPECT(esp_vfs_unregister("/vfs")            == ESP_ERR_NOT_SUPPORTED);
 
-    vsf_trace_info("[esp_vfs_fat] end" VSF_TRACE_CFG_LINEEND);
+    printf("[esp_vfs_fat] end" "\n");
 }
 
 void app_main(void)
 {
-#if     VSF_USE_ESPIDF == ENABLED                                              \
-    &&  VSF_ESPIDF_CFG_USE_NETIF == ENABLED
+#if VSF_ESPIDF_CFG_USE_NETIF == ENABLED
     {
         extern void vsf_netif_demo_start(void);
         vsf_netif_demo_start();
@@ -2287,11 +2268,11 @@ void app_main(void)
     __test_esp_vfs_fat();
 
     if (__test_pass == __test_total) {
-        vsf_trace_info("espidf tests: %d/%d PASSED" VSF_TRACE_CFG_LINEEND,
+        printf("espidf tests: %d/%d PASSED" "\n",
                        __test_pass, __test_total);
     } else {
-        vsf_trace_error("espidf tests: %d/%d PASSED, %d FAILED"
-                        VSF_TRACE_CFG_LINEEND,
+        printf("espidf tests: %d/%d PASSED, %d FAILED"
+                        "\n",
                         __test_pass, __test_total,
                         __test_total - __test_pass);
     }
