@@ -184,6 +184,9 @@ int vsf_linux_create_fhs(void)
         .partition.root_mal         = &__root_mal.use_as__vk_mal_t,
         .partition.entries          = __root_entries,
         .partition.entry_count      = __root_entries_count,
+#if VSF_USE_USB_HOST == ENABLED
+        .usb_host.usbh              = &vsf_board.usbh_dev,
+#endif
     };
 
     vsf_freertos_init();

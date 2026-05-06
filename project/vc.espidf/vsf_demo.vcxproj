@@ -630,6 +630,7 @@
     <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_netif_demo.c" />
     <ClCompile Include="..\..\application\shell\sys\espidf\kernel\vsf_main.c" />
     <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_espidf_test.c" />
+    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_espidf_usb_test.c" />
     <ClCompile Include="..\..\board\win\vsf_board.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\btstack_oo.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\device\btstack_dev.c" />
@@ -1068,6 +1069,7 @@
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\driver_adc_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_netif_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_http_client_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\usb_host_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\vsf_espidf.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_heap_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_queue_port.c" />

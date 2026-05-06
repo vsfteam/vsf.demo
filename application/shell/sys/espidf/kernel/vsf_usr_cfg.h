@@ -162,6 +162,9 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   if VSF_USE_TCPIP == ENABLED && VSF_USE_MBEDTLS == ENABLED
 #       define VSF_ESPIDF_CFG_USE_HTTP_CLIENT            ENABLED
 #   endif
+#   if VSF_USE_USB_HOST == ENABLED
+#       define VSF_ESPIDF_CFG_USE_USB_HOST              ENABLED
+#   endif
 
 #define VSF_USE_LINUX                                   ENABLED
 #   ifndef VSF_LINUX_CFG_STACKSIZE
