@@ -4316,6 +4316,12 @@
     <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_netif_demo.c">
       <Filter>application\test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_espidf_usb_test.c">
+      <Filter>application\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\usb_host_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">

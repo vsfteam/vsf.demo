@@ -132,7 +132,7 @@ static void __client_event_cb(const usb_host_client_event_msg_t *event_msg,
     }
 }
 
-void app_main(void)
+void __test_esp_usb_host(void)
 {
     printf("\n========== [usb_host] ESP-IDF USB Host Library Test ==========\n\n");
 

@@ -85,6 +85,11 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ PROTOTYPES ====================================*/
+
+#if VSF_ESPIDF_CFG_USE_USB_HOST == ENABLED
+extern void __test_esp_usb_host(void);
+#endif
+
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 
@@ -2266,6 +2271,10 @@ void app_main(void)
     __test_esp_flash();
     __test_esp_vfs_littlefs();
     __test_esp_vfs_fat();
+
+#if VSF_ESPIDF_CFG_USE_USB_HOST == ENABLED
+    __test_esp_usb_host();
+#endif
 
     if (__test_pass == __test_total) {
         printf("espidf tests: %d/%d PASSED" "\n",
