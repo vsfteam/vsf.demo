@@ -2276,6 +2276,11 @@ void app_main(void)
     __test_esp_usb_host();
 #endif
 
+#if VSF_ESPIDF_CFG_USE_LCD == ENABLED
+    extern void vsf_espidf_lcd_test(void);
+    vsf_espidf_lcd_test();
+#endif
+
     if (__test_pass == __test_total) {
         printf("espidf tests: %d/%d PASSED" "\n",
                        __test_pass, __test_total);

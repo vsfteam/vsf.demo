@@ -997,6 +997,9 @@
     <Filter Include="application\test">
       <UniqueIdentifier>{ff2f5e1a-2f7d-4585-9e2f-6796ca37de86}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\shell\sys\espidf\include\usb">
+      <UniqueIdentifier>{ef35fae3-3999-4a75-8862-05b6b2d65fe8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2814,6 +2817,9 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\driver\spi_master.h">
       <Filter>vsf\shell\sys\espidf\include\driver</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\usb\usb_host.h">
+      <Filter>vsf\shell\sys\espidf\include\usb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -4319,7 +4325,13 @@
     <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_espidf_usb_test.c">
       <Filter>application\test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_espidf_lcd_test.c">
+      <Filter>application\test</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\usb_host_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_lcd_port.c">
       <Filter>vsf\shell\sys\espidf\port</Filter>
     </ClCompile>
   </ItemGroup>

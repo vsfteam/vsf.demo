@@ -431,6 +431,7 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\driver\uart.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\driver\i2c_types.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\driver\i2c_master.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\espidf\include\usb\usb_host.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\vsf_espidf.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\espidf\vsf_espidf_cfg.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\freertos\include\FreeRTOS.h" />
@@ -631,6 +632,7 @@
     <ClCompile Include="..\..\application\shell\sys\espidf\kernel\vsf_main.c" />
     <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_espidf_test.c" />
     <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_espidf_usb_test.c" />
+    <ClCompile Include="..\..\application\shell\sys\espidf\kernel\test\vsf_espidf_lcd_test.c" />
     <ClCompile Include="..\..\board\win\vsf_board.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\btstack_oo.c" />
     <ClCompile Include="..\..\vsf\source\component\3rd-party\btstack\extension\btstack_oo\device\btstack_dev.c" />
@@ -1050,6 +1052,7 @@
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_err_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_event_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_heap_caps_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_lcd_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_log_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_partition_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\nvs_flash_port.c" />
