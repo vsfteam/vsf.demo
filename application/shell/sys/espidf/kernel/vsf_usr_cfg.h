@@ -148,6 +148,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   define VSF_FREERTOS_CFG_USE_NOTIFY                  ENABLED
 #   define VSF_FREERTOS_CFG_USE_TIMERS                  ENABLED
 #   define VSF_FREERTOS_CFG_USE_STREAM_BUFFER           ENABLED
+#   define VSF_FREERTOS_CFG_USE_QUEUESET                ENABLED
 
 #define VSF_USE_ESPIDF                                  ENABLED
 #   define VSF_ESPIDF_CFG_USE_PARTITION                 ENABLED
@@ -166,6 +167,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #       define VSF_ESPIDF_CFG_USE_USB_HOST              ENABLED
 #   endif
 #   define VSF_ESPIDF_CFG_USE_LCD                       ENABLED
+#   define VSF_ESPIDF_CFG_RINGBUF_USE_FREERTOS_QUEUESET  ENABLED
 
 #define VSF_USE_LINUX                                   ENABLED
 #   ifndef VSF_LINUX_CFG_STACKSIZE

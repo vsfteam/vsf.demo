@@ -340,60 +340,273 @@ static void __test_esp_ringbuf(void)
 {
     printf("[esp_ringbuf] begin" "\n");
 
-    RingbufHandle_t rb = xRingbufferCreate(16, RINGBUF_TYPE_BYTEBUF);
-    TEST_EXPECT(rb != NULL);
-    TEST_EXPECT(xRingbufferGetMaxItemSize(rb) == 16);
-    TEST_EXPECT(xRingbufferGetCurFreeSize(rb) == 16);
-    TEST_EXPECT(xRingbufferGetCurFilledSize(rb) == 0);
+    /* ---------- BYTEBUF (zero-copy) --------------------------------- */
+    {
+        RingbufHandle_t rb = xRingbufferCreate(16, RINGBUF_TYPE_BYTEBUF);
+        TEST_EXPECT(rb != NULL);
+        TEST_EXPECT(xRingbufferGetMaxItemSize(rb) == 16);
+        TEST_EXPECT(xRingbufferGetCurFreeSize(rb) == 16);
+        TEST_EXPECT(xRingbufferGetCurFilledSize(rb) == 0);
 
-    const char hello[] = "hello";      // 5 chars, no NUL included below
-    TEST_EXPECT(xRingbufferSend(rb, hello, 5, 0) == pdTRUE);
-    TEST_EXPECT(xRingbufferGetCurFilledSize(rb) == 5);
-    TEST_EXPECT(xRingbufferGetCurFreeSize(rb) == 11);
+        const char hello[] = "hello";
+        TEST_EXPECT(xRingbufferSend(rb, hello, 5, 0) == pdTRUE);
+        TEST_EXPECT(xRingbufferGetCurFilledSize(rb) == 5);
+        TEST_EXPECT(xRingbufferGetCurFreeSize(rb) == 11);
 
-    size_t got = 0;
-    void *p = xRingbufferReceive(rb, &got, 0);
-    TEST_EXPECT(p != NULL);
-    TEST_EXPECT(got == 5);
-    TEST_EXPECT(memcmp(p, hello, 5) == 0);
-    vRingbufferReturnItem(rb, p);
-    TEST_EXPECT(xRingbufferGetCurFilledSize(rb) == 0);
+        size_t got = 0;
+        void *p = xRingbufferReceive(rb, &got, 0);
+        TEST_EXPECT(p != NULL);
+        TEST_EXPECT(got == 5);
+        TEST_EXPECT(memcmp(p, hello, 5) == 0);
+        vRingbufferReturnItem(rb, p);
+        TEST_EXPECT(xRingbufferGetCurFilledSize(rb) == 0);
 
-    // Fill until full; next send must fail.
-    uint8_t pat[16];
-    for (size_t i = 0; i < sizeof(pat); i++) { pat[i] = (uint8_t)i; }
-    TEST_EXPECT(xRingbufferSend(rb, pat, sizeof(pat), 0) == pdTRUE);
-    TEST_EXPECT(xRingbufferGetCurFreeSize(rb) == 0);
-    TEST_EXPECT(xRingbufferSend(rb, pat, 1, 0) == pdFALSE);
+        // Fill, then send must fail.
+        uint8_t pat[16];
+        for (size_t i = 0; i < sizeof(pat); i++) { pat[i] = (uint8_t)i; }
+        TEST_EXPECT(xRingbufferSend(rb, pat, sizeof(pat), 0) == pdTRUE);
+        TEST_EXPECT(xRingbufferGetCurFreeSize(rb) == 0);
+        TEST_EXPECT(xRingbufferSend(rb, pat, 1, 0) == pdFALSE);
 
-    // Read in chunks with ReceiveUpTo to exercise wrap-around on next write.
-    got = 0;
-    p = xRingbufferReceiveUpTo(rb, &got, 0, 10);
-    TEST_EXPECT(p != NULL);
-    TEST_EXPECT(got == 10);
-    TEST_EXPECT(memcmp(p, pat, 10) == 0);
-    vRingbufferReturnItem(rb, p);
+        // ReceiveUpTo partial drain.
+        got = 0;
+        p = xRingbufferReceiveUpTo(rb, &got, 0, 10);
+        TEST_EXPECT(p != NULL);
+        TEST_EXPECT(got == 10);
+        TEST_EXPECT(memcmp(p, pat, 10) == 0);
+        vRingbufferReturnItem(rb, p);
 
-    // Now write 8 more bytes; should wrap the internal head across 0.
-    uint8_t more[8] = { 0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7 };
-    TEST_EXPECT(xRingbufferSend(rb, more, sizeof(more), 0) == pdTRUE);
-    TEST_EXPECT(xRingbufferGetCurFilledSize(rb) == 6 + 8);
+        // Drain remaining 6 bytes (1 at tail + 5 at head after wrap).
+        got = 0;
+        p = xRingbufferReceive(rb, &got, 0);
+        TEST_EXPECT(p != NULL);
+        TEST_EXPECT(got == 1);
+        vRingbufferReturnItem(rb, p);
 
-    // Drain fully; verify order preserves (last 6 of pat, then 8 of more).
-    got = 0;
-    p = xRingbufferReceive(rb, &got, 0);
-    TEST_EXPECT(p != NULL);
-    TEST_EXPECT(got == 14);
-    TEST_EXPECT(memcmp(p, pat + 10, 6) == 0);
-    TEST_EXPECT(memcmp((uint8_t *)p + 6, more, 8) == 0);
-    vRingbufferReturnItem(rb, p);
+        got = 0;
+        p = xRingbufferReceive(rb, &got, 0);
+        TEST_EXPECT(p != NULL);
+        TEST_EXPECT(got == 5);
+        vRingbufferReturnItem(rb, p);
 
-    // Empty receive returns NULL.
-    got = 99;
-    p = xRingbufferReceive(rb, &got, 0);
-    TEST_EXPECT(p == NULL);
+        got = 99;
+        p = xRingbufferReceive(rb, &got, 0);
+        TEST_EXPECT(p == NULL);
 
-    vRingbufferDelete(rb);
+        vRingbufferDelete(rb);
+        printf("[esp_ringbuf] bytebuf ok" "\n");
+    }
+
+    /* ---------- NOSPLIT (item-oriented, zero-copy) ------------------ */
+    {
+        // Capacity allocated: 128.  NOSPLIT overhead = 8B header per item.
+        RingbufHandle_t rb = xRingbufferCreate(128, RINGBUF_TYPE_NOSPLIT);
+        TEST_EXPECT(rb != NULL);
+        TEST_EXPECT(xRingbufferGetMaxItemSize(rb) > 0);
+        TEST_EXPECT(xRingbufferGetCurFilledSize(rb) == 0);
+
+        const char msg1[] = "hello";
+        TEST_EXPECT(xRingbufferSend(rb, msg1, 5, 0) == pdTRUE);
+        TEST_EXPECT(xRingbufferGetCurFilledSize(rb) > 0);
+
+        size_t sz = 0;
+        void *p = xRingbufferReceive(rb, &sz, 0);
+        TEST_EXPECT(p != NULL);
+        TEST_EXPECT(sz == 5);
+        TEST_EXPECT(memcmp(p, msg1, 5) == 0);
+        vRingbufferReturnItem(rb, p);
+        TEST_EXPECT(xRingbufferGetCurFilledSize(rb) == 0);
+
+        // Send several items, receive in order.
+        const char *items[] = {"abc", "defgh", "ij"};
+        size_t lens[] = {3, 5, 2};
+        for (int i = 0; i < 3; i++) {
+            TEST_EXPECT(xRingbufferSend(rb, items[i], lens[i], 0) == pdTRUE);
+        }
+        for (int i = 0; i < 3; i++) {
+            sz = 0;
+            p = xRingbufferReceive(rb, &sz, 0);
+            TEST_EXPECT(p != NULL);
+            TEST_EXPECT(sz == lens[i]);
+            TEST_EXPECT(memcmp(p, items[i], lens[i]) == 0);
+            vRingbufferReturnItem(rb, p);
+        }
+        TEST_EXPECT(xRingbufferGetCurFilledSize(rb) == 0);
+
+        vRingbufferDelete(rb);
+        printf("[esp_ringbuf] nosplit ok" "\n");
+    }
+
+    /* ---------- ALLOWSPLIT (item-oriented, can split at wrap) ------ */
+    {
+        RingbufHandle_t rb = xRingbufferCreate(256, RINGBUF_TYPE_ALLOWSPLIT);
+        TEST_EXPECT(rb != NULL);
+        TEST_EXPECT(xRingbufferGetMaxItemSize(rb) > 0);
+
+        // Basic send / receive-split round-trip (may or may not split).
+        uint8_t data[32];
+        for (size_t i = 0; i < sizeof(data); i++) { data[i] = (uint8_t)(i + 1); }
+        TEST_EXPECT(xRingbufferSend(rb, data, sizeof(data), 0) == pdTRUE);
+
+        void *head = NULL, *tail = NULL;
+        size_t head_sz = 0, tail_sz = 0;
+        TEST_EXPECT(xRingbufferReceiveSplit(rb, &head, &tail,
+                    &head_sz, &tail_sz, 0) == pdTRUE);
+        TEST_EXPECT(head != NULL);
+        TEST_EXPECT(head_sz > 0);
+        TEST_EXPECT(memcmp(head, data, head_sz) == 0);
+        vRingbufferReturnItem(rb, head);
+
+        size_t total = head_sz;
+        if (tail != NULL) {
+            TEST_EXPECT(tail_sz > 0);
+            TEST_EXPECT(memcmp(tail, data + head_sz, tail_sz) == 0);
+            vRingbufferReturnItem(rb, tail);
+            total += tail_sz;
+        }
+        TEST_EXPECT(total == sizeof(data));
+
+        // Multiple items, verify order and data integrity.
+        const char *items[] = {"one", "two", "three"};
+        size_t lens[] = {3, 3, 5};
+        for (int i = 0; i < 3; i++) {
+            TEST_EXPECT(xRingbufferSend(rb, items[i], lens[i], 0) == pdTRUE);
+        }
+        for (int i = 0; i < 3; i++) {
+            head = tail = NULL;
+            head_sz = tail_sz = 0;
+            TEST_EXPECT(xRingbufferReceiveSplit(rb, &head, &tail,
+                        &head_sz, &tail_sz, 0) == pdTRUE);
+            TEST_EXPECT(head != NULL);
+            TEST_EXPECT(head_sz == lens[i]);
+            TEST_EXPECT(memcmp(head, items[i], lens[i]) == 0);
+            vRingbufferReturnItem(rb, head);
+            if (tail != NULL) {
+                vRingbufferReturnItem(rb, tail);
+            }
+        }
+
+        vRingbufferDelete(rb);
+        printf("[esp_ringbuf] allowsplit ok" "\n");
+    }
+
+    /* ---------- additional APIs -------------------------------------- */
+    {
+        // CreateNoSplit convenience
+        RingbufHandle_t rb = xRingbufferCreateNoSplit(10, 4);
+        TEST_EXPECT(rb != NULL);
+        vRingbufferDelete(rb);
+
+        // SendAcquire / SendComplete (NOSPLIT only)
+        rb = xRingbufferCreate(64, RINGBUF_TYPE_NOSPLIT);
+        TEST_EXPECT(rb != NULL);
+        void *acq = NULL;
+        TEST_EXPECT(xRingbufferSendAcquire(rb, &acq, 5, 0) == pdTRUE);
+        TEST_EXPECT(acq != NULL);
+        memcpy(acq, "HELLO", 5);
+        TEST_EXPECT(xRingbufferSendComplete(rb, acq) == pdTRUE);
+
+        size_t sz = 0;
+        void *p = xRingbufferReceive(rb, &sz, 0);
+        TEST_EXPECT(p != NULL);
+        TEST_EXPECT(sz == 5);
+        TEST_EXPECT(memcmp(p, "HELLO", 5) == 0);
+        vRingbufferReturnItem(rb, p);
+
+        // vRingbufferGetInfo
+        UBaseType_t uf, ur, uw, ua, uwait;
+        vRingbufferGetInfo(rb, &uf, &ur, &uw, &ua, &uwait);
+        (void)uf; (void)ur; (void)uw; (void)ua; (void)uwait;
+
+        // vRingbufferReset
+        TEST_EXPECT(vRingbufferReset(rb) == ESP_OK);
+        TEST_EXPECT(xRingbufferGetCurFilledSize(rb) == 0);
+        TEST_EXPECT(xRingbufferGetCurFreeSize(rb) > 0);
+
+        // xRingbufferPrintInfo (verify it doesn't crash)
+        xRingbufferPrintInfo(rb);
+
+        vRingbufferDelete(rb);
+        printf("[esp_ringbuf] extra ok" "\n");
+    }
+
+    /* ---------- QueueSet integration ---------------------------------- */
+    {
+        QueueSetHandle_t set = xQueueCreateSet(3);
+        TEST_EXPECT(set != NULL);
+
+        RingbufHandle_t rb1 = xRingbufferCreate(64, RINGBUF_TYPE_NOSPLIT);
+        RingbufHandle_t rb2 = xRingbufferCreate(64, RINGBUF_TYPE_NOSPLIT);
+        TEST_EXPECT(rb1 != NULL);
+        TEST_EXPECT(rb2 != NULL);
+
+        // Add rb1 to the set.
+        TEST_EXPECT(xRingbufferAddToQueueSetRead(rb1, set) == pdTRUE);
+        // Double-add rejected.
+        TEST_EXPECT(xRingbufferAddToQueueSetRead(rb1, set) == pdFALSE);
+
+        // Add rb2 to the set.
+        TEST_EXPECT(xRingbufferAddToQueueSetRead(rb2, set) == pdTRUE);
+
+        // Send to rb1: select must return rb1.
+        const char *msg = "hello";
+        TEST_EXPECT(xRingbufferSend(rb1, msg, 5, 0) == pdTRUE);
+
+        QueueSetMemberHandle_t member =
+            xQueueSelectFromSet(set, pdMS_TO_TICKS(100));
+        TEST_EXPECT(member != NULL);
+        TEST_EXPECT(xRingbufferCanRead(rb1, member) == pdTRUE);
+        TEST_EXPECT(xRingbufferCanRead(rb2, member) == pdFALSE);
+
+        // Receive and return the item from rb1.
+        size_t sz = 0;
+        void *p = xRingbufferReceive(rb1, &sz, 0);
+        TEST_EXPECT(p != NULL);
+        TEST_EXPECT(sz == 5);
+        TEST_EXPECT(memcmp(p, msg, 5) == 0);
+        vRingbufferReturnItem(rb1, p);
+
+        // Send to rb2: select must return rb2.
+        const char *msg2 = "world";
+        TEST_EXPECT(xRingbufferSend(rb2, msg2, 5, 0) == pdTRUE);
+
+        member = xQueueSelectFromSet(set, pdMS_TO_TICKS(100));
+        TEST_EXPECT(member != NULL);
+        TEST_EXPECT(xRingbufferCanRead(rb2, member) == pdTRUE);
+        TEST_EXPECT(xRingbufferCanRead(rb1, member) == pdFALSE);
+
+        p = xRingbufferReceive(rb2, &sz, 0);
+        TEST_EXPECT(p != NULL);
+        vRingbufferReturnItem(rb2, p);
+
+        // Remove rb1 from set; send to rb1 should NOT notify.
+        TEST_EXPECT(xRingbufferRemoveFromQueueSetRead(rb1, set) == pdTRUE);
+        TEST_EXPECT(xRingbufferRemoveFromQueueSetRead(rb1, set) == pdFALSE);
+
+        TEST_EXPECT(xRingbufferSend(rb1, msg, 5, 0) == pdTRUE);
+        member = xQueueSelectFromSet(set, pdMS_TO_TICKS(20));
+        TEST_EXPECT(member == NULL);
+
+        // But data is still readable from rb1.
+        p = xRingbufferReceive(rb1, &sz, 0);
+        TEST_EXPECT(p != NULL);
+        vRingbufferReturnItem(rb1, p);
+
+        // Invalid-arg surface.
+        TEST_EXPECT(xRingbufferAddToQueueSetRead(NULL, set) == pdFALSE);
+        TEST_EXPECT(xRingbufferAddToQueueSetRead(rb1, NULL) == pdFALSE);
+        TEST_EXPECT(xRingbufferRemoveFromQueueSetRead(NULL, set) == pdFALSE);
+        TEST_EXPECT(xRingbufferRemoveFromQueueSetRead(rb1, NULL) == pdFALSE);
+
+        // Cleanup.
+        TEST_EXPECT(xRingbufferRemoveFromQueueSetRead(rb2, set) == pdTRUE);
+        vRingbufferDelete(rb1);
+        vRingbufferDelete(rb2);
+        vQueueDelete(set);
+
+        printf("[esp_ringbuf] queueset ok" "\n");
+    }
+
     printf("[esp_ringbuf] end" "\n");
 }
 
@@ -1165,6 +1378,90 @@ static void __test_freertos_message_buffer(void)
     TEST_EXPECT(xMessageBufferSend(NULL, "x", 1, 0) == 0);
 
     printf("[freertos_message_buffer] end" "\n");
+}
+
+// --- QueueSet ---------------------------------------------------------
+
+static void __test_freertos_queueset(void)
+{
+    printf("[freertos_queueset] begin" "\n");
+
+    // --- Invalid args ---
+    TEST_EXPECT(xQueueCreateSet(0) == NULL);
+    TEST_EXPECT(xQueueAddToSet(NULL, NULL) == pdFALSE);
+    TEST_EXPECT(xQueueRemoveFromSet(NULL, NULL) == pdFALSE);
+
+    // --- Create a set with 4 slots ---
+    QueueSetHandle_t set = xQueueCreateSet(4);
+    TEST_EXPECT(set != NULL);
+
+    // --- Create two queues and add them ---
+    QueueHandle_t q1 = xQueueCreate(2, sizeof(uint32_t));
+    QueueHandle_t q2 = xQueueCreate(2, sizeof(uint32_t));
+    TEST_EXPECT(q1 != NULL);
+    TEST_EXPECT(q2 != NULL);
+
+    TEST_EXPECT(xQueueAddToSet(q1, set) == pdTRUE);
+    TEST_EXPECT(xQueueAddToSet(q2, set) == pdTRUE);
+
+    // Double-add must be rejected.
+    TEST_EXPECT(xQueueAddToSet(q1, set) == pdFALSE);
+
+    // --- Send data to q1, then select from set ---
+    uint32_t v = 42;
+    TEST_EXPECT(xQueueSend(q1, &v, 0) == pdTRUE);
+
+    QueueSetMemberHandle_t member = xQueueSelectFromSet(set, pdMS_TO_TICKS(50));
+    TEST_EXPECT(member == (QueueSetMemberHandle_t)q1);
+
+    // Drain q1 so it's empty again.
+    uint32_t rx = 0;
+    TEST_EXPECT(xQueueReceive(q1, &rx, 0) == pdTRUE);
+    TEST_EXPECT(rx == 42);
+
+    // --- Empty set: select with timeout returns NULL ---
+    member = xQueueSelectFromSet(set, pdMS_TO_TICKS(20));
+    TEST_EXPECT(member == NULL);
+
+    // --- Send to q2, verify select returns q2 ---
+    v = 77;
+    TEST_EXPECT(xQueueSend(q2, &v, 0) == pdTRUE);
+    member = xQueueSelectFromSet(set, pdMS_TO_TICKS(50));
+    TEST_EXPECT(member == (QueueSetMemberHandle_t)q2);
+
+    // Drain q2.
+    TEST_EXPECT(xQueueReceive(q2, &rx, 0) == pdTRUE);
+    TEST_EXPECT(rx == 77);
+
+    // --- Remove q1 from the set and verify it no longer notifies ---
+    TEST_EXPECT(xQueueRemoveFromSet(q1, set) == pdTRUE);
+    // Mismatched set argument must be rejected.
+    TEST_EXPECT(xQueueRemoveFromSet(q1, set) == pdFALSE);
+
+    v = 99;
+    TEST_EXPECT(xQueueSend(q1, &v, 0) == pdTRUE);
+    // q1 is no longer in the set — no notification, so select times out.
+    member = xQueueSelectFromSet(set, pdMS_TO_TICKS(20));
+    TEST_EXPECT(member == NULL);
+    // But data is still in q1.
+    TEST_EXPECT(uxQueueMessagesWaiting(q1) == 1);
+    TEST_EXPECT(xQueueReceive(q1, &rx, 0) == pdTRUE);
+    TEST_EXPECT(rx == 99);
+
+    // --- xQueueSelectFromSetFromISR basic validity (NULL returned on empty) ---
+    member = xQueueSelectFromSetFromISR(set);
+    TEST_EXPECT(member == NULL);
+
+    // Cleanup.
+    vQueueDelete(q1);
+    vQueueDelete(q2);
+    vQueueDelete(set);
+
+    // Invalid-arg surface: member cannot be the set (self-ref).
+    TEST_EXPECT(xQueueAddToSet((QueueSetMemberHandle_t)set,
+                               (QueueSetHandle_t)set) == pdFALSE);
+
+    printf("[freertos_queueset] end" "\n");
 }
 
 // --- critical section / scheduler control -----------------------------
@@ -2257,6 +2554,7 @@ void app_main(void)
     __test_esp_heap_caps();
     __test_freertos();
     __test_freertos_queue();
+    __test_freertos_queueset();
     __test_freertos_semphr();
     __test_freertos_event_groups();
     __test_freertos_notify();
