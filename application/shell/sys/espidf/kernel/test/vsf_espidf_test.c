@@ -60,6 +60,9 @@
 #include "esp_heap_caps_init.h"
 #include "esp_log_buffer.h"
 
+#include <errno.h>
+#include <sys/stat.h>
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -2532,9 +2535,10 @@ static void __test_esp_vfs_fat(void)
     TEST_EXPECT(esp_vfs_fat_spiflash_format_rw_wl("/fat", "storage")
                 == ESP_ERR_NOT_SUPPORTED);
 
-    // esp_vfs_register / register_fd_range / unregister are stubs.
-    TEST_EXPECT(esp_vfs_register("/vfs", NULL, NULL) == ESP_ERR_NOT_SUPPORTED);
-    TEST_EXPECT(esp_vfs_unregister("/vfs")            == ESP_ERR_NOT_SUPPORTED);
+    // esp_vfs_register / unregister are now functional.
+    TEST_EXPECT(esp_vfs_register("/vfs", NULL, NULL)   == ESP_ERR_INVALID_ARG);
+    TEST_EXPECT(esp_vfs_unregister("/vfs")              == ESP_ERR_INVALID_STATE);
+    TEST_EXPECT(esp_vfs_register(NULL, NULL, NULL)      == ESP_ERR_INVALID_ARG);
 
     printf("[esp_vfs_fat] end" "\n");
 }
@@ -2726,6 +2730,96 @@ static void __test_esp_vfs_eventfd(void)
     printf("[esp_vfs_eventfd] end" "\n");
 }
 
+// --- esp_vfs (nullfs-style custom VFS) -------------------------------------
+
+static int  __nullfs_open(void *ctx, const char *path, int flags, int mode);
+static ssize_t __nullfs_write(void *ctx, int fd, const void *data, size_t size);
+static ssize_t __nullfs_read(void *ctx, int fd, void *dst, size_t size);
+static off_t   __nullfs_lseek(void *ctx, int fd, off_t offset, int whence);
+static int  __nullfs_close(void *ctx, int fd);
+static int  __nullfs_fstat(void *ctx, int fd, struct stat *st);
+
+static int __nullfs_open(void *ctx, const char *path, int flags, int mode)
+{
+    (void)ctx; (void)mode;
+    if (strcmp(path, "/") != 0 && strcmp(path, "/null") != 0)
+        { errno = ENOENT; return -1; }
+    return (flags & O_ACCMODE) ? 0 : -1;
+}
+
+static ssize_t __nullfs_write(void *ctx, int fd, const void *data, size_t size)
+{
+    (void)ctx; (void)fd; (void)data;
+    return (ssize_t)size;
+}
+
+static ssize_t __nullfs_read(void *ctx, int fd, void *dst, size_t size)
+{
+    (void)ctx; (void)fd; (void)dst; (void)size;
+    return 0;
+}
+
+static off_t __nullfs_lseek(void *ctx, int fd, off_t offset, int whence)
+{
+    (void)ctx; (void)fd; (void)offset;
+    switch (whence) {
+    case SEEK_SET: case SEEK_CUR: case SEEK_END: return 0;
+    default: errno = EINVAL; return -1;
+    }
+}
+
+static int __nullfs_close(void *ctx, int fd)
+{
+    (void)ctx; (void)fd;
+    return 0;
+}
+
+static int __nullfs_fstat(void *ctx, int fd, struct stat *st)
+{
+    (void)ctx; (void)fd;
+    memset(st, 0, sizeof(*st));
+    st->st_mode = S_IFCHR | 0666;
+    return 0;
+}
+
+static void __test_esp_vfs_nullfs(void)
+{
+    printf("[esp_vfs_nullfs] begin" "\n");
+
+    esp_vfs_fs_ops_t ops;
+    memset(&ops, 0, sizeof(ops));
+    ops.open_p  = __nullfs_open;
+    ops.write_p = __nullfs_write;
+    ops.read_p  = __nullfs_read;
+    ops.lseek_p = __nullfs_lseek;
+    ops.close_p = __nullfs_close;
+    ops.fstat_p = __nullfs_fstat;
+
+    TEST_EXPECT(mkdir("/vfs", 0777) == 0);
+
+    esp_err_t rc = esp_vfs_register_fs("/vfs", &ops,
+                        ESP_VFS_FLAG_STATIC | ESP_VFS_FLAG_CONTEXT_PTR, NULL);
+    TEST_EXPECT(rc == ESP_OK);
+
+    int fd = open("/vfs/null", O_RDWR);
+    TEST_EXPECT(fd >= 0);
+
+    ssize_t n = write(fd, "hello", 5);
+    TEST_EXPECT(n == 5);
+
+    char buf[8] = {0};
+    n = read(fd, buf, sizeof(buf));
+    TEST_EXPECT(n == 0);
+
+    close(fd);
+
+    rc = esp_vfs_unregister("/vfs");
+    TEST_EXPECT(rc == ESP_OK);
+
+    (void)rmdir("/vfs");
+    printf("[esp_vfs_nullfs] end" "\n");
+}
+
 // --- esp_vfs_semihost -------------------------------------------------------
 
 static void __test_esp_vfs_semihost(void)
@@ -2781,6 +2875,7 @@ void app_main(void)
     __test_esp_heap_caps_init();
     __test_esp_vfs_eventfd();
     __test_esp_vfs_semihost();
+    __test_esp_vfs_nullfs();
 
 #if VSF_ESPIDF_CFG_USE_USB_HOST == ENABLED
     __test_esp_usb_host();
