@@ -4334,6 +4334,21 @@
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_lcd_port.c">
       <Filter>vsf\shell\sys\espidf\port</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\multi_heap_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_heap_caps_init_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_log_buffer_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_vfs_eventfd_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_vfs_semihost_port.c">
+      <Filter>vsf\shell\sys\espidf\port</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">

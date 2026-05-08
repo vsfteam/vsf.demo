@@ -1052,8 +1052,10 @@
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_err_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_event_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_heap_caps_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_heap_caps_init_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_lcd_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_log_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_log_buffer_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_partition_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\nvs_flash_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_flash_port.c" />
@@ -1072,6 +1074,9 @@
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\driver_adc_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_netif_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_http_client_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_vfs_eventfd_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\esp_vfs_semihost_port.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\multi_heap_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\port\usb_host_port.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\espidf\vsf_espidf.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\freertos\port\freertos_heap_port.c" />

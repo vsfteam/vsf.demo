@@ -53,7 +53,12 @@
 #include "esp_partition.h"
 #include "esp_vfs.h"
 #include "esp_vfs_fat.h"
+#include "esp_vfs_eventfd.h"
+#include "esp_vfs_semihost.h"
 #include "esp_littlefs.h"
+#include "multi_heap.h"
+#include "esp_heap_caps_init.h"
+#include "esp_log_buffer.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -2534,6 +2539,208 @@ static void __test_esp_vfs_fat(void)
     printf("[esp_vfs_fat] end" "\n");
 }
 
+// --- multi_heap -------------------------------------------------------------
+
+static void __test_multi_heap(void)
+{
+    printf("[multi_heap] begin" "\n");
+
+    uint8_t *heap_buf = (uint8_t *)malloc(4096);
+    TEST_EXPECT(heap_buf != NULL);
+
+    multi_heap_handle_t h = multi_heap_register(heap_buf, 4096);
+    TEST_EXPECT(h != NULL);
+
+    multi_heap_handle_t h_null = multi_heap_register(NULL, 0);
+    TEST_EXPECT(h_null == NULL);
+
+    void *p1 = multi_heap_malloc(h, 64);
+    TEST_EXPECT(p1 != NULL);
+    TEST_EXPECT((uintptr_t)p1 >= (uintptr_t)heap_buf);
+    TEST_EXPECT((uintptr_t)p1 < (uintptr_t)heap_buf + 4096);
+
+    multi_heap_free(h, p1);
+    // Re-allocate after free: must succeed at same or different address.
+    void *p2 = multi_heap_malloc(h, 64);
+    TEST_EXPECT(p2 != NULL);
+
+    // realloc grow
+    void *p3 = multi_heap_realloc(h, p2, 128);
+    TEST_EXPECT(p3 != NULL);
+
+    // get_allocated_size
+    size_t sz = multi_heap_get_allocated_size(h, p3);
+    TEST_EXPECT(sz >= 128);
+
+    multi_heap_free(h, p3);
+
+    // info
+    multi_heap_info_t info;
+    multi_heap_get_info(h, &info);
+    // After freeing all allocations, free bytes should be close to 4096.
+    TEST_EXPECT(info.total_free_bytes > 3000);
+
+    // NULL arg safety
+    TEST_EXPECT(multi_heap_malloc(NULL, 32) == NULL);
+    multi_heap_free(NULL, NULL);
+    multi_heap_free(h, NULL);
+    size_t fs = multi_heap_free_size(h);
+    TEST_EXPECT(fs == info.total_free_bytes);
+
+    multi_heap_check(h, false);
+    multi_heap_dump(h);
+
+    // aligned_alloc
+    void *pa = multi_heap_aligned_alloc(h, 200, 64);
+    TEST_EXPECT(pa != NULL);
+    TEST_EXPECT(((uintptr_t)pa & 63u) == 0);
+    multi_heap_free(h, pa);
+
+    free(heap_buf);
+
+    printf("[multi_heap] end" "\n");
+}
+
+// --- esp_log_buffer ---------------------------------------------------------
+
+static char __logbuf_lines[16][128];
+static int  __logbuf_count;
+
+static int __logbuf_vprintf(const char *fmt, va_list ap)
+{
+    if (__logbuf_count < 16) {
+        vsnprintf(__logbuf_lines[__logbuf_count], sizeof(__logbuf_lines[0]), fmt, ap);
+        __logbuf_count++;
+    }
+    return 0;
+}
+
+static void __test_esp_log_buffer(void)
+{
+    printf("[esp_log_buffer] begin" "\n");
+
+    vprintf_like_t prev = esp_log_set_vprintf(__logbuf_vprintf);
+
+    uint8_t data[20];
+    for (int i = 0; i < 20; i++) { data[i] = (uint8_t)(i + 1); }
+
+    __logbuf_count = 0;
+    ESP_LOG_BUFFER_HEX("test", data, 20);
+    TEST_EXPECT(__logbuf_count == 2);
+    // First line: "01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 "
+    TEST_EXPECT(strstr(__logbuf_lines[0], "01 02 03 04 05 06 07 08") != NULL);
+    // Second line: "11 12 13 14 "
+    TEST_EXPECT(strstr(__logbuf_lines[1], "11 12 13 14") != NULL);
+
+    __logbuf_count = 0;
+    ESP_LOG_BUFFER_CHAR("test", "HelloWorld", 10);
+    TEST_EXPECT(__logbuf_count == 1);
+    TEST_EXPECT(strstr(__logbuf_lines[0], "HelloWorld") != NULL);
+
+    __logbuf_count = 0;
+    uint8_t small[8] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77};
+    ESP_LOG_BUFFER_HEXDUMP("test", small, 8, ESP_LOG_INFO);
+    TEST_EXPECT(__logbuf_count == 1);
+    TEST_EXPECT(strstr(__logbuf_lines[0], "00 11 22 33 34 35 36 37") != NULL
+             || strstr(__logbuf_lines[0], "00 11 22 33") != NULL);
+
+    (void)esp_log_set_vprintf(prev);
+
+    printf("[esp_log_buffer] end" "\n");
+}
+
+// --- esp_heap_caps_init -----------------------------------------------------
+
+static void __test_esp_heap_caps_init(void)
+{
+    printf("[esp_heap_caps_init] begin" "\n");
+
+    heap_caps_init();
+    // idempotent
+    heap_caps_init();
+
+    heap_caps_enable_nonos_stack_heaps();
+
+    // add_region with a dedicated buffer
+    static uint8_t region_buf[4096];
+    esp_err_t rc = heap_caps_add_region((intptr_t)region_buf,
+                                         (intptr_t)region_buf + sizeof(region_buf));
+    TEST_EXPECT(rc == ESP_OK);
+
+    // Allocate from the new region via heap_caps_malloc — caps DEFAULT
+    // should match the registered region.
+    void *p = heap_caps_malloc(128, MALLOC_CAP_DEFAULT);
+    TEST_EXPECT(p != NULL);
+    heap_caps_free(p);
+
+    // Bounds: start >= end must fail
+    rc = heap_caps_add_region((intptr_t)region_buf, (intptr_t)region_buf);
+    TEST_EXPECT(rc == ESP_ERR_INVALID_ARG);
+
+    // add_region_with_caps
+    static uint8_t region_buf2[4096];
+    const uint32_t caps_arr[] = { MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT };
+    rc = heap_caps_add_region_with_caps(caps_arr,
+                                         (intptr_t)region_buf2,
+                                         (intptr_t)region_buf2 + sizeof(region_buf2));
+    TEST_EXPECT(rc == ESP_OK);
+
+    // NULL caps array
+    rc = heap_caps_add_region_with_caps(NULL,
+                                         (intptr_t)region_buf2,
+                                         (intptr_t)region_buf2 + 64);
+    TEST_EXPECT(rc == ESP_ERR_INVALID_ARG);
+
+    printf("[esp_heap_caps_init] end" "\n");
+}
+
+// --- esp_vfs_eventfd --------------------------------------------------------
+
+static void __test_esp_vfs_eventfd(void)
+{
+    printf("[esp_vfs_eventfd] begin" "\n");
+
+    esp_vfs_eventfd_config_t cfg = ESP_VFS_EVENTD_CONFIG_DEFAULT();
+    esp_err_t rc = esp_vfs_eventfd_register(&cfg);
+    TEST_EXPECT(rc == ESP_OK);
+
+    int fd = eventfd(0, 0);
+    TEST_EXPECT(fd >= 0);
+
+    // write a value
+    eventfd_t val = 42;
+    ssize_t wr = write(fd, &val, sizeof(val));
+    TEST_EXPECT(wr == sizeof(val));
+
+    // read back
+    eventfd_t rd = 0;
+    ssize_t rr = read(fd, &rd, sizeof(rd));
+    TEST_EXPECT(rr == sizeof(rd));
+    TEST_EXPECT(rd == 42);
+
+    close(fd);
+
+    rc = esp_vfs_eventfd_unregister();
+    TEST_EXPECT(rc == ESP_OK);
+
+    printf("[esp_vfs_eventfd] end" "\n");
+}
+
+// --- esp_vfs_semihost -------------------------------------------------------
+
+static void __test_esp_vfs_semihost(void)
+{
+    printf("[esp_vfs_semihost] begin" "\n");
+
+    esp_err_t rc = esp_vfs_semihost_register("/semihost");
+    TEST_EXPECT(rc == ESP_ERR_NOT_SUPPORTED);
+
+    rc = esp_vfs_semihost_unregister("/semihost");
+    TEST_EXPECT(rc == ESP_ERR_NOT_SUPPORTED);
+
+    printf("[esp_vfs_semihost] end" "\n");
+}
+
 void app_main(void)
 {
 #if VSF_ESPIDF_CFG_USE_NETIF == ENABLED
@@ -2569,6 +2776,11 @@ void app_main(void)
     __test_esp_flash();
     __test_esp_vfs_littlefs();
     __test_esp_vfs_fat();
+    __test_multi_heap();
+    __test_esp_log_buffer();
+    __test_esp_heap_caps_init();
+    __test_esp_vfs_eventfd();
+    __test_esp_vfs_semihost();
 
 #if VSF_ESPIDF_CFG_USE_USB_HOST == ENABLED
     __test_esp_usb_host();
