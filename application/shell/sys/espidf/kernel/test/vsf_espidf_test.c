@@ -2418,12 +2418,6 @@ static void __test_esp_vfs_littlefs(void)
     // partition and lay down fresh superblocks.
     TEST_EXPECT(esp_littlefs_format("lfs") == ESP_OK);
 
-    // esp_vfs_littlefs_register mounts via the underlying VFS which,
-    // on POSIX-style hosts, requires the target directory to exist.
-    // Pre-create /lfs here to mirror what the environment does for
-    // /root, independent of how mount is implemented downstream.
-    (void)mkdir("/lfs", 0);
-
     // --- Real register + mount -----------------------------------
     esp_vfs_littlefs_conf_t real_cfg = {
         .base_path              = "/lfs",
@@ -2795,8 +2789,6 @@ static void __test_esp_vfs_nullfs(void)
     ops.close_p = __nullfs_close;
     ops.fstat_p = __nullfs_fstat;
 
-    TEST_EXPECT(mkdir("/vfs", 0777) == 0);
-
     esp_err_t rc = esp_vfs_register_fs("/vfs", &ops,
                         ESP_VFS_FLAG_STATIC | ESP_VFS_FLAG_CONTEXT_PTR, NULL);
     TEST_EXPECT(rc == ESP_OK);
@@ -2816,7 +2808,6 @@ static void __test_esp_vfs_nullfs(void)
     rc = esp_vfs_unregister("/vfs");
     TEST_EXPECT(rc == ESP_OK);
 
-    (void)rmdir("/vfs");
     printf("[esp_vfs_nullfs] end" "\n");
 }
 
