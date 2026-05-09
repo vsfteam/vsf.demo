@@ -64,6 +64,12 @@ void app_main(void)
 {
 }
 
+VSF_CAL_WEAK(vsf_netif_demo_set_handle)
+void vsf_netif_demo_set_handle(void *handle)
+{
+    (void)handle;
+}
+
 static void * __vsf_espidf_start_main(void *arg)
 {
     app_main();
@@ -171,12 +177,12 @@ int vsf_linux_create_fhs(void)
 
     static vk_netdrv_wpcap_t __env_wpcap_netdrv = { 0 };
     vk_netdrv_set_netlink_op((vk_netdrv_t *)&__env_wpcap_netdrv, &vk_netdrv_wpcap_netlink_op, NULL);
-
-    extern void vsf_netif_demo_set_handle(esp_netif_iodriver_handle handle);
-    vsf_netif_demo_set_handle((esp_netif_iodriver_handle)vsf_netdrv_new_netif_glue(&__env_wpcap_netdrv.use_as__vk_netdrv_t));
+    vsf_netif_demo_set_handle(vsf_netdrv_new_netif_glue(&__env_wpcap_netdrv.use_as__vk_netdrv_t));
 #else
 #   warning where should be ${HOME}?
 #endif
+
+    busybox_install();
 
     vsf_trace_info("start espidf ..." VSF_TRACE_CFG_LINEEND);
 

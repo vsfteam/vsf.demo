@@ -24,7 +24,7 @@
  * reacts to DHCP GOT_IP / LOST_IP, using strictly ESP-IDF public API.
  */
 
-#include "../vsf_usr_cfg.h"
+#include "vsf_usr_cfg.h"
 
 #if     VSF_USE_ESPIDF == ENABLED                                              \
     &&  VSF_ESPIDF_CFG_USE_NETIF == ENABLED
@@ -39,7 +39,7 @@
 
 /*============================ LOCAL VARIABLES ===============================*/
 
-static const char *TAG = "netif-demo";
+static const char *__netif_tag = "netif-demo";
 
 static esp_netif_t *__demo_netif = NULL;
 static esp_netif_iodriver_handle __demo_driver_handle = NULL;
@@ -57,7 +57,7 @@ static void __netif_demo_ip_handler(void *arg, esp_event_base_t base,
         uint32_t ip = ev->ip_info.ip.addr;
         uint32_t nm = ev->ip_info.netmask.addr;
         uint32_t gw = ev->ip_info.gw.addr;
-        ESP_LOGI(TAG, "GOT_IP %u.%u.%u.%u / %u.%u.%u.%u gw %u.%u.%u.%u",
+        ESP_LOGI(__netif_tag, "GOT_IP %u.%u.%u.%u / %u.%u.%u.%u gw %u.%u.%u.%u",
                  (unsigned)((ip >>  0) & 0xff),
                  (unsigned)((ip >>  8) & 0xff),
                  (unsigned)((ip >> 16) & 0xff),
@@ -72,7 +72,7 @@ static void __netif_demo_ip_handler(void *arg, esp_event_base_t base,
                  (unsigned)((gw >> 24) & 0xff));
     } else if (event_id == IP_EVENT_ETH_LOST_IP
             || event_id == IP_EVENT_STA_LOST_IP) {
-        ESP_LOGI(TAG, "LOST_IP");
+        ESP_LOGI(__netif_tag, "LOST_IP");
     }
 }
 
@@ -83,7 +83,7 @@ void vsf_netif_demo_set_handle(esp_netif_iodriver_handle handle)
 
 void vsf_netif_demo_start(void)
 {
-    ESP_LOGI(TAG, "start() entered");
+    ESP_LOGI(__netif_tag, "start() entered");
     if ((NULL == __demo_driver_handle) || (__demo_netif != NULL)) {
         return;
     }
@@ -96,7 +96,7 @@ void vsf_netif_demo_start(void)
     esp_err_t er = esp_event_handler_register(IP_EVENT, ESP_EVENT_ANY_ID,
                                               __netif_demo_ip_handler, NULL);
     if (er != ESP_OK) {
-        ESP_LOGE(TAG, "handler_register failed: %d", (int)er);
+        ESP_LOGE(__netif_tag, "handler_register failed: %d", (int)er);
         return;
     }
 
@@ -108,13 +108,13 @@ void vsf_netif_demo_start(void)
     };
     __demo_netif = esp_netif_new(&cfg);
     if (__demo_netif == NULL) {
-        ESP_LOGE(TAG, "esp_netif_new failed");
+        ESP_LOGE(__netif_tag, "esp_netif_new failed");
         return;
     }
 
     er = esp_netif_attach(__demo_netif, __demo_driver_handle);
     if (er != ESP_OK) {
-        ESP_LOGE(TAG, "esp_netif_attach failed with %d", er);
+        ESP_LOGE(__netif_tag, "esp_netif_attach failed with %d", er);
         esp_netif_destroy(__demo_netif);
         __demo_netif = NULL;
         return;
@@ -122,13 +122,13 @@ void vsf_netif_demo_start(void)
 
     er = esp_netif_action_start(__demo_netif, NULL, 0, NULL);
     if (er != ESP_OK) {
-        ESP_LOGE(TAG, "esp_netif_action_start failed with %d", er);
+        ESP_LOGE(__netif_tag, "esp_netif_action_start failed with %d", er);
         esp_netif_destroy(__demo_netif);
         __demo_netif = NULL;
         return;
     }
 
-    ESP_LOGI(TAG, "handler registered, awaiting IP events");
+    ESP_LOGI(__netif_tag, "handler registered, awaiting IP events");
 }
 
 #endif      /* VSF_USE_ESPIDF && VSF_ESPIDF_CFG_USE_NETIF */

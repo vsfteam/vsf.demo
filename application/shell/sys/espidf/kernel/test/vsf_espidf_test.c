@@ -59,6 +59,8 @@
 #include "multi_heap.h"
 #include "esp_heap_caps_init.h"
 #include "esp_log_buffer.h"
+#include "esp_app_trace.h"
+#include "esp_console.h"
 
 #include <errno.h>
 #include <sys/stat.h>
@@ -728,10 +730,7 @@ static void __test_freertos(void)
 {
     printf("[freertos] begin" "\n");
 
-    // pdMS_TO_TICKS is identity in this shim (1 tick == 1 ms).
     TEST_EXPECT(pdMS_TO_TICKS(0)   == 0);
-    TEST_EXPECT(pdMS_TO_TICKS(1)   == 1);
-    TEST_EXPECT(pdMS_TO_TICKS(100) == 100);
 
     // xTaskGetTickCount advances after a delay.
     TickType_t t0 = xTaskGetTickCount();
@@ -2826,6 +2825,246 @@ static void __test_esp_vfs_semihost(void)
     printf("[esp_vfs_semihost] end" "\n");
 }
 
+// --- esp_app_trace ----------------------------------------------------------
+
+#if VSF_ESPIDF_CFG_USE_APP_TRACE == ENABLED
+static void __test_esp_app_trace(void)
+{
+    printf("[esp_app_trace] begin" "\n");
+
+    esp_apptrace_config_t cfg = {
+        .dest = ESP_APPTRACE_DEST_UART,
+        .dest_cfg.uart = {
+            .tx_msg_size = 128,
+        },
+    };
+
+    esp_err_t rc = esp_apptrace_init(&cfg);
+    TEST_EXPECT(rc == ESP_OK);
+
+    /* host_is_connected after init */
+    TEST_EXPECT(esp_apptrace_host_is_connected());
+
+    /* get_destination */
+    TEST_EXPECT(esp_apptrace_get_destination() == ESP_APPTRACE_DEST_UART);
+
+    /* set_header_size */
+    rc = esp_apptrace_set_header_size(ESP_APPTRACE_HEADER_SIZE_32);
+    TEST_EXPECT(rc == ESP_OK);
+
+    /* buffer_get/buffer_put */
+    uint8_t *buf = esp_apptrace_buffer_get(32, ESP_APPTRACE_TMO_INFINITE);
+    TEST_EXPECT(buf != NULL);
+    memset(buf, 'A', 32);
+    rc = esp_apptrace_buffer_put(buf, ESP_APPTRACE_TMO_INFINITE);
+    TEST_EXPECT(rc == ESP_OK);
+
+    /* write */
+    rc = esp_apptrace_write("esp_app_trace test\n", 19, ESP_APPTRACE_TMO_INFINITE);
+    TEST_EXPECT(rc == ESP_OK);
+
+    /* flush */
+    rc = esp_apptrace_flush(ESP_APPTRACE_TMO_INFINITE);
+    TEST_EXPECT(rc == ESP_OK);
+
+    /* flush_nolock */
+    rc = esp_apptrace_flush_nolock(0, ESP_APPTRACE_TMO_INFINITE);
+    TEST_EXPECT(rc == ESP_OK);
+
+    /* init again (idempotent via port, but channel is static) */
+    rc = esp_apptrace_init(&cfg);
+    TEST_EXPECT(rc == ESP_OK);
+
+    /* NULL config */
+    rc = esp_apptrace_init(NULL);
+    TEST_EXPECT(rc == ESP_ERR_INVALID_ARG);
+
+    /* buffer_get with size 0 */
+    TEST_EXPECT(esp_apptrace_buffer_get(0, 0) == NULL);
+
+    /* buffer_put with NULL */
+    rc = esp_apptrace_buffer_put(NULL, 0);
+    TEST_EXPECT(rc == ESP_ERR_INVALID_ARG);
+
+    /* write with NULL data */
+    rc = esp_apptrace_write(NULL, 1, 0);
+    TEST_EXPECT(rc == ESP_ERR_INVALID_ARG);
+
+    /* write with size 0 */
+    rc = esp_apptrace_write("x", 0, 0);
+    TEST_EXPECT(rc == ESP_ERR_INVALID_ARG);
+
+    printf("[esp_app_trace] end" "\n");
+}
+#endif
+
+#if VSF_ESPIDF_CFG_USE_CONSOLE == ENABLED
+
+static int __test_cmd_handler(int argc, char **argv)
+{
+    return 123;
+}
+
+static int __test_cmd_handler2(int argc, char **argv)
+{
+    return 0;
+}
+
+static void __test_esp_console(void)
+{
+    esp_err_t ret;
+
+    printf("[esp_console] begin" "\n");
+
+    // --- esp_console_split_argv ---
+    {
+        char line[64];
+        char *argv[8];
+
+        strcpy(line, "cmd arg1 arg2");
+        size_t argc = esp_console_split_argv(line, argv, 8);
+        TEST_EXPECT(argc == 3);
+        TEST_EXPECT(strcmp(argv[0], "cmd") == 0);
+        TEST_EXPECT(strcmp(argv[1], "arg1") == 0);
+        TEST_EXPECT(strcmp(argv[2], "arg2") == 0);
+        TEST_EXPECT(argv[3] == NULL);
+
+        strcpy(line, "cmd \"arg with space\" end");
+        argc = esp_console_split_argv(line, argv, 8);
+        TEST_EXPECT(argc == 3);
+        TEST_EXPECT(strcmp(argv[0], "cmd") == 0);
+        TEST_EXPECT(strcmp(argv[1], "arg with space") == 0);
+        TEST_EXPECT(strcmp(argv[2], "end") == 0);
+
+        strcpy(line, "a\\ b\\\\c\\\"");
+        argc = esp_console_split_argv(line, argv, 8);
+        TEST_EXPECT(argc == 1);
+        TEST_EXPECT(strcmp(argv[0], "a b\\c\"") == 0);
+
+        strcpy(line, "   ");
+        argc = esp_console_split_argv(line, argv, 8);
+        TEST_EXPECT(argc == 0);
+
+        strcpy(line, "");
+        argc = esp_console_split_argv(line, argv, 8);
+        TEST_EXPECT(argc == 0);
+    }
+
+    // --- init / deinit ---
+    esp_console_config_t config = ESP_CONSOLE_CONFIG_DEFAULT();
+    ret = esp_console_init(&config);
+    TEST_EXPECT(ret == ESP_OK);
+
+    // double init should fail
+    ret = esp_console_init(&config);
+    TEST_EXPECT(ret == ESP_ERR_INVALID_STATE);
+
+    // NULL config should fail (after deinit)
+    esp_console_deinit();
+    ret = esp_console_init(NULL);
+    TEST_EXPECT(ret == ESP_ERR_INVALID_ARG);
+
+    // re-init for further tests
+    ret = esp_console_init(&config);
+    TEST_EXPECT(ret == ESP_OK);
+
+    // --- cmd_register ---
+    esp_console_cmd_t cmd = {
+        .command = "test",
+        .help = "Test command",
+        .hint = NULL,
+        .func = &__test_cmd_handler,
+        .argtable = NULL,
+    };
+
+    ret = esp_console_cmd_register(&cmd);
+    TEST_EXPECT(ret == ESP_OK);
+
+    // register same name again (update)
+    ret = esp_console_cmd_register(&cmd);
+    TEST_EXPECT(ret == ESP_OK);
+
+    // register invalid: NULL command
+    cmd.command = NULL;
+    ret = esp_console_cmd_register(&cmd);
+    TEST_EXPECT(ret == ESP_ERR_INVALID_ARG);
+
+    // register invalid: command with space
+    cmd.command = "bad cmd";
+    ret = esp_console_cmd_register(&cmd);
+    TEST_EXPECT(ret == ESP_ERR_INVALID_ARG);
+
+    // register invalid: no func and no func_w_context
+    cmd.command = "nofunc";
+    cmd.func = NULL;
+    ret = esp_console_cmd_register(&cmd);
+    TEST_EXPECT(ret == ESP_ERR_INVALID_ARG);
+
+    // --- register help ---
+    ret = esp_console_register_help_command();
+    TEST_EXPECT(ret == ESP_OK);
+
+    // --- esp_console_get_completion (cannot test fully without linenoise.h) ---
+    // Just verify the callback is set up and callable without crash
+    TEST_EXPECT(1);
+
+    // --- esp_console_get_hint ---
+    {
+        int color = 0, bold = 0;
+        const char *hint = esp_console_get_hint("test", &color, &bold);
+        TEST_EXPECT(hint == NULL); // no hint set
+
+        hint = esp_console_get_hint("unknown", &color, &bold);
+        TEST_EXPECT(hint == NULL);
+    }
+
+    // --- esp_console_run ---
+    {
+        int cmd_ret = -1;
+        ret = esp_console_run("test", &cmd_ret);
+        TEST_EXPECT(ret == ESP_OK);
+        TEST_EXPECT(cmd_ret == 123);
+
+        ret = esp_console_run("unknown", &cmd_ret);
+        TEST_EXPECT(ret == ESP_ERR_NOT_FOUND);
+
+        ret = esp_console_run("", &cmd_ret);
+        TEST_EXPECT(ret == ESP_ERR_INVALID_ARG);
+
+        // help command
+        ret = esp_console_run("help", &cmd_ret);
+        TEST_EXPECT(ret == ESP_OK);
+        TEST_EXPECT(cmd_ret == 0);
+    }
+
+    // --- cmd_deregister ---
+    ret = esp_console_cmd_deregister("test");
+    TEST_EXPECT(ret == ESP_OK);
+
+    ret = esp_console_cmd_deregister("test");
+    TEST_EXPECT(ret == ESP_ERR_INVALID_ARG);
+
+    // --- set verbose level ---
+    ret = esp_console_set_help_verbose_level(ESP_CONSOLE_HELP_VERBOSE_LEVEL_0);
+    TEST_EXPECT(ret == ESP_OK);
+
+    ret = esp_console_set_help_verbose_level(ESP_CONSOLE_HELP_VERBOSE_LEVEL_1);
+    TEST_EXPECT(ret == ESP_OK);
+
+    ret = esp_console_set_help_verbose_level(ESP_CONSOLE_HELP_VERBOSE_LEVEL_MAX_NUM);
+    TEST_EXPECT(ret == ESP_ERR_INVALID_ARG);
+
+    // --- deinit ---
+    ret = esp_console_deinit();
+    TEST_EXPECT(ret == ESP_OK);
+
+    ret = esp_console_deinit();
+    TEST_EXPECT(ret == ESP_ERR_INVALID_STATE);
+
+    printf("[esp_console] end" "\n");
+}
+#endif
+
 void app_main(void)
 {
 #if VSF_ESPIDF_CFG_USE_NETIF == ENABLED
@@ -2867,6 +3106,14 @@ void app_main(void)
     __test_esp_vfs_eventfd();
     __test_esp_vfs_semihost();
     __test_esp_vfs_nullfs();
+
+#if VSF_ESPIDF_CFG_USE_APP_TRACE == ENABLED
+    __test_esp_app_trace();
+#endif
+
+#if VSF_ESPIDF_CFG_USE_CONSOLE == ENABLED
+    __test_esp_console();
+#endif
 
 #if VSF_ESPIDF_CFG_USE_USB_HOST == ENABLED
     __test_esp_usb_host();

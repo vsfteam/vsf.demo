@@ -168,6 +168,8 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   endif
 #   define VSF_ESPIDF_CFG_USE_LCD                       ENABLED
 #   define VSF_ESPIDF_CFG_RINGBUF_USE_FREERTOS_QUEUESET  ENABLED
+#   define VSF_ESPIDF_CFG_USE_APP_TRACE                  ENABLED
+#   define VSF_ESPIDF_CFG_USE_CONSOLE                    ENABLED
 
 #define VSF_USE_LINUX                                   ENABLED
 #   ifndef VSF_LINUX_CFG_STACKSIZE
@@ -175,7 +177,7 @@ extern void vsf_trace_assert(const char *expr, const char *file, int line, const
 #   endif
 #   define VSF_USE_POSIX                                ENABLED
 #   define VSF_LINUX_USE_SIMPLE_LIBC                    ENABLED
-#   define VSF_LINUX_USE_BUSYBOX                        DISABLED
+#   define VSF_LINUX_USE_BUSYBOX                        ENABLED
 #   define VSF_LINUX_CFG_LINK_FILE                      DISABLED
 #   define VSF_LINUX_USE_SOCKET                         ENABLED
 #       define VSF_LINUX_SOCKET_USE_UNIX                ENABLED

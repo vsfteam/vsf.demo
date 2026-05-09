@@ -28,7 +28,7 @@
  * store which is out of scope for the first smoke run.
  */
 
-#include "../vsf_usr_cfg.h"
+#include "vsf_usr_cfg.h"
 
 #if     VSF_USE_ESPIDF == ENABLED                                              \
     &&  VSF_ESPIDF_CFG_USE_HTTP_CLIENT == ENABLED
@@ -56,7 +56,7 @@
 
 /*============================ LOCAL VARIABLES ===============================*/
 
-static const char          *TAG = "http-demo";
+static const char          *__http_tag = "http-demo";
 static volatile int         __http_demo_running = 0;
 
 /*============================ IMPLEMENTATION ================================*/
@@ -65,37 +65,37 @@ static esp_err_t __http_demo_event_handler(esp_http_client_event_t *evt)
 {
     switch (evt->event_id) {
     case HTTP_EVENT_ON_CONNECTED:
-        ESP_LOGI(TAG, "CONNECTED");
+        ESP_LOGI(__http_tag, "CONNECTED");
         break;
     case HTTP_EVENT_HEADERS_SENT:
-        ESP_LOGI(TAG, "HEADERS_SENT");
+        ESP_LOGI(__http_tag, "HEADERS_SENT");
         break;
     case HTTP_EVENT_ON_HEADER:
         if (evt->header_key && evt->header_value) {
-            ESP_LOGI(TAG, "HDR %s: %s", evt->header_key, evt->header_value);
+            ESP_LOGI(__http_tag, "HDR %s: %s", evt->header_key, evt->header_value);
         }
         break;
     case HTTP_EVENT_ON_STATUS_CODE:
-        ESP_LOGI(TAG, "STATUS %d", evt->data_len);
+        ESP_LOGI(__http_tag, "STATUS %d", evt->data_len);
         break;
     case HTTP_EVENT_ON_DATA:
-        ESP_LOGI(TAG, "DATA len=%d", evt->data_len);
+        ESP_LOGI(__http_tag, "DATA len=%d", evt->data_len);
         if (evt->data && evt->data_len > 0) {
             int n = evt->data_len > 128 ? 128 : evt->data_len;
-            ESP_LOGI(TAG, "%.*s", n, (const char *)evt->data);
+            ESP_LOGI(__http_tag, "%.*s", n, (const char *)evt->data);
         }
         break;
     case HTTP_EVENT_ON_FINISH:
-        ESP_LOGI(TAG, "FINISH");
+        ESP_LOGI(__http_tag, "FINISH");
         break;
     case HTTP_EVENT_DISCONNECTED:
-        ESP_LOGI(TAG, "DISCONNECTED");
+        ESP_LOGI(__http_tag, "DISCONNECTED");
         break;
     case HTTP_EVENT_REDIRECT:
-        ESP_LOGI(TAG, "REDIRECT");
+        ESP_LOGI(__http_tag, "REDIRECT");
         break;
     case HTTP_EVENT_ERROR:
-        ESP_LOGE(TAG, "ERROR");
+        ESP_LOGE(__http_tag, "ERROR");
         break;
     default:
         break;
@@ -112,11 +112,11 @@ static void __http_demo_run(void)
     cfg.timeout_ms      = VSF_HTTP_CLIENT_DEMO_TIMEOUT_MS;
     cfg.transport_type  = HTTP_TRANSPORT_OVER_TCP;
 
-    ESP_LOGI(TAG, "GET %s", cfg.url);
+    ESP_LOGI(__http_tag, "GET %s", cfg.url);
 
     esp_http_client_handle_t client = esp_http_client_init(&cfg);
     if (client == NULL) {
-        ESP_LOGE(TAG, "esp_http_client_init failed");
+        ESP_LOGE(__http_tag, "esp_http_client_init failed");
         return;
     }
 
@@ -124,10 +124,10 @@ static void __http_demo_run(void)
     if (err == ESP_OK) {
         int     status = esp_http_client_get_status_code(client);
         int64_t clen   = esp_http_client_get_content_length(client);
-        ESP_LOGI(TAG, "perform ok status=%d content_length=%lld",
+        ESP_LOGI(__http_tag, "perform ok status=%d content_length=%lld",
                  status, (long long)clen);
     } else {
-        ESP_LOGE(TAG, "perform failed err=%d", (int)err);
+        ESP_LOGE(__http_tag, "perform failed err=%d", (int)err);
     }
 
     esp_http_client_cleanup(client);
@@ -162,7 +162,7 @@ void vsf_http_client_demo_start(void)
     pthread_attr_destroy(&attr);
 
     if (r != 0) {
-        ESP_LOGE(TAG, "pthread_create failed: %d", r);
+        ESP_LOGE(__http_tag, "pthread_create failed: %d", r);
         __http_demo_running = 0;
         return;
     }

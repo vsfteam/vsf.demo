@@ -51,27 +51,9 @@
 #include <stdio.h>
 #include <string.h>
 
-/*============================ MACROS ========================================*/
-
-#define TEST_EXPECT(__cond)                                                 \
-    do {                                                                    \
-        __test_total++;                                                     \
-        if (__cond) {                                                       \
-            __test_pass++;                                                  \
-            printf("  [PASS] " #__cond "\n");     \
-        } else {                                                            \
-            printf("  [FAIL] " #__cond " @%s:%d"                 \
-                            "\n", __FILE__, __LINE__);     \
-        }                                                                   \
-    } while (0)
-
-#define __wait_ms(__ms)  vTaskDelay(pdMS_TO_TICKS(__ms))
-
 /*============================ LOCAL VARIABLES ===============================*/
 
-static const char *TAG = "usb_test";
-static int __test_total;
-static int __test_pass;
+static const char *__usb_tag = "usb_test";
 
 static SemaphoreHandle_t __test_done;
 
@@ -82,7 +64,7 @@ static void __client_event_cb(const usb_host_client_event_msg_t *event_msg,
                                void *arg)
 {
     if (event_msg->event == USB_HOST_CLIENT_EVENT_NEW_DEV) {
-        ESP_LOGI(TAG, "NEW_DEV: address=%d", event_msg->new_dev.address);
+        ESP_LOGI(__usb_tag, "NEW_DEV: address=%d", event_msg->new_dev.address);
 
         /* Open device and print descriptors */
         usb_device_handle_t dev_hdl;
@@ -90,7 +72,7 @@ static void __client_event_cb(const usb_host_client_event_msg_t *event_msg,
                                              event_msg->new_dev.address,
                                              &dev_hdl);
         if (err != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to open device: 0x%x", err);
+            ESP_LOGE(__usb_tag, "Failed to open device: 0x%x", err);
             return;
         }
 
@@ -98,9 +80,9 @@ static void __client_event_cb(const usb_host_client_event_msg_t *event_msg,
         usb_device_info_t info;
         err = usb_host_device_info(dev_hdl, &info);
         if (err == ESP_OK) {
-            ESP_LOGI(TAG, "  Speed: %s",
+            ESP_LOGI(__usb_tag, "  Speed: %s",
                 info.speed == 0 ? "Low" : info.speed == 1 ? "Full" : "High");
-            ESP_LOGI(TAG, "  Config value: %d", info.bConfigurationValue);
+            ESP_LOGI(__usb_tag, "  Config value: %d", info.bConfigurationValue);
         }
 
         /* Device descriptor */
@@ -109,7 +91,7 @@ static void __client_event_cb(const usb_host_client_event_msg_t *event_msg,
         if (err == ESP_OK) {
             TEST_EXPECT(dev_desc->bLength >= 18);
             TEST_EXPECT(dev_desc->bDescriptorType == 0x01);
-            ESP_LOGI(TAG, "  VID=0x%04X PID=0x%04X class=0x%02X cfgCnt=%d",
+            ESP_LOGI(__usb_tag, "  VID=0x%04X PID=0x%04X class=0x%02X cfgCnt=%d",
                 dev_desc->idVendor, dev_desc->idProduct,
                 dev_desc->bDeviceClass, dev_desc->bNumConfigurations);
         }
@@ -120,7 +102,7 @@ static void __client_event_cb(const usb_host_client_event_msg_t *event_msg,
         if (err == ESP_OK) {
             TEST_EXPECT(cfg_desc->bDescriptorType == 0x02);
             TEST_EXPECT(cfg_desc->bNumInterfaces > 0);
-            ESP_LOGI(TAG, "  Config: ifs=%d attrs=0x%02X power=%d",
+            ESP_LOGI(__usb_tag, "  Config: ifs=%d attrs=0x%02X power=%d",
                 cfg_desc->bNumInterfaces, cfg_desc->bmAttributes,
                 cfg_desc->bMaxPower);
         }
@@ -128,7 +110,7 @@ static void __client_event_cb(const usb_host_client_event_msg_t *event_msg,
         usb_host_device_close((usb_host_client_handle_t)arg, dev_hdl);
 
     } else if (event_msg->event == USB_HOST_CLIENT_EVENT_DEV_GONE) {
-        ESP_LOGI(TAG, "DEV_GONE");
+        ESP_LOGI(__usb_tag, "DEV_GONE");
     }
 }
 
@@ -137,18 +119,18 @@ void __test_esp_usb_host(void)
     printf("\n========== [usb_host] ESP-IDF USB Host Library Test ==========\n\n");
 
     /* ---- 1. Install USB Host ---- */
-    ESP_LOGI(TAG, "Installing USB Host Library...");
+    ESP_LOGI(__usb_tag, "Installing USB Host Library...");
     usb_host_config_t host_cfg = { .skip_phy_setup = true };
     esp_err_t err = usb_host_install(&host_cfg);
     TEST_EXPECT(err == ESP_OK);
     if (err != ESP_OK) {
-        ESP_LOGE(TAG, "usb_host_install failed: 0x%x (check board cfg)", err);
+        ESP_LOGE(__usb_tag, "usb_host_install failed: 0x%x (check board cfg)", err);
         printf("\n  SUMMARY: %d / %d passed\n", __test_pass, __test_total);
         return;
     }
 
     /* ---- 2. Register client ---- */
-    ESP_LOGI(TAG, "Registering client...");
+    ESP_LOGI(__usb_tag, "Registering client...");
     usb_host_client_handle_t client_hdl = NULL;
     usb_host_client_config_t client_cfg = {
         .is_synchronous     = false,
@@ -170,12 +152,12 @@ void __test_esp_usb_host(void)
     client_cfg.async.callback_arg = client_hdl;
 
     /* ---- 3. Wait for device events ---- */
-    ESP_LOGI(TAG, "Waiting for USB device (15 seconds)...");
-    ESP_LOGI(TAG, "  (Plug in a USB flash drive with WinUSB driver installed)");
+    ESP_LOGI(__usb_tag, "Waiting for USB device (15 seconds)...");
+    ESP_LOGI(__usb_tag, "  (Plug in a USB flash drive with WinUSB driver installed)");
 
     __test_done = xSemaphoreCreateBinary();
     if (!__test_done) {
-        ESP_LOGE(TAG, "Failed to create semaphore");
+        ESP_LOGE(__usb_tag, "Failed to create semaphore");
         goto cleanup;
     }
 
@@ -188,7 +170,7 @@ void __test_esp_usb_host(void)
         if (err == ESP_OK) {
             event_count++;
         } else if (err != ESP_ERR_TIMEOUT) {
-            ESP_LOGW(TAG, "client_handle_events: 0x%x", err);
+            ESP_LOGW(__usb_tag, "client_handle_events: 0x%x", err);
         }
 
         /* Also drive library events briefly */
@@ -197,20 +179,20 @@ void __test_esp_usb_host(void)
     }
 
     TEST_EXPECT(event_count > 0);
-    ESP_LOGI(TAG, "Event loop finished, %d events processed", event_count);
+    ESP_LOGI(__usb_tag, "Event loop finished, %d events processed", event_count);
 
     if (event_count == 0) {
-        ESP_LOGW(TAG, "No USB device detected. Check:");
-        ESP_LOGW(TAG, "  1. Device is plugged in");
-        ESP_LOGW(TAG, "  2. WinUSB driver installed (use Zadig)");
-        ESP_LOGW(TAG, "  3. VID/PID match board/win/vsf_board_cfg.h");
+        ESP_LOGW(__usb_tag, "No USB device detected. Check:");
+        ESP_LOGW(__usb_tag, "  1. Device is plugged in");
+        ESP_LOGW(__usb_tag, "  2. WinUSB driver installed (use Zadig)");
+        ESP_LOGW(__usb_tag, "  3. VID/PID match board/win/vsf_board_cfg.h");
     }
 
     /* ---- 4. Lib info ---- */
     usb_host_lib_info_t lib_info;
     err = usb_host_lib_info(&lib_info);
     TEST_EXPECT(err == ESP_OK);
-    ESP_LOGI(TAG, "Library: %d device(s), %d client(s)",
+    ESP_LOGI(__usb_tag, "Library: %d device(s), %d client(s)",
              lib_info.num_devices, lib_info.num_clients);
 
 cleanup:
