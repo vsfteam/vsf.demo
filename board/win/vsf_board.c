@@ -44,6 +44,54 @@ static const vk_winusb_hcd_param_t __winusb_hcd_param = {
 
 /*============================ GLOBAL VARIABLES ==============================*/
 
+#if VSF_USE_FBCON == ENABLED
+// fbcon uses a dedicated fifo stream as its data source.
+static uint8_t __fbcon_stream_tx_buf[4096];
+static vsf_fifo_stream_t __fbcon_stream_tx = {
+    .op     = &vsf_fifo_stream_op,
+    .buffer = __fbcon_stream_tx_buf,
+    .size   = sizeof(__fbcon_stream_tx_buf),
+};
+
+// Adapter stream: tee writes to both hardware console and fbcon.
+static void __adapter_tx_init(vsf_stream_t *stream)
+{
+    vsf_stream_connect_rx(stream);
+}
+
+static uint_fast32_t __adapter_tx_write(vsf_stream_t *stream,
+            uint8_t *buf, uint_fast32_t size)
+{
+    // Forward to hardware console (VSF_DEBUG_STREAM_TX from driver.c)
+    vsf_stream_write((vsf_stream_t *)&VSF_DEBUG_STREAM_TX, buf, size);
+    // Forward to fbcon fifo stream
+    vsf_stream_write(&__fbcon_stream_tx.use_as__vsf_stream_t, buf, size);
+    return size;
+}
+
+static uint_fast32_t __adapter_tx_get_data_length(vsf_stream_t *stream)
+{
+    return 0;
+}
+
+static uint_fast32_t __adapter_tx_get_avail_length(vsf_stream_t *stream)
+{
+    return 0xFFFFFFFF;
+}
+
+static const vsf_stream_op_t __vsf_board_debug_stream_adapter_tx_op = {
+    .init               = __adapter_tx_init,
+    .fini               = __adapter_tx_init,
+    .write              = __adapter_tx_write,
+    .get_data_length    = __adapter_tx_get_data_length,
+    .get_avail_length   = __adapter_tx_get_avail_length,
+};
+
+vsf_fifo_stream_t __vsf_board_debug_stream_adapter_tx = {
+    .op     = &__vsf_board_debug_stream_adapter_tx_op,
+};
+#endif
+
 vsf_board_t vsf_board = {
     .usart                      = NULL,
 
@@ -87,6 +135,11 @@ vsf_board_t vsf_board = {
 
 void vsf_board_init(void)
 {
+#if VSF_USE_FBCON == ENABLED
+    vsf_board.fbcon.disp = vsf_board.display_dev;
+    vsf_board.fbcon.stream = &__fbcon_stream_tx.use_as__vsf_stream_t;
+    vsf_fbcon_init(&vsf_board.fbcon);
+#endif
 #if VSF_HAL_USE_USART == ENABLED
     vsf_hostos_usart_device_t usart_devices[8];
     uint8_t usart_devnum = vsf_hostos_usart_scan_devices((vsf_hostos_usart_device_t*)&usart_devices, dimof(usart_devices));

@@ -928,6 +928,9 @@
     <Filter Include="vsf\shell\sys\linux\kernel\core\crypto">
       <UniqueIdentifier>{d78d8250-7e1d-4d1c-92ac-6f0fe1dd1cfa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\component\ui\fbcon">
+      <UniqueIdentifier>{a01533f1-ef73-41ce-9d66-a506289c71c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2619,6 +2622,12 @@
     <ClInclude Include="..\..\vsf\source\hal\utilities\remap\rng\vsf_remapped_rng.h">
       <Filter>vsf\hal\utilities\remap\rng</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\fbcon\vsf_fbcon.h">
+      <Filter>vsf\component\ui\fbcon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\ui\fbcon\vsf_fbcon_font.h">
+      <Filter>vsf\component\ui\fbcon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -3904,6 +3913,9 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\crypto\vsf_linux_core_crypto.c">
       <Filter>vsf\shell\sys\linux\kernel\core\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\ui\fbcon\vsf_fbcon.c">
+      <Filter>vsf\component\ui\fbcon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

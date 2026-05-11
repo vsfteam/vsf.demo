@@ -53,6 +53,13 @@
 
 #define VSF_HAL_USE_DEBUG_STREAM                        ENABLED
 #   define VSF_DEBUG_STREAM_CFG_HW_PRIORITY             vsf_arch_prio_0
+
+#define VSF_USE_FBCON                                   DISABLED
+#if VSF_USE_FBCON == ENABLED
+#   define VSF_CFG_DEBUG_STREAM_TX_T                    vsf_fifo_stream_t
+#   define VSF_CFG_DEBUG_STREAM_TX                      __vsf_board_debug_stream_adapter_tx
+#endif
+
 #define VSF_HAL_USE_DISTBUS                             ENABLED
 #   define VSF_HAL_DISTBUS_USE_GPIO                     ENABLED
 #   define VSF_HAL_DISTBUS_USE_ADC                      ENABLED

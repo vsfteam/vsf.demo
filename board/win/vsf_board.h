@@ -44,6 +44,9 @@ typedef struct vsf_board_t {
 #if VSF_USE_UI == ENABLED
     vk_disp_t *display_dev;
     vk_disp_wingdi_t disp_wingdi;
+#   if VSF_USE_FBCON == ENABLED
+    vsf_fbcon_t fbcon;
+#   endif
 #endif
 #if VSF_USE_AUDIO == ENABLED
     vk_audio_dev_t *audio_dev;

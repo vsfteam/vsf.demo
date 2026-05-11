@@ -153,6 +153,8 @@
     <ClInclude Include="..\..\vsf\source\component\ui\disp\driver\vga\m480\vsf_disp_vga_m480.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\disp\driver\wingdi\vsf_disp_wingdi.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\disp\vsf_disp.h" />
+    <ClInclude Include="..\..\vsf\source\component\ui\fbcon\vsf_fbcon.h" />
+    <ClInclude Include="..\..\vsf\source\component\ui\fbcon\vsf_fbcon_font.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\vsf_msg_tree_cfg.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_button.h" />
     <ClInclude Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_control.h" />
@@ -786,6 +788,7 @@
     <ClCompile Include="..\..\vsf\source\component\ui\disp\driver\vga\m480\vsf_disp_vga_m480.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\disp\driver\wingdi\vsf_disp_wingdi.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\disp\vsf_disp.c" />
+    <ClCompile Include="..\..\vsf\source\component\ui\fbcon\vsf_fbcon.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_button.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_control.c" />
     <ClCompile Include="..\..\vsf\source\component\ui\tgui\controls\vsf_tgui_controls_common.c" />
