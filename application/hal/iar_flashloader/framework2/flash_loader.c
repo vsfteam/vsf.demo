@@ -1,5 +1,3 @@
-// Wrapper for target-specific flash loader code
-
 #include "flash_loader.h"
 #include "flash_loader_extra.h"
 
@@ -28,6 +26,15 @@ extern uint32_t FlashChecksum(uint32_t begin, uint32_t count);
 extern uint32_t FlashSignoff();
 
 uint16_t Crc16_helper(uint8_t const *p, uint32_t len, uint16_t sum);
+
+// Flashloader framework version advertised to C-SPY. The debugger looks up
+// this symbol to select the parameter-passing ABI: 200 = framework2, which
+// passes parameters through theFlashParams (populated by C-SPY before every
+// RPC). Without this symbol C-SPY falls back to the legacy ABI (parameters
+// in registers), and the asm wrappers here only read theFlashParams, so
+// theFlashParams.count stays at whatever FlashInit wrote last -- which is
+// exactly the "FlashWrite always sees cnt=0" symptom observed without it.
+__root const uint16_t frameworkVersion = 200;
 
 __root __no_init FlashParamsHolder theFlashParams;
 
@@ -69,9 +76,38 @@ void Fl2FlashWriteEntry()
 }
 
 // The erase-first flash write function -----------------------------------------
+//
+// IAR 9.60 C-SPY oddity (empirically confirmed via two probes):
+//   probe 1 (count = 0xDEADBEEF) failed       -> EraseWrite RPC IS invoked
+//   probe 2 (standard impl, trusts base_ptr / offset / block_size from
+//            theFlashParams every call)      -> ALSO failed
+// Conclusion: under the current .flash config (page=4096, FLAG_ERASE_ONLY
+// in FlashInit) C-SPY does not refresh base_ptr / offset_into_block /
+// count for the EraseWrite RPC -- only block_size and the buffer contents.
+// We therefore maintain our own block cursor: capture base_ptr at the very
+// first call (Init-time value) and advance by block_size every subsequent
+// call, treating each invocation as "erase + write one whole block worth
+// of data starting from that running address". This matches what C-SPY
+// actually does (it refills the buffer for each block).
+// Also: the size argument to FlashWrite must be block_size (not count),
+// because count is the byte-count input for the standalone Write RPC and
+// is not refreshed for EraseWrite.
+static uint32_t g_ew_cursor    = 0;  // running offset from Init base_ptr
+static uint32_t g_ew_init_base = 0;  // captured from first call
+static uint32_t g_ew_calls     = 0;  // used to detect the very first call
+
 void Fl2FlashEraseWriteEntry()
 {
+  if (g_ew_calls == 0) {
+    g_ew_init_base = theFlashParams.base_ptr;
+    g_ew_cursor    = 0;
+  }
+
   uint32_t tmp = theFlashParams.block_size;
+  uint32_t cur_base = g_ew_init_base + g_ew_cursor;
+
+  g_ew_calls++;
+
   if (tmp == 0)
   {
     FlashEraseData *p = (FlashEraseData*)theFlashParams.buffer;
@@ -84,14 +120,15 @@ void Fl2FlashEraseWriteEntry()
   }
   else
   {
-    tmp = FlashErase((CODE_REF)theFlashParams.base_ptr,
-                     theFlashParams.block_size);
+    tmp = FlashErase((CODE_REF)cur_base, theFlashParams.block_size);
     if (tmp == 0)
     {
-      tmp = FlashWrite((CODE_REF)theFlashParams.base_ptr,
-                       theFlashParams.offset_into_block,
-                       theFlashParams.count,
+      tmp = FlashWrite((CODE_REF)cur_base, 0,
+                       theFlashParams.block_size,
                        theFlashParams.buffer);
+    }
+    if (tmp == 0) {
+      g_ew_cursor += theFlashParams.block_size;
     }
   }
   theFlashParams.count = tmp;
