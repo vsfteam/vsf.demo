@@ -202,7 +202,7 @@ void vsf_board_init(void)
 }
 
 /* ------------------------------------------------------------------------ */
-/* Fault recovery — WDT force-reset on HardFault / Assert deadloop            */
+/* Fault recovery — WDT force-reset on HardFault                              */
 /* ------------------------------------------------------------------------ */
 
 #include "hardware/structs/timer.h"
@@ -219,11 +219,6 @@ void HardFault_Handler(void)
     __FAULT_TRACE("HardFault: WDT force reset");
     watchdog_hw->ctrl = WATCHDOG_CTRL_TRIGGER_BITS;
     while (1);   // insurance — never reached if TRIGGER succeeds
-}
-
-void vsf_trace_assert_pre_deadloop(void)
-{
-    watchdog_hw->ctrl = WATCHDOG_CTRL_TRIGGER_BITS;
 }
 
 // newlib exit()/abort() require _exit on bare-metal targets.
