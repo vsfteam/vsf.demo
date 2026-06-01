@@ -1,0 +1,50 @@
+- name: ttyUSB1
+  connected: true
+  platform: pico
+  active_runner: swd
+  runners:
+    swd:
+      type: openocd
+      artifact:
+        name: vsf_demo.elf
+        format: elf
+      interface: cmsis-dap.cfg
+      target: rp2040.cfg
+      speed: 5000
+    uf2:
+      type: uf2
+      artifact:
+        name: vsf_demo.uf2
+        format: uf2
+      device: /dev/sdb1
+  serial: /dev/ttyUSB1
+  aux_serial: /dev/ttyUSB0
+  baud: 115200
+  build:
+    source_dir: ../../project/cmake/rp2040
+    build_dir: ../../build/rp2040
+    artifacts:
+      - name: vsf_demo.elf
+        format: elf
+      - name: vsf_demo.uf2
+        format: uf2
+  logic_analyzer:
+    device: DSLogic
+    samplerate: "10M"
+    capture_duration: 5
+    channels:
+      uart0_rx: CH0
+      uart0_tx: CH1
+      uart1_rx: CH2
+      uart1_tx: CH3
+      spi0_sck: CH8
+      spi0_mosi: CH9
+      spi0_cs: CH10
+      spi0_miso: CH11
+      i2c_scl: CH4
+      i2c_sda: CH5
+      gp4: CH6
+  board_pins: ./vsf_test_board_pins.h
+  fixtures:
+    - uart_loopback
+    - i2c_eeprom
