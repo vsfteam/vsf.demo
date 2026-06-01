@@ -1,0 +1,26 @@
+marker:
+  channel: uart0_tx
+  pattern: "CASE:(\\d+)"
+  delay_ms: 2
+
+include:
+  - usart.yml
+  - gpio.yml
+  - i2c.yml
+  - rtc.yml
+  - flash.yml
+  - wdt.yml
+  - adc.yml
+  - pwm.yml
+  - timer.yml
+  - spi.yml
+  - rng.yml
+  - dma.yml
+
+# RP2040-specific overrides: gpio_irq_latency first-iteration cache-miss latency
+# is higher than typical; warn threshold allows the warm-up iteration to pass.
+gpio_irq_latency:
+  name: gpio_irq_latency
+  suite_timeout_s: 5.0
+  cases:
+    - {idx: 0, pin: VSF_TEST_PIN_SELF_LOOPBACK, warn_latency_ns: 50000, max_latency_ns: 150000, host: {hw_req: sio_loopback}}

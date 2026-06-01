@@ -1,0 +1,33 @@
+- connected: true
+  platform: pico
+  active_runner: swd
+  runners:
+    swd:
+      type: openocd
+      artifact:
+        name: vsf_demo.elf
+        format: elf
+      interface: cmsis-dap.cfg
+      target: rp2040.cfg
+      speed: 5000
+    uf2:
+      type: uf2
+      artifact:
+        name: vsf_demo.uf2
+        format: uf2
+      device: /dev/sdb1
+  serial: /dev/ttyUSB1
+  aux_serial: /dev/ttyUSB0
+  baud: 115200
+  build:
+    source_dir: ../../project/cmake/rp2040
+    build_dir: ../../build/rp2040
+    artifacts:
+      - name: vsf_demo.elf
+        format: elf
+      - name: vsf_demo.uf2
+        format: uf2
+  board_pins: ./vsf_test_board_pins.h
+  fixtures:
+    - uart_loopback
+    - i2c_eeprom

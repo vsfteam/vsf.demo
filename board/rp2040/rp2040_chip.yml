@@ -1,0 +1,22 @@
+vendor: RaspberryPi
+series: RP2040
+device: RP2040
+cpu: arm
+arch_pri_num: 4
+arch_pri_bit: 2
+xosc_khz: 12000
+sys_clk_khz: 125000
+peripherals:
+  uart:
+    ipcore: ARM/PL011
+    instances:
+      - { index: 0, irqn: UART0_IRQ_IRQn, irq_handler: UART0_IRQHandler, reg: UART0_BASE }
+      - { index: 1, irqn: UART1_IRQ_IRQn, irq_handler: UART1_IRQHandler, reg: UART1_BASE }
+  i2c:
+    ipcore: Synopsys/DW_apb_i2c
+    instances:
+      - { index: 0, irqn: I2C0_IRQ_IRQn, irq_handler: I2C0_IRQHandler, reg: I2C0_BASE }
+      - { index: 1, irqn: I2C1_IRQ_IRQn, irq_handler: I2C1_IRQHandler, reg: I2C1_BASE }
+  gpio:
+    port_count: 1
+    pin_count: 30
