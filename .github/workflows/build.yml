@@ -13,7 +13,7 @@ jobs:
       targets: ${{ steps.find_jobs.outputs.targets }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - id: find_jobs
       run: |
         paths=$(find application/ | grep CMakeLists.txt | grep -v "applet" | grep -v "board" | grep -v "distbus" | rev | cut -d'/' -f 2- | rev | jq -R . | jq -s .)
@@ -58,7 +58,7 @@ jobs:
         uses: lukka/get-cmake@latest
 
       - name: arm-none-eabi-gcc
-        uses: carlosperate/arm-none-eabi-gcc-action@v1
+        uses: carlosperate/arm-none-eabi-gcc-action@v1.12.3
         with:
           release: ${{matrix.cc}}
 
@@ -68,7 +68,7 @@ jobs:
             sudo apt-get install -y libsdl2-dev
         shell: bash
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true # without recursive
 
