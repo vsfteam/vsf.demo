@@ -40,3 +40,6 @@
 [submodule "application/shell/sys/linux/applets/usbipd/raw"]
 	path = application/shell/sys/linux/applets/usbipd/raw
 	url = ../../raydudu/usbipd-libusb
+[submodule "priv_hal"]
+	path = priv_hal
+	url = https://github.com/vsfteam/vsf_priv_hal
