@@ -314,6 +314,18 @@ VSF_VideoInit(_THIS)
         SDL_VideoDisplay display;
         SDL_DisplayMode mode = { 0 };
 
+        // input notifier: registered BEFORE the fallible display setup below,
+        //  so SDL's error paths(SDL_VideoQuit → VSF_VideoQuit → unregister)
+        //  always find it registered. queue must be ready before the first
+        //  event can arrive; re-init drops leftovers of the previous
+        //  SDL instance
+        vsf_slist_queue_init(&SDL_platform.event.queue);
+        SDL_platform.event.notifier.mask =  (1 << VSF_INPUT_TYPE_TOUCHSCREEN)
+                                        |   (1 << VSF_INPUT_TYPE_KEYBOARD)
+                                        |   (1 << VSF_INPUT_TYPE_MOUSE);
+        SDL_platform.event.notifier.on_evt = (vk_input_on_evt_t)VSF_OnEvent;
+        vk_input_notifier_register(&SDL_platform.event.notifier);
+
         disp->ui_data = vsf_eda_get_cur();
         disp->ui_on_ready = WIN_VideoInitReady;
         vk_disp_init(disp);
@@ -336,13 +348,6 @@ VSF_VideoInit(_THIS)
         }
         _this->num_displays = 1;
 
-        vsf_slist_queue_init(&SDL_platform.event.queue);
-        SDL_platform.event.notifier.mask =  (1 << VSF_INPUT_TYPE_TOUCHSCREEN)
-                                        |   (1 << VSF_INPUT_TYPE_KEYBOARD)
-                                        |   (1 << VSF_INPUT_TYPE_MOUSE);
-        SDL_platform.event.notifier.on_evt = (vk_input_on_evt_t)VSF_OnEvent;
-        vk_input_notifier_register(&SDL_platform.event.notifier);
-
         SDL_platform.is_disp_inited = true;
     }
     return 0;
@@ -351,6 +356,19 @@ VSF_VideoInit(_THIS)
 static void
 VSF_VideoQuit(_THIS)
 {
+    // SDL_VideoQuit calls this hook right before tearing down the whole
+    //  per-instance display list(SDL_video.c:3251-3268), so allow the next
+    //  SDL_Init(VIDEO) - in the same or another process - to run the display
+    //  setup again. the input notifier follows the same lifecycle as SDL's
+    //  own keyboard/mouse(SDL_KeyboardQuit/MouseQuit just above in
+    //  SDL_VideoQuit): registered in VSF_VideoInit, unregistered here.
+    //  a process that exits WITHOUT SDL_Quit cannot be rescued at this layer
+    //  anyway: SDL's own subsystem refcount static(SDL.c:100) survives and
+    //  SDL_InitSubSystem skips SDL_VideoInit entirely for the next process.
+    //  NOTE: the display DEVICE itself is firmware-global, it must survive a
+    //  process quit - vk_disp_fini stays unset(upstream left it out too).
+    vk_input_notifier_unregister(&SDL_platform.event.notifier);
+    SDL_platform.is_disp_inited = false;
 //    vk_disp_t *disp = (vk_disp_t *) _this->driverdata;
 //    vk_disp_fini(disp);
 }

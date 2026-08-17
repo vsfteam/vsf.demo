@@ -1,3 +1,4 @@
+#define __VSF_AUDIO_CLASS_INHERIT__
 #define __VSF_SIMPLE_STREAM_CLASS_INHERIT__
 #include "../../../../raw/src/SDL_internal.h"
 
