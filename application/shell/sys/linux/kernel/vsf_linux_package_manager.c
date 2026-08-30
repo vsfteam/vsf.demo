@@ -142,12 +142,12 @@ static int __vpm_install_package(char *package)
 #   endif
 
     int pos;
-    result = vsf_http_client_request(http, &(vsf_http_client_req_t){
+    result = vsf_http_client_request_with_redirect(http, &(vsf_http_client_req_t){
         .host       = host,
         .port       = REPO_HOST_PORT,
         .verb       = "GET",
         .path       = (char *)buf,
-    });
+    }, 4);
     if ((result < 0) || (http->resp_status != 200)) {
         printf("failed to start http with response %d\n", http->resp_status);
     failure:
@@ -517,12 +517,12 @@ static int __vpm_list_remote_packages(void)
     strcat((char *)buf, VSF_BOARD_ARCH_STR "/" VSF_BOARD_ARCH_APP_FORMAT "/");
     strcat((char *)buf, "list.txt");
 
-    result = vsf_http_client_request(http, &(vsf_http_client_req_t){
+    result = vsf_http_client_request_with_redirect(http, &(vsf_http_client_req_t){
         .host       = host,
         .port       = REPO_HOST_PORT,
         .verb       = "GET",
         .path       = (char *)buf,
-    });
+    }, 4);
     if ((result < 0) || (http->resp_status != 200)) {
         printf("failed to start http\n");
         result = -1;
