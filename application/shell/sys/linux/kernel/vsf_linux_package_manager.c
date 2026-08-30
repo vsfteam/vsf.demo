@@ -40,16 +40,15 @@ static void __vpm_parse_host_path(char *buf, int bufsize, char **host, char **pa
     char *cur = buf;
     int curbufsize = bufsize, cursize;
     if (app_config_read("vpm-host", cur, curbufsize)) {
-        cur = REPO_HOST_NAME;
-        cursize = 0;
-    } else {
-        cursize = strlen(cur);
+        strcpy(cur, REPO_HOST_NAME);
     }
+    cursize = strlen(cur);
     *host = cur;
 
+    cursize++;
     cur += cursize;
     curbufsize -= cursize;
-    if (app_config_read("vpm-path", cur, curbufsize)) {
+    if ((curbufsize > 0) && app_config_read("vpm-path", cur, curbufsize)) {
         cur = REPO_PATH;
     }
     *path = cur;
