@@ -70,10 +70,16 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          submodules: true # without recursive
+          submodules: false
 
-      - name: checkout vsf with recursive
-        run: cd vsf && git submodule update --init
+      - name: checkout public submodules
+        run: |
+          git config --file .gitmodules --get-regexp path | while read -r _ path; do
+            if [[ "$path" != "priv_hal" ]]; then
+              git submodule update --init "$path"
+            fi
+          done
+          cd vsf && git submodule update --init
       - name: update project
         run: |
           sed -i -e "s|application/kernel/helloworld|${{matrix.path}}|g" project/cmake/${{matrix.target}}/CMakeLists.txt
